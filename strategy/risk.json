@@ -1,0 +1,10 @@
+{
+  "_comment": "AGENT-EDITABLE sizing policy. Hard caps live in config/protected.json and always win.",
+  "version": 0,
+  "default_stake_usd": 5.0,
+  "min_edge": 0.07,
+  "max_spread": 0.06,
+  "max_positions_per_category_per_cycle": 5,
+  "sizing": "flat",
+  "sizing_notes": "Flat $5 until calibration data exists (n>=50 settled). Then consider fractional Kelly at quarter strength, capped by protected max_stake_usd."
+}
