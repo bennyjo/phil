@@ -34,3 +34,17 @@ Cycle complete: **3 bets placed, 0 settled, cash $960** (committed as `9188ec6`)
 Sources: [ESPN Grêmio–Bolívar odds](https://www.espn.com/soccer/odds/_/gameId/401874159), [Sportsgambler Grêmio–Bolívar](https://www.sportsgambler.com/betting-tips/football/gremio-vs-bolivar-prediction-lineups-odds-2026-07-30/), [Oddslot Talleres–Vélez consensus](https://oddslot.com/football/match/liga-profesional-argentina/talleres-cordoba/velez-sarsfield/30-jul-2026/), [Betfred Rivadavia–Huracán](https://insights.betfred.com/football/match/argentina/30-07-2026/independiente-rivadavia-v-huracan/), [Sportsgambler Rivadavia–Huracán](https://www.sportsgambler.com/betting-tips/football/independiente-rivadavia-vs-huracan-prediction-lineups-odds-2026-07-30/)
 WARNING: protected files appear in recent commits — review manually
 === cycle 1/6 2026-07-30T21:35:30Z ===
+Cycle complete — placed 1 bet, settled 0, committed as `abfb811`.
+
+**What happened this cycle:**
+- **Settle/score:** 0 of 8 open positions settled (most resolve tonight 22:00–24:00Z), so no retro was due.
+- **Scan:** 35 candidates, all soccer kicking off 22:00–22:30Z. Three of the four games already had positions from the 21:14Z cycle, so I focused on the uncovered one: Corinthians vs Athletico-PR (Brazil Série A).
+- **Bet placed:** Corinthians to win, $5 at 0.43 (11.63 shares), my estimate 0.48. Two sharp books agree (Betwinner 1.94, DraftKings -105 → both normalize to ~48.5% home win), Corinthians have 4 straight home wins and 4 of the last 5 head-to-heads, and Athletico have lost 5 of 9 away. Edge vs the live ask: 0.05.
+- **Skipped near-misses on the same game:** Over 2.5 goals (edge 0.025), halftime-draw No (0.03), Athletico team total (≈0) — all below the 0.04 min_edge against live asks. Secondary markets on the Argentine games were dead-on bookmaker-implied prices (e.g. Talleres BTTS 0.425 vs book 42.5%), and the Grêmio 90-minute odds were too muddied by the aggregate-tie context to trust.
+- **Playbook edit:** added evidence that stale scan mids cut both ways — Corinthians' mid was 0.455 but the live book was 0.42/0.43, turning a marginal-looking edge into a qualifying one. Lesson: check the book before discarding near-threshold candidates, not just before betting.
+
+Cash is now $955 with 9 open positions; the next cycle should see a large settlement batch (8 positions resolve tonight) and will need a proper retro.
+
+Note: two MCP servers (claude.ai Google Drive) need re-authentication via your claude.ai connector settings — not needed for this cycle, but flagging it.
+
+Sources: [SportsGambler odds](https://www.sportsgambler.com/betting-tips/football/corinthians-vs-athletico-paranaense-prediction-lineups-odds-2026-07-30/), [ESPN/DraftKings odds](https://www.espn.com/soccer/odds/_/gameId/401841174), [Sports Mole preview](https://www.sportsmole.co.uk/football/corinthians/preview/corinthians-vs-athletico-pr-prediction-team-news-lineups_602080.html), [SportsGambler Talleres-Vélez](https://www.sportsgambler.com/betting-tips/football/talleres-vs-velez-sarsfield-prediction-lineups-odds-2026-07-30/), [Sports Mole Grêmio-Bolívar](https://www.sportsmole.co.uk/football/copa-sudamericana/gremio-vs-bolivar_game_252483.html)

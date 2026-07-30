@@ -42,3 +42,7 @@ procedure exactly once, then stop. Work from this directory.
 7. **Log**: append one line to `journal/cycles.log`:
    `<UTC ISO> cycle done: settled N, placed M, cash $X` (from ledger status).
 8. **Commit**: `git add -A && git commit -m "cycle: <UTCdate-HHMM> placed M settled N"`
+9. **Push** (cloud runs only — skip if no `origin` remote): `git push origin main`.
+   If rejected, `git pull --rebase origin main` and push again. If the rebase
+   conflicts on `journal/ledger.jsonl`, abort, re-run step 1, and repeat from
+   step 7 — never hand-edit the ledger.
