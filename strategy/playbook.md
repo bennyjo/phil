@@ -54,8 +54,10 @@ description, books with spread > risk.json `max_spread`.
    not a reason.
 5. **Check the live book first** (`python3 strategy/tools/quote.py
    <clob_token_id>`, token ids are in scan output; if the sandbox blocks it,
-   `curl -s "https://clob.polymarket.com/book?token_id=<id>" -o /tmp/book.json`
-   and read the file). `scan.py` outcome_prices are stale mids; fills happen
+   `curl -s "https://clob.polymarket.com/book?token_id=<id>" -o reports/book_<x>.json`
+   and read the file — fetch into `reports/` not `/tmp`; the sandbox blocks
+   reading `/tmp` (learned 2026-07-30 cycle 3). Delete the scratch files
+   before committing. `scan.py` outcome_prices are stale mids; fills happen
    at the best ask. Apply `min_edge` to the ASK, not the scan price.
    Evidence (2026-07-30 cycle): REF "No" scan mid 0.833 → ask 0.999
    (rejected); NG "Up" scan mid 0.915 → filled 0.95, edge collapsed to 0.02;

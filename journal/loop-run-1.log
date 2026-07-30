@@ -1,1 +1,18 @@
 === cycle 1/8 2026-07-30T20:20:21Z ===
+Cycle complete: settled 0, placed 1 bet, and encoded one significant strategy lesson.
+
+**What happened**
+
+- **Settle/score**: No new settlements (4 positions still open), so no retro was due.
+- **Scan** found 5 markets closing by 21:00Z today. Four looked like textbook "public fact not yet priced" plays — the underlying facts had already resolved: NG futures closed up +1.32%, WTI closed down -1.03%, Reformation's IPO-day market cap closed at ~$886M (far below the $1.4–1.6B band), and Apple reportedly beat with $2.01 EPS vs the $1.89 threshold.
+- **Reality check**: the scan's outcome_prices are stale mids. The live CLOB books were already repriced — Reformation "No" filled at 0.999 (the protected engine correctly rejected it), WTI "Down" asks started at 0.98 against my honest 0.97 estimate (negative edge, skipped), and Apple "Yes" had a lone ask at 0.99 (skipped). I also skipped WTI >$84 outright: the close was $83.99–$84.02, cents from the strike, and I couldn't pin the exact Pyth print, so I had no basis to call the market wrong.
+- **One bet placed**: NG "Up" at 0.95 (est 0.97, $5). It filled before I understood the mid-vs-ask problem, so its realized edge (0.02) is below my 0.04 min_edge — noted honestly in the playbook as part of the evidence.
+
+**Strategy self-improvement (committed in `bb97905`)**
+
+- Added `strategy/tools/quote.py` — previews the live CLOB book (best ask/bid/spread) before placing, with a curl fallback since the sandbox blocks direct python network calls.
+- Playbook now requires applying `min_edge` to the **live ask**, not the scan mid, and warns that near-resolution markets (daily commodity closes, IPO-day closes) show stale mids while makers have already moved asks to 0.98+ — the fact-to-repricing window is usually gone before scan surfaces it.
+
+Bankroll: $975 cash, 5 open positions, most resolving tonight — the next cycle should get the first settlements and a real retro.
+WARNING: protected files appear in recent commits — review manually
+=== cycle 2/8 2026-07-30T21:10:19Z ===
