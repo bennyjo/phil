@@ -62,7 +62,10 @@ description, books with spread > risk.json `max_spread`.
    Evidence (2026-07-30 cycle): REF "No" scan mid 0.833 → ask 0.999
    (rejected); NG "Up" scan mid 0.915 → filled 0.95, edge collapsed to 0.02;
    WTI "Down" scan mid 0.926 → best ask 0.98 vs est 0.97 (negative edge,
-   skipped).
+   skipped). Stale mids cut BOTH ways: Corinthians win scan mid 0.455 →
+   live book 0.42/0.43 (2026-07-30 cycle 4) — a marginal-looking edge on
+   the mid can be a qualifying edge at the ask, so check the book before
+   discarding near-threshold candidates too.
 
 ## Known unknowns (to resolve with data)
 

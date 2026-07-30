@@ -16,3 +16,21 @@ Cycle complete: settled 0, placed 1 bet, and encoded one significant strategy le
 Bankroll: $975 cash, 5 open positions, most resolving tonight — the next cycle should get the first settlements and a real retro.
 WARNING: protected files appear in recent commits — review manually
 === cycle 2/8 2026-07-30T21:10:19Z ===
+Cycle complete: **3 bets placed, 0 settled, cash $960** (committed as `9188ec6`).
+
+**Settle/score:** Nothing resolved yet — all 5 prior positions still open (natural gas and WNBA settle tonight, Chinese-AI-model markets tomorrow), so no retro was due.
+
+**Scan:** 27 candidates, all soccer — tonight's South American slate (Grêmio–Bolívar in Copa Sudamericana, Talleres–Vélez and Ind. Rivadavia–Huracán in the Argentine Primera), all kicking off 22:00 UTC, checked pre-match.
+
+**Bets placed** (flat $5 each, all verified against the live CLOB ask per the playbook rule):
+1. **Rivadavia "No" @ 0.49** (est 0.57, edge +0.08) — the strongest one. Bookmakers devig to only ~0.435 for a Rivadavia win but Polymarket had it at 0.515; Huracán has drawn 8 of 11 away matches this season.
+2. **Talleres "Yes" @ 0.36** (est 0.40, edge +0.04) — ESPN line and a 12-book consensus both put Talleres at ~40%.
+3. **Grêmio -1.5 spread @ 0.45** (est 0.49, edge +0.04) — bookmaker Asian handicap devigs to ~0.51, and the knockout context supports margin-chasing: down 3-2 on aggregate, a 1-goal win only forces penalties, so Grêmio needs to win by 2 to advance in 90 minutes.
+
+**Skipped:** Huracán "Yes" (same view as bet 1, would double the exposure), Vélez "No" and Grêmio moneyline/BTTS (edges under 0.04 at the ask).
+
+**Playbook update:** one procedural lesson encoded — fetch order books into `reports/` instead of `/tmp` (the sandbox blocks reading `/tmp`), and delete the scratch files before committing.
+
+Sources: [ESPN Grêmio–Bolívar odds](https://www.espn.com/soccer/odds/_/gameId/401874159), [Sportsgambler Grêmio–Bolívar](https://www.sportsgambler.com/betting-tips/football/gremio-vs-bolivar-prediction-lineups-odds-2026-07-30/), [Oddslot Talleres–Vélez consensus](https://oddslot.com/football/match/liga-profesional-argentina/talleres-cordoba/velez-sarsfield/30-jul-2026/), [Betfred Rivadavia–Huracán](https://insights.betfred.com/football/match/argentina/30-07-2026/independiente-rivadavia-v-huracan/), [Sportsgambler Rivadavia–Huracán](https://www.sportsgambler.com/betting-tips/football/independiente-rivadavia-vs-huracan-prediction-lineups-odds-2026-07-30/)
+WARNING: protected files appear in recent commits — review manually
+=== cycle 1/6 2026-07-30T21:35:30Z ===
