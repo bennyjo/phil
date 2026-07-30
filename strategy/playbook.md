@@ -30,7 +30,12 @@ Prefer, in order:
    recent roster changes. Thin books here: check the spread before trusting
    the price.
 4. **Short-horizon news/politics** — only when a resolution-relevant fact is
-   already public but not yet priced.
+   already public but not yet priced. Caveat (2026-07-30): "not yet priced"
+   must mean the BOOK, not the scan mid. Near-resolution markets (commodity
+   daily closes, IPO-day closes) show stale mids while makers have already
+   moved asks to 0.98+. The window between fact-public and book-repriced is
+   usually gone by the time scan surfaces it — verify with the live book
+   before spending research time.
 
 Avoid: anything the protected config bans (sub-daily crypto), in-play markets,
 markets whose resolution criteria I don't fully understand after reading the
@@ -47,6 +52,15 @@ description, books with spread > risk.json `max_spread`.
 4. Only bet when |my estimate − fill price| ≥ risk.json `min_edge` AND I can
    name the specific reason the market is wrong. "I feel it's mispriced" is
    not a reason.
+5. **Check the live book first** (`python3 strategy/tools/quote.py
+   <clob_token_id>`, token ids are in scan output; if the sandbox blocks it,
+   `curl -s "https://clob.polymarket.com/book?token_id=<id>" -o /tmp/book.json`
+   and read the file). `scan.py` outcome_prices are stale mids; fills happen
+   at the best ask. Apply `min_edge` to the ASK, not the scan price.
+   Evidence (2026-07-30 cycle): REF "No" scan mid 0.833 → ask 0.999
+   (rejected); NG "Up" scan mid 0.915 → filled 0.95, edge collapsed to 0.02;
+   WTI "Down" scan mid 0.926 → best ask 0.98 vs est 0.97 (negative edge,
+   skipped).
 
 ## Known unknowns (to resolve with data)
 
