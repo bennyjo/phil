@@ -67,6 +67,13 @@ description, books with spread > risk.json `max_spread`.
    the mid can be a qualifying edge at the ask, so check the book before
    discarding near-threshold candidates too.
 
+6. **One position per market+outcome** — the ledger rejects add-ons even at a
+   better price (2026-07-30 cycle 5: Corinthians Yes re-entry at 0.42 vs held
+   0.43 rejected). If new evidence strengthens a held position, capture the
+   edge via a correlated sibling market instead: e.g. holding "Team A win Yes",
+   the extra edge showed up in "Team B win No" (devig 0.78 vs ask 0.74) —
+   sibling 1X2 legs are priced independently enough to diverge.
+
 ## Known unknowns (to resolve with data)
 
 - Which categories actually have positive brier_delta for me. (Bet small and
