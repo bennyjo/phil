@@ -14,11 +14,17 @@ import urllib.request
 
 BOOK_URL = "https://clob.polymarket.com/book?token_id={}"
 
+# The CLOB API 403s the default "Python-urllib/x.y" User-Agent (verified
+# 2026-07-31: same URL, default UA -> 403, any real UA -> 200). Any
+# browser/curl-style UA passes.
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; paper-trader-quote)"}
+
 
 def main(token_ids):
     for tid in token_ids:
         try:
-            with urllib.request.urlopen(BOOK_URL.format(tid), timeout=15) as r:
+            req = urllib.request.Request(BOOK_URL.format(tid), headers=HEADERS)
+            with urllib.request.urlopen(req, timeout=15) as r:
                 book = json.load(r)
         except Exception as e:
             print(json.dumps({"token_id": tid, "error": str(e)}))
