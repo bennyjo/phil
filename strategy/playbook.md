@@ -87,6 +87,24 @@ description, books with spread > risk.json `max_spread`.
    class (`min_edge` for structural, `min_edge_book_devig` for book-devig
    arbitration) AND I can name the specific reason the market is wrong.
    "I feel it's mispriced" is not a reason.
+   - **A literal source-reading vs a >0.90 market consensus is a resolver-
+     process red flag, not just a confident fact.** Evidence (2026-07-31):
+     `7e753de88823` (Moonshot Yes) bet that a named leaderboard source
+     showed Moonshot on top; the operator verified that exact source
+     directly, three times spanning 22h including 2.5h *after* resolution,
+     and it never moved off the same reading — yet the market resolved the
+     other way, at ~93% confidence priced in advance. The market's price
+     predicted the resolution better than the literal source read did. When
+     your reading of a resolution-relevant source disagrees with a >0.90
+     consensus, that consensus likely embeds something about HOW the
+     resolver reads the source (which table/toggle/view, dispute
+     precedent) that a fact-only check doesn't capture. Before betting
+     against that kind of consensus, name specifically what the crowd
+     might be missing about the *resolution process* — not just re-confirm
+     the fact. This applies to resolution reads requiring a judgment call
+     (UI settings, which mirror/table); it does not apply to mechanical
+     resolution sources (a number printed in an official filing/API),
+     which aren't implicated by this evidence.
 5. **Check the live book first** (`python3 strategy/tools/quote.py
    <clob_token_id>`, token ids are in scan output; if the sandbox blocks it,
    `curl -s "https://clob.polymarket.com/book?token_id=<id>" -o reports/book_<x>.json`
