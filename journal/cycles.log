@@ -9,3 +9,4 @@
 2026-07-31T00:16Z cycle done: settled 0, placed 2, cash $940.26
 2026-07-31T01:15:54Z cycle done: settled 2, placed 1, cash $935.26
 2026-07-31T02:15:00Z cycle done: settled 1, placed 0, cash $935.26. Settled Spread: Grêmio FBPA (-1.5) (lost, -$5.00, est 0.49 vs mkt 0.45; Bolívar won, Grêmio didn't cover). Retro written (n=1 new, soccer now 0/3 at n=3, brier_delta +0.0509 — still noise per CYCLE.md's ~15-settlement floor, no playbook edit). Scanned 1 candidate in next 48h: SpaceX market cap $1.5-2.0T at July close — live book had bid/ask spread ~0.44 on both outcomes (Yes bid 0.06/ask 0.50, No bid 0.50/ask 0.94), far over risk.json max_spread 0.06; skipped, no bet placed.
+2026-07-31T03:11:58Z cycle done: settled 3, placed 0, cash $935.26
