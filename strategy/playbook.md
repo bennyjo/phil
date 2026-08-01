@@ -29,6 +29,19 @@ Rank every candidate by WHY the market should be wrong, strongest first:
    `4d5a4304a4d0`, `3cce11272d9d`, `1399450675ba`, `2c4c6a2adc0a`;
    P(0/7 | own ests) ≈ 1%). It requires `risk.json min_edge_book_devig`
    (0.07), not the base `min_edge`, and a power devig (see Estimation).
+   Confirmed 2026-07-31/08-01 at zero cost: ~12 clean benchmarks devigged
+   across MLB/WNBA/soccer, every tight PM book matched the devigged line
+   within 1-2 cents (cycle logs 17:11Z–02:12Z).
+
+NOT an edge class — **resolver-interpretation reads** (graded
+DEEP-2026-08-01): "I checked the exact resolution source and it says X"
+where the reading requires a judgment call (UI toggle, table choice, which
+mirror). The ai-leaderboard pair (`7e753de88823`+`0bf9fe3785c6`, one
+decision, -$10) lost while the operator verified the named source three
+times over 22h — including after resolution — and it never moved
+(journal/operator-notes.md). The fact was right; the resolution process
+read it differently. Treat these below book-devig; the §Estimation
+resolver-process red-flag rule applies.
 
 ## Market selection
 
@@ -58,7 +71,32 @@ Prefer, in order:
 
 Avoid: anything the protected config bans (sub-daily crypto), in-play markets,
 markets whose resolution criteria I don't fully understand after reading the
-description, books with spread > risk.json `max_spread`.
+description, books with spread > risk.json `max_spread` (scope below).
+
+### Spread-rule scope (DEEP-2026-08-01)
+
+`max_spread` is a HARD veto for book-devig / benchmark-derived bets and for
+any market where my own estimate is uncertain: a wide book there means the
+benchmark comparison is unreliable and the market is telling me something I
+don't know (correctly applied to ENA/XRP retrospective-fact markets,
+2026-08-01 03:11Z).
+
+Narrow exception — **structural info-race only**: positions are held to
+resolution (never exited) and fill at the ask, so exit liquidity is
+irrelevant; a wide bid/ask on a market whose resolving fact is verified by
+multiple independent sources is the signature of the inattentive book this
+class targets (both structural wins came from 0.01–0.06-spread books; all
+seven book-devig losses from 1-cent books). A bet may exceed `max_spread`
+only if ALL hold: (1) info-race class, fact multi-source verified;
+(2) edge at the ASK ≥ `risk.json min_edge_wide_book` (0.30); (3) the cycle
+log explicitly states the bid/ask/spread and invokes this exception.
+
+Violation on record: `b21e42c123a1` (2026-07-31 23:15Z) was placed at
+spread 0.13 with no mention of the spread in the cycle log — a silent skip
+of a written check. Whatever a bet's merits, a rule that seems wrong gets
+flagged in a retro and proposed for change; it does not get silently
+ignored. Every placement's cycle-log entry must state the spread check
+from now on.
 
 ## Estimation method
 
