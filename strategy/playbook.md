@@ -33,6 +33,17 @@ Rank every candidate by WHY the market should be wrong, strongest first:
    across MLB/WNBA/soccer, every tight PM book matched the devigged line
    within 1-2 cents (cycle logs 17:11Z–02:12Z).
 
+Info-race is on watch (DEEP-2026-08-02): the open Iran pair
+(`b21e42c123a1` est 0.90, `d2dd24206542` est 0.98) has repriced violently
+against us while unresolved 2+ days past end date (Yes mid ~0.06 vs entry
+0.15; ceasefire No at 0.455 vs entry 0.92). Pre-registered rule-candidate,
+to be enacted ONLY if the pair settles as losses: "multi-source verified"
+tightens to require at least one non-party primary source (wire service
+Reuters/AP/AFP, host-government statement, or the resolver's own named
+source) — a consensus composed of state media of the parties to the event
+(PressTV, Mehr, TASS, Xinhua on the Iran claims) does not qualify on its
+own. If either leg wins, this stays a caution, not a rule.
+
 NOT an edge class — **resolver-interpretation reads** (graded
 DEEP-2026-08-01): "I checked the exact resolution source and it says X"
 where the reading requires a judgment call (UI toggle, table choice, which
@@ -97,6 +108,22 @@ of a written check. Whatever a bet's merits, a rule that seems wrong gets
 flagged in a retro and proposed for change; it does not get silently
 ignored. Every placement's cycle-log entry must state the spread check
 from now on.
+
+## Open-position monitoring (DEEP-2026-08-02)
+
+Positions are held to resolution — never exited — but their live prices
+are free information about the resolver. Every cycle, for each open
+position past its market end date: fetch the current book or gamma mid
+and log it in the cycle entry. Any adverse move ≥ 0.10 from entry must be
+called out explicitly (one line: position id, entry price, current mid).
+Evidence: `d2dd24206542` repriced from ~0.08 Yes at entry to ~0.545 Yes
+over 2026-08-01/02 — 46 points against us on a thesis logged as
+"structurally impossible" — and ~28 consecutive cycle logs repeated
+"awaiting official resolution" without noticing. A sustained multi-day
+adverse repricing on an unresolved market is resolver-process evidence
+(dispute, rules reading we don't have) and feeds the position's eventual
+grading; it is NOT a reason to exit (we can't) or to average in (ledger
+forbids add-ons).
 
 ## Estimation method
 
