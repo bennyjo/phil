@@ -98,3 +98,12 @@
   Fever/Lynx moneyline: DK-style odds (Lynx -222/Fever +185) power-devig to Lynx 0.673/Fever 0.327 vs PM asks (Fever 0.36, Lynx 0.65) -- edges -0.033 (Fever) / +0.023 (Lynx), both below threshold. Spread-5.5 and totals: only simulation-model outputs found (dimers.com "55.6% win prob", "7.5% edge" claims), not a clean two-sided single-book line -- treated as unreliable per line-freshness/mixed-reports rule, not researched further.
   CS2 Teletubisie/Sangal ALTERS: no independent bookmaker/HLTV odds found (search only surfaced Polymarket's own price quoted back) -- no benchmark, skipped unresearchable.
   No structural (info-race/cross-market-inconsistency) candidates present this cycle. No bets placed.
+2026-08-02T17:14:00Z cycle done: settled 0, placed 0, cash $958.11
+  Open-position monitoring: b21e42c123a1 (Iran military action Yes, entry 0.15) live book bid 0.009/ask 0.032, mid ~0.02 -- adverse move ~0.13 against entry, still unresolved 2d past end date. d2dd24206542 (US-Iran ceasefire No, entry 0.92) live book bid 0.48/ask 0.49 -- adverse move ~0.43 against entry (implied ceasefire-Yes now ~0.51 vs ~0.08 at entry), still unresolved. Both flagged per DEEP-2026-08-02 open-position rule; no action possible (held to resolution).
+  Scan: 32 candidates, all MLB (no soccer/esports/earnings/politics this slate). Researched book-devig for 5 matchups pre-first-pitch (~20min window):
+  Guardians/Diamondbacks run line (CLE -1.5 +150/ARI +1.5 -182, single book): power devig ARI+1.5 fair 0.625 vs live ask 0.58 -- edge 0.045, below min_edge_book_devig (0.07).
+  Guardians/Diamondbacks total 8.5 (Over -105/Under -115): power devig Under fair 0.512 vs live ask 0.57 -- negative; Over fair 0.488 vs ask 0.44 -- edge 0.048, below threshold.
+  Marlins/Mets run line (MIA -1.5 +130/NYM +1.5 -156): power devig vs PM mid, both sides edge <=0.01, below threshold, live book not checked (not worth it).
+  Phillies/Orioles run line (PHI -1.5 +122/BAL +1.5 -146): power devig vs PM mid, ORI side edge ~0.008, below threshold.
+  Pirates/Reds, Cardinals/Blue Jays, White Sox/Rays: only mixed-book or moneyline-only odds found (no clean single-book two-sided line matching PM's spread/total number) -- skipped per line-freshness/mixed-reports rule.
+  No structural (info-race/cross-market-inconsistency) candidates present. No bets placed.
