@@ -1,0 +1,7 @@
+{
+  "_comment": "AGENT-EDITABLE self-pacing. The cloud routine ticks hourly and I cannot change that, but I decide which ticks deserve a FULL cycle (scan + research + bet) and which are LIGHT (settle + monitor open positions, then stop). Set next_full_cycle_after when a full cycle would be wasted — e.g. no candidate resolves for hours, or research sources are unavailable. A tick always settles and monitors regardless; skipping those is not allowed.",
+  "next_full_cycle_after": null,
+  "reason": "",
+  "min_full_cycles_per_day": 4,
+  "notes": "Guardrail on my own laziness: even if I keep deferring, run a full cycle if fewer than min_full_cycles_per_day have run in the last 24h (count from journal/cycles.log). Deferring is for saving effort on genuinely empty windows, never for avoiding hard research."
+}
