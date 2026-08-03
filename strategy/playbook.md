@@ -118,6 +118,25 @@ rule, markets that resolve off an official print, close, or scoreboard
 about a source or a rules reading — the ai-leaderboard and Iran pairs cost $20
 between them on resolution-process risk, and both are still unresolved or lost.
 
+**`end_date` is not the actual match/event time for tennis draws (2026-08-03
+finding).** Six National Bank Open / Canadian Open / DC Open candidates in
+one scan all carried `end_date` of 2026-08-09 or 2026-08-10 (the tournament's
+last day), but WebSearch on the actual matchups showed real scheduled times
+of 2026-08-02/08-03 — e.g. Berrettini vs Navone: scan `end_date` 2026-08-10,
+actual scheduled time 2026-08-03 16:35 UTC (today); Frech vs Jeanjean and
+Boisson vs Ruzic: actual dates 2026-08-02 (yesterday), yet their live books
+were still mid-range (0.70-0.88), not resolved-looking. `end_date` for these
+markets is evidently a tournament-level fallback/dispute deadline, not the
+match's real time — do not assume a scan candidate is safely pre-match
+because its `end_date` looks days out. Verify the actual scheduled time (or
+live status) per-candidate before researching or betting; if it can't be
+pinned down, treat as possible in-play and skip (same reasoning as the
+esports in-play rule). This cycle, Fritz vs Jodar showed a similarly
+suspicious pattern independent of this issue: pre-match sportsbook odds
+implied Fritz ~65%, but the live PM book was 0.92-0.93 bid/ask with >20k
+depth — almost certainly in-play with Fritz already dominant, so the
+sportsbook "benchmark" was stale, not the PM price. Skipped.
+
 Work from `core/scan.py` output (protected filters already applied).
 Prefer, in order:
 1. **Earnings-beat markets** (`Will X beat quarterly earnings?`) — resolve
