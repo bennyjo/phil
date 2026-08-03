@@ -18,9 +18,30 @@ Rank every candidate by WHY the market should be wrong, strongest first:
 1. **Structural — information race**: the resolution-relevant fact is already
    public and the book demonstrably hasn't finished repricing (verify at the
    live book, not the mid). Evidence: `2dc417ed68f6` won.
+   **Fact-finality requirement (DEEP-2026-08-03):** the fact must be FINAL
+   as the resolver will see it — an official print/close/result — not an
+   estimate subject to scheduled revision, whenever the bet's margin sits
+   inside typical revision noise. Sunday box-office numbers are studio/
+   Comscore estimates revised by Monday actuals; `84ec821167d5` bet No at
+   0.16 on a "$2M short" (0.6%) margin from such an estimate and was
+   marked to ~0.02 within 10h as actuals landed. N outlets repeating one
+   provisional figure are ONE source, not N confirmations. Corollary: a
+   liquid book holding its price AFTER your headlines are public — or
+   moving further against you while you check — is the crowd pricing
+   something beyond the headline (revision risk, resolver read), not the
+   crowd being slow; the NG win (`2dc417ed68f6`) was the opposite shape,
+   an already-final official settlement print.
 2. **Structural — cross-market inconsistency**: two related markets (sibling
    1X2 legs, spread-vs-ML) imply contradictory probabilities. Evidence:
    `1e8dec1078ba` won.
+   **Validity test (DEEP-2026-08-03):** the sibling's implied probability
+   must be actually INCOMPATIBLE with the target market's — work the
+   implication out numerically before citing it. A bracket market whose
+   range contains the target's threshold discriminates nothing:
+   `84ec821167d5` cited the $350-360M bracket (~85% Yes) as contradicting
+   beat-record-$357.1M (~84% Yes), but $357.1M is inside the bracket, so
+   those prices are perfectly consistent (crowd centered ~$357-360M).
+   The claimed inconsistency was an inference error, not a signal.
 3. **Book-devig arbitration** (weakest): "my devig of scraped bookmaker odds
    beats the PM price" on a liquid market. A 1-cent-spread PM book with real
    depth is made by someone pricing off the same feeds, live — this class is
@@ -33,10 +54,12 @@ Rank every candidate by WHY the market should be wrong, strongest first:
    across MLB/WNBA/soccer, every tight PM book matched the devigged line
    within 1-2 cents (cycle logs 17:11Z–02:12Z).
 
-Info-race is on watch (DEEP-2026-08-02): the open Iran pair
-(`b21e42c123a1` est 0.90, `d2dd24206542` est 0.98) has repriced violently
-against us while unresolved 2+ days past end date (Yes mid ~0.06 vs entry
-0.15; ceasefire No at 0.455 vs entry 0.92). Pre-registered rule-candidate,
+Info-race is on watch (DEEP-2026-08-02, marks updated DEEP-2026-08-03):
+all three open structural positions are marked against us — the Iran pair
+(`b21e42c123a1` est 0.90, mid ~0.045 vs entry 0.15; `d2dd24206542` est
+0.98, No mid ~0.395 vs entry 0.92, worsening) unresolved 3+ days past end
+date, and `84ec821167d5` (No mid ~0.02 vs entry 0.16, see fact-finality
+rule above; its pre-registered grading is in DEEP-2026-08-03 §a). Pre-registered rule-candidate,
 to be enacted ONLY if the pair settles as losses: "multi-source verified"
 tightens to require at least one non-party primary source (wire service
 Reuters/AP/AFP, host-government statement, or the resolver's own named
@@ -112,10 +135,14 @@ from now on.
 ## Open-position monitoring (DEEP-2026-08-02)
 
 Positions are held to resolution — never exited — but their live prices
-are free information about the resolver. Every cycle, for each open
-position past its market end date: fetch the current book or gamma mid
-and log it in the cycle entry. Any adverse move ≥ 0.10 from entry must be
-called out explicitly (one line: position id, entry price, current mid).
+are free information about the resolver. **REQUIRED line in every cycle
+log, no exceptions** (sharpened DEEP-2026-08-03 after 10 of 19 cycles
+silently skipped it — including 23:11Z, the cycle that placed
+`84ec821167d5` and missed the start of its 0.14 collapse): for each open
+position past its market end date, fetch the current book and log
+`position id, entry, live bid/ask, mid, adverse move`; if none qualify,
+log the literal line "open-position monitor: none past end date". Any
+adverse move ≥ 0.10 from entry must be called out explicitly.
 Evidence: `d2dd24206542` repriced from ~0.08 Yes at entry to ~0.545 Yes
 over 2026-08-01/02 — 46 points against us on a thesis logged as
 "structurally impossible" — and ~28 consecutive cycle logs repeated
