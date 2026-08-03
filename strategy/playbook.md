@@ -137,6 +137,19 @@ implied Fritz ~65%, but the live PM book was 0.92-0.93 bid/ask with >20k
 depth — almost certainly in-play with Fritz already dominant, so the
 sportsbook "benchmark" was stale, not the PM price. Skipped.
 
+**Scan does not flag in-play status for single-game moneylines (2026-08-03
+finding).** WSH/PHI and STL/NYY MLB moneylines both showed large price
+divergence from pregame bookmaker consensus on deep, 1-cent-spread books
+($170k-295k liquidity) — looked exactly like a book-devig edge. Checking
+wall-clock time against the listed first pitch (in the market description,
+not `end_date`) showed both games had started 13-38 minutes earlier; the
+price move was in-play information, not a mispricing. `outcome_prices` and
+`end_date` are both stale/uninformative about in-play status. Before
+researching or betting any single-game team-vs-team market (not just
+esports), check current time against the actual listed start time in the
+description; if the game has started, skip — same rule as esports in-play,
+now confirmed to apply to traditional sports moneylines too.
+
 Work from `core/scan.py` output (protected filters already applied).
 Prefer, in order:
 1. **Earnings-beat markets** (`Will X beat quarterly earnings?`) — resolve
