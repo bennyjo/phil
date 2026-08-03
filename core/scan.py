@@ -37,6 +37,12 @@ def main():
     ap.add_argument("--hours", type=float, default=48)
     ap.add_argument("--min-volume-24h", type=float, default=500)
     ap.add_argument("--limit", type=int, default=400)
+    ap.add_argument("--min-total-volume", type=float, default=0,
+                    help="server-side lifetime-volume floor (gamma volume_num_min). "
+                         "Required to reach events more than ~1 day out: results are "
+                         "paged in endDate order and the near-term universe is "
+                         "thousands of sub-daily markets deep, so without this the "
+                         "scan never escapes today regardless of --hours.")
     args = ap.parse_args()
 
     banned = [re.compile(p, re.I) for p in PROTECTED["banned_question_patterns"]]
@@ -48,11 +54,14 @@ def main():
     kept = 0
     offset = 0
     while offset < args.limit:
-        batch = pmapi.gamma_markets(
+        query = dict(
             closed="false", order="endDate", ascending="true",
             limit=100, offset=offset,
             end_date_min=iso(min_end), end_date_max=iso(horizon),
         )
+        if args.min_total_volume > 0:
+            query["volume_num_min"] = args.min_total_volume
+        batch = pmapi.gamma_markets(**query)
         if not batch:
             break
         offset += len(batch)

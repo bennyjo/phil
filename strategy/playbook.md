@@ -79,7 +79,46 @@ resolver-process red-flag rule applies.
 
 ## Market selection
 
-Work from `core/scan.py` output (next 48h, protected filters already applied).
+**Scan horizon (OPERATOR EDIT 2026-08-03, see journal/operator-notes.md):**
+default to
+`python3 core/scan.py --hours 168 --min-volume-24h 0 --min-total-volume 50000`.
+The `--min-total-volume` flag is new (operator patch to core/scan.py, same
+date) and is REQUIRED to see past today: results page in endDate order and the
+near-term universe is thousands of sub-daily markets deep, so `--hours` alone
+never escapes the current day — verified, 1004/1004 candidates were day-0.
+With the flag, the same scan surfaces ATP/WTA main-draw tennis 5–7 days out
+(liquidity $200k–460k), central-bank decisions, and countable-metric markets.
+Do NOT also apply a 24h-volume floor on a weekly window: an event five days
+out legitimately has little volume today, so that filter re-creates the bug.
+Evidence for all of this: 19 straight no-bet cycles on 2026-08-02/03. The 48h
+window structurally selects for
+whatever clears the volume filter *soon* — Icelandic, Argentine second-tier
+and lower-league fixtures — which are exactly the events with no searchable
+sharp benchmark, so research fails and no bet is possible. Well-covered
+events (major European leagues, MLB/NBA/NFL/WNBA, big esports finals,
+scheduled earnings and macro releases) mostly sit 2–7 days out. Longer
+horizon also means slower feedback; that is an accepted cost, since feedback
+is already gated by resolution lag, not by bet frequency. Revisit if the
+weekly window produces placements without improving hit quality.
+
+**Coverage precondition (OPERATOR EDIT 2026-08-03):** before spending research
+effort on a candidate, spend ONE search establishing whether a sharp benchmark
+is retrievable at all (a real bookmaker line for this exact market, an analyst
+consensus, an official schedule/print). If nothing sharp is retrievable, drop
+the candidate immediately and move on — do not build an estimate on aggregator
+"prediction model" numbers. Scraping consumer odds portals directly does not
+work from the cloud runner: forebet/oddsportal/oddspedia 403 datacenter IPs
+(this is site-level bot blocking, NOT the sandbox egress policy — the earlier
+"recurring egress block" diagnosis in cycle logs was wrong). WebSearch results
+do work; use them.
+
+**Prefer mechanically-resolving markets.** Consistent with the fact-finality
+rule, markets that resolve off an official print, close, or scoreboard
+(earnings, macro releases, match results) beat markets needing a judgment call
+about a source or a rules reading — the ai-leaderboard and Iran pairs cost $20
+between them on resolution-process risk, and both are still unresolved or lost.
+
+Work from `core/scan.py` output (protected filters already applied).
 Prefer, in order:
 1. **Earnings-beat markets** (`Will X beat quarterly earnings?`) — resolve
    same evening. Research: consensus EPS estimate, whisper numbers, the

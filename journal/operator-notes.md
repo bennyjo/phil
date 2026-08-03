@@ -89,3 +89,33 @@ mark-to-market losses on stuck positions should be reported in the score view
 rather than only in cycle logs, and a position that is N days past end date
 without resolution should be escalated in the retro as a *process* datapoint
 (which market types stall?) rather than silently re-flagged every hour.
+
+## 2026-08-03 19:25Z — root cause of the no-bet drought: the scan could not see past today
+
+Diagnosis correction (supersedes the market-selection note above, which was
+right about symptoms but wrong about cause). `core/scan.py` pages the gamma
+API in `endDate` order from now. The near-term Polymarket universe is
+thousands of sub-daily markets deep (5-minute crypto candles, in-play
+derivatives), so pagination exhausts the `--limit` long before reaching
+tomorrow. Verified: `--hours 168 --min-volume-24h 0 --limit 2000` returned
+1004 candidates, **all of them day-0**. The horizon flag was never the
+binding constraint — the agent could not have found well-covered events no
+matter how it tuned it, and every "no qualifying candidate" cycle log was
+technically accurate but structurally misleading.
+
+Operator patch (protected core, so agent-side rules unchanged): `scan.py`
+gains `--min-total-volume`, passed server-side as gamma's `volume_num_min`.
+With `--hours 168 --min-volume-24h 0 --min-total-volume 50000` the same scan
+returns 32 candidates, 19 of them 1+ days out, including ATP/WTA main-draw
+matches at $200k-460k liquidity, a Bank of Mexico rate decision, and
+countable-metric markets. Note the interaction: a 24h-volume floor must NOT
+be combined with a multi-day window (an event five days out has little volume
+today), which is why the two flags move together.
+
+Why this matters beyond the fix: for two days the agent reasoned impeccably
+about a candidate pool that was an artifact of a tooling limit it could not
+see and was forbidden to edit. Its retros correctly recorded "no qualifying
+edge" and correctly declined to force bets; nothing in its own evidence could
+have revealed the cause. Worth grading in the next deep retro as a lesson
+about the limits of self-improvement inside a fixed harness — the agent can
+optimize its judgment, but not its instruments.
