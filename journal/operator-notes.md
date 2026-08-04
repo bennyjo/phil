@@ -119,3 +119,27 @@ edge" and correctly declined to force bets; nothing in its own evidence could
 have revealed the cause. Worth grading in the next deep retro as a lesson
 about the limits of self-improvement inside a fixed harness — the agent can
 optimize its judgment, but not its instruments.
+
+## 2026-08-04 ~06:45Z — UMA look on the Iran pair (proposals item, now done)
+
+Checked gamma for both markets directly:
+
+- `b21e42c123a1` (Iran military action vs Gulf State): **resolved No overnight**
+  via a normal UMA flow — `umaResolutionStatuses ["proposed"]`,
+  `umaResolutionStatus resolved`, `umaEndDate 2026-08-04T06:02:33Z`, final
+  prices Yes=0/No=1. resolve.py already settled it (-$5). Nothing pathological
+  in the process; the delay matched the market description's own "3 full
+  calendar days for conflicting reports" clause (Jul 31 end + 3 days → Aug 4).
+- `d2dd24206542` (US x Iran ceasefire, holding No @ 0.92): **no UMA proposal
+  has ever been submitted** — `umaResolutionStatuses []`, `closed false`,
+  4+ days past end date, Yes trading ~0.515. Reading: the same 3-calendar-day
+  clause ran out with reports still conflicting, and no proposer will stake a
+  bond on a genuinely contested ~50/50 fact. The oscillating price is not a
+  resolver leaning — it is the absence of any resolution attempt. Expect
+  settlement only when facts converge or someone risks a proposal+dispute.
+
+Process datapoint for retros: "by <date>?" geopolitical markets with
+conflicting-reports clauses have an UNBOUNDED resolution tail — the end date
+is when trading stops mattering, not when capital frees. Cost so far: $5 of
+bankroll and a monitor line locked for 4+ days. Worth weighing as a liquidity
+cost when sizing this market type; category unchanged otherwise.

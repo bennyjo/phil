@@ -108,6 +108,7 @@ def cmd_place(args, entries):
         "stake_usd": args.stake,
         "shares": round(args.stake / ask, 4),
         "category": args.category,
+        "edge_class": args.edge_class,
         "rationale": args.rationale,
         "strategy_rev": args.strategy_rev,
         "status": "open",
@@ -129,6 +130,9 @@ def main():
     p.add_argument("--stake", type=float, required=True)
     p.add_argument("--category", required=True,
                    help="agent-assigned category, e.g. earnings/soccer/esports/news")
+    p.add_argument("--edge-class", required=True,
+                   choices=["info-race", "cross-market", "book-devig", "other"],
+                   help="playbook edge class this bet claims (scored separately)")
     p.add_argument("--rationale", required=True, help="one-line reason (for the retro)")
     p.add_argument("--strategy-rev", default="", help="git rev of strategy/ used")
     sub.add_parser("status")

@@ -8,6 +8,22 @@ SLEEP_MIN="${2:-45}"
 
 for i in $(seq 1 "$CYCLES"); do
   echo "=== cycle $i/$CYCLES $(date -u +%FT%TZ) ==="
+
+  # Sync with origin before cycling so a stale local main can never silently
+  # fork for days (the 2026-07-31 orphaned-history incident). Fast-forward
+  # only; a genuine divergence needs a human, not an automatic reset.
+  if git remote get-url origin >/dev/null 2>&1; then
+    if git fetch origin main 2>/dev/null; then
+      if git merge-base --is-ancestor HEAD origin/main; then
+        git checkout -B main origin/main
+      elif ! git merge-base --is-ancestor origin/main HEAD; then
+        echo "WARNING: local main and origin/main have diverged — resolve manually" >&2
+      fi
+    else
+      echo "WARNING: could not fetch origin/main; cycling on local state" >&2
+    fi
+  fi
+
   claude -p "$(cat CYCLE.md)" \
     --allowedTools "Read" "Glob" "Grep" "WebSearch" "WebFetch" \
       "Edit" "Write" \

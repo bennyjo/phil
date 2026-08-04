@@ -65,7 +65,9 @@ set this look for ~2026-08-04; it is now due. The grading of $10 of exposure
 **Proposed change:** human look at the UMA proposal/dispute history for both
 markets; paste findings into journal/operator-notes.md.
 
-**Status:** open (raised by deep-retro 2026-08-04)
+**Status:** actioned (operator, 2026-08-04 — findings in operator-notes.md:
+Iran-Gulf resolved No via normal UMA flow and is settled; ceasefire has NO
+UMA proposal at all, contested ~50/50, unbounded tail)
 
 ---
 
@@ -78,7 +80,8 @@ sequence.
 **Proposed change:** `git fetch origin main && git checkout -B main
 origin/main` at cycle start in loop.sh.
 
-**Status:** open (carried from DEEP-2026-08-03 e.2)
+**Status:** actioned (operator, 2026-08-04 — fetch + fast-forward-only sync
+at cycle start; divergence warns instead of auto-resetting)
 
 ---
 
@@ -93,5 +96,8 @@ nowhere in score output, per the operator's own 2026-08-03 note.
 core/score.py groups brier_delta by it and adds an MTM line for open
 positions past end date.
 
-**Status:** open (carried from DEEP-2026-08-03 e.4, matches operator note
-2026-08-03)
+**Status:** actioned (operator, 2026-08-04 — ledger.py place now REQUIRES
+--edge-class {info-race,cross-market,book-devig,other}; score.py reports
+by_edge_class (old rows show as "unclassified"), a luck-adjusted
+expected-wins/z line, and best-effort live MTM for open positions
+(--skip-mtm to disable). CYCLE.md bet template updated)

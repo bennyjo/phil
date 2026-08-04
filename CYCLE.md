@@ -62,8 +62,11 @@ get causes fixed.
 6. **Bet**: for each candidate where edge ≥ `risk.json` min_edge:
    `python3 core/ledger.py place --market-id <id> --outcome "<name>" \
      --est-prob <p> --stake <risk.json stake> --category <cat> \
+     --edge-class <info-race|cross-market|book-devig|other> \
      --rationale "<evidence, benchmark, why the market is wrong>" \
      --strategy-rev $(git rev-parse --short HEAD)`
+   `--edge-class` is the playbook edge class the bet claims — score.py now
+   splits brier_delta by it, so classify honestly, not aspirationally.
    Respect rejections — they are protected-cap enforcement, not errors to fix.
 7. **Log**: append one line to `journal/cycles.log`:
    `<UTC ISO> cycle done: settled N, placed M, cash $X` (from ledger status).
