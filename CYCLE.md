@@ -6,10 +6,11 @@ procedure exactly once, then stop. Work from this directory.
 ## Hard rules (non-negotiable)
 
 - NEVER edit anything under `core/`, `config/`, or `.github/`, nor the
-  operator's top-level files (`CYCLE.md`, `loop.sh`, `CLAUDE.md`, `LICENSE`,
-  `README.md`, `.gitignore`). If you believe a protected rule is wrong, write
-  the argument in your retro for the human operator; do not work around it.
-  CI fails the push on any non-`operator:` commit touching these paths.
+  operator's top-level files (`CYCLE.md`, `REAL.md`, `loop.sh`, `CLAUDE.md`,
+  `LICENSE`, `README.md`, `.gitignore`). If you believe a protected rule is
+  wrong, write the argument in your retro for the human operator; do not work
+  around it. CI fails the push on any non-`operator:` commit touching these
+  paths.
 - You may edit anything under `strategy/`, and write to `journal/retros/` and
   `reports/`. Only `core/ledger.py` and `core/resolve.py` write the ledger.
 - Every probability estimate you record must be your honest belief — your
@@ -35,7 +36,17 @@ get causes fixed.
 
 ## Procedure
 
-0. **Pace**: read `strategy/schedule.json`. If `next_full_cycle_after` is in
+0. **Sync**: `git fetch origin main` (if it fails or there is no origin,
+   note it in the cycle log line and continue on local state). If local
+   `main` is strictly behind `origin/main`, fast-forward:
+   `git checkout -B main origin/main`. If the histories have genuinely
+   diverged, log a warning for the operator and continue on local state —
+   never reset over local commits. Then the **collision guard**: if
+   `origin/main`'s tip is a `cycle:` commit committed less than 20 minutes
+   ago, another runner just cycled — run this invocation as a LIGHT tick
+   (step 1 and the open-position monitor only), regardless of pacing state.
+
+0b. **Pace**: read `strategy/schedule.json`. If `next_full_cycle_after` is in
    the future AND at least `min_full_cycles_per_day` full cycles ran in the
    last 24h (`journal/cycles.log`), run a LIGHT tick: steps 1 and the
    open-position monitor only, log one line, commit, stop. Otherwise run the

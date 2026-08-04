@@ -11,5 +11,12 @@
   "min_minutes_to_resolution": 20,
   "max_entry_price": 0.95,
   "min_entry_price": 0.02,
-  "real_trading_enabled": false
+  "real_trading_enabled": true,
+  "real": {
+    "_comment": "Caps for real execution via Pearl Connect (laptop only). Hard ceilings live in core/validate.py; raising them is a protected-core edit by design.",
+    "max_stake_usd": 1.0,
+    "max_open_positions": 10,
+    "daily_stake_cap_usd": 5.0,
+    "allowed_edge_classes": ["cross-market", "info-race"]
+  }
 }

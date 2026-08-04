@@ -24,13 +24,23 @@ The strategy's git log is the product: every commit is a lesson the agent paid
 for (in paper) — and the honest metric is `brier_delta` (is the agent's
 probability a better forecast than the market's own price?), not just P&L.
 
-## Why simulation first
+## Two loops: paper learns 24/7, real money follows the evidence
 
-Hundreds of feedback loops across the whole market universe cost nothing and
-answer the only question that matters before real money: *in which market
-categories does fast AI research actually beat the price?* Real-funds trading
-(via Pearl Connect's wallet on Polygon) is gated on that evidence AND a human
-flipping `real_trading_enabled` — the agent cannot.
+The learning engine is paper: an always-on cloud loop cycles hourly across
+the whole market universe, because hundreds of simulated feedback loops cost
+nothing and answer the question that matters: *in which market categories
+does fast AI research actually beat the price?*
+
+Real execution rides on top, deliberately small: when the operator's machine
+is on and Pearl Connect's local signer is healthy (`./loop.sh --real`),
+paper bets in edge classes with positive settled evidence get a **$1 real
+twin** on Polymarket (Polygon) — placed through `core/real.py`, the only
+code that touches funds, against hard caps in `config/protected.json`
+(per-bet, per-day, open-position). The Safe holds ~$25; the agent never
+holds keys; every signature goes through Pearl Connect's audited local
+choke point. Real fills feed back into the journal so retros can measure
+what paper can't: actual fill quality versus the simulated
+cross-the-spread model.
 
 [Pearl Connect](https://github.com/valory-xyz/connect) is Pearl's BYOA
 signing service: it lets any agent harness — Claude Code included — act as an
@@ -49,8 +59,10 @@ Pearl at [pearl.you/connect](https://www.pearl.you/connect).
 ## Run
 
 ```bash
-./loop.sh 10 45   # 10 cycles, 45 min apart (headless Claude Code)
-python3 core/score.py   # calibration & P&L report any time
+./loop.sh 10 45          # 10 paper cycles, 45 min apart (headless Claude Code)
+./loop.sh 1 45 --real    # one cycle with $1 real twins via Pearl Connect
+python3 core/score.py    # calibration & P&L report any time
+python3 core/real.py doctor   # is the real-execution path ready?
 ```
 
 Requires [Claude Code](https://claude.com/claude-code) (`claude` on your

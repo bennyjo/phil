@@ -54,11 +54,35 @@ def check_iso_z(relpath, field, value):
         err(f"{relpath}: {field} is not a YYYY-MM-DDTHH:MM:SSZ timestamp: {value!r}")
 
 
+KNOWN_EDGE_CLASSES = {"info-race", "cross-market", "book-devig", "other"}
+REAL_HARD_CEILINGS = {"max_stake_usd": 2.0, "daily_stake_cap_usd": 10.0,
+                      "max_open_positions": 20}
+
 protected = load_json("config/protected.json")
 if protected:
-    if protected.get("real_trading_enabled") is not False:
-        err("config/protected.json: real_trading_enabled MUST be false "
-            "(flipping it is a deliberate human step, never a side effect)")
+    if protected.get("real_trading_enabled") not in (True, False):
+        err("config/protected.json: real_trading_enabled must be a boolean")
+    if protected.get("real_trading_enabled") is True:
+        real = protected.get("real")
+        if not isinstance(real, dict):
+            err("config/protected.json: real_trading_enabled is true but the "
+                "'real' caps block is missing — real mode without caps is "
+                "never allowed")
+        else:
+            for field, ceiling in REAL_HARD_CEILINGS.items():
+                v = real.get(field)
+                if not isinstance(v, (int, float)) or v <= 0:
+                    err(f"config/protected.json: real.{field} missing or not "
+                        f"a positive number")
+                elif v > ceiling:
+                    err(f"config/protected.json: real.{field} = {v} exceeds "
+                        f"the hard ceiling {ceiling} (raising it requires "
+                        f"editing protected core, deliberately)")
+            classes = real.get("allowed_edge_classes")
+            if not (isinstance(classes, list) and classes
+                    and set(classes) <= KNOWN_EDGE_CLASSES):
+                err("config/protected.json: real.allowed_edge_classes must be "
+                    f"a non-empty subset of {sorted(KNOWN_EDGE_CLASSES)}")
     for field in ("sim_bankroll_usd", "max_stake_usd", "max_open_positions",
                   "min_minutes_to_resolution", "max_entry_price", "min_entry_price"):
         if not isinstance(protected.get(field), (int, float)):
@@ -114,6 +138,22 @@ if ledger_path.exists() and protected:
                 f"[{protected['min_entry_price']}, {protected['max_entry_price']}]")
         if not 0 < row["est_prob"] <= 1:
             err(f"ledger.jsonl:{lineno}: est_prob {row['est_prob']} outside (0, 1]")
+
+real_ledger_path = ROOT / "journal" / "real-ledger.jsonl"
+if real_ledger_path.exists() and protected and isinstance(protected.get("real"), dict):
+    real_cap = protected["real"].get("max_stake_usd")
+    for lineno, line in enumerate(real_ledger_path.read_text().splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError as e:
+            err(f"real-ledger.jsonl:{lineno}: invalid JSON — {e}")
+            continue
+        if isinstance(real_cap, (int, float)) and \
+                isinstance(row.get("usd"), (int, float)) and row["usd"] > real_cap:
+            err(f"real-ledger.jsonl:{lineno}: real stake {row['usd']} exceeds "
+                f"real.max_stake_usd {real_cap}")
 
 for pyfile in sorted((ROOT / "core").glob("*.py")) + \
         sorted((ROOT / "strategy").rglob("*.py")):

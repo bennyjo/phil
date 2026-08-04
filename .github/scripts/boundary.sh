@@ -10,7 +10,7 @@ set -euo pipefail
 BEFORE="${1:?usage: boundary.sh <before-sha> <after-sha>}"
 AFTER="${2:?usage: boundary.sh <before-sha> <after-sha>}"
 
-PROTECTED='^(core/|config/|\.github/|CYCLE\.md|loop\.sh|CLAUDE\.md|LICENSE|README\.md|\.gitignore)'
+PROTECTED='^(core/|config/|\.github/|CYCLE\.md|REAL\.md|loop\.sh|CLAUDE\.md|LICENSE|README\.md|\.gitignore)'
 
 if [[ "$BEFORE" =~ ^0+$ ]]; then
   # Branch creation: no meaningful range; check only the head commit.
