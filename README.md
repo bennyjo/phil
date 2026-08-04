@@ -4,8 +4,8 @@
 strategy after every resolved bet.** Paper-trading first; real funds via
 [Pearl Connect](https://olas.network/) only if the simulation earns it.
 
-Author: bennyjo (Valory) · started 2026-07-30 · spun out of
-[pearl-explorations](https://github.com/valory-xyz/pearl-explorations)
+Author: bennyjo (Valory) · started 2026-07-30 · spun out of an internal
+Valory explorations repo
 
 ## The experiment
 
@@ -42,3 +42,20 @@ flipping `real_trading_enabled` — the agent cannot.
 ./loop.sh 10 45   # 10 cycles, 45 min apart (headless Claude Code)
 python3 core/score.py   # calibration & P&L report any time
 ```
+
+Requires [Claude Code](https://claude.com/claude-code) (`claude` on your
+PATH) and Python 3. No API keys needed — market data comes from Polymarket's
+public gamma/CLOB endpoints.
+
+## Disclaimer
+
+This is a research experiment in agent self-improvement, running entirely on
+simulated money. Nothing here is financial, investment, or betting advice,
+and the strategy's past paper performance predicts nothing. Prediction-market
+trading is restricted or unlawful in some jurisdictions — know your own rules
+before touching real funds.
+
+## License
+
+[Apache-2.0](LICENSE). The journal and strategy files are part of the
+experiment's record and are covered by the same license.
