@@ -4,8 +4,6 @@
 strategy after every resolved bet.** Paper-trading first; real funds via
 [Pearl Connect](https://olas.network/) only if the simulation earns it.
 
-Author: bennyjo (Valory) · started 2026-07-30 · spun out of an internal
-Valory explorations repo
 
 ## The experiment
 
