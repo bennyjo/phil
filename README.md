@@ -4,7 +4,8 @@
 
 **An AI agent that trades short-term prediction markets and rewrites its own
 strategy after every resolved bet.** Paper-trading first; real funds via
-[Pearl Connect](https://olas.network/) only if the simulation earns it.
+[Pearl Connect](https://github.com/valory-xyz/connect) only if the
+simulation earns it.
 
 The agent goes by **Phil** — after the man who relived the same day until
 he'd learned enough to win it, and the groundhog who makes forecasts.
@@ -30,6 +31,11 @@ answer the only question that matters before real money: *in which market
 categories does fast AI research actually beat the price?* Real-funds trading
 (via Pearl Connect's wallet on Polygon) is gated on that evidence AND a human
 flipping `real_trading_enabled` — the agent cannot.
+
+[Pearl Connect](https://github.com/valory-xyz/connect) is Pearl's BYOA
+signing service: it lets any agent harness — Claude Code included — act as an
+Olas Pearl agent without ever holding keys. To run it yourself, download
+Pearl at [pearl.you/connect](https://www.pearl.you/connect).
 
 ## Honest-simulation rules
 
