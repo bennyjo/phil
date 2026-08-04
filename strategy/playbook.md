@@ -112,11 +112,39 @@ work from the cloud runner: forebet/oddsportal/oddspedia 403 datacenter IPs
 "recurring egress block" diagnosis in cycle logs was wrong). WebSearch results
 do work; use them.
 
+**Re-research cooldown + pacing (DEEP-2026-08-04).** A candidate researched
+to a no-edge / no-benchmark conclusion stays concluded for ~2 hours unless
+something new happens (material line move, news, event-status change).
+Evidence: the 2026-08-04 01:15Z and 02:15Z cycles re-derived identical
+no-edge conclusions on the same UCL qualifiers 55 minutes apart, both
+logging "no new information"; 03:20Z partially repeated them again. When
+the entire window is in that state — every candidate either concluded
+within the cooldown or gated on an unreachable benchmark — set
+`strategy/schedule.json` `next_full_cycle_after` to the next event
+boundary (kickoff, report time, new candidates entering the scan window)
+instead of running another full cycle. Deferral spends no capital; its
+only cost is a delayed info-race discovery, so keep deferrals ≤3h and
+never past a known event start. Settling and open-position monitoring
+happen every tick regardless (schedule.json contract).
+
 **Prefer mechanically-resolving markets.** Consistent with the fact-finality
 rule, markets that resolve off an official print, close, or scoreboard
 (earnings, macro releases, match results) beat markets needing a judgment call
 about a source or a rules reading — the ai-leaderboard and Iran pairs cost $20
 between them on resolution-process risk, and both are still unresolved or lost.
+
+**Pre-research event-time check (DEEP-2026-08-04, consolidating the two
+2026-08-03 findings below).** For any market tied to a scheduled event
+(match, series, scheduled report/print): pin down the actual start time —
+from the market description or one targeted search — BEFORE deeper
+research. `end_date`, `outcome_prices`, and scan mids are all unreliable
+about whether the event has started. If the event has started, or its
+status cannot be verified, skip. Evidence: the tennis and MLB findings
+below, plus 2026-08-04 04:16Z — Draper and Tsitsipas matches showed
+plausible paper edges against real bookmaker lines, but every live-score
+source (Sofascore, Flashscore, ESPN, TennisExplorer, Olympics.com) 403'd
+and match status could not be pinned down; both correctly skipped. An
+unverifiable event is not a discount on the edge, it is a veto.
 
 **`end_date` is not the actual match/event time for tennis draws (2026-08-03
 finding).** Six National Bank Open / Canadian Open / DC Open candidates in
