@@ -96,8 +96,9 @@ nowhere in score output, per the operator's own 2026-08-03 note.
 core/score.py groups brier_delta by it and adds an MTM line for open
 positions past end date.
 
-**Status:** actioned (operator, 2026-08-04 — ledger.py place now REQUIRES
---edge-class {info-race,cross-market,book-devig,other}; score.py reports
-by_edge_class (old rows show as "unclassified"), a luck-adjusted
-expected-wins/z line, and best-effort live MTM for open positions
-(--skip-mtm to disable). CYCLE.md bet template updated)
+**Status:** open (deferred by operator, 2026-08-04 — implemented briefly then
+reverted same day; operator will revisit if the deep retro raises it again.
+One finding from the trial run worth keeping: a luck-adjusted expected-wins
+check over the 17 settled bets gave z=-2.61 — ~10 expected wins under the
+agent's own estimates vs 5 actual, i.e. estimates look systematically
+overconfident, not unlucky)
