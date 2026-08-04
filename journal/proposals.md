@@ -48,11 +48,19 @@ pinned. Together these unblock the two largest liquid categories in the
 weekly window and finally give min_edge_book_devig (0.07) real tests.
 
 **Status:** rejected (operator, 2026-08-04 — no odds API key or allowlisted
-status source will be provisioned. Stop carrying this item. Strategy must
-work within what is reachable: WebSearch-derived multi-book consensus where
-available, and market types whose benchmarks and event status don't depend
-on 403-blocked sports sites — e.g. scheduled economic/corporate releases,
-countable-metric markets, and mechanically-resolving events)
+status source will be provisioned. Stop carrying this item day-to-day.
+Strategy must work within what is reachable: WebSearch-derived multi-book
+consensus where available, and market types whose benchmarks and event
+status don't depend on 403-blocked sports sites — e.g. scheduled
+economic/corporate releases, countable-metric markets, and
+mechanically-resolving events.
+**Re-open condition:** this rejection is contingent, not permanent. If deep
+retros find that benchmark/status unreachability is materially blocking the
+experiment despite the strategy pivot — e.g. placement rate stays well below
+Phase-1 sample needs for ~a week with cycle logs attributing the misses to
+unreachable benchmarks rather than thresholds or judgment — raise it as a
+NEW proposal citing that evidence, and quantify what fraction of skipped
+candidates the key would have unblocked)
 
 ---
 
