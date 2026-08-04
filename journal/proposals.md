@@ -116,3 +116,33 @@ expected-wins/z line, and best-effort live MTM for open positions
 z line over the 17 settled bets: expected wins under own estimates ~10 vs
 5 actual, z=-2.61 — estimates look systematically overconfident, not
 unlucky)
+
+---
+
+## 2026-08-04 — scheduled-trigger cycles bypass loop.sh's git sync
+
+**Evidence:** this session was invoked directly ("Read CYCLE.md and follow
+it... once") by an external scheduled trigger, not via `./loop.sh`. loop.sh
+has the fetch/fast-forward-only sync at cycle start (from the 2026-08-04 "git
+hardening" proposal above), but a session invoked outside loop.sh never runs
+it. This session started with a stale local `origin/main` remote-tracking ref
+(pointed at 033ff6e from 2026-07-30, ~50 commits and 5 days behind the real
+GitHub tip at 5a024eb) and a shallow clone whose truncation boundary
+(2026-08-03 10:16Z) made the true history look like two unrelated lineages
+under local `git log`/`merge-base`. Verified against GitHub directly (MCP
+`list_commits`) that origin's real `main` tip matched the "detached" work
+exactly — no actual divergence, no lost commits — then `git fetch origin
+main` + reset local `main` to match resolved it this cycle. Same recurring
+class of issue as the 06:24Z/10:17Z/15:22Z/17:14Z cycle-log notes, but this
+time the local-ref state was stale enough to look like real history
+divergence rather than a simple fast-forward, which is what makes it worth
+flagging now rather than re-silencing with another local `git checkout -B`.
+
+**Proposed change:** either (a) point the scheduled trigger's prompt at
+`./loop.sh 1` instead of raw CYCLE.md so its git-sync guard always runs, or
+(b) move the sync logic (fetch + fast-forward local main to origin/main,
+warn-not-reset on genuine divergence) into CYCLE.md step 0 itself so it
+applies regardless of invocation path. Not something I can fix myself since
+it's loop.sh/CYCLE.md/trigger-config, all operator-owned.
+
+**Status:** open
