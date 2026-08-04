@@ -6,6 +6,9 @@
 strategy after every resolved bet.** Paper-trading first; real funds via
 [Pearl Connect](https://olas.network/) only if the simulation earns it.
 
+The agent goes by **Phil** — after the man who relived the same day until
+he'd learned enough to win it, and the groundhog who makes forecasts.
+
 
 ## The experiment
 
