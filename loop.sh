@@ -32,11 +32,12 @@ for i in $(seq 1 "$CYCLES"); do
     --permission-mode acceptEdits || echo "cycle $i failed; continuing"
 
   # Enforce the protected boundary: revert any agent edits to core/config.
-  if ! git diff --quiet HEAD -- core/ config/protected.json CYCLE.md loop.sh CLAUDE.md; then
+  PROTECTED_PATHS=(core/ config/ .github/ CYCLE.md loop.sh CLAUDE.md LICENSE README.md .gitignore)
+  if ! git diff --quiet HEAD -- "${PROTECTED_PATHS[@]}"; then
     echo "WARNING: agent touched protected files — reverting" >&2
-    git checkout -- core/ config/protected.json CYCLE.md loop.sh CLAUDE.md
+    git checkout -- "${PROTECTED_PATHS[@]}"
   fi
-  PROTECTED_IN_LAST_COMMITS=$(git log --oneline -5 --name-only | grep -cE '^(core/|config/protected|CYCLE\.md|loop\.sh|CLAUDE\.md)' || true)
+  PROTECTED_IN_LAST_COMMITS=$(git log --oneline -5 --name-only | grep -cE '^(core/|config/|\.github/|CYCLE\.md|loop\.sh|CLAUDE\.md|LICENSE|README\.md|\.gitignore)' || true)
   if [ "$PROTECTED_IN_LAST_COMMITS" -gt 0 ]; then
     echo "WARNING: protected files appear in recent commits — review manually" >&2
   fi

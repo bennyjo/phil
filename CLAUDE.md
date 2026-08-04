@@ -8,7 +8,14 @@ retrospective → edit its own strategy → research → place simulated bets.
 
 - `core/` + `config/protected.json` — PROTECTED simulation engine (honest
   CLOB-ask fills, bankroll caps, official resolutions). The agent must never
-  edit these; `loop.sh` reverts any such change.
+  edit these; `loop.sh` reverts any such change. Also operator-owned: the
+  top-level docs, `LICENSE`, and `.github/` (CI).
+- CI (`.github/workflows/ci.yml`) runs on every push: `core/validate.py`
+  integrity tripwires (real_trading_enabled stays false, JSONs parse, ledger
+  rows respect the protected caps, Python compiles), a bug-class-only ruff
+  pass, and a boundary guard — commits not prefixed `operator:` are agent
+  commits and must not touch operator-owned paths. Human commits to protected
+  files MUST use the `operator:` message prefix or CI fails the push.
 - `strategy/` — the agent's own playbook, risk policy, and tools. This is what
   self-improves. Its git history IS the experiment's product.
 - `journal/` — ledger (JSONL, written only by core), retros, cycle log.

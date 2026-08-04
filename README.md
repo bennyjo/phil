@@ -1,5 +1,7 @@
 # self-improving-trader
 
+[![CI](https://github.com/bennyjo/self-improving-trader/actions/workflows/ci.yml/badge.svg)](https://github.com/bennyjo/self-improving-trader/actions/workflows/ci.yml)
+
 **An AI agent that trades short-term prediction markets and rewrites its own
 strategy after every resolved bet.** Paper-trading first; real funds via
 [Pearl Connect](https://olas.network/) only if the simulation earns it.
@@ -31,7 +33,8 @@ flipping `real_trading_enabled` — the agent cannot.
 - Paper fills cross the live CLOB spread (buy at best ask), like a real taker.
 - Entry prices are recorded at bet time; resolutions are Polymarket's own.
 - The agent cannot edit the engine (`core/`, `config/protected.json`);
-  `loop.sh` reverts any attempt. Caps: $10/bet max, 60 open positions,
+  `loop.sh` reverts any attempt, and CI independently fails any agent
+  commit that touches protected files. Caps: $10/bet max, 60 open positions,
   no market resolving <20 min out, no entries outside 2¢–95¢.
 
 ## Run

@@ -5,9 +5,11 @@ procedure exactly once, then stop. Work from this directory.
 
 ## Hard rules (non-negotiable)
 
-- NEVER edit anything under `core/` or `config/protected.json`. If you believe
-  a protected rule is wrong, write the argument in your retro for the human
-  operator; do not work around it.
+- NEVER edit anything under `core/`, `config/`, or `.github/`, nor the
+  operator's top-level files (`CYCLE.md`, `loop.sh`, `CLAUDE.md`, `LICENSE`,
+  `README.md`, `.gitignore`). If you believe a protected rule is wrong, write
+  the argument in your retro for the human operator; do not work around it.
+  CI fails the push on any non-`operator:` commit touching these paths.
 - You may edit anything under `strategy/`, and write to `journal/retros/` and
   `reports/`. Only `core/ledger.py` and `core/resolve.py` write the ledger.
 - Every probability estimate you record must be your honest belief — your

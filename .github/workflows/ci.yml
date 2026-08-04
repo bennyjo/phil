@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  integrity:
+    name: Integrity tripwires
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Config, caps, ledger and Python sources are sane
+        run: python3 core/validate.py
+      - name: Score report parses the real ledger (offline)
+        run: python3 core/score.py --json --skip-mtm > /dev/null
+      - name: Lint — bug-class rules only (syntax errors, undefined names)
+        run: |
+          pip install --quiet ruff
+          ruff check --select E9,F core strategy
+
+  boundary:
+    name: Agent/operator boundary
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: No agent commit touches operator-owned files
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.event.after }}
+        run: bash .github/scripts/boundary.sh "$BEFORE" "$AFTER"
