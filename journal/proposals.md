@@ -47,8 +47,12 @@ allowlisted/keyed live-score or schedule source so match status can be
 pinned. Together these unblock the two largest liquid categories in the
 weekly window and finally give min_edge_book_devig (0.07) real tests.
 
-**Status:** open (raised by deep-retro 2026-08-04; carried from
-DEEP-2026-08-01/02/03 e-items with widened scope)
+**Status:** rejected (operator, 2026-08-04 — no odds API key or allowlisted
+status source will be provisioned. Stop carrying this item. Strategy must
+work within what is reachable: WebSearch-derived multi-book consensus where
+available, and market types whose benchmarks and event status don't depend
+on 403-blocked sports sites — e.g. scheduled economic/corporate releases,
+countable-metric markets, and mechanically-resolving events)
 
 ---
 
@@ -96,9 +100,11 @@ nowhere in score output, per the operator's own 2026-08-03 note.
 core/score.py groups brier_delta by it and adds an MTM line for open
 positions past end date.
 
-**Status:** open (deferred by operator, 2026-08-04 — implemented briefly then
-reverted same day; operator will revisit if the deep retro raises it again.
-One finding from the trial run worth keeping: a luck-adjusted expected-wins
-check over the 17 settled bets gave z=-2.61 — ~10 expected wins under the
-agent's own estimates vs 5 actual, i.e. estimates look systematically
-overconfident, not unlucky)
+**Status:** actioned (operator, 2026-08-04 — ledger.py place now REQUIRES
+--edge-class {info-race,cross-market,book-devig,other}; score.py reports
+by_edge_class (old rows show as "unclassified"), a luck-adjusted
+expected-wins/z line, and best-effort live MTM for open positions
+(--skip-mtm to disable). CYCLE.md bet template updated. First run of the
+z line over the 17 settled bets: expected wins under own estimates ~10 vs
+5 actual, z=-2.61 — estimates look systematically overconfident, not
+unlucky)
