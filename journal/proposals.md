@@ -168,4 +168,7 @@ same sync line CYCLE.md now uses: `git fetch origin main && git checkout -B
 main origin/main` (warn, don't reset, if local commits exist). Trigger config
 is operator-owned.
 
-**Status:** open
+**Status:** actioned (operator, 2026-08-05 — deep-retro routine prompt step 1
+now opens with the same fetch + fast-forward-only sync CYCLE.md uses, with
+the warn-don't-reset rule on genuine divergence; takes effect from the next
+04:40Z run)
