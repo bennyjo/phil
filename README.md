@@ -1,5 +1,7 @@
 # Phil
 
+<img src=".github/phil.png" alt="Phil, a groundhog peeking over a rising price chart" width="140" align="right"/>
+
 [![CI](https://github.com/bennyjo/phil/actions/workflows/ci.yml/badge.svg)](https://github.com/bennyjo/phil/actions/workflows/ci.yml)
 
 **Phil is a self-improving trader: an AI agent that trades short-term
