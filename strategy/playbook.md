@@ -54,18 +54,22 @@ Rank every candidate by WHY the market should be wrong, strongest first:
    across MLB/WNBA/soccer, every tight PM book matched the devigged line
    within 1-2 cents (cycle logs 17:11Z–02:12Z).
 
-Info-race is on watch (DEEP-2026-08-02, marks updated DEEP-2026-08-03):
-all three open structural positions are marked against us — the Iran pair
-(`b21e42c123a1` est 0.90, mid ~0.045 vs entry 0.15; `d2dd24206542` est
-0.98, No mid ~0.395 vs entry 0.92, worsening) unresolved 3+ days past end
-date, and `84ec821167d5` (No mid ~0.02 vs entry 0.16, see fact-finality
-rule above; its pre-registered grading is in DEEP-2026-08-03 §a). Pre-registered rule-candidate,
-to be enacted ONLY if the pair settles as losses: "multi-source verified"
-tightens to require at least one non-party primary source (wire service
-Reuters/AP/AFP, host-government statement, or the resolver's own named
-source) — a consensus composed of state media of the parties to the event
-(PressTV, Mehr, TASS, Xinhua on the Iran claims) does not qualify on its
-own. If either leg wins, this stays a caution, not a rule.
+Info-race status (updated DEEP-2026-08-05): the class is **2W/3L by
+decision** — wins on mechanical/final facts (`2dc417ed68f6` official
+print, `1e8dec1078ba` cross-market), losses on provisional or
+interpretation-dependent ones (ai-leaderboard pair as one decision,
+`84ec821167d5`, and now `b21e42c123a1`, settled LOST -$5 on 2026-08-04 via
+a normal UMA flow: est 0.90 on state-media-sourced claims, resolver waited
+out the market's 3-day conflicting-reports clause and resolved No — graded
+reasoning-wrong per the DEEP-2026-08-02 pre-registration). One leg still
+open: `d2dd24206542` (ceasefire No @ 0.92), 5+ days past end date with NO
+UMA proposal ever submitted. Pre-registered rule-candidate, to be enacted
+ONLY if BOTH pair legs settle as losses (one has; if d2dd loses too):
+"multi-source verified" tightens to require at least one non-party primary
+source (wire service Reuters/AP/AFP, host-government statement, or the
+resolver's own named source) — a consensus composed of state media of the
+parties to the event (PressTV, Mehr, TASS, Xinhua on the Iran claims) does
+not qualify on its own. If d2dd wins, this stays a caution, not a rule.
 
 NOT an edge class — **resolver-interpretation reads** (graded
 DEEP-2026-08-01): "I checked the exact resolution source and it says X"
@@ -134,6 +138,20 @@ placed, all candidates failed coverage or showed no edge):**
   with odds of 1.47, which imply 68%) — a sign the summarizer conflated
   numbers from different parts of the source page. Don't average
   contradictory numbers into an estimate; treat as no-benchmark and skip.
+- **WebSearch's summarizer can echo an assumption stated in the query back
+  as if it were a found fact (2026-08-05 00:17Z).** Asked a leading
+  question about Padres/Diamondbacks total pricing, the search summary
+  affirmed "-110 for the 8.5 total... align with standard sportsbook
+  pricing" with no actual sportsbook number anywhere in the fetched text.
+  An odds claim only counts as a benchmark if it is tied to a quoted
+  source figure naming the book; phrase odds queries neutrally (no
+  candidate number in the query).
+
+**Durable lessons never live only in `schedule.json` reason fields
+(DEEP-2026-08-05).** The reason field is overwritten every full cycle; the
+leading-question trap above was originally documented only there and
+survived solely in git history. Any instrument finding or method trap
+worth keeping goes in this playbook in the same cycle that finds it.
 
 **Re-research cooldown + pacing (DEEP-2026-08-04).** A candidate researched
 to a no-edge / no-benchmark conclusion stays concluded for ~2 hours unless
@@ -154,7 +172,24 @@ happen every tick regardless (schedule.json contract).
 rule, markets that resolve off an official print, close, or scoreboard
 (earnings, macro releases, match results) beat markets needing a judgment call
 about a source or a rules reading — the ai-leaderboard and Iran pairs cost $20
-between them on resolution-process risk, and both are still unresolved or lost.
+between them on resolution-process risk ($15 now settled-lost, $5 still stuck).
+
+**Scheduled-release triage rule (DEEP-2026-08-05).** Every full cycle:
+identify the scheduled-release candidates in the pool (earnings-beat,
+macro/inflation/central-bank prints, countable-metric deadlines), NAME
+them in the cycle log, and disposition each (research now / defer to a
+stated cycle nearer the print / skip with reason). Evidence: a July
+inflation bracket cluster (annual 3.3%, annual 3.4%, monthly ≥0.1%, all
+end 2026-08-12) sat in the 400+-candidate pool while ~37 consecutive
+cycles spent their research budget on sports/esports whose benchmarks are
+known-blocked; the operator's 2026-08-04 pivot directive names exactly
+this category. These markets have reachable, mechanical benchmarks
+(official statistical releases, analyst consensus) — read the description
+first to pin the exact source and threshold, and check book depth/spread
+before treating the mid as real. Current priority: the July inflation
+cluster — bracket legs are mutually exclusive siblings, so cross-market
+consistency (probabilities summing >1 across brackets) is checkable
+arithmetic, our strongest settled edge class (`1e8dec1078ba`).
 
 **Pre-research event-time check (DEEP-2026-08-04, consolidating the two
 2026-08-03 findings below).** For any market tied to a scheduled event
@@ -208,6 +243,18 @@ Prefer, in order:
    company's historical beat rate (most large caps beat 75–85% of quarters),
    recent guidance, peer results this season. Suspect mispricing when the
    price is far from the historical beat base rate without news to justify it.
+   Sharpened from the 2026-08-04/05 CRCL and OXY passes (3 cycles, no bets):
+   - **GAAP vs non-GAAP is a mandatory first check.** The market's fixed
+     threshold names a basis; consensus numbers usually don't. CRCL's
+     threshold was GAAP $0.16 while every findable consensus ($0.165-$0.19)
+     was non-GAAP — applying one to the other is a methodology error, not
+     an edge (04:16Z catch, correct skip).
+   - **"Consensus clears the threshold" is not an edge when PM already
+     prices it ≥~0.80** (CRCL 0.845, OXY 0.91): the market has the same
+     consensus. The tradeable shapes are (i) PM price *contradicting* the
+     consensus direction, or (ii) a threshold sitting far outside the
+     analyst range while PM lags near base rates. Absent those, log
+     "market confirms, no edge" once and let the cooldown hold it.
 2. **Soccer daily match markets** — resolve at final whistle. Research: recent
    form, injuries/rotation news, home/away splits, league table stakes,
    odds at conventional bookmakers (the sharpest available benchmark — if
@@ -246,6 +293,16 @@ seven book-devig losses from 1-cent books). A bet may exceed `max_spread`
 only if ALL hold: (1) info-race class, fact multi-source verified;
 (2) edge at the ASK ≥ `risk.json min_edge_wide_book` (0.30); (3) the cycle
 log explicitly states the bid/ask/spread and invokes this exception.
+
+**Tightened (DEEP-2026-08-05, enacting the b21-loss pre-registration from
+DEEP-2026-08-02):** condition (1) now additionally requires the resolving
+fact to be FINAL/MECHANICAL (per the fact-finality requirement) and
+confirmed by at least one non-party primary source. Evidence:
+`b21e42c123a1` — the bet whose profile partly calibrated this exception —
+settled lost; its "multi-source verified" fact was state-media consensus
+on a contested claim, and the resolver read it the other way. A wide book
+plus a contested fact is the market pricing resolution risk, not
+inattention.
 
 Violation on record: `b21e42c123a1` (2026-07-31 23:15Z) was placed at
 spread 0.13 with no mention of the spread in the cycle log — a silent skip

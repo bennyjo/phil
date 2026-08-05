@@ -145,4 +145,27 @@ warn-not-reset on genuine divergence) into CYCLE.md step 0 itself so it
 applies regardless of invocation path. Not something I can fix myself since
 it's loop.sh/CYCLE.md/trigger-config, all operator-owned.
 
+**Status:** actioned (operator, 2026-08-04 — commit `6676f9d` added CYCLE.md
+step 0 "Sync" with fetch + `checkout -B main origin/main`, commit message
+explicitly cites the scheduled-trigger stale-clone class; confirmed by
+deep-retro 2026-08-05)
+
+---
+
+## 2026-08-05 — deep-retro sessions still start on stale clones (residual of the item above)
+
+**Evidence:** the CYCLE.md Sync step covers hourly cycle sessions, but the
+daily deep-retro trigger follows its own prompt, not CYCLE.md. Today's
+deep-retro session started detached at the correct tip but with local `main`
+still pointing at pre-handover `033ff6e` (10 commits of dead history, no
+common ancestor with origin/main under the shallow clone), and a plain
+`git checkout main` + `git pull` dead-ends on "divergent branches". Recovered
+in-session via `git reset --hard origin/main`, same as the hourly agents used
+to do by hand.
+
+**Proposed change:** prepend the deep-retro trigger prompt's step 1 with the
+same sync line CYCLE.md now uses: `git fetch origin main && git checkout -B
+main origin/main` (warn, don't reset, if local commits exist). Trigger config
+is operator-owned.
+
 **Status:** open
