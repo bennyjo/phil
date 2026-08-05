@@ -250,6 +250,54 @@ placed, all candidates failed coverage or showed no edge):**
   source figure naming the book; phrase odds queries neutrally (no
   candidate number in the query).
 
+**Three more traps found this cycle (2026-08-05 21:16Z — exploration-budget
+weather test + econ re-check + soccer 1X2, zero bets placed):**
+- **Weather: mechanical resolution does not imply a reachable point
+  benchmark.** Exploration-budget test of the operator's own example
+  hypothesis ("weather resolves mechanically; is the coverage there?") on
+  Hong Kong Aug-6 highest-temperature brackets (PM implied distribution
+  peaking ~33°C across the 32-35°C bracket set). Two forecast sources gave
+  materially different numbers for the same nominal date: Hong Kong
+  Observatory's own 9-day forecast (the market's stated resolution source)
+  said 26-31°C (max 31°C), AccuWeather (Sha Tin station, not confirmed as
+  the same station HKO uses for the official reading) said 93°F ≈ 34°C — a
+  3°C spread, wider than the 1°C bracket width the market is priced on, with
+  station identity unconfirmed on top. Resolves the "mechanical resolution"
+  rubric property Yes but "benchmark reachable" No: treat as a
+  contradictory-source skip (existing rule), not an edge — the forecast
+  disagreement is bigger than the thing being priced. Also corrects
+  `discovery.py`'s comment: climate-weather tag 1474 was empty on
+  2026-08-05, but general volume/liquidity queries surface ~79 weather
+  markets independent of that tag (city-temperature brackets, $2-19k
+  liquidity) — tag 1474 being empty does not mean the category is absent
+  from the pool.
+- **WebSearch can surface a PRIOR year's already-released actuals for a
+  still-upcoming release when the query doesn't pin the year tightly and
+  the event name recurs annually.** Searching for the July 2026 US jobs
+  report (due 2026-08-07, not yet released) returned an fxstreet article
+  (URL-dated 2025-08-01) describing that year's July jobs report as already
+  landed (unemployment 4.1%→4.2%, payrolls +73k) — i.e. July 2025 actuals,
+  not a 2026 forecast, surfaced by a query that said "July 2026" but didn't
+  stop the summarizer from matching on "July jobs report" generically.
+  Caught here because the numbers read as settled/past-tense for an event
+  that hasn't happened; a less careful read could log stale-year actuals as
+  current consensus. Cross-check any scheduled-release search result's
+  implied publish date against the event's actual date before using it —
+  don't trust the query's own year framing to have filtered correctly.
+- **Odds-comparison sites report "best odds" shopped per side across
+  different bookmakers, not one book's coherent line — devigging that
+  composite is a version of the cross-book-mixing trap** (first named in
+  schedule.json 2026-08-05 17:19Z re: Fenerbahce/Sturm Graz, now formally
+  in the playbook). Boca Juniors vs Estudiantes 1X2: "best odds" search
+  summary gave Boca 2.15 (one book), draw 3.15, Estudiantes 4.01, but a
+  second passage in the same result gave Boca 2.22 at Betsson and draw 3.05
+  at Betsson — different books' best-per-side numbers stitched together
+  don't represent a single market's true vig or fair prices. Devigging it
+  anyway produced a marginal ~0.06 edge on Boca-No, under min_edge_book_devig
+  (0.07) regardless, but the number shouldn't be trusted even if it had
+  cleared: require a single named book's full multi-way quote (not a
+  "best odds across bookmakers" aggregation) before devigging a 3-way line.
+
 **Durable lessons never live only in `schedule.json` reason fields
 (DEEP-2026-08-05).** The reason field is overwritten every full cycle; the
 leading-question trap above was originally documented only there and
