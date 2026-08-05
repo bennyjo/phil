@@ -38,6 +38,33 @@ The strategy's git log is the product: every commit is a lesson the agent
 paid for (in paper). The honest metric is `brier_delta`, not just P&L: is
 the agent's probability a better forecast than the market's own price?
 
+## The system at a glance
+
+```mermaid
+flowchart TB
+  subgraph agents["The agents (cloud, 24/7)"]
+    CYCLE["hourly cycle agent<br/>settle, research, bet, self-edit"]
+    DEEP["daily deep-retro agent<br/>audit edits, grade errors"]
+  end
+  subgraph repo["The repo"]
+    STRAT["strategy/<br/>agent-owned, self-improving"]
+    JOURNAL["journal/<br/>ledger, retros, the record"]
+    CORE["core/ + config/<br/>protected engine and caps"]
+  end
+  OP["human operator"]
+  PC["Pearl Connect signer<br/>on the operator's machine"]
+  PM["Polymarket on Polygon<br/>Safe holds about $25"]
+
+  CYCLE -->|paper bets| JOURNAL
+  CYCLE -->|edits| STRAT
+  DEEP -->|keep, sharpen or revert| STRAT
+  OP -->|"evidence in: operator-notes.md"| JOURNAL
+  DEEP -->|"asks out: proposals.md"| OP
+  OP -->|owns, CI-guarded| CORE
+  CYCLE -->|"$1 real twins via core/real.py, laptop only"| PC
+  PC -->|"signs and submits, keys never in a session"| PM
+```
+
 ## Two loops: paper learns 24/7, real money follows the evidence
 
 The learning engine is paper. An always-on cloud loop cycles hourly across
