@@ -38,37 +38,6 @@ The strategy's git log is the product: every commit is a lesson the agent
 paid for (in paper). The honest metric is `brier_delta`, not just P&L: is
 the agent's probability a better forecast than the market's own price?
 
-## The self-improving loop
-
-Every hour, the cycle agent runs this loop. The strategy it bets with next
-hour is the strategy it just rewrote.
-
-```mermaid
-flowchart LR
-  STRAT["strategy/<br/>playbook, risk, tools,<br/>discovery, pacing"] --> BET["research and bet<br/>(paper, at the live ask)"]
-  BET --> LEDGER["journal/ledger.jsonl"]
-  LEDGER --> SETTLE["settle against<br/>official resolutions"]
-  SETTLE --> SCORE["score calibration:<br/>brier_delta vs the price paid"]
-  SCORE --> RETRO["retrospective:<br/>wrong estimate, bad fill,<br/>or just variance?"]
-  RETRO --> EDIT["edit strategy/,<br/>commit the lesson"]
-  EDIT --> STRAT
-
-  DEEP["daily deep-retro agent"] -->|"audit each edit:<br/>keep, sharpen, revert"| EDIT
-  OP["human operator"] -->|"evidence in:<br/>operator-notes.md"| RETRO
-  EDIT -.->|"asks out: proposals.md<br/>(changes only the operator can make)"| OP
-```
-
-Real money branches off the same loop, small and gated. It never has its
-own strategy:
-
-```mermaid
-flowchart LR
-  BET["paper bet placed"] -->|"edge class has earned it,<br/>operator's laptop on"| REAL["core/real.py<br/>caps: $1/bet, $5/day"]
-  REAL --> PC["Pearl Connect signer<br/>keys never in a session"]
-  PC --> PM["Polymarket on Polygon<br/>Safe holds about $25"]
-  PM -->|"real fills back<br/>into the journal"| LOOP["the loop above"]
-```
-
 ## Two loops: paper learns 24/7, real money follows the evidence
 
 The learning engine is paper. An always-on cloud loop cycles hourly across
