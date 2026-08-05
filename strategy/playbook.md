@@ -42,6 +42,26 @@ Rank every candidate by WHY the market should be wrong, strongest first:
    beat-record-$357.1M (~84% Yes), but $357.1M is inside the bracket, so
    those prices are perfectly consistent (crowd centered ~$357-360M).
    The claimed inconsistency was an inference error, not a signal.
+   **Sensing (DEEP-2026-08-05, integrating operator-notes.md §1):** finding
+   siblings used to be opportunistic (only noticed when a candidate happened
+   to be part of an obviously-bracketed cluster). `strategy/tools/siblings.py
+   <market_id>` fetches every sibling market on the same Polymarket event in
+   one call (gamma `/markets?id=` exposes an `events[0].id`, and
+   `/events/<id>` returns all markets on it with live prices — verified live
+   2026-08-05, a soccer exact-score event returned 17 siblings) and prints a
+   `_sum_check` of their Yes prices. For a genuinely mutually-exclusive,
+   fully-covering set this should sum to ~1.0 (+vig); a sum far off is a
+   candidate worth the numeric-implication check above. Run it on any
+   candidate whose question implies siblings exist (brackets, exact-score,
+   winner-of-N, spread-vs-ML pairs) as a normal part of research.
+   **Caveat found on first live use:** the test event's 17 sum-checked to
+   4.24, not ~1 — but every individual price sat in a narrow 0.23-0.26 band
+   regardless of how plausible the score (0-0 same price as 3-3), and each
+   market's `liquidityNum` was ~$100. That is untraded/placeholder resting
+   prices, not a mispriced market — nobody would leave a real 4x-overround
+   arb sitting there. **Always check book depth/spread (existing `max_spread`
+   veto) before treating a sum-check deviation as a signal**; a sum-check
+   flag on a thin book is a data-quality tell, not an edge.
 3. **Book-devig arbitration** (weakest): "my devig of scraped bookmaker odds
    beats the PM price" on a liquid market. A 1-cent-spread PM book with real
    depth is made by someone pricing off the same feeds, live — this class is
