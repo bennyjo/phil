@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <clipPath id="circle"><circle cx="256" cy="256" r="256"/></clipPath>
+  </defs>
+  <g clip-path="url(#circle)">
+    <!-- background -->
+    <rect width="512" height="512" fill="#12333f"/>
+    <!-- sun: the forecast motif, fully inside the circle -->
+    <circle cx="384" cy="112" r="46" fill="#f4c95d"/>
+    <!-- ears: smaller, groundhog-low -->
+    <circle cx="164" cy="182" r="32" fill="#7a5638"/>
+    <circle cx="164" cy="182" r="17" fill="#5d4029"/>
+    <circle cx="348" cy="182" r="32" fill="#7a5638"/>
+    <circle cx="348" cy="182" r="17" fill="#5d4029"/>
+    <!-- head -->
+    <ellipse cx="256" cy="302" rx="152" ry="140" fill="#8d6748"/>
+    <!-- eyes -->
+    <circle cx="203" cy="262" r="18" fill="#241a12"/>
+    <circle cx="309" cy="262" r="18" fill="#241a12"/>
+    <circle cx="209" cy="255" r="6" fill="#ffffff"/>
+    <circle cx="315" cy="255" r="6" fill="#ffffff"/>
+    <!-- muzzle -->
+    <ellipse cx="256" cy="336" rx="66" ry="50" fill="#c9a887"/>
+    <ellipse cx="256" cy="308" rx="21" ry="15" fill="#3b2a1e"/>
+    <circle cx="250" cy="303" r="4" fill="#6b5240"/>
+    <!-- whisker dots -->
+    <circle cx="206" cy="326" r="4" fill="#7a5638"/>
+    <circle cx="196" cy="340" r="4" fill="#7a5638"/>
+    <circle cx="208" cy="352" r="4" fill="#7a5638"/>
+    <circle cx="306" cy="326" r="4" fill="#7a5638"/>
+    <circle cx="316" cy="340" r="4" fill="#7a5638"/>
+    <circle cx="304" cy="352" r="4" fill="#7a5638"/>
+    <!-- teeth: the groundhog signature -->
+    <rect x="236" y="336" width="19" height="30" rx="5" fill="#fdf6ec"/>
+    <rect x="257" y="336" width="19" height="30" rx="5" fill="#fdf6ec"/>
+    <!-- burrow mound as a rising chart -->
+    <path d="M -10 442 L 92 410 L 170 428 L 258 382 L 336 402 L 522 336 L 522 522 L -10 522 Z" fill="#0b2530"/>
+    <polyline points="-10,442 92,410 170,428 258,382 336,402 522,336" fill="none" stroke="#4ade80" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- paws gripping the chart line -->
+    <ellipse cx="206" cy="409" rx="25" ry="17" fill="#8d6748" stroke="#5d4029" stroke-width="3"/>
+    <line x1="199" y1="398" x2="199" y2="414" stroke="#5d4029" stroke-width="3" stroke-linecap="round"/>
+    <line x1="211" y1="396" x2="211" y2="413" stroke="#5d4029" stroke-width="3" stroke-linecap="round"/>
+    <ellipse cx="302" cy="392" rx="25" ry="17" fill="#8d6748" stroke="#5d4029" stroke-width="3"/>
+    <line x1="295" y1="381" x2="295" y2="397" stroke="#5d4029" stroke-width="3" stroke-linecap="round"/>
+    <line x1="307" y1="379" x2="307" y2="396" stroke="#5d4029" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>
