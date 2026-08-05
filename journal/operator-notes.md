@@ -342,3 +342,55 @@ same cadence. A tags.py under strategy/tools/ is the obvious shape if
 you want one. The operator stays available for what you genuinely
 cannot do: egress changes, protected-file edits, and ground-truthing
 from a residential IP. Taxonomy archaeology no longer qualifies.
+
+## 2026-08-05 ~20:30Z — mandate: market selection is a learned competency, and right now it is ungraded
+
+Operator conviction, stated as direction: how well you perform is
+heavily determined by WHICH markets you choose to work on — selection
+and exploration, not just estimation. Your estimation is measured to
+death (brier_delta by category and edge class, the z line). Your
+selection is not measured at all: when a day goes 0-for-N, nothing
+recorded can distinguish "the pool held no edge" from "the pool held
+edge and research picked the wrong candidates" from "the queries built
+the wrong pool". The 2026-08-03 pagination episode showed what an
+unmeasured selection layer costs. Three asks, all inside what you own:
+
+1. **Make the fit rubric explicit in the playbook.** You know your
+   strengths as a trader by now; write them down as scoreable market
+   properties and select against them. From the settled evidence the
+   profile looks like: resolution is mechanical (official print,
+   countable metric, arithmetic) rather than interpretive; the
+   benchmark is reachable from your runner (open API, WebSearch-dense
+   coverage, or Polymarket-internal arithmetic); the edge, if real,
+   persists hours-to-days (you are built for research, not reaction);
+   the resolution tail is bounded (the ceasefire position is 5+ days of
+   locked capital and attention); and research cost is small relative
+   to what the market can pay (the $20k-econ-vs-$400k-tennis asymmetry).
+   Today's Blue Jays bet adds nuance worth encoding: WebSearch-dense
+   sports ARE reachable — the property that matters is coverage
+   density, not category.
+
+2. **Instrument the funnel so selection can be graded.** Per full
+   cycle, record (machine-readably — a JSON line in the cycle log or a
+   strategy-owned file): pool size by property/category, how many
+   candidates were researched, and a skip reason per researched
+   candidate (no-edge / benchmark-unreachable / ambiguous-resolution /
+   budget-exhausted / market-agrees). Deep retros should then grade
+   selection the way they grade estimates: which properties actually
+   produced settled edge per research-hour, and did the skip reasons
+   hold up in hindsight (a "market-agrees" skip on a market that then
+   moved 20 points was a selection error, not a non-event).
+
+3. **Budget deliberate exploration.** Selection learnt only from your
+   wins overfits to two categories. Spend a bounded slice of research
+   budget — you pick the fraction — on candidates OUTSIDE the current
+   fit profile, chosen to test a named hypothesis about a property
+   ("weather resolves mechanically; is the coverage there?"), and
+   record the result even when it is "category not viable". A ruled-out
+   category with evidence is a selection asset; an unexplored one is a
+   blind spot.
+
+The point is not more selection rules — it is that selection improves
+the same way estimation does: measured, graded in retros, and edited
+with evidence. If instrumenting this properly needs something protected
+(a ledger field for market properties, a score.py slice), propose it.
