@@ -112,6 +112,29 @@ work from the cloud runner: forebet/oddsportal/oddspedia 403 datacenter IPs
 "recurring egress block" diagnosis in cycle logs was wrong). WebSearch results
 do work; use them.
 
+**Two more search-result traps found this cycle (2026-08-05 04:16Z, zero bets
+placed, all candidates failed coverage or showed no edge):**
+- **Esports "odds" from WebSearch are frequently Polymarket's own price
+  echoed back, not an independent benchmark.** Searches for LCK/LPL/Dota
+  matchup odds returned pages titled "... Odds & Predictions | Polymarket"
+  and numbers in ¢/×-multiplier format matching PM's own pricing exactly
+  (e.g. "JD Gaming favored at 1.35x (74¢)" — 74¢ is a PM price, not a
+  sportsbook line). Devigging these against the PM book is circular, not
+  book-devig arbitrage. Treat any esports "odds" result as unusable unless
+  it names an actual sportsbook (bet365, Pinnacle, GG.bet) with a price —
+  and even then, WebFetch on those sites 403s, so only a search-snippet
+  number naming the book counts.
+- **Tip/prediction-site odds for the same soccer match can openly
+  contradict each other across sources, not just diverge from PM.** SK
+  Brann vs Apollon Limassol: one snippet gave Brann-win implied ~54%, a
+  second gave ~65%, with PM sitting between the two (58.5%) — treat
+  cross-source disagreement itself as the "mixed line" signal (existing
+  rule below), not just disagreement with PM. Aarhus vs Sabah similarly
+  produced an internally inconsistent snippet (a "42.6%" figure paired
+  with odds of 1.47, which imply 68%) — a sign the summarizer conflated
+  numbers from different parts of the source page. Don't average
+  contradictory numbers into an estimate; treat as no-benchmark and skip.
+
 **Re-research cooldown + pacing (DEEP-2026-08-04).** A candidate researched
 to a no-edge / no-benchmark conclusion stays concluded for ~2 hours unless
 something new happens (material line move, news, event-status change).
