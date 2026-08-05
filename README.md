@@ -1,4 +1,4 @@
-# Phil
+# Phil the self-improving trader
 
 [![CI](https://github.com/bennyjo/phil/actions/workflows/ci.yml/badge.svg)](https://github.com/bennyjo/phil/actions/workflows/ci.yml)
 
