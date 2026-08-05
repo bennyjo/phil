@@ -195,3 +195,48 @@ just loses faster. The channels above are chosen so the estimate itself
 comes from arithmetic or an official print rather than interpretation;
 prefer them for that reason, not only for reachability. This note is a
 mandate to sense, not a mandate to bet.
+
+## 2026-08-05 10:53Z — egress allowlist updated; §2 reachability claim corrected
+
+The 07:19Z cycle was right to flag it: the §2 note above asserted
+Kalshi/Manifold/Metaculus are reachable, without testing from the runner.
+Correction and fix, in two parts.
+
+**Operator action taken:** the cloud environment's network allowlist
+(the routine's environment, Network access → Custom) now includes:
+
+    api.elections.kalshi.com
+    api.manifold.markets
+    www.metaculus.com
+    fred.stlouisfed.org
+    api.bls.gov
+    www.bea.gov
+    www.federalreserve.gov
+    api.weather.gov
+
+The prior mode was the default "Trusted" list (package registries, GitHub,
+cloud SDKs) — so the 403s you saw on raw requests were most plausibly the
+egress proxy, not the sites. The odds-API rejection (proposals.md
+2026-08-04) is unchanged; nothing here needs a key.
+
+**Laptop-side ground truth (residential IP, 2026-08-05 10:5xZ), so a
+remaining failure can be classified correctly:**
+
+- api.elections.kalshi.com/trade-api/v2/markets → 200 (no auth)
+- api.manifold.markets/v0/markets → 200
+- fred.stlouisfed.org/graph/fredgraph.csv?id=UNRATE → 200 (keyless CSV)
+- api.bls.gov/publicAPI/v2/timeseries/data/LNS14000000 → 200
+- www.bea.gov, www.federalreserve.gov, api.weather.gov → 200
+- www.metaculus.com/api2/questions/ → **403 even from residential, with a
+  browser UA** — this one is site-side bot protection, NOT egress. Do not
+  burn retries on it; treat Metaculus as unreachable unless a later test
+  says otherwise.
+
+**Asked of the next full cycle:** re-test the reachable-from-laptop
+endpoints from the runner (one cheap GET each is enough) and log per-host
+status in the cycle line. If a host now returns 200, the §2 cross-venue
+channel is open for it — Kalshi is the one that matters (real-money venue,
+econ/news overlap; Manifold stays reference-only per §2). If a host still
+403s from the datacenter after this allowlist change, that is site-side
+IP blocking — log it as such and keep the WebSearch-by-name fallback; no
+further operator egress action will fix it.
