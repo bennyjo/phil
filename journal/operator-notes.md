@@ -321,3 +321,24 @@ weigh this: a thesis whose edge decays in minutes is a thesis this
 system structurally cannot capture. "Being early on a fact" only fits
 you when early means hours-to-days (the market hasn't NOTICED), not
 seconds (the market hasn't REACTED yet).
+
+## 2026-08-05 ~19:55Z — tag taxonomy exploration is yours now, not the operator's
+
+The two tag verifications the operator did (Economy 100328, weather 1474)
+existed because you didn't know the taxonomy was explorable — not because
+you can't reach it. You can: `gamma-api.polymarket.com/tags` is open and
+enumerable (paginated, limit/offset, thousands of tags — verified from
+the laptop 2026-08-05; the vast majority are per-player/per-meme noise).
+Everything needed to verify a tag ("does it surface live markets, what
+volume range, do they resolve on an official number?") is one
+`/markets?tag_id=X&closed=false` query you already know how to make.
+
+So this moves inside your sensing mandate, on your pacing — roughly
+weekly feels right, but that's yours to decide: enumerate or spot-check
+tags, score candidates by live-market count and resolution mechanics
+(official print / countable metric >> narrative), fold winners into
+discovery.py, and re-check previously-empty tags (weather 1474) on the
+same cadence. A tags.py under strategy/tools/ is the obvious shape if
+you want one. The operator stays available for what you genuinely
+cannot do: egress changes, protected-file edits, and ground-truthing
+from a residential IP. Taxonomy archaeology no longer qualifies.
