@@ -17,6 +17,6 @@
     "max_stake_usd": 1.0,
     "max_open_positions": 10,
     "daily_stake_cap_usd": 5.0,
-    "allowed_edge_classes": ["cross-market", "info-race"]
+    "allowed_edge_classes": ["cross-market"]
   }
 }

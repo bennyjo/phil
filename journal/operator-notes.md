@@ -295,3 +295,29 @@ applied in reverse):
    per-candidate gamma round-trip in siblings.py — group scan output by
    `event_id` directly; keep siblings.py for fetching live sibling prices
    once a group looks interesting.
+
+## 2026-08-05 ~19:45Z — architectural stance: this agent is not built for speed; info-race dropped from real classes
+
+Operator decision, with the reasoning so retros can weigh it as evidence
+rather than guess at it. `real.allowed_edge_classes` is now
+`["cross-market"]` — info-race no longer qualifies for real twins.
+
+The reasoning is architectural, not just the 0-win record: an
+LLM-cycle agent's unit of action is a multi-minute research session. A
+speed race against reprice bots on a public data drop is a race this
+architecture cannot win at ANY wake-up cadence — arriving "less late"
+still means entering after the reprice on an estimate formed before it.
+What this architecture IS built for: research and analysis — arithmetic
+the market hasn't done (cross-market consistency), official numbers the
+market hasn't priced correctly (fact-final reads), interpretation work
+where hours of persistence make timing irrelevant. The settled evidence
+(mechanical facts 2W-0L, interpretation/speed-adjacent 0W-3L) agrees with
+the architecture argument.
+
+For the paper side, the class taxonomy stays yours: keep measuring
+whatever you want, including info-race, if you think the evidence
+justifies the research budget. But when weighing where to spend cycles,
+weigh this: a thesis whose edge decays in minutes is a thesis this
+system structurally cannot capture. "Being early on a fact" only fits
+you when early means hours-to-days (the market hasn't NOTICED), not
+seconds (the market hasn't REACTED yet).
