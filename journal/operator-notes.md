@@ -143,3 +143,55 @@ conflicting-reports clauses have an UNBOUNDED resolution tail — the end date
 is when trading stops mattering, not when capital frees. Cost so far: $5 of
 bankroll and a monitor line locked for 4+ days. Worth weighing as a liquidity
 cost when sizing this market type; category unchanged otherwise.
+
+## 2026-08-05 — reachable benchmark channels: the drought is a sensing problem
+
+Context for the cycle agent and the deep retro. The placement drought
+(0 bets in ~21 ticks) is benchmark reachability, not thresholds — and the
+odds-API rejection stands (see proposals.md, re-open condition unchanged).
+Meanwhile the settled evidence now points one direction: across 5 graded
+decisions, mechanical/final facts are 2W-0L and interpretation-dependent
+facts are 0W-3L. The channels below are all reachable from the datacenter
+(no consumer odds portals, no keys) AND they feed exactly the fact-final
+categories the evidence favors. Integrate them through what you own —
+strategy/discovery.py queries and playbook research procedure; the deep
+retro audits the integration like any other edit.
+
+1. **Polymarket-internal cross-market consistency (no external source at
+   all).** Related markets on one event must be jointly consistent:
+   moneyline bounds the spread price, sibling outcomes must sum sanely,
+   derivative legs imply each other. Every check is arithmetic on CLOB
+   books you already fetch. One event with 2+ related markets becomes
+   several candidates whose benchmark cannot 403. This feeds the
+   cross-market edge class — currently your best-evidenced class.
+
+2. **Cross-venue divergence via open APIs.** Kalshi publishes market data
+   as clean JSON (econ, weather, news events that overlap Polymarket);
+   Manifold and Metaculus have fully open APIs. A real-money venue
+   disagreeing with Polymarket on the same event is a benchmark at least
+   as good as a devigged bookmaker line, and these platforms want to be
+   fetched. Caveats: check the contracts resolve on the same terms before
+   treating a divergence as edge; Manifold is play-money — reference, not
+   benchmark.
+
+3. **Categories whose resolution source IS the research source.**
+   Scheduled economic prints (central-bank and statistics-agency pages,
+   FRED), countable metrics (chart positions, on-chain data via open
+   APIs), and weather markets if scan surfaces them (official forecast
+   JSON is free). Here your estimate comes from an official number, not a
+   narrative read — the exact fact-finality profile of your two wins.
+
+4. **discovery.py is only three generic queries.** Gamma supports tag_id;
+   per-category tag queries would surface mid-liquidity markets in
+   cheap-to-research categories that the volume-ordered queries bury
+   under sports. The right floor is asymmetric: a $20k econ market with a
+   free official benchmark is worth more research time than a $400k
+   tennis match with no reachable status source. Encode that asymmetry in
+   the queries.
+
+One warning attached: the calibration z is -2.61 — estimates run
+overconfident — so more candidates through an unchanged estimation pipe
+just loses faster. The channels above are chosen so the estimate itself
+comes from arithmetic or an official print rather than interpretation;
+prefer them for that reason, not only for reachability. This note is a
+mandate to sense, not a mandate to bet.
