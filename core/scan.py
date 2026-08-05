@@ -92,10 +92,13 @@ def keep(m, seen, banned, args):
     # skip effectively-decided markets (in-play blowouts, resolved-in-waiting)
     if max(prices) > PROTECTED["max_entry_price"] or min(prices) < PROTECTED["min_entry_price"]:
         return None
+    event = (m.get("events") or [{}])[0]
     return {
         "market_id": m.get("id"),
         "question": q,
         "end_date": m.get("endDate"),
+        "event_id": event.get("id"),
+        "event_slug": event.get("slug"),
         "outcomes": json.loads(m.get("outcomes", "[]")),
         "outcome_prices": prices,
         "clob_token_ids": json.loads(m.get("clobTokenIds", "[]")),

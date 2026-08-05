@@ -64,7 +64,7 @@ get causes fixed.
    - Concrete lessons → then ACTUALLY EDIT `strategy/playbook.md`,
      `strategy/risk.json`, or `strategy/tools/` to encode them.
    - Commit: `git add -A && git commit -m "retro: <one-line lesson>"`.
-4. **Scan**: `python3 core/scan.py --hours 168` — queries come from
+4. **Scan**: `python3 core/scan.py --hours 336 --limit 800` — queries come from
    `strategy/discovery.py`, which is mine to edit. Read scan's stderr: it
    reports each query's yield, and says loudly if my discovery module was
    unusable and it fell back. If a query is returning nothing useful, fix the

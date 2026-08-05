@@ -240,3 +240,58 @@ econ/news overlap; Manifold stays reference-only per §2). If a host still
 403s from the datacenter after this allowlist change, that is site-side
 IP blocking — log it as such and keep the WebSearch-by-name fallback; no
 further operator egress action will fix it.
+
+## 2026-08-05 ~19:30Z — CPI brackets: the "contradictory sources" were three different series
+
+The 13:45Z/10:26Z cycles skipped the July CPI markets because WebSearch
+numbers (2.7-2.8%) didn't parse against brackets centered 3.3-3.5%. Operator
+pulled the actual market descriptions from gamma. There is no contradiction —
+Polymarket runs THREE separate CPI clusters on the same Aug 12 08:30 ET
+release, each resolving on a DIFFERENT series, all to one decimal:
+
+- **"Will annual inflation be X% in July?"** (event 703573): headline CPI-U,
+  12-month change, **NOT seasonally adjusted** (BLS series CUUR0000SA0;
+  FRED `CPIAUCNS`).
+- **"Will monthly inflation increase/decrease by X% in July?"**: headline
+  CPI-U, one-month change, **seasonally adjusted** (BLS `CUSR0000SA0`;
+  FRED `CPIAUCSL`).
+- **"Will Core CPI MoM be X% in July?"**: CPI-U ex food & energy, one-month
+  change (FRED `CPILFESL`).
+
+Resolution source for all three: the monthly BLS CPI news release
+(bls.gov/bls/news-release/cpi.htm) — api.bls.gov and fred.stlouisfed.org
+are both on the runner's allowlist as of the 10:53Z note, so pull the
+series directly instead of searching for headline numbers. Any consensus
+figure found via WebSearch is only usable after identifying WHICH of these
+series it forecasts (press "CPI rose X%" is usually the SA MoM or the YoY;
+core is quoted separately).
+
+Mechanical structure worth noting for the cross-market class: with June
+data published, 11 of the 12 months in the YoY comparison are already
+known — the YoY brackets and the MoM cluster are two prices on
+substantially the same single unknown (July's monthly change), linked by
+a computable base effect and the seasonal factor. Whether the two clusters
+are jointly consistent is arithmetic on data you can now fetch. Checking
+that consistency is exactly the fact-final, no-narrative profile of the
+settled wins; as always, this is a pointer to sense, not a mandate to bet.
+
+## 2026-08-05 ~19:30Z — instrument change: scan window widened, event_id in scan output
+
+Two operator edits to protected files, announced here so the change in
+your inputs is visible rather than inferred (the 2026-08-03 lesson,
+applied in reverse):
+
+1. **CYCLE.md step 4 now runs `--hours 336 --limit 800`** (was 168/400).
+   Two weeks of scheduled prints and fixtures are now in the window, and
+   the higher paging cap keeps the endDate-ascending query from
+   truncating in the deeper universe. Expect a larger candidate pool;
+   your selection standards, not the pool size, still govern what gets
+   researched. discovery.py's queries and their per-query floors are
+   untouched and remain yours.
+
+2. **scan.py output records now carry `event_id` and `event_slug`**
+   (first entry of gamma's `events` array, null if absent). Sibling
+   grouping for the cross-market checks no longer needs the extra
+   per-candidate gamma round-trip in siblings.py — group scan output by
+   `event_id` directly; keep siblings.py for fetching live sibling prices
+   once a group looks interesting.
