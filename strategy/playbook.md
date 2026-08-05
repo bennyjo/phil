@@ -134,9 +134,14 @@ the candidate immediately and move on — do not build an estimate on aggregator
 work from the cloud runner: forebet/oddsportal/oddspedia 403 datacenter IPs
 (this is site-level bot blocking, NOT the sandbox egress policy — the earlier
 "recurring egress block" diagnosis in cycle logs was wrong). WebSearch results
-do work; use them. Same shape confirmed 2026-08-05 for Kalshi/Manifold/
-Metaculus direct API access (see Estimation §3 cross-venue note) — direct
-fetch 403s, WebSearch-by-name works.
+do work; use them. Kalshi and Manifold are different: after the operator's
+10:53Z egress allowlist update, direct API fetch to
+`api.elections.kalshi.com` and `api.manifold.markets` now returns 200 from
+this runner (re-verified 2026-08-05 ~13:30Z, see `strategy/tools/kalshi.py`)
+— use the direct fetch, it's cheaper and more precise than WebSearch.
+Metaculus (`www.metaculus.com/api2`) is still 403 even with the allowlist
+(site-side bot block, confirmed from a residential IP too) — WebSearch-by-name
+remains the only channel there.
 
 **Sensing addition (DEEP-2026-08-05):** `strategy/discovery.py` query 4
 ("econ-tag", gamma `tag_id=100328`) targets Polymarket's Economy tag with no
@@ -371,21 +376,25 @@ forbids add-ons).
    (anchoring guard). Write the estimate down in the rationale.
 3. Identify the sharpest external benchmark (bookmaker odds, analyst
    consensus, base rates) and reconcile.
-   - **Cross-venue divergence (added DEEP-2026-08-05, integrating
-     operator-notes.md 2026-08-05 §2 with a correction):** a real-money venue
-     pricing the same event (Kalshi, CME FedWatch for Fed decisions) is a
-     benchmark at least as good as a devigged bookmaker line. BUT direct API
-     access does not work from here — `api.elections.kalshi.com`,
-     `api.manifold.markets`, and `www.metaculus.com/api2` all returned
-     HTTP 403 both via direct fetch AND via WebFetch (verified 2026-08-05;
-     this is a real block, not the "recurring egress block" misdiagnosis from
-     2026-08-03 — that one turned out to be site-level bot blocking too, same
-     shape, different sites). What DOES work: WebSearch for the venue's
-     pricing by name (e.g. "Kalshi Fed rate decision September odds") reliably
-     surfaces news coverage quoting the live number — same pattern as
-     sportsbook odds coverage. Use that, not a direct fetch. Manifold is
-     play-money — reference only, not a benchmark; Kalshi and CME FedWatch are
-     real-money/real-stakes and count.
+   - **Cross-venue divergence (added DEEP-2026-08-05, corrected 2026-08-05
+     ~13:30Z after the operator's egress allowlist update):** a real-money
+     venue pricing the same event (Kalshi, CME FedWatch for Fed decisions) is
+     a benchmark at least as good as a devigged bookmaker line. Direct API
+     fetch to `api.elections.kalshi.com` now returns 200 from this runner
+     (was 403 before the 2026-08-05 10:53Z allowlist change) — use
+     `strategy/tools/kalshi.py events --series-ticker <t>` /
+     `markets --series-ticker <t>` (or `--event-ticker`) to pull live
+     yes/no bid-ask directly, no auth needed for public market data. Check
+     BOTH sides' bid/ask, not just one side's ask, before calling it a
+     divergence — and confirm the Kalshi and Polymarket contracts settle on
+     the same terms (same strike/threshold, same official source) before
+     treating a price gap as edge rather than a definitional mismatch.
+     `api.manifold.markets` is also 200 now but Manifold stays play-money —
+     reference only, never a benchmark. `www.metaculus.com/api2` is STILL 403
+     even with the allowlist (site-side bot block, confirmed from a
+     residential IP too) — for Metaculus, WebSearch for the venue's pricing
+     by name (e.g. "Kalshi Fed rate decision September odds") is still the
+     only channel, same pattern as sportsbook odds coverage.
    - **Devig with `strategy/tools/devig.py`, and use the POWER number for any
      side priced below ~0.60.** Proportional (divide-by-sum) devig spreads
      the vig evenly, but books load vig onto longshots (favorite-longshot
