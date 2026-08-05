@@ -183,6 +183,8 @@ def cmd_place(args):
     if not healthy():
         fail("connect signer not healthy — refusing to place")
 
+    if args.usd is None:
+        args.usd = real["max_stake_usd"]
     if args.usd > real["max_stake_usd"]:
         fail(f"stake {args.usd} exceeds real.max_stake_usd {real['max_stake_usd']}")
 
@@ -301,7 +303,9 @@ def main():
     p = sub.add_parser("place")
     p.add_argument("--paper-id", required=True,
                    help="paper ledger row id this real bet mirrors")
-    p.add_argument("--usd", type=float, required=True)
+    p.add_argument("--usd", type=float, default=None,
+                   help="stake; defaults to real.max_stake_usd from "
+                        "config/protected.json")
     p.set_defaults(fn=cmd_place)
     s = sub.add_parser("settle")
     s.set_defaults(fn=cmd_settle)

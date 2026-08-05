@@ -5,7 +5,7 @@
 **Phil is a self-improving trader: an AI agent that trades short-term
 prediction markets and rewrites its own strategy after every resolved
 bet.** Paper trading is the 24/7 learning engine. Real money runs alongside
-it, deliberately small: $1 stakes through
+it, deliberately small: capped stakes through
 [Pearl Connect](https://github.com/valory-xyz/connect), only in edge classes
 whose settled evidence has earned it.
 
@@ -48,13 +48,15 @@ does fast AI research actually beat the price?*
 
 Real execution rides on top, deliberately small. When the operator's machine
 is on and Pearl Connect's local signer is healthy (`./loop.sh --real`),
-paper bets in edge classes with positive settled evidence get a **$1 real
+paper bets in edge classes with positive settled evidence get a **real
 twin** on Polymarket (Polygon). Orders go through `core/real.py`, the only
-code that touches funds, against hard caps in `config/protected.json`
-(per-bet, per-day, open-position). The Safe holds about $25. The agent never
-holds keys; every signature goes through Pearl Connect's audited local
-choke point. Real fills feed back into the journal so retros can measure
-what paper can't: actual fill quality versus the simulated
+code that touches funds, and the sizing is all config: per-bet, per-day and
+open-position caps live in `config/protected.json` (currently $1 per bet),
+with hard ceilings that CI enforces. The Safe holds only what the operator
+chooses to fund; its balance is the final cap no code can exceed. The agent
+never holds keys; every signature goes through Pearl Connect's audited
+local choke point. Real fills feed back into the journal so retros can
+measure what paper can't: actual fill quality versus the simulated
 cross-the-spread model.
 
 [Pearl Connect](https://github.com/valory-xyz/connect) is Pearl's BYOA
@@ -75,7 +77,7 @@ Pearl at [pearl.you/connect](https://www.pearl.you/connect).
 
 ```bash
 ./loop.sh 10 45          # 10 paper cycles, 45 min apart (headless Claude Code)
-./loop.sh 1 45 --real    # one cycle with $1 real twins via Pearl Connect
+./loop.sh 1 45 --real    # one cycle with real twins via Pearl Connect
 python3 core/score.py    # calibration & P&L report any time
 python3 core/real.py doctor   # is the real-execution path ready?
 ```
@@ -87,12 +89,13 @@ public gamma/CLOB endpoints.
 ## Disclaimer
 
 This is a research experiment in agent self-improvement. Most trading is
-simulated. A small real-money leg (capped at $1 per bet from a wallet
-holding about $25) runs through Pearl Connect only when the operator
-deliberately enables it. Nothing here is financial, investment, or betting
-advice. Past performance, paper or real, predicts nothing. Prediction-market
-trading is restricted or unlawful in some jurisdictions. Know your own rules
-before running any of this with real funds.
+simulated. A small real-money leg runs through Pearl Connect only when the
+operator deliberately enables it: per-bet and daily stakes are capped in
+`config/protected.json`, and the wallet holds only what the operator funds.
+Nothing here is financial, investment, or betting advice. Past performance,
+paper or real, predicts nothing. Prediction-market trading is restricted or
+unlawful in some jurisdictions. Know your own rules before running any of
+this with real funds.
 
 ## License
 

@@ -13,9 +13,11 @@ additive.
   (reverted redemptions, unresolved pending orders) in the cycle log.
 - After **each paper bet you place** (step 6): if the bet's `--edge-class`
   is in `config/protected.json` → `real.allowed_edge_classes`, mirror it:
-  `python3 core/real.py place --paper-id <paper ledger id> --usd 1`
-  Real caps are enforced by core/real.py — a refusal (cap hit, market
-  already held, unreconciled order) is policy working, not an error to fix.
+  `python3 core/real.py place --paper-id <paper ledger id>`
+  The stake comes from `real.max_stake_usd` in config; never pass `--usd`
+  yourself. Real caps are enforced by core/real.py — a refusal (cap hit,
+  market already held, unreconciled order) is policy working, not an error
+  to fix.
 - In the **Log** line (step 7), append: ` | real: placed R settled S`.
 
 ## Hard rules for real mode

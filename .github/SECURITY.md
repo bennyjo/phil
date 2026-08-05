@@ -24,8 +24,9 @@ The interesting surface is the money path and the boundaries around it:
   instead of assuming it won't.
 - Real exposure is capped in three independent places: per-bet, per-day and
   open-position caps in `config/protected.json` (with hard ceilings enforced
-  by CI), the Safe's balance (about $25), and the Pearl Connect signer's own
-  guardrail, which runs outside the agent session.
+  by CI), the Safe's balance (the operator funds it deliberately small, and
+  no code can spend past it), and the Pearl Connect signer's own guardrail,
+  which runs outside the agent session.
 - Keys never enter any agent session. Signing happens in Pearl Connect's
   local service; the session only names actions.
 - The journal is public by design. Wallet addresses may appear there;
