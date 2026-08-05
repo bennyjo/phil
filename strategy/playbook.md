@@ -101,6 +101,72 @@ times over 22h — including after resolution — and it never moved
 read it differently. Treat these below book-devig; the §Estimation
 resolver-process red-flag rule applies.
 
+## Fit rubric (DEEP-2026-08-05, operator mandate: selection is a learned
+competency and was ungraded)
+
+Estimation is measured to death (brier_delta by category/edge class); WHICH
+markets I choose to spend research budget on was not measured at all — a
+0-for-N day could mean "no edge existed" or "edge existed, wrong candidates
+picked" or "queries built the wrong pool", and nothing distinguished them.
+Score every candidate that reaches research (not just ones I bet on) against
+five properties, derived from the settled record (2W/3L info-race split by
+fact-finality; the Blue Jays book-devig win; the $20k-econ-vs-$400k-tennis
+asymmetry):
+
+1. **Mechanical resolution** — official print/close/countable metric/
+   arithmetic, not a narrative or judgment call. (Y/N)
+2. **Benchmark reachable** — open API, WebSearch-dense coverage, or
+   Polymarket-internal arithmetic (siblings), confirmed reachable THIS cycle,
+   not assumed. (Y/N)
+3. **Edge persistence hours-to-days** — if the thesis would decay in minutes
+   (a repricing race), score N; this architecture's unit of action is a
+   multi-minute research session and cannot win a speed race (operator-notes
+   2026-08-05 ~19:45Z). (Y/N)
+4. **Bounded resolution tail** — no open-ended dispute/UMA risk of the kind
+   that locked `d2dd24206542` 5+ days past end date. (Y/N)
+5. **Research cost small relative to payout** — thin-liquidity/high-effort
+   candidates (a $20-1000 China-CPI bracket needing a scrape) score N even if
+   1-4 pass.
+
+Fit score = count of Y (0-5). Candidates scoring ≤2 are exploration-budget
+territory (see below), not default research targets. Log the score inline
+with the skip/bet reason per candidate (funnel instrumentation below) — this
+is what lets a deep retro grade selection the way `core/score.py` grades
+estimates: which properties actually produced settled edge per research-hour.
+
+## Funnel instrumentation (DEEP-2026-08-05, operator mandate)
+
+Selection was ungraded because nothing recorded the funnel between "scan
+pool" and "bet placed" — cycle logs only ever showed the researched subset,
+never what was skipped or why. Every FULL cycle, append one JSON line to
+`strategy/funnel.jsonl` (strategy-owned, not the ledger) with:
+`{"cycle": "<UTC ISO>", "strategy_rev": "<short sha>", "pool_by_query":
+{"<discovery.py _label>": <n>}, "researched": [{"market_id": "<id>",
+"category": "<cat>", "fit_score": <0-5>, "skip_reason":
+"no-edge|benchmark-unreachable|ambiguous-resolution|budget-exhausted|
+market-agrees|bet-placed"}]}`. This is additive to the cycle-log prose, not
+a replacement — the prose stays for narrative context, the JSONL is what a
+deep retro scripts against to grade selection quantitatively (e.g. which
+fit-score bucket produced the settled wins). Skip reasons must be the actual
+reason, not padded — a "market-agrees" skip on something that later moved
+20 points is a selection error, and only shows up in a retro if the original
+call is on record.
+
+## Exploration budget (DEEP-2026-08-05, operator mandate)
+
+Selection rules learned only from wins overfit to the categories already
+tried (currently: soccer/MLB book-devig, econ/cross-market). Each FULL cycle,
+spend a bounded slice of research budget — target ~1 candidate, more if the
+pool is rich — on something OUTSIDE the current fit profile (fit score ≤2,
+or a category with n<5 settled), chosen to test a NAMED hypothesis about one
+rubric property (e.g. "weather resolves mechanically; is the benchmark
+actually reachable?"). Record the result in the funnel JSONL and cycle log
+even when the result is "category not viable" or "benchmark unreachable" —
+a ruled-out category with evidence is a selection asset, ruling nothing out
+is a blind spot. This is a research-time budget only: exploration candidates
+still need edge >= min_edge to get an actual bet; the exploration budget
+funds looking, not lowering the bar to place.
+
 ## Market selection
 
 **Scan horizon (OPERATOR EDIT 2026-08-03, see journal/operator-notes.md):**
