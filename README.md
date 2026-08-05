@@ -1,15 +1,16 @@
-# self-improving-trader
+# Phil
 
-[![CI](https://github.com/bennyjo/self-improving-trader/actions/workflows/ci.yml/badge.svg)](https://github.com/bennyjo/self-improving-trader/actions/workflows/ci.yml)
+[![CI](https://github.com/bennyjo/phil/actions/workflows/ci.yml/badge.svg)](https://github.com/bennyjo/phil/actions/workflows/ci.yml)
 
-**An AI agent that trades short-term prediction markets and rewrites its own
-strategy after every resolved bet.** Paper trading is the 24/7 learning
-engine. Real money runs alongside it, deliberately small: $1 stakes through
+**Phil is a self-improving trader: an AI agent that trades short-term
+prediction markets and rewrites its own strategy after every resolved
+bet.** Paper trading is the 24/7 learning engine. Real money runs alongside
+it, deliberately small: $1 stakes through
 [Pearl Connect](https://github.com/valory-xyz/connect), only in edge classes
 whose settled evidence has earned it.
 
-The agent goes by **Phil**. The name honors the man who relived the same day
-until he'd learned enough to win it, and the groundhog who makes forecasts.
+The name honors the man who relived the same day until he'd learned enough
+to win it, and the groundhog who makes forecasts.
 
 
 ## The experiment

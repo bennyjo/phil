@@ -1,6 +1,6 @@
-# self-improving-trader
+# Phil (self-improving trader)
 
-A self-improving paper-trading agent for short-term Polymarket markets. The
+A self-improving trading agent for short-term Polymarket markets. The
 agent (Claude Code, headless) runs `CYCLE.md` repeatedly: settle → score →
 retrospective → edit its own strategy → research → place simulated bets.
 
