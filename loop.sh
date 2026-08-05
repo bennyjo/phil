@@ -36,12 +36,17 @@ for i in $(seq 1 "$CYCLES"); do
   # Pearl Connect attach: when the local signer is up, expose its read-only
   # wallet_info MCP tool and deny the session the token file (journal is
   # public — the bearer token must never be readable, let alone committed).
+  # The probe must positively identify the connect signer: every Pearl agent
+  # serves /healthcheck on 8716, and a full trader FSM also reports
+  # is_healthy=true — but only connect's body is bare (no "rounds" field).
   PEARL_UP=0
   STORE="${PEARL_CONNECT_STORE:-}"
-  if [ -n "$STORE" ] && [ -f "$STORE/.mcp.json" ] \
-     && curl -sf -m 2 http://127.0.0.1:8716/healthcheck 2>/dev/null \
-        | grep -q '"is_healthy": *true'; then
-    PEARL_UP=1
+  if [ -n "$STORE" ] && [ -f "$STORE/.mcp.json" ]; then
+    HC="$(curl -sf -m 2 http://127.0.0.1:8716/healthcheck 2>/dev/null || true)"
+    if echo "$HC" | grep -q '"is_healthy": *true' \
+       && ! echo "$HC" | grep -q '"rounds"'; then
+      PEARL_UP=1
+    fi
   fi
 
   PROMPT="$(cat CYCLE.md)"

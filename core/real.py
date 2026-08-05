@@ -74,9 +74,13 @@ def store_path():
 
 
 def healthy():
+    """True only for the connect signer — every Pearl agent serves
+    /healthcheck on 8716, but only connect's body is bare (a trader FSM
+    also reports is_healthy=true and would otherwise false-positive)."""
     try:
         with urllib.request.urlopen(HEALTHCHECK_URL, timeout=3) as r:
-            return bool(json.load(r).get("is_healthy"))
+            data = json.load(r)
+        return bool(data.get("is_healthy")) and "rounds" not in data
     except Exception:
         return False
 
