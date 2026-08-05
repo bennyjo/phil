@@ -48,4 +48,20 @@ def queries(now, min_end, horizon, args, protected):
          "ascending": "false", "end_date_min": iso(min_end),
          "end_date_max": iso(min(horizon, now.replace(microsecond=0) +
                                  __import__("datetime").timedelta(hours=36)))},
+
+        # 4. Category-targeted, asymmetric floor (operator-notes.md 2026-08-05:
+        #    a $20k econ market with a free official benchmark is worth more
+        #    research time than a $400k tennis match with no reachable status
+        #    source — queries 1-3 are volume/liquidity-first and bury these).
+        #    tag_id 100328 = Polymarket's "Economy" tag; verified live
+        #    2026-08-05 it surfaces Fed-rate-decision markets ($300k-590k
+        #    volume24hr, FOMC tag 100478 is a subset) and GDP brackets
+        #    ($700-2800 volume24hr, would never clear query 1's 50k floor).
+        #    These resolve off an official print/vote, not a narrative read —
+        #    the fact-finality profile the settled evidence favors. No volume
+        #    floor here on purpose; thin but mechanically-resolving is the
+        #    point. (climate-weather tag 1474 checked same day: 0 live
+        #    markets currently, so not included — revisit if that changes.)
+        {**base, "_label": "econ-tag", "tag_id": 100328, "order": "volume24hr",
+         "ascending": "false"},
     ]

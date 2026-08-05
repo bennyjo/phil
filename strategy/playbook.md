@@ -114,7 +114,19 @@ the candidate immediately and move on — do not build an estimate on aggregator
 work from the cloud runner: forebet/oddsportal/oddspedia 403 datacenter IPs
 (this is site-level bot blocking, NOT the sandbox egress policy — the earlier
 "recurring egress block" diagnosis in cycle logs was wrong). WebSearch results
-do work; use them.
+do work; use them. Same shape confirmed 2026-08-05 for Kalshi/Manifold/
+Metaculus direct API access (see Estimation §3 cross-venue note) — direct
+fetch 403s, WebSearch-by-name works.
+
+**Sensing addition (DEEP-2026-08-05):** `strategy/discovery.py` query 4
+("econ-tag", gamma `tag_id=100328`) targets Polymarket's Economy tag with no
+volume floor — Fed-rate-decision and GDP-bracket markets that resolve off an
+official print/vote, the fact-finality profile the settled evidence favors,
+but that queries 1-3's volume/liquidity ordering buries under sports. Check
+its yield in scan's stderr each cycle; if it stays empty for several cycles
+running, that is itself worth a cycle-log note (query 1 already put these
+markets in front of everyone, in which case query 4 is redundant, not
+broken).
 
 **Two more search-result traps found this cycle (2026-08-05 04:16Z, zero bets
 placed, all candidates failed coverage or showed no edge):**
@@ -339,6 +351,21 @@ forbids add-ons).
    (anchoring guard). Write the estimate down in the rationale.
 3. Identify the sharpest external benchmark (bookmaker odds, analyst
    consensus, base rates) and reconcile.
+   - **Cross-venue divergence (added DEEP-2026-08-05, integrating
+     operator-notes.md 2026-08-05 §2 with a correction):** a real-money venue
+     pricing the same event (Kalshi, CME FedWatch for Fed decisions) is a
+     benchmark at least as good as a devigged bookmaker line. BUT direct API
+     access does not work from here — `api.elections.kalshi.com`,
+     `api.manifold.markets`, and `www.metaculus.com/api2` all returned
+     HTTP 403 both via direct fetch AND via WebFetch (verified 2026-08-05;
+     this is a real block, not the "recurring egress block" misdiagnosis from
+     2026-08-03 — that one turned out to be site-level bot blocking too, same
+     shape, different sites). What DOES work: WebSearch for the venue's
+     pricing by name (e.g. "Kalshi Fed rate decision September odds") reliably
+     surfaces news coverage quoting the live number — same pattern as
+     sportsbook odds coverage. Use that, not a direct fetch. Manifold is
+     play-money — reference only, not a benchmark; Kalshi and CME FedWatch are
+     real-money/real-stakes and count.
    - **Devig with `strategy/tools/devig.py`, and use the POWER number for any
      side priced below ~0.60.** Proportional (divide-by-sum) devig spreads
      the vig evenly, but books load vig onto longshots (favorite-longshot
