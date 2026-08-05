@@ -23,6 +23,10 @@ fail=0
 for sha in $COMMITS; do
   subject=$(git log -1 --format=%s "$sha")
   [[ "$subject" == operator:* ]] && continue
+  # GitHub web-flow commits (committer = GitHub) are a human in the UI, not
+  # the agent — the agents push over git and can never have this committer.
+  committer=$(git log -1 --format=%ce "$sha")
+  [[ "$committer" == "noreply@github.com" ]] && continue
   touched=$(git diff-tree --no-commit-id --name-only -r "$sha" | grep -E "$PROTECTED" || true)
   if [[ -n "$touched" ]]; then
     echo "::error::agent commit $sha ('$subject') touches operator-owned paths:"
