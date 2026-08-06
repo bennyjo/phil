@@ -318,6 +318,21 @@ weather test + econ re-check + soccer 1X2, zero bets placed):**
   cleared: require a single named book's full multi-way quote (not a
   "best odds across bookmakers" aggregation) before devigging a 3-way line.
 
+**Weather exploration budget, round 2 (2026-08-06 06:25Z) — even the single
+official source can disagree with itself.** The 2026-08-05 Hong Kong test
+found two different sources 3°C apart. This round tested a well-instrumented
+US station (Atlanta/KATL, official NWS gridpoint forecast, `3350823-26`,
+4 brackets 84-91°F) on a day with afternoon thunderstorms forecast. NWS's
+OWN forecast text gave "high near 90, falling to around 86 in the
+afternoon" — a 4°F intraday spread inside ONE official product, before even
+counting the ~83-88°F spread across secondary aggregators. On
+convective/storm days, "mechanical + official source" is still not
+"point-precise enough for 1-2°F brackets" — the uncertainty is physical
+(storm timing), not a sourcing problem, so a second corroborating source
+won't fix it the way it does for e.g. earnings consensus. Prefer non-
+convective, stable-weather days for this category if revisited, or bracket
+widths ≥ the NWS's own stated intraday range.
+
 **Durable lessons never live only in `schedule.json` reason fields
 (DEEP-2026-08-05).** The reason field is overwritten every full cycle; the
 leading-question trap above was originally documented only there and
