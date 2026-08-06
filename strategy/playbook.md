@@ -333,6 +333,21 @@ won't fix it the way it does for e.g. earnings consensus. Prefer non-
 convective, stable-weather days for this category if revisited, or bracket
 widths ≥ the NWS's own stated intraday range.
 
+**Exploration budget, politics vote-share brackets (2026-08-06 19:13Z, first
+test of this category).** Hypothesis: "vote-count resolution is mechanical;
+is a constituency poll a granular enough benchmark for a 10-point bracket?"
+Tested on the Clacton by-election Count Binface vote-share brackets
+(5 mutually-exclusive brackets, siblings-verified `_sum_check` 1.041, normal
+vig). A single Survation constituency poll (2026-08-02) put Binface ~20%.
+PM's bracket prices (10-20%: 44.5%, 20-30%: 42.5%, <10%: 8%, 30-40%: 6.3%,
+≥40%: 2.8%) straddle the poll's 20% point almost exactly evenly — the book is
+already well-calibrated to the one available poll. Result: **reachable**
+(a single constituency poll is enough to benchmark a bracket set here) but
+**no edge** this instance — the market isn't lagging the poll, it's pricing
+it correctly. Politics vote-share brackets stay open as a category (ruled
+in, not out); revisit when multiple polls disagree or a poll updates after
+the book was last priced.
+
 **Durable lessons never live only in `schedule.json` reason fields
 (DEEP-2026-08-05).** The reason field is overwritten every full cycle; the
 leading-question trap above was originally documented only there and
@@ -596,6 +611,20 @@ forbids add-ons).
      unreachable, not exploitable. Log this as a distinct benchmark-reachable-
      but-book-too-wide skip, and re-check the ladder near the 2026-08-07
      08:30Z BLS release in case the book tightens.
+     **Recheck (2026-08-06 19:13Z, ~13h before release):** book tightened to
+     0.05 spread (now under `max_spread`) — the wide-book veto no longer
+     applies, but the edge itself doesn't clear the bar: best ask-edge across
+     the 4.0-4.3% legs is only 0.021-0.03 (4.1% No highest at 0.025, 4.3% No
+     at 0.03), under `min_edge` 0.04. The divergence direction is unchanged
+     from 15:41Z; it was never blocked on spread alone once you do the actual
+     ask-edge arithmetic — say so accurately next time rather than defaulting
+     to "unreachable." **`kalshi.py` usage note:** `markets --series-ticker
+     KXU3-26JUL` silently returns nothing — `KXU3-26JUL` is the *event*
+     ticker, not the series ticker (the series is just `KXU3`, spanning all
+     months). Use `markets --event-ticker KXU3-26JUL` to scope to one month's
+     ladder; `--series-ticker KXU3` returns all months unscoped. The tool
+     itself is correct (verified against the raw API this cycle); this was a
+     call-site error worth remembering so it doesn't cost another cycle.
    - **Devig with `strategy/tools/devig.py`, and use the POWER number for any
      side priced below ~0.60.** Proportional (divide-by-sum) devig spreads
      the vig evenly, but books load vig onto longshots (favorite-longshot
