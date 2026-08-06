@@ -662,6 +662,22 @@ forbids add-ons).
      (UI settings, which mirror/table); it does not apply to mechanical
      resolution sources (a number printed in an official filing/API),
      which aren't implicated by this evidence.
+   - **Same-day commodity price-threshold bets on a live geopolitical
+     conflict complex: don't extrapolate "realized range so far" as a
+     volatility bound (DEEP-2026-08-06).** `d6d71ab454dc` (WTI closes above
+     $77) estimated P(Yes)=0.12 mid-day from "needed move ($1-2.4) exceeds
+     realized range so far (~$1.40)" plus a same-day bearish catalyst
+     (Iran/Strait-of-Hormuz deal hopes) — WTI closed $77.75 (+3.37% on the
+     day), the tail move happened, in the opposite direction of the cited
+     catalyst. This contract sits on the same US-Iran conflict complex as
+     `d2dd24206542` (a ceasefire position that has itself round-tripped
+     0.92→0.14→0.20+ on headline swings) — that complex produces discrete
+     headline-driven jumps, not bounded continuation from a mid-day
+     snapshot. n=1, not enough for a numeric floor, but treat "range so
+     far" reasoning on conflict-linked commodities as unreliable; either
+     discount confidence well below what the range-based math implies, or
+     require a catalyst check close to the actual close rather than hours
+     before it.
 5. **Check the live book first** (`python3 strategy/tools/quote.py
    <clob_token_id>`, token ids are in scan output; if the sandbox blocks it,
    `curl -s "https://clob.polymarket.com/book?token_id=<id>" -o reports/book_<x>.json`
