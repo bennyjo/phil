@@ -422,6 +422,29 @@ esports), check current time against the actual listed start time in the
 description; if the game has started, skip — same rule as esports in-play,
 now confirmed to apply to traditional sports moneylines too.
 
+**MLB `Spread: TeamX (-1.5)` markets are per-team, not per-game — verify
+which team is the actual moneyline favorite before searching for a
+bookmaker run line (2026-08-06 15:41Z finding, 5-game sample).** Polymarket
+creates a separate -1.5 spread market for each team, e.g. an event can
+carry `Spread: Team A (-1.5)` and/or `Spread: Team B (-1.5)` independently,
+and which ones exist varies by game — sometimes only the underdog's (an
+alternate line: "underdog wins outright by 2+", a much rarer event than
+the standard "favorite lays 1.5"). A single bookmaker "run line" search
+(favorite -1.5 / dog +1.5) only prices the FAVORITE's -1.5 side; if PM's
+listed market is for the underdog's -1.5 instead, the numbers aren't
+comparable at all — buying either side off that mismatch is not a devig,
+it's noise. Confirm the PM moneyline favorite (or a moneyline search)
+matches the team named in the PM spread market before devigging against a
+bookmaker run line. In this cycle's sample: Marlins/Braves and
+Diamondbacks/Padres had PM markets on the underdog/coinflip side only
+(skipped, mismatched); Twins/Royals had a bookmaker run-line search that
+named the wrong favorite entirely (contradicted by both PM's and a second
+search's moneyline — discarded as an unreliable source, another instance
+of the cross-source-contradiction rule); only Tigers/Mariners had a
+verified favorite-side match, and its devig edge (0.014-0.018) came in
+under `min_edge_book_devig` (0.07) on both legs — no bet, but the match
+methodology held up and is worth reusing.
+
 Work from `core/scan.py` output (protected filters already applied).
 Prefer, in order:
 1. **Earnings-beat markets** (`Will X beat quarterly earnings?`) — resolve
@@ -557,6 +580,22 @@ forbids add-ons).
      residential IP too) — for Metaculus, WebSearch for the venue's pricing
      by name (e.g. "Kalshi Fed rate decision September odds") is still the
      only channel, same pattern as sportsbook odds coverage.
+   - **Kalshi has a per-1%-bracket "Above X%" ladder for the unemployment
+     rate, series `KXU3-<YY><MON>` (2026-08-06 15:41Z finding, not the same
+     series as the payrolls/CPI ladders already validated 2026-08-05
+     13:45Z).** Differencing adjacent `Above` contracts gives an implied
+     point distribution to compare against Polymarket's own bracket set —
+     for July 2026 it disagreed with PM's internal ranking (Kalshi peaked
+     4.2% at ~0.32 with 4.1%≈0.21/4.3%≈0.28; PM priced 4.3% highest at 0.335
+     with 4.1% close behind at 0.295, understating 4.2% and overstating
+     4.1%/4.3% by several points each vs the Kalshi-implied numbers). Real
+     divergence, but PM's per-bracket books on this cluster are thin and
+     wide (0.07-0.10 spread on the 4.1%/4.3% legs, `journal/ledger.jsonl`-
+     verified via `quote.py`) — over `max_spread` (0.06), a hard veto for a
+     benchmark-derived bet (Spread-rule scope below), so the divergence is
+     unreachable, not exploitable. Log this as a distinct benchmark-reachable-
+     but-book-too-wide skip, and re-check the ladder near the 2026-08-07
+     08:30Z BLS release in case the book tightens.
    - **Devig with `strategy/tools/devig.py`, and use the POWER number for any
      side priced below ~0.60.** Proportional (divide-by-sum) devig spreads
      the vig evenly, but books load vig onto longshots (favorite-longshot
