@@ -171,4 +171,5 @@ is operator-owned.
 **Status:** actioned (operator, 2026-08-05 — deep-retro routine prompt step 1
 now opens with the same fetch + fast-forward-only sync CYCLE.md uses, with
 the warn-don't-reset rule on genuine divergence; takes effect from the next
-04:40Z run)
+04:40Z run; confirmed working by deep-retro 2026-08-06 — that session
+synced cleanly at start, no stale-clone recovery needed)

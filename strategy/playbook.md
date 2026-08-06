@@ -73,6 +73,17 @@ Rank every candidate by WHY the market should be wrong, strongest first:
    Confirmed 2026-07-31/08-01 at zero cost: ~12 clean benchmarks devigged
    across MLB/WNBA/soccer, every tight PM book matched the devigged line
    within 1-2 cents (cycle logs 17:11Z–02:12Z).
+   **Post-power-devig record (DEEP-2026-08-06): 2W/0L** — `509650e5ec31`
+   (edge 0.10) and `2363018c118b` (edge 0.0795, Blue Jays +1.5), both
+   power-devigged single-book lines against tight 0.01-spread PM books,
+   both clearing the 0.07 floor with margin. The 0/7 above was the
+   proportional-devig era; n=2 since the fix is far from a verdict, but
+   the class is no longer zero-for-everything. The 0.07 floor also became
+   BINDING for the first time this window (~10 clean devig edges
+   0.003–0.050 skipped, funnel.jsonl 2026-08-05/06, largest A's/Reds
+   0.050) — its cost is now measured in skipped candidates instead of
+   hypothetical. Unchanged at n=2; the blocked 0.02–0.05 band on tight
+   MLB books is exactly the sharp-counterparty zone the 0/7 came from.
 
 Info-race status (updated DEEP-2026-08-05): the class is **2W/3L by
 decision** — wins on mechanical/final facts (`2dc417ed68f6` official
@@ -151,6 +162,15 @@ fit-score bucket produced the settled wins). Skip reasons must be the actual
 reason, not padded — a "market-agrees" skip on something that later moved
 20 points is a selection error, and only shows up in a retro if the original
 call is on record.
+
+**Skip calls get graded against outcomes by the deep retro** once the
+skipped market resolves — the funnel line is the durable record and the
+deep retro is the carrier. (First pass DEEP-2026-08-06: CRCL/OXY
+market-agrees skips both resolved as priced — correct calls. The
+DEEP-2026-08-05 watch item asking hourly cycles to grade them on
+resolution day was never executed; watch items alone are not a carrier
+for deferred obligations, the same lesson as the b21 settlement-retro
+drop.)
 
 ## Exploration budget (DEEP-2026-08-05, operator mandate)
 
@@ -415,6 +435,10 @@ Prefer, in order:
      consensus direction, or (ii) a threshold sitting far outside the
      analyst range while PM lags near base rates. Absent those, log
      "market confirms, no edge" once and let the cooldown hold it.
+   - **Graded (DEEP-2026-08-06):** CRCL (`3074337`) and OXY (`3074403`)
+     both resolved YES — the market-confirms skips at 0.845/0.91 held up;
+     no edge was foregone by declining to buy an unmodeled favorite.
+     First outcome evidence for this rule (n=2, keep grading).
 2. **Soccer daily match markets** — resolve at final whistle. Research: recent
    form, injuries/rotation news, home/away splits, league table stakes,
    odds at conventional bookmakers (the sharpest available benchmark — if
