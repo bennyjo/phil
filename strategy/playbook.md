@@ -400,6 +400,15 @@ Prefer, in order:
      threshold was GAAP $0.16 while every findable consensus ($0.165-$0.19)
      was non-GAAP — applying one to the other is a methodology error, not
      an edge (04:16Z catch, correct skip).
+     **Extension (2026-08-06 03:13Z, ABNB `3074288`):** GAAP-specific
+     consensus is frequently just unfindable via WebSearch, not merely a
+     basis-mismatch risk — every source for Airbnb's Q2 2026 report
+     (Yahoo, TipRanks, StockStory, MarketBeat) reported non-GAAP/adjusted
+     EPS ($1.19-$1.26) while the market's threshold was GAAP $1.25; no
+     source gave a standalone GAAP figure. Treat "no GAAP-basis number
+     found" as benchmark-unreachable by default for GAAP-threshold beat
+     markets, the same as a basis mismatch — don't fall back to the
+     non-GAAP consensus as a stand-in.
    - **"Consensus clears the threshold" is not an edge when PM already
      prices it ≥~0.80** (CRCL 0.845, OXY 0.91): the market has the same
      consensus. The tradeable shapes are (i) PM price *contradicting* the
