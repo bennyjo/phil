@@ -333,6 +333,21 @@ won't fix it the way it does for e.g. earnings consensus. Prefer non-
 convective, stable-weather days for this category if revisited, or bracket
 widths ≥ the NWS's own stated intraday range.
 
+**Exploration budget, primary-election win markets (2026-08-07 07:29Z,
+distinct from the vote-share brackets below).** Hypothesis: "named-pollster
+averages (not just single polls) are a reachable benchmark for primary
+win-probability markets close to the vote." Wisconsin Governor Democratic
+primary (2026-08-11): two independent named-pollster results (Marquette,
+Main Street Action) into early August both show Francesca Hong leading
+David Crowley by a wide, stable double-digit margin (38-44% vs 7-15%). PM
+prices Hong Yes=0.921, Crowley Yes=0.08 — consistent with a dominant,
+stable leader this close to the vote. Result: **reachable** (named-pollster
+averages are a normal WebSearch hit for any actively-polled primary) but
+**no edge** this instance — market already reflects the polling lead.
+Category ruled in (not out): revisit closer-margin primaries, or ones
+without recent, WebSearch-findable pollster figures, before generalizing
+further.
+
 **Exploration budget, politics vote-share brackets (2026-08-06 19:13Z, first
 test of this category).** Hypothesis: "vote-count resolution is mechanical;
 is a constituency poll a granular enough benchmark for a 10-point bracket?"
