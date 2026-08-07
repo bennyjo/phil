@@ -333,6 +333,19 @@ won't fix it the way it does for e.g. earnings consensus. Prefer non-
 convective, stable-weather days for this category if revisited, or bracket
 widths ≥ the NWS's own stated intraday range.
 
+**Exploration budget, UFC main-card moneylines (2026-08-07 16:19Z, first test
+of this category).** Hypothesis: "UFC main-card moneylines have dense enough
+multi-book sportsbook coverage to devig, and PM either lags or tracks them
+loosely enough to leave edge." Gamrot vs Salkilld (UFC Vegas 120, >24h
+pre-fight): three independent books (DraftKings, FanDuel, opening line) agree
+on favorite and magnitude; power devig (DraftKings) gives Salkilld fair 0.567
+vs PM mid 0.575 — within 0.008. Result: **reachable** (multi-book UFC
+moneyline coverage is a normal WebSearch hit, unlike the esports-echo trap)
+but **no edge** this instance — PM tracks the sportsbook consensus tightly.
+Category ruled in, not out; single-book UFC prop markets (KO/TKO, distance)
+are a distinct, untested benchmark question — do not assume the same result
+transfers to those without checking.
+
 **Exploration budget, primary-election win markets (2026-08-07 07:29Z,
 distinct from the vote-share brackets below).** Hypothesis: "named-pollster
 averages (not just single polls) are a reachable benchmark for primary
