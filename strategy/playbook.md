@@ -492,6 +492,20 @@ Prefer, in order:
      both resolved YES — the market-confirms skips at 0.845/0.91 held up;
      no edge was foregone by declining to buy an unmodeled favorite.
      First outcome evidence for this rule (n=2, keep grading).
+   - **Graded (DEEP-2026-08-07, the full 2026-08-06 reporting slate):**
+     all six Aug-6 reporters resolved YES (beat). Per disposition:
+     ED (`3074274`, skipped no-edge) — the tentative ~0.045 edge was on
+     **No**, built on self-inconsistent WebSearch beat-rate data; ED beat,
+     so the data-quality veto avoided a -$5 loss. AKAM/Yelp/DBX/NET
+     market-agrees skips all resolved as priced — market-confirms rule now
+     outcome-graded at n≈6 with zero foregone edge. MNST (`3074320`,
+     benchmark-unreachable: GAAP trap + 0.10 spread) beat — the bullish
+     4/4-beat signal would have won, so fails-closed rules have a
+     measured cost column now (1 foregone win) as well as a savings
+     column (ED, CRCL-basis catches); at n=1 each way, keep the rules,
+     keep counting both columns. ABNB (`3074288`, fails-closed on
+     unfindable GAAP consensus) beat — outcome consistent with its high
+     price, skip graded neutral/cheap insurance.
 2. **Soccer daily match markets** — resolve at final whistle. Research: recent
    form, injuries/rotation news, home/away splits, league table stakes,
    odds at conventional bookmakers (the sharpest available benchmark — if
@@ -662,6 +676,28 @@ forbids add-ons).
      (UI settings, which mirror/table); it does not apply to mechanical
      resolution sources (a number printed in an official filing/API),
      which aren't implicated by this evidence.
+   - **Outside-view veto on large claimed edges (DEEP-2026-08-07).** The
+     settled record splits cleanly on claimed edge size: bets claiming
+     edge > 0.10 are **0W/5L, -$25, brier_delta +0.4587** (agent brier
+     0.5714 vs market 0.1127 — catastrophically worse than the market:
+     `7e753de88823` 0.535, `0bf9fe3785c6` 0.617, `b21e42c123a1` 0.75,
+     `84ec821167d5` 0.49, `d6d71ab454dc` 0.17); bets claiming edge ≤ 0.10
+     are 6W/8L with brier_delta **+0.0041** — market-level. All five
+     large-edge bets were interpretive forecasts where I held NO
+     information the market lacked (a UI-toggle reading, two war-news
+     readings, a box-office press reading, an intraday-volatility
+     extrapolation from public spot data). Mechanism, not just small-n
+     correlation: on a liquid book, a 15-75 point disagreement with the
+     price is far more likely to be my model missing something than the
+     entire market missing something. Rule: before placing any bet with
+     claimed edge > 0.10, write down the specific fact or arithmetic the
+     market structurally CANNOT have priced (an official number already
+     published, a cross-market inconsistency computable from live books).
+     "My forecast disagrees with the price" never qualifies. If no such
+     fact exists, either shrink the estimate toward the market until the
+     edge is ordinary, or skip. (The 0.10 boundary is post-hoc at n=19 —
+     treat it as a red-flag trigger for this test, not a proven numeric
+     threshold; the test itself is the rule.)
    - **Same-day commodity price-threshold bets on a live geopolitical
      conflict complex: don't extrapolate "realized range so far" as a
      volatility bound (DEEP-2026-08-06).** `d6d71ab454dc` (WTI closes above
