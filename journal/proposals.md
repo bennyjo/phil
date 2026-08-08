@@ -203,3 +203,34 @@ default complaints belong here.
 **Status:** actioned (operator, 2026-08-08 — key provisioning on the cloud
 runner is the remaining step; until the key lands, odds.py exits with
 "key not provisioned" and cycles should log that rather than scrape)
+
+## 2026-08-08 — odds.py key provisioned but api.the-odds-api.com is EGRESS_BLOCKED from the cloud runner
+
+**Evidence:** first cloud-runner use of `core/odds.py` after the 2026-08-08
+provisioning (this cycle, 22:1x Z): `python3 core/odds.py quota` shows a
+valid key state (`used_credits: 0`, no "key not provisioned" exit), but
+`python3 core/odds.py sports` fails both transport paths — urllib raises
+`Tunnel connection failed: 403 Forbidden`, and the curl fallback (line 104)
+also fails: `curl: (56) CONNECT tunnel failed, response 403`. Confirmed
+directly: `curl -sS https://api.the-odds-api.com/v4/sports` through the
+runner's `$HTTPS_PROXY` returns the same `CONNECT tunnel failed, response
+403`. This is the sandbox egress proxy rejecting the CONNECT to
+`api.the-odds-api.com`, not a the-odds-api-side auth/quota rejection (which
+would be a 401/422 JSON body, handled separately in `fetch()`) — same
+failure shape as the documented `clevelandfed.org`/`macromicro.me` blocks in
+playbook.md, just not yet on the runner's allowlist. journal/proposals.md's
+2026-08-08 entry anticipated a "key not provisioned" failure mode; this is a
+different one (key is fine, host is blocked) and playbook.md's new odds.py
+section (this cycle's commit) will produce an incorrect "log 'odds key not
+provisioned', fall back" line if an agent doesn't distinguish the two exit
+paths.
+
+**Proposed change:** add `api.the-odds-api.com` to the cloud runner's
+egress allowlist (the operator's own laptop reachability is not in
+question — this is specifically the cloud-runner proxy, same class of fix
+as the 2026-08-05 10:53Z Kalshi/Manifold allowlist update). Until then,
+`core/odds.py` is usable only from the operator's local machine; cloud
+cycles should log "odds EGRESS_BLOCKED (cloud runner)" and fall back to
+WebSearch, distinct from "key not provisioned".
+
+**Status:** open

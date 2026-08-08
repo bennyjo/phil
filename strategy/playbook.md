@@ -258,6 +258,18 @@ If the key is missing or the budget is exhausted, `core/odds.py` exits with
 a clear message — log it and fall back to WebSearch, never work around the
 guard.
 
+**Cloud-runner caveat (found first cloud use, 2026-08-08 ~22:1xZ):**
+`api.the-odds-api.com` is EGRESS_BLOCKED from the cloud runner specifically
+— both urllib and the curl fallback get `CONNECT tunnel failed, response
+403` from the sandbox proxy, distinct from a "key not provisioned" exit or
+an API-side 401/422. Check which failure you got before logging: a clean
+`sys.exit` naming the key/budget is the guard working as designed; a
+`Tunnel connection failed`/`curl: (56)` traceback is the egress block —
+log "odds EGRESS_BLOCKED (cloud runner)" and fall back to WebSearch, same
+as the clevelandfed.org/macromicro.me pattern above. Filed as a proposal
+(journal/proposals.md 2026-08-08) — re-check `sports` each cycle in case
+the allowlist changes.
+
 **Sensing addition (DEEP-2026-08-05):** `strategy/discovery.py` query 4
 ("econ-tag", gamma `tag_id=100328`) targets Polymarket's Economy tag with no
 volume floor — Fed-rate-decision and GDP-bracket markets that resolve off an
