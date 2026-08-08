@@ -234,3 +234,38 @@ cycles should log "odds EGRESS_BLOCKED (cloud runner)" and fall back to
 WebSearch, distinct from "key not provisioned".
 
 **Status:** open
+
+---
+
+## 2026-08-08 — Polymarket's own APIs (gamma-api, clob) are now EGRESS_BLOCKED from the cloud runner, not just api.the-odds-api.com
+
+**Evidence:** this cycle (23:1xZ, LIGHT tick), `python3 core/resolve.py`
+failed to fetch market 2937525 from `gamma-api.polymarket.com`: `<urlopen
+error Tunnel connection failed: 403 Forbidden>` (settled 0 of 19 as a
+result — cannot be distinguished from "nothing resolved yet" without this
+note). `strategy/tools/quote.py` on the one open position's token
+(d2dd24206542, US x Iran ceasefire No) failed both its urllib and curl
+fallback paths against `clob.polymarket.com/book`: curl exit 56 (connect
+failure). Confirmed at the proxy layer, not app-layer: `curl -sS
+"$HTTPS_PROXY/__agentproxy/status"` lists both hosts in
+`recentRelayFailures` at 23:13:2x-28Z: `{"kind": "connect_rejected",
+"detail": "gateway answered 403 to CONNECT (policy denial or upstream
+failure)", "host": "gamma-api.polymarket.com:443"}` and the same for
+`clob.polymarket.com:443`. This is the identical failure shape as the
+2026-08-08 odds-api entry above (proxy CONNECT 403, not an app 401/404),
+but on the two hosts the whole trading loop depends on for settlement and
+live-book pricing — every prior cycle today (through 22:13Z) reached both
+hosts fine, so this is a new/intermittent allowlist regression, not a
+standing gap. Per CYCLE.md's operational note ("if Polymarket APIs are
+unreachable, write the failure to journal/cycles.log, commit and push what
+is valid, and stop"), this cycle stopped after settle+monitor without
+placing bets or attempting scan/research.
+
+**Proposed change:** re-check/re-add `gamma-api.polymarket.com` and
+`clob.polymarket.com` to the cloud runner's egress allowlist alongside
+`api.the-odds-api.com` — these three are now all showing the same
+proxy-level CONNECT-403 pattern. Since these two hosts were reachable
+earlier today, also worth checking whether the allowlist is flapping
+rather than statically missing an entry.
+
+**Status:** open
