@@ -304,6 +304,31 @@ weather test + econ re-check + soccer 1X2, zero bets placed):**
   current consensus. Cross-check any scheduled-release search result's
   implied publish date against the event's actual date before using it —
   don't trust the query's own year framing to have filtered correctly.
+- **Same trap, multi-game-series form: WebSearch for "today's" run line odds
+  on a series opener/finale skews toward the PRIOR game in the series, and
+  favorites can flip game-to-game (different starting pitchers) — no bet
+  placed, caught before placement (2026-08-08 02:13Z).** Scanned 5 same-day
+  MLB spread candidates (NYY-1.5, WAS-1.5, ARI-1.5, CLE-1.5, TEX-1.5/-2.5),
+  all part of 2-3 game series. Initial searches for "run line odds August 8"
+  returned articles explicitly dated/framed for August 7 (one snippet even
+  said outright "the game was played on August 7"), not the still-upcoming
+  Aug 8 game the PM market resolves on. Devigging that stale line against
+  today's PM ask produced an apparently huge edge (~0.10-0.14) on NYY-1.5 and
+  WAS-1.5 — but a follow-up search pinned to the correct date and probable
+  starters (Braves' Aug 8 starter, Reds' Chase Burns vs Nationals' Alvarez)
+  showed the FAVORITE HAD FLIPPED both games: Atlanta (not Yankees) and
+  Cincinnati (not Washington) were the correct day's -1.5 favorites. The
+  "edge" was an artifact of benchmarking against the wrong game entirely,
+  not a real mispricing — and even the corrected line was unusable, since it
+  only quotes the actual favorite's -1.5 side (Braves/Reds), leaving PM's
+  underdog-framed market (Yankees/Nationals -1.5) with no matching book
+  quote (reverse-line-mismatch trap, existing rule). Rule: for any series
+  game, confirm the search result's date AND probable starting pitcher names
+  match the specific game the PM market resolves on before devigging —
+  "today" in a query is not enough to prevent the summarizer surfacing the
+  most recent (usually prior) game in the same series. Treat an unconfirmed
+  game-date/pitcher match as benchmark-unreachable, not as license to use
+  the nearest available number.
 - **Odds-comparison sites report "best odds" shopped per side across
   different bookmakers, not one book's coherent line — devigging that
   composite is a version of the cross-book-mixing trap** (first named in
