@@ -513,6 +513,24 @@ verified favorite-side match, and its devig edge (0.014-0.018) came in
 under `min_edge_book_devig` (0.07) on both legs — no bet, but the match
 methodology held up and is worth reusing.
 
+**Selection pre-filter for this category (DEEP-2026-08-08, from the
+funnel record).** The 2026-08-07/08 window spent 15 of 35 research slots
+on mlb-spreads and got 9 benchmark-unreachable skips and 0 bets —
+`strategy/funnel.jsonl` cycles 04:15Z–02:13Z. The unreachables are
+structural, not bad luck: an underdog-framed `Spread: TeamX (-1.5)` (X is
+not the book favorite) has NO matching book quote by construction (books
+quote favorite -1.5 / dog +1.5; dog -1.5 is a rarer alt line few books
+carry), and series games add the wrong-day/starter-flip trap on top. So
+run the two cheap checks AT SELECTION TIME, before the candidate gets a
+research slot: (1) one moneyline lookup to confirm the PM spread's named
+team IS the favorite — if not, log the candidate straight to the funnel
+as benchmark-unreachable (fit-score benchmark=N) and spend the slot
+elsewhere; (2) for any series game, the date+probable-starter pin
+(2026-08-08 02:13Z rule above) before any devig. Full research effort is
+reserved for favorite-framed, date-pinned spreads — the only
+configuration that has ever produced a usable benchmark match in this
+category (Tigers/Mariners 2026-08-06; the 2363018c118b win).
+
 Work from `core/scan.py` output (protected filters already applied).
 Prefer, in order:
 1. **Earnings-beat markets** (`Will X beat quarterly earnings?`) — resolve
@@ -559,6 +577,12 @@ Prefer, in order:
      keep counting both columns. ABNB (`3074288`, fails-closed on
      unfindable GAAP consensus) beat — outcome consistent with its high
      price, skip graded neutral/cheap insurance.
+   - **Graded (DEEP-2026-08-08):** UAA (`3089555`) resolved YES. The
+     no-signal skips (threshold $0.02 = consensus exactly, $187 book,
+     last priced ~0.52-0.62) grade as process-correct /
+     outcome-uninformative — with no directional signal there is no
+     foregone-edge claim either way on a coin-flip-priced market.
+     Market-confirms tally unchanged at n≈6, zero foregone edge.
 2. **Soccer daily match markets** — resolve at final whistle. Research: recent
    form, injuries/rotation news, home/away splits, league table stakes,
    odds at conventional bookmakers (the sharpest available benchmark — if
@@ -692,6 +716,22 @@ forbids add-ons).
      ladder; `--series-ticker KXU3` returns all months unscoped. The tool
      itself is correct (verified against the raw API this cycle); this was a
      call-site error worth remembering so it doesn't cost another cycle.
+     **Outcome graded (DEEP-2026-08-08): July printed 4.1%** (FRED UNRATE,
+     2026-07-01 row, pulled directly). Both venues' modes were wrong —
+     Kalshi-implied peak 4.2% (~0.32), PM peak 4.3% (0.335) — so the
+     divergence the six-check thread was chasing was two thin, wrong
+     distributions disagreeing, not information. The noise-read skips were
+     validated concretely: the final pre-release candidate (4.1% No at
+     edge 0.04, exactly at min_edge, 07:30Z) was on the wrong side of the
+     print and would have lost. Rule: **a Kalshi-vs-PM price divergence is
+     a benchmark only when one side has a mechanical anchor** (official
+     nowcast, arithmetic on published components); two order books
+     disagreeing about the same unknown is a spread, not an edge — trade
+     it only with an independent estimate of the underlying, held to the
+     same standards as any other estimate. Honest caveat: my own
+     fair-value lean pointed away from the outcome (read 4.1% as
+     overpriced at ~0.295), so the discipline saved a loss the estimate
+     would have taken. n=1; grade the next ladder print the same way.
    - **Devig with `strategy/tools/devig.py`, and use the POWER number for any
      side priced below ~0.60.** Proportional (divide-by-sum) devig spreads
      the vig evenly, but books load vig onto longshots (favorite-longshot
