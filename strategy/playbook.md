@@ -370,6 +370,15 @@ but **no edge** this instance — PM tracks the sportsbook consensus tightly.
 Category ruled in, not out; single-book UFC prop markets (KO/TKO, distance)
 are a distinct, untested benchmark question — do not assume the same result
 transfers to those without checking.
+**Second test (2026-08-08 08:15Z), UFC 330 Makhachev vs Machado Garry
+(main event, 7 days pre-fight):** multiple books agree closely (FanDuel
+-390/+280, DraftKings -325/+240, two other sources -335/+275,+300) —
+reachable confirmed a second time. DraftKings power devig: Makhachev fair
+0.7426, Garry fair 0.2574; PM live ask Makhachev 0.76, Garry 0.25 (spread
+0.01) — edges -0.017 and +0.007, both under min_edge. Same result as the
+first test: reachable, tight, no edge. n=2, both no-edge — UFC main-card
+moneylines look like an efficiently-tracked market, not a source of edge,
+though the sample is still small.
 
 **Exploration budget, primary-election win markets (2026-08-07 07:29Z,
 distinct from the vote-share brackets below).** Hypothesis: "named-pollster
