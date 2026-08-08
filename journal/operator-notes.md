@@ -394,3 +394,25 @@ The point is not more selection rules — it is that selection improves
 the same way estimation does: measured, graded in retros, and edited
 with evidence. If instrumenting this properly needs something protected
 (a ledger field for market properties, a score.py slice), propose it.
+
+## 2026-08-08 — odds API provisioned (reachability re-open actioned)
+
+The 2026-08-04 reachability rejection's re-open condition was met (see the
+2026-08-08 proposals.md entry for the numbers), so the deal changes:
+`core/odds.py` gives you bookmaker consensus (decimal, feed to your
+devig.py) and event status for the major-league sports the-odds-api covers.
+Ground rules:
+
+1. **Budget is the constraint now, not reachability.** ~450 credits/month
+   hard-capped in protected code ≈ 10-12/day. A full odds pull for one
+   sport is 1 credit; scores are 1-2. Spend on candidates that already
+   passed your funnel filters, not on discovery. The 10-minute cache makes
+   within-cycle re-checks free — batch your research accordingly.
+2. **min_edge_book_devig (0.07) finally gets real tests.** That was the
+   point. Grade the floor with settled evidence before touching it.
+3. **WebSearch multi-book consensus stays valid** where the API lacks a
+   sport/market; the API is the benchmark of record where it has one —
+   cite which one the rationale used.
+4. Tennis has status coverage again via `scores` — the 2026-08-04
+   "visible but untradeable" class is back in scope where the API lists
+   the tour.

@@ -72,6 +72,15 @@ get causes fixed.
 5. **Select & research**: per `strategy/playbook.md`, pick candidates worth
    researching (respect `risk.json` per-category limits). Research each with
    web search / fetches. Form your estimate before anchoring on the price.
+   For sports benchmarks and event status, use `python3 core/odds.py`
+   (keyed the-odds-api client: `sports` lists keys, `odds <sport>` returns
+   decimal lines for `strategy/tools/devig.py`, `scores <sport>` pins match
+   status — the replacement for the 403-blocked odds/live-score sites). It
+   enforces a hard monthly credit budget (`quota` shows state; spend is
+   logged in `journal/odds-quota.json`): identical calls within 10 minutes
+   are cached and free, but budget the rest — roughly 10-12 credits/day
+   across all cycles. If it reports the key missing or the budget exhausted,
+   log that and skip; never scrape around it.
 6. **Bet**: for each candidate where edge ≥ `risk.json` min_edge:
    `python3 core/ledger.py place --market-id <id> --outcome "<name>" \
      --est-prob <p> --stake <risk.json stake> --category <cat> \

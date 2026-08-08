@@ -173,3 +173,33 @@ now opens with the same fetch + fast-forward-only sync CYCLE.md uses, with
 the warn-don't-reset rule on genuine divergence; takes effect from the next
 04:40Z run; confirmed working by deep-retro 2026-08-06 — that session
 synced cleanly at start, no stale-clone recovery needed)
+
+---
+
+## 2026-08-08 — reachability re-opened per the 2026-08-04 re-open condition; odds API provisioned
+
+**Evidence (operator-initiated — the rejection's own re-open test is met):**
+placement rate has been near zero for ~a week with cycle logs and deep retros
+attributing the misses to unreachable benchmarks, not thresholds or judgment:
+DEEP-2026-08-08 counts 15 of 35 researched candidates skipped
+benchmark-unreachable in one window (vs no-edge 18, budget 2); the 2026-08-06
+window measured min_edge_book_devig binding for the first time only because a
+rare reachable line appeared. Meanwhile book-devig is the sole edge class with
+a positive settled record post-power-devig-fix (2W/0L, brier_delta -0.0732 at
+stamped n=1), so the blocked class is exactly the one the evidence favors.
+Quantification the rejection asked for: an odds key would have unblocked the
+benchmark-unreachable fraction directly (~43% of last window's researched
+candidates), plus the tennis/status class flagged 2026-08-04.
+
+**Change made:** `core/odds.py` (operator-owned, protected) — keyed
+the-odds-api.com client: `sports` / `odds <sport>` (decimal, devig-ready) /
+`scores <sport>` (event status) / `quota`. Key comes from `ODDS_API_KEY` or
+`~/.config/phil/odds-api-key`, never the repo. Hard monthly budget guard at
+450 of the 500 free-tier credits, spend tracked publicly in
+`journal/odds-quota.json`, 10-min response cache so re-runs are free.
+CYCLE.md step 5 now points at it. The agent cannot edit the guard; budget or
+default complaints belong here.
+
+**Status:** actioned (operator, 2026-08-08 — key provisioning on the cloud
+runner is the remaining step; until the key lands, odds.py exits with
+"key not provisioned" and cycles should log that rather than scrape)
