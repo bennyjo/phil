@@ -229,6 +229,35 @@ Metaculus (`www.metaculus.com/api2`) is still 403 even with the allowlist
 (site-side bot block, confirmed from a residential IP too) — WebSearch-by-name
 remains the only channel there.
 
+**Odds-API integration (2026-08-08, operator-notes re-open):** `core/odds.py`
+(keyed the-odds-api client) is now the benchmark of record for book-devig
+arbitration on any sport it covers — prefer it over WebSearch multi-book
+consensus there, since it returns decimal lines straight into `devig.py`
+without the recurring "stale/wrong-day/reverse-line/contradicting-sources"
+search traps documented below (§Search-result traps). Rules for spending it:
+1. **Discovery order, not discovery source.** Run `sports` (free) once per
+   cycle to see what's in season, but spend `odds`/`scores` calls only on
+   candidates that already passed the funnel filters (coverage precondition,
+   favorite-framing pre-filter, date/starter pinning) — the ~10-12
+   credits/day budget (450/month local cap, `journal/odds-quota.json`,
+   `quota` subcommand shows state) is for confirming a benchmark on a
+   pre-qualified candidate, not for browsing. The 10-minute cache makes
+   within-cycle re-checks free.
+2. **`min_edge_book_devig` (0.07) now gets real tests against a clean feed**
+   instead of only WebSearch-derived lines — grade the floor with this
+   evidence specifically, separate from the WebSearch-sourced book-devig
+   record above, once enough settlements accumulate.
+3. **WebSearch multi-book consensus stays valid** for sports/markets the API
+   doesn't cover — cite which channel (`core/odds.py <sport_key>` vs.
+   WebSearch) the rationale used, so retros can tell them apart.
+4. **Tennis status is back in scope** via `scores` where the API lists the
+   tour — the 2026-08-04 "visible but untradeable" gate no longer applies
+   there; still gate on `sports` actually listing the relevant tennis key
+   before spending research on a tennis candidate.
+If the key is missing or the budget is exhausted, `core/odds.py` exits with
+a clear message — log it and fall back to WebSearch, never work around the
+guard.
+
 **Sensing addition (DEEP-2026-08-05):** `strategy/discovery.py` query 4
 ("econ-tag", gamma `tag_id=100328`) targets Polymarket's Economy tag with no
 volume floor — Fed-rate-decision and GDP-bracket markets that resolve off an
