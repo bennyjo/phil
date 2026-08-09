@@ -258,6 +258,23 @@ If the key is missing or the budget is exhausted, `core/odds.py` exits with
 a clear message — log it and fall back to WebSearch, never work around the
 guard.
 
+**First clean-feed sweep result (2026-08-09 02:12Z, DEEP-2026-08-09):** the
+feed's first working cycle devigged 7 favorite-framed MLB -1.5 spreads and 2
+WNBA markets (2+2 credits, 9 books deep): max nominal edge **0.018** at the
+mid (MLB, Pirates), 0.025-0.035 (WNBA) — all under base min_edge 0.04, let
+alone min_edge_book_devig 0.07. Every prior "big" sports-devig edge in the
+settled record came from scraped/stale/wrong-day lines (the 0/7 graveyard);
+with a clean, current line the measured gap to tight PM books is ~0.02.
+Allocation consequence (one slate, small-n, but it agrees with the whole
+settled record): sports devig is now a CHEAP CONFIRMATION step (a couple of
+credits, minutes), not a place to spend the research hour. The marginal
+research hour goes to mechanical-resolution non-sports — the CPI cluster
+(Aug 10-12, FRED/BLS direct), econ-tag markets, post-count brackets near
+period end — where the settled evidence (mechanical facts 2W-0L) and the
+architecture argument (operator-notes 2026-08-05) already pointed. Run the
+sweep, log it, move on; a sports bet now needs the feed to hand you ≥0.07
+on a current line, which day 1 suggests is rare.
+
 **Cloud-runner caveat (found first cloud use, 2026-08-08 ~22:1xZ):**
 `api.the-odds-api.com` is EGRESS_BLOCKED from the cloud runner specifically
 — both urllib and the curl fallback get `CONNECT tunnel failed, response

@@ -233,7 +233,12 @@ as the 2026-08-05 10:53Z Kalshi/Manifold allowlist update). Until then,
 cycles should log "odds EGRESS_BLOCKED (cloud runner)" and fall back to
 WebSearch, distinct from "key not provisioned".
 
-**Status:** open
+**Status:** rejected (deep-retro 2026-08-09 — moot/transient: api.the-odds-api.com
+was reachable from the cloud runner at 2026-08-09 02:12Z and served a 6-credit
+sweep with zero proxy errors, with no visible operator action in between. The
+block was flapping, not a standing allowlist gap. Re-file citing at least two
+dated CONNECT-403 instances if it recurs, so flapping infra can be
+distinguished from a stale allowlist)
 
 ---
 
@@ -268,7 +273,9 @@ proxy-level CONNECT-403 pattern. Since these two hosts were reachable
 earlier today, also worth checking whether the allowlist is flapping
 rather than statically missing an entry.
 
-**Status:** open
+**Status:** rejected (deep-retro 2026-08-09 — moot/transient: both hosts
+served every tick after 23:13Z, including full settle/monitor/quote cycles;
+same evidence and same re-file condition as the odds-api entry above)
 
 ---
 
@@ -288,4 +295,7 @@ recurs -- closing the loop on the open items above with this observation.
 If a future cycle sees the same CONNECT-403 pattern again, that would argue
 for flapping/intermittent infra rather than a one-time fix, worth a look.
 
-**Status:** open (informational; not asking for action unless the block recurs)
+**Status:** endorsed by deep-retro (2026-08-09 — correct closing observation;
+the durable residue is the playbook rule to re-verify reachability each cycle
+rather than trusting yesterday's block. The two 2026-08-08 entries above are
+closed as moot on this evidence; recurrence condition documented there)
