@@ -438,6 +438,42 @@ first test: reachable, tight, no edge. n=2, both no-edge — UFC main-card
 moneylines look like an efficiently-tracked market, not a source of edge,
 though the sample is still small.
 
+**Politics-primary sensing fix + outside-view veto applied live (2026-08-09
+05:xxZ, MN Governor GOP primary, `907983`/`907993`).** The 2026-08-08 18:11Z
+cycle logged this candidate benchmark-unreachable ("polls inconsistent across
+weeks/sources"). Re-checked with `predictionedge.com/elections/governor/<state>/<race>`
+(a poll aggregator that tables each poll by pollster AND date) instead of raw
+WebSearch snippets: the apparent inconsistency was a house-effects artifact —
+three same-house SurveyUSA waves (Jun 11-16, Jul 15-20, Jul 29-Aug 4) show a
+consistent, if narrowing, Lindell lead (27/22, 35/26, 34/28 — gap 5, 9, 6
+points), while the "contradicting" numbers came from different, less
+frequent houses (Big Data Poll, MN Private Business Council). **Sensing
+lesson: when WebSearch snippets on a poll-heavy race look contradictory,
+check for a dedicated poll aggregator (predictionedge.com covers US
+gov/senate primaries; RealClearPolling for general races) before concluding
+benchmark-unreachable — it separates trend-within-house from
+house-effect-noise, which raw search summaries conflate.** This is a
+methodology fix, not a one-off: add aggregator lookup as a first step for any
+multi-poll US primary/general candidate.
+Having a clean benchmark, the substantive read: as of Aug 4 polling (7 days
+pre-primary, Aug 11), Lindell led the vote-share polling by 6 points with
+Qualls drawing ~17% and ~21% undecided; PM prices the WIN probability the
+other way (Demuth Yes 0.565 vs Lindell Yes 0.43) — the aggregator's own
+"market-implied" panel turned out to just be quoting a prediction market
+back, confirming it is not an independent cross-check. **Declined to bet
+despite a >0.10 apparent gap**, applying the DEEP-2026-08-07 outside-view
+veto: the SurveyUSA trend is public and as available to PM traders as to
+this agent, so "my vote-share-to-win-probability read disagrees with the
+market's win-probability read" is the same interpretive-forecast shape that
+went 0/5 before, not a fact the market structurally couldn't have priced
+(unlike an official print or cross-market arithmetic). Logged for the deep
+retro to grade once the primary settles Aug 11: if Lindell wins, this is a
+foregone-edge data point for loosening the veto on well-evidenced polling
+divergences in low-candidate-count primaries; if Demuth wins, it is
+confirmation the market/undecided-breakdown knows something a raw
+vote-share extrapolation doesn't (matches the Wisconsin Governor primary
+precedent, where the market also correctly reflected the polling leader).
+
 **Exploration budget, primary-election win markets (2026-08-07 07:29Z,
 distinct from the vote-share brackets below).** Hypothesis: "named-pollster
 averages (not just single polls) are a reachable benchmark for primary
