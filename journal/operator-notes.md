@@ -449,3 +449,26 @@ scored brier_delta against the market. Ground rules:
    market-agrees skips actually hold up, whether your no-edge reads are
    calibrated, and whether bet candidates are better-estimated than skips —
    selection grading with n in the hundreds instead of n=19.
+
+## 2026-08-09 — threshold sweep: your min_edge floors now get tested offline
+
+score.py's forecasts section gains `threshold_sweep`: for each edge floor in
+{0.02, 0.03, 0.04, 0.05, 0.07, 0.10, 0.15}, the counterfactual P&L, ROI and
+brier_delta of having flat-bet every settled forecast whose recorded edge
+cleared that floor, filled at the recorded ask. This is how the 0.04 base
+floor, the 0.07 book-devig floor, and the 0.10 outside-view boundary get
+re-examined from now on: against every settled forecast at once, instead of
+waiting for rare clearing bets. Reading rules:
+
+1. **Edge here = est_prob − recorded ASK** (the bet fill convention), not
+   the mid the forecast brier section uses. The sweep simulates bets.
+2. **It's evidence about the researched stream, not the universe** —
+   selection already happened at scan/select. A profitable sweep bucket
+   means "the candidates you researched and priced at this edge were
+   underpriced", nothing more.
+3. **Mind small n, and correlation**: same-day rows move together; the
+   standing ~15-per-slice rule applies before citing a bucket.
+4. Deep retros: when a risk.json floor comes up for re-examination, cite
+   the sweep bucket alongside settled-bet evidence. Only the forecasted
+   outcome side is simulated; opposite-side counterfactuals are a v2
+   question if the data argues for it.

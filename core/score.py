@@ -64,13 +64,49 @@ def fstats(rows):
     }
 
 
+EDGE_GRID = [0.02, 0.03, 0.04, 0.05, 0.07, 0.10, 0.15]
+
+
+def threshold_sweep(fsettled):
+    """Counterfactual bet policies over settled forecasts: for each edge floor
+    X, simulate a flat 1.0-unit bet on every forecast whose recorded edge
+    (est_prob - best_ask_at_record — the BET fill convention, not the mid the
+    forecast brier section baselines on) was >= X, filled at the recorded ask.
+
+    Scale-free pnl units (multiply by any flat stake). Answers "is this
+    min_edge floor calibrated?" against every settled forecast at once —
+    but only for the RESEARCHED candidate stream, at recorded-ask fills,
+    with same-day correlation; mind small n.
+    """
+    eligible = [r for r in fsettled if r.get("best_ask_at_record") is not None]
+    out = []
+    for x in EDGE_GRID:
+        # round like ledger.py's edge field, so exact-boundary edges (0.30 -
+        # 0.28 = 0.0199999...) land in their bucket instead of float-dropping out
+        rows = [r for r in eligible
+                if round(r["est_prob"] - r["best_ask_at_record"], 4) >= x]
+        if not rows:
+            out.append({"edge_min": x, "n": 0})
+            continue
+        wins = sum(1 for r in rows if r["status"] == "won")
+        pnl = sum((1 / r["best_ask_at_record"] - 1) if r["status"] == "won" else -1.0
+                  for r in rows)
+        out.append({
+            "edge_min": x, "n": len(rows), "wins": wins,
+            "pnl_units": round(pnl, 3), "roi": round(pnl / len(rows), 3),
+            "brier_delta": fstats(rows)["brier_delta"],
+        })
+    return out
+
+
 def forecast_report(frows):
     fsettled = [r for r in frows if r["status"] in ("won", "lost")]
     n_open = sum(1 for r in frows if r["status"] == "open")
     if not fsettled:
         return {"settled": 0, "open": n_open}
     rep = {"overall": fstats(fsettled), "luck_adjusted": luck_adjusted(fsettled),
-           "by_category": {}, "by_skip_reason": {}, "calibration": [], "open": n_open}
+           "by_category": {}, "by_skip_reason": {}, "calibration": [],
+           "threshold_sweep": threshold_sweep(fsettled), "open": n_open}
     by_cat = defaultdict(list)
     by_reason = defaultdict(list)
     buckets = defaultdict(list)
@@ -224,6 +260,11 @@ def main():
             print(f"  {cat:16} n={s['n']:3} brier_delta={s['brier_delta']:+.4f}")
         print("  calibration: " + "  ".join(
             f"{c['est_range']}:n={c['n']},r={c['realized']:.2f}" for c in fr["calibration"]))
+        for s in fr["threshold_sweep"]:
+            if s["n"]:
+                print(f"  sweep edge>={s['edge_min']:.2f}: n={s['n']:3} "
+                      f"win={s['wins']/s['n']:.2f} pnl={s['pnl_units']:+.2f}u "
+                      f"roi={s['roi']:+.3f} brier_delta={s['brier_delta']:+.4f}")
     else:
         print(f"\nforecasts: settled=0 open={fr.get('open', 0)}")
 
