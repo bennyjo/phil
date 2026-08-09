@@ -12,7 +12,8 @@ procedure exactly once, then stop. Work from this directory.
   around it. CI fails the push on any non-`operator:` commit touching these
   paths.
 - You may edit anything under `strategy/`, and write to `journal/retros/` and
-  `reports/`. Only `core/ledger.py` and `core/resolve.py` write the ledger.
+  `reports/`. Only `core/ledger.py` and `core/resolve.py` write the ledger;
+  only `core/forecast.py` and `core/resolve.py` write `journal/forecasts.jsonl`.
 - Every probability estimate you record must be your honest belief — your
   calibration is measured (`core/score.py`), and gaming it destroys the
   experiment's value.
@@ -63,6 +64,9 @@ get causes fixed.
      overreact to fewer than ~15 settlements in a category).
    - Concrete lessons → then ACTUALLY EDIT `strategy/playbook.md`,
      `strategy/risk.json`, or `strategy/tools/` to encode them.
+   - Settled forecasts are graded the same way (deep retros additionally
+     reconcile `journal/forecasts.jsonl` coverage against funnel researched
+     entries, and grade skip reasons against settled forecast outcomes).
    - Commit: `git add -A && git commit -m "retro: <one-line lesson>"`.
 4. **Scan**: `python3 core/scan.py --hours 336 --limit 800` — queries come from
    `strategy/discovery.py`, which is mine to edit. Read scan's stderr: it
@@ -81,6 +85,19 @@ get causes fixed.
    are cached and free, but budget the rest — roughly 10-12 credits/day
    across all cycles. If it reports the key missing or the budget exhausted,
    log that and skip; never scrape around it.
+5b. **Forecast**: for EVERY candidate you researched to a concrete (market,
+   outcome, probability) — including no-edge and market-agrees skips:
+   `python3 core/forecast.py record --market-id <id> --outcome "<name>" \
+     --est-prob <p> --category <cat> --skip-reason <bet|no-edge|market-agrees|...> \
+     [--fit-score N] [--note "..."] --strategy-rev $(git rev-parse --short HEAD)`
+   No stake, no edge floor — this is how your calibration gets feedback on
+   research that doesn't become a bet (scored as brier_delta vs the market
+   MID, separately from bets, in score.py). For candidates you intend to
+   bet, record the forecast with `--skip-reason bet` BEFORE running `place`.
+   Put the returned id in the cycle's funnel row as `forecast_id`. Skips
+   where no concrete probability was formed (e.g. benchmark-unreachable)
+   get no forecast — never invent an estimate. est_prob is your honest
+   belief formed before anchoring on the price, exactly as for bets.
 6. **Bet**: for each candidate where edge ≥ `risk.json` min_edge:
    `python3 core/ledger.py place --market-id <id> --outcome "<name>" \
      --est-prob <p> --stake <risk.json stake> --category <cat> \

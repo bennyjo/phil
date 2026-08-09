@@ -11,6 +11,7 @@ Checks that an unattended cycle cannot have left the repo broken or unsafe:
     and their load-bearing fields are sane
   - the agent's editable sizing policy stays inside the protected caps
   - journal/ledger.jsonl is well-formed and every row respects the caps
+  - journal/forecasts.jsonl (stake-free forecasts) rows are well-formed
   - every Python file under core/ and strategy/ still compiles
 
 Usage: python3 core/validate.py
@@ -27,7 +28,12 @@ LEDGER_REQUIRED = {
     "id", "ts", "market_id", "question", "outcome", "token_id",
     "entry_price", "est_prob", "stake_usd", "status",
 }
-LEDGER_STATUSES = {"open", "won", "lost"}
+LEDGER_STATUSES = {"open", "won", "lost", "void"}
+
+FORECAST_REQUIRED = {
+    "id", "ts", "market_id", "question", "outcome", "token_id",
+    "est_prob", "market_prob_at_record", "category", "skip_reason", "status",
+}
 
 errors = []
 
@@ -138,6 +144,30 @@ if ledger_path.exists() and protected:
                 f"[{protected['min_entry_price']}, {protected['max_entry_price']}]")
         if not 0 < row["est_prob"] <= 1:
             err(f"ledger.jsonl:{lineno}: est_prob {row['est_prob']} outside (0, 1]")
+
+forecasts_path = ROOT / "journal" / "forecasts.jsonl"
+if forecasts_path.exists():
+    for lineno, line in enumerate(forecasts_path.read_text().splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError as e:
+            err(f"forecasts.jsonl:{lineno}: invalid JSON — {e}")
+            continue
+        missing = FORECAST_REQUIRED - row.keys()
+        if missing:
+            err(f"forecasts.jsonl:{lineno}: missing fields {sorted(missing)}")
+            continue
+        if row["status"] not in LEDGER_STATUSES:
+            err(f"forecasts.jsonl:{lineno}: unknown status {row['status']!r}")
+        if row["status"] != "open" and "settled_ts" not in row:
+            err(f"forecasts.jsonl:{lineno}: settled row lacks settled_ts")
+        if not 0 < row["est_prob"] < 1:
+            err(f"forecasts.jsonl:{lineno}: est_prob {row['est_prob']} outside (0, 1)")
+        if not 0 <= row["market_prob_at_record"] <= 1:
+            err(f"forecasts.jsonl:{lineno}: market_prob_at_record "
+                f"{row['market_prob_at_record']} outside [0, 1]")
 
 real_ledger_path = ROOT / "journal" / "real-ledger.jsonl"
 if real_ledger_path.exists() and protected and isinstance(protected.get("real"), dict):

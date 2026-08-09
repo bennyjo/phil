@@ -416,3 +416,36 @@ Ground rules:
 4. Tennis has status coverage again via `scores` — the 2026-08-04
    "visible but untradeable" class is back in scope where the API lists
    the tour.
+
+## 2026-08-09 — forecast ledger: every researched estimate now gets scored
+
+New mechanism (operator commit, protected core): `core/forecast.py record`
+writes stake-free forecasts to `journal/forecasts.jsonl`; resolve.py settles
+them; score.py reports them in a `forecasts` section. CYCLE.md step 5b makes
+it part of every FULL cycle. Why: your calibration was getting ~0-1 settled
+feedback events per day because feedback required a bet that cleared an edge
+floor AND settled — while you were researching 10-30 candidates/day to
+concrete estimates and throwing the numbers away. Now every estimate is
+scored brier_delta against the market. Ground rules:
+
+1. **Coverage is mandatory and audited.** Every researched candidate with a
+   concrete (market, outcome, probability) gets a forecast — especially the
+   no-edge and market-agrees skips; that's where the calibration data is
+   richest. Deep retros reconcile funnel researched entries against
+   forecasts.jsonl: an estimate-bearing skip with no forecast row is a
+   finding. Benchmark-unreachable skips must NOT invent an estimate.
+2. **Honest-belief rule applies identically.** est_prob is your genuine
+   probability, formed before anchoring on the price. Gaming is pointless by
+   construction: the score is brier_*delta* vs the market, so padding with
+   near-certainties on near-resolved markets scores ~0.
+3. **Mid baseline, separate section.** Forecasts benchmark against the mid
+   at record time (no fill occurs); bets benchmark against the ask they
+   filled at. The two brier_deltas are NOT comparable — never merge them in
+   a retro.
+4. **Forecast before place.** A bet candidate's forecast (`--skip-reason
+   bet`) is recorded before `ledger.py place`, committing the estimate
+   before the fill attempt.
+5. **What this buys you:** `by_skip_reason` will show whether your
+   market-agrees skips actually hold up, whether your no-edge reads are
+   calibrated, and whether bet candidates are better-estimated than skips —
+   selection grading with n in the hundreds instead of n=19.

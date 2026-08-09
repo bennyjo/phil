@@ -25,6 +25,7 @@ import pmapi  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 LEDGER = ROOT / "journal" / "ledger.jsonl"
+FORECASTS = ROOT / "journal" / "forecasts.jsonl"
 
 
 def stats(entries):
@@ -42,6 +43,52 @@ def stats(entries):
         "brier_agent": round(brier_agent, 4), "brier_market": round(brier_market, 4),
         "brier_delta": round(brier_agent - brier_market, 4),
     }
+
+
+def fstats(rows):
+    """Brier stats for stake-free forecast rows (baseline = mid at record time).
+
+    Not comparable to bet stats(): bets baseline on the fill ask, forecasts on
+    the mid — the sections stay separate by design.
+    """
+    n = len(rows)
+    wins = sum(1 for r in rows if r["status"] == "won")
+    brier_agent = sum((r["est_prob"] - (1 if r["status"] == "won" else 0)) ** 2
+                      for r in rows) / n
+    brier_market = sum((r["market_prob_at_record"] - (1 if r["status"] == "won" else 0)) ** 2
+                       for r in rows) / n
+    return {
+        "n": n, "wins": wins, "win_rate": round(wins / n, 3),
+        "brier_agent": round(brier_agent, 4), "brier_market": round(brier_market, 4),
+        "brier_delta": round(brier_agent - brier_market, 4),
+    }
+
+
+def forecast_report(frows):
+    fsettled = [r for r in frows if r["status"] in ("won", "lost")]
+    n_open = sum(1 for r in frows if r["status"] == "open")
+    if not fsettled:
+        return {"settled": 0, "open": n_open}
+    rep = {"overall": fstats(fsettled), "luck_adjusted": luck_adjusted(fsettled),
+           "by_category": {}, "by_skip_reason": {}, "calibration": [], "open": n_open}
+    by_cat = defaultdict(list)
+    by_reason = defaultdict(list)
+    buckets = defaultdict(list)
+    for r in fsettled:
+        by_cat[r["category"]].append(r)
+        by_reason[r.get("skip_reason") or "unclassified"].append(r)
+        buckets[min(int(r["est_prob"] * 10), 9)].append(r)
+    for cat, rs in sorted(by_cat.items()):
+        rep["by_category"][cat] = fstats(rs)
+    for reason, rs in sorted(by_reason.items()):
+        rep["by_skip_reason"][reason] = fstats(rs)
+    for b in sorted(buckets):
+        rs = buckets[b]
+        rep["calibration"].append({
+            "est_range": f"{b/10:.1f}-{(b+1)/10:.1f}", "n": len(rs),
+            "realized": round(sum(1 for r in rs if r["status"] == "won") / len(rs), 3),
+        })
+    return rep
 
 
 def luck_adjusted(entries):
@@ -92,14 +139,17 @@ def main():
 
     entries = [json.loads(line) for line in LEDGER.read_text().splitlines() if line.strip()] \
         if LEDGER.exists() else []
+    frows = [json.loads(line) for line in FORECASTS.read_text().splitlines() if line.strip()] \
+        if FORECASTS.exists() else []
     settled = [e for e in entries if e["status"] in ("won", "lost")]
     if not settled:
-        print(json.dumps({"settled": 0, "open": sum(1 for e in entries if e["status"] == "open")}))
+        print(json.dumps({"settled": 0, "open": sum(1 for e in entries if e["status"] == "open"),
+                          "forecasts": forecast_report(frows)}))
         return
 
     report = {"overall": stats(settled), "luck_adjusted": luck_adjusted(settled),
               "by_edge_class": {}, "by_category": {}, "by_strategy_rev": {},
-              "calibration": []}
+              "calibration": [], "forecasts": forecast_report(frows)}
     by_class = defaultdict(list)
     by_cat = defaultdict(list)
     by_rev = defaultdict(list)
@@ -162,6 +212,20 @@ def main():
     print("\ncalibration (est vs realized):")
     for c in report["calibration"]:
         print(f"  {c['est_range']}: n={c['n']:3} realized={c['realized']:.2f}")
+    fr = report["forecasts"]
+    if fr.get("overall"):
+        fo, fla = fr["overall"], fr["luck_adjusted"]
+        print("\nforecasts (stake-free, mid baseline — not comparable to bet brier):")
+        print(f"  settled={fo['n']} open={fr['open']} win_rate={fo['win_rate']} "
+              f"brier_delta={fo['brier_delta']:+.4f} z={fla['z']:+.2f}")
+        for reason, s in fr["by_skip_reason"].items():
+            print(f"  [{reason:14}] n={s['n']:3} brier_delta={s['brier_delta']:+.4f}")
+        for cat, s in fr["by_category"].items():
+            print(f"  {cat:16} n={s['n']:3} brier_delta={s['brier_delta']:+.4f}")
+        print("  calibration: " + "  ".join(
+            f"{c['est_range']}:n={c['n']},r={c['realized']:.2f}" for c in fr["calibration"]))
+    else:
+        print(f"\nforecasts: settled=0 open={fr.get('open', 0)}")
 
 
 if __name__ == "__main__":
