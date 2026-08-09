@@ -269,3 +269,23 @@ earlier today, also worth checking whether the allowlist is flapping
 rather than statically missing an entry.
 
 **Status:** open
+
+---
+
+## 2026-08-09 — status update: 2026-08-08 egress-block entries look transient, not standing
+
+**Evidence:** this cycle (02:12Z), `api.the-odds-api.com`, `gamma-api.polymarket.com`,
+`clob.polymarket.com`, `clevelandfed.org`, and `xtracker.polymarket.com` were
+all reached from the cloud runner with zero proxy errors -- no CONNECT-403s,
+no urllib/curl failures. This directly contradicts the two 2026-08-08 entries
+above (both reporting `gateway answered 403 to CONNECT` on these same hosts).
+Doesn't prove the allowlist was fixed rather than flapping; either way, future
+cycles should keep re-testing reachability each time rather than assuming a
+prior block still holds (already added as a playbook.md durable note).
+
+**Proposed change:** none needed from the operator unless the block
+recurs -- closing the loop on the open items above with this observation.
+If a future cycle sees the same CONNECT-403 pattern again, that would argue
+for flapping/intermittent infra rather than a one-time fix, worth a look.
+
+**Status:** open (informational; not asking for action unless the block recurs)

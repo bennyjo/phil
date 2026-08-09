@@ -436,6 +436,43 @@ Category ruled in (not out): revisit closer-margin primaries, or ones
 without recent, WebSearch-findable pollster figures, before generalizing
 further.
 
+**Exploration budget, social-media post-count brackets (2026-08-09 02:1xZ,
+first test of this category).** Hypothesis: "post-count resolution is
+mechanical AND the running count is published live by the resolver itself,
+not just estimable" — a stronger reachability claim than any prior category
+tested. Confirmed: Polymarket's stated resolution source for "Elon Musk #
+tweets <period>?" markets is `https://xtracker.polymarket.com`, and its
+public REST API (no auth) exposes the exact running count — `GET
+/api/users/elonmusk?platform=x&stats=true` lists every open tracking period
+by id, then `GET /api/trackings/<id>?includeStats=true` returns hourly
+`daily` counts plus a `cumulative` total for that period. Tested on the
+"August 4 - August 11" bracket set (PM brackets: 160-179 Yes=0.135, 180-199
+Yes=0.385, 200-219 Yes=0.285, 220-239 Yes=0.095): at query time (4.42 days
+of 7 elapsed) cumulative was 126, i.e. ~28.5/day; the API's own `pace` field
+(176) is misleading — it divides by `daysElapsed` (5, apparently ceil'd),
+not actual elapsed time, understating the run rate. The correct linear
+extrapolation (126/4.42*7 ≈ 200) lands almost exactly on PM's 180-199/200-219
+boundary, where PM already puts its two largest buckets (67% combined) —
+**reachable (exact live source) but no edge**: PM's distribution already
+tracks the true pace closely once you extrapolate correctly, and per-day
+counts are volatile enough (18-37 across 4 observed full days) that no
+single 20-wide bracket clears min_edge against that noise. Category ruled
+IN as viable (the API is a stronger benchmark than anything else tested —
+exact, live, resolver-authoritative) — worth rechecking near the end of a
+period when daysRemaining is small (less extrapolation variance) or on a
+bracket set whose current pace sits further from PM's mode than this one
+did. **Caveat for reuse:** always compute pace from `cumulative / actual
+elapsed days` yourself; do not trust the API's own `pace` field, which
+undercounts a still-running partial day as a full one.
+
+**Cloud-runner egress note (2026-08-09 02:1xZ):** `api.the-odds-api.com`,
+`gamma-api.polymarket.com`, `clob.polymarket.com`, `clevelandfed.org`, and
+`xtracker.polymarket.com` were ALL reachable from the cloud runner this
+cycle with no proxy errors — the 2026-08-08 EGRESS_BLOCKED entries
+(journal/proposals.md) were evidently transient/flapping, not a standing
+gap; re-verify reachability each cycle rather than assuming yesterday's
+block still holds, and don't skip a source without trying it first.
+
 **Exploration budget, politics vote-share brackets (2026-08-06 19:13Z, first
 test of this category).** Hypothesis: "vote-count resolution is mechanical;
 is a constituency poll a granular enough benchmark for a 10-point bracket?"
