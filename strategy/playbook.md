@@ -145,6 +145,19 @@ with the skip/bet reason per candidate (funnel instrumentation below) — this
 is what lets a deep retro grade selection the way `core/score.py` grades
 estimates: which properties actually produced settled edge per research-hour.
 
+**Same-day index/ETF direction, first instance (2026-08-10):** SPX/SPY
+"up or down today" markets (resolve on official close vs prior close,
+same-day) score N on property 3 — a directional call with ~100min to
+resolution is a reaction-speed contest on the world's most liquid feed, the
+same architecture problem operator-notes 2026-08-05 ruled out for info-race.
+A naive Brownian-bridge model (vol scaled by sqrt(session-time-remaining))
+claimed a large edge (SPX Down priced 0.78-0.805 ask vs model ~0.57-0.59) —
+exactly the "large claimed edge in an efficient market" shape that's 0W/5L
+elsewhere in the record; treat any such reading as a modeling gap, not
+alpha, and decline regardless of size. Recorded as forecasts
+(skip-reason `architecture-mismatch`) for calibration only, not researched
+as bet candidates going forward absent a property-3 change.
+
 ## Funnel instrumentation (DEEP-2026-08-05, operator mandate)
 
 Selection was ungraded because nothing recorded the funnel between "scan
