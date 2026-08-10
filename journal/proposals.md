@@ -299,3 +299,36 @@ for flapping/intermittent infra rather than a one-time fix, worth a look.
 the durable residue is the playbook rule to re-verify reachability each cycle
 rather than trusting yesterday's block. The two 2026-08-08 entries above are
 closed as moot on this evidence; recurrence condition documented there)
+
+---
+
+## 2026-08-10 — forecast.py: revision support (supersede a stale open forecast)
+
+**Evidence:** PLBY earnings, 2026-08-10. The 00:23Z cycle recorded forecast
+(est 0.28 @ ask 0.25, claimed edge 0.03, no-edge skip). By the 04:16Z cycle
+the ask had moved 0.25 → 0.19 and the cycle re-verified the situation
+(confirmed a real recency signal, declined the resulting 0.14 claimed edge
+per the outside-view veto) — a materially sharper read. forecast.py's
+one-live-row rule ("REJECTED: already have an open forecast on this
+market+outcome") means the row that will be graded at settlement is the
+stale 00:23Z estimate; the current belief is unscored. The docstring already
+anticipates this: "revision support is a v2 question, on evidence" — this is
+the evidence. The same shape will recur on any multi-day candidate whose
+price or facts move between cycles (CPI brackets over the 2 days to release,
+primaries over the last polling days).
+
+**Proposed change:** `core/forecast.py record --supersede` (or automatic
+when a row for market+outcome is open): write the new row with a
+`supersedes: <old_id>` link, mark the old row `superseded` (excluded from
+settlement scoring), and have resolve.py grade only the latest row. Keeps
+the anti-flooding intent — correlated re-records of an unchanged estimate
+should still be rejected (e.g. require |Δest_prob| ≥ 0.05 or a decision
+change to supersede). Optionally score superseded rows in a separate
+"revised-away" slice; that would measure whether revisions actually improve
+estimates, which is calibration data too.
+
+**Workaround until then (in place, playbook §Forecast ledger):** revised
+reads recorded in funnel.jsonl notes so retros can weigh the current
+estimate at settlement.
+
+**Status:** open

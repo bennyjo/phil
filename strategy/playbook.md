@@ -187,6 +187,19 @@ is a blind spot. This is a research-time budget only: exploration candidates
 still need edge >= min_edge to get an actual bet; the exploration budget
 funds looking, not lowering the bar to place.
 
+**Anti-loophole (DEEP-2026-08-10):** an exploration candidate must test a
+rubric PROPERTY not yet characterized, not a new instance of a
+characterized one. A new league/competition fed through already-measured
+edge machinery does not qualify: the 2026-08-09 21:15Z cycle spent its
+exploration slot on Leagues Cup/Brasileirão 3-way devig via odds.py —
+the same book-devig pipe whose clean-feed profile (~0.00-0.02 edges vs
+tight PM books) was already confirmed across ~40 devigged markets over
+the prior 3 days — and predictably re-found the known result. Contrast
+the 08-09 05:15Z weather probe (new property: "official forecast JSON as
+benchmark — reachable? resolvable?"), which is the intended shape. Before
+charging a candidate to the exploration budget, name the property being
+tested and why existing evidence doesn't already answer it.
+
 ## Market selection
 
 **Scan horizon (OPERATOR EDIT 2026-08-03, see journal/operator-notes.md):**
@@ -257,6 +270,20 @@ search traps documented below (§Search-result traps). Rules for spending it:
 If the key is missing or the budget is exhausted, `core/odds.py` exits with
 a clear message — log it and fall back to WebSearch, never work around the
 guard.
+5. **Confirmation-sweep cap (DEEP-2026-08-10).** The clean-feed finding is
+   now CONFIRMED, not provisional: across 3 days and ~40 devigged markets
+   (MLB -1.5 slates 08-09 08:15Z/11:15Z/14:19Z/04:16Z, WNBA h2h+spreads,
+   Leagues Cup/Brasileirão 3-way), every power-devig edge vs a tight PM
+   book landed in 0.000-0.020 — under even min_edge, nowhere near
+   min_edge_book_devig. Re-demonstrating this daily is cheap in credits
+   (cache) but not in research minutes: the 14:19Z cycle re-ran the same
+   slate researched 3h earlier to "confirm unchanged". Cap: at most ONE
+   sports devig confirmation sweep per day, and only when the slate's
+   composition actually changed (new games, not the same games re-checked);
+   log it as `cheap-confirmation`, not research. The marginal research
+   minutes go to independent-benchmark candidates (econ prints, polls,
+   countable metrics) — the only stream that generates scoreable
+   disagreements (see Forecast ledger, below).
 
 **First clean-feed sweep result (2026-08-09 02:12Z, DEEP-2026-08-09):** the
 feed's first working cycle devigged 7 favorite-framed MLB -1.5 spreads and 2
@@ -980,6 +1007,43 @@ forbids add-ons).
      "Bucaramanga doesn't win".
    - Retros must grade a correlated pair as ONE decision (net P&L per
      event), not as independent wins/losses.
+
+## Forecast ledger: what it can and cannot test (DEEP-2026-08-10)
+
+First scored window (2026-08-09/10): 54 forecasts recorded, 18 settled,
+brier_delta +0.001 (z -0.15) — estimates that agree with the market settle
+at market. Reassuring, and expected by construction. Three durable rules
+from the window:
+
+1. **The disagreement gap is the number to watch, not aggregate
+   brier_delta.** Only 6 of 55 recorded rows carry ask-edge ≥ 0.02
+   (3 politics, 2 econ, 1 earnings — ZERO sports), and none has settled;
+   the threshold sweep is empty. Sports-devig forecasts structurally
+   cannot test disagreement calibration: the estimate (devigged book
+   consensus) and PM's price are downstream of the same books, so
+   agreement is baked in. Only independent-source estimates — polls,
+   official prints, consensus EPS, count extrapolations — produce rows
+   where est and price genuinely differ. When allocating research
+   minutes, weigh a candidate partly by whether it can ADD a
+   disagreement row, since that is the only stream that will ever answer
+   "are we calibrated when we disagree?".
+2. **Record even when declining — especially when declining.** The
+   outside-view veto (>0.10 claimed edge) would be unfalsifiable if
+   declined estimates were never scored. The 2026-08-10 declines (PLBY
+   claimed 0.14; WI Hong ≥30% bracket claimed 0.117) are both recorded
+   as forecasts, so the veto gets out-of-sample grading at zero bankroll
+   cost. **Pre-registered (grade in the next deep retros, explicitly):**
+   WI Hong brackets (settle ~Aug 11) and PLBY (Aug 10 night) — declined
+   side loses ⇒ veto validated; declined side would have won ⇒ first
+   evidence the veto over-fires. CPI rows (Aug 12) grade the econ pivot.
+3. **A materially revised estimate deserves a row, but forecast.py holds
+   one live row per market+outcome** (anti-flooding, by design —
+   revision support is proposed, journal/proposals.md 2026-08-10). Until
+   then: when a re-verification materially changes the estimate or the
+   price has moved enough to change the decision (PLBY: ask 0.25 → 0.19
+   between 00:23Z and 04:16Z), record the revised read in funnel.jsonl's
+   note so the settlement grading can weigh the estimate that was
+   actually current, not just the stale row.
 
 ## Known unknowns (to resolve with data)
 
