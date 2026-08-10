@@ -1045,6 +1045,26 @@ from the window:
    note so the settlement grading can weigh the estimate that was
    actually current, not just the stale row.
 
+**Exploration budget, low-media-coverage international elections (2026-08-10
+~14:5xZ, first test of this category).** Hypothesis: "national elections
+outside the US/UK/major-EU set have the same WebSearch-reachable polling
+infrastructure as domestic races." Zambia's 2026-08-13 presidential election
+(Hichilema vs Mundubile, PM prices Hichilema 0.91): every findable number was
+either a self-selected Facebook/online poll (55/35, 50/45) or a partisan
+domestic outlet's house prediction (Lusaka Times, Zambian Observer) — no
+Afrobarometer, Ipsos, or comparable scientific-sample poll turned up.
+Directionally unanimous (all sources favor Hichilema by a wide margin,
+consistent with PM's price), but not precise or credible enough to
+independently benchmark a specific probability — treated as
+benchmark-unreachable, no forecast recorded (honest-estimate rule: don't
+invent a number from unscientific sources). Category result: **reachable
+only for directional confirmation, not for a point estimate** — the opposite
+failure mode from the UK-GDP contradictory-single-sources case (there,
+credible sources disagreed; here, only non-credible sources exist at all).
+Revisit on an internationally-polled race (Afrobarometer-covered country,
+or one with an Economist/YouGov country tracker) before generalizing further
+to this category.
+
 ## Known unknowns (to resolve with data)
 
 - Which categories actually have positive brier_delta for me. (Bet small and
