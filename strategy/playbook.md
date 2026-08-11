@@ -819,6 +819,25 @@ flagged in a retro and proposed for change; it does not get silently
 ignored. Every placement's cycle-log entry must state the spread check
 from now on.
 
+**Exploration budget, AI model release-date markets (2026-08-11 02:xxZ, first
+test of this category).** Hypothesis: "product release-date markets have a
+reachable benchmark (official roadmap, credible leak) the way earnings/econ
+releases do." Tested on `3206142` (Gemini Pro release by Aug 14, PM Yes
+0.065). WebSearch surfaced only rumor-aggregator blogs (coursiv.io,
+codersera.com, cometapi.com, felloai.com, androidinfotech.com) with mutually
+conflicting rumored dates — none citing a primary Google statement with a
+specific date. One credible secondary mention: Bloomberg reported the model
+"months behind schedule", and Google itself said 2026-07-21 it is "currently
+testing with partners" (still no ship date). Result: **not reachable for
+date precision** — same shape as the esports-echo and tip-site traps, an
+aggregator swarm around a real but vague signal — though the vague signal
+(delayed) is directionally corroborated by Bloomberg and agrees with PM's
+own low pricing. Recorded market-agrees, not benchmark-unreachable, since
+the direction (not the date) was confirmable. Category ruled OUT for
+date-precision bets absent a primary-source (official blog post, SEC
+filing, named-exec statement) announcement with an actual date; revisit
+only if one surfaces for a specific candidate.
+
 ## Open-position monitoring (DEEP-2026-08-02)
 
 Positions are held to resolution — never exited — but their live prices
