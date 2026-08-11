@@ -176,6 +176,24 @@ reason, not padded — a "market-agrees" skip on something that later moved
 20 points is a selection error, and only shows up in a retro if the original
 call is on record.
 
+**Skip-reason taxonomy rule (DEEP-2026-08-11):** `outside-view-veto` may
+appear in a funnel row ONLY when a forecast row exists for that
+market+outcome (link its forecast_id) — the veto blocks *bets*, never
+*estimates*; a vetoed candidate by definition had a concrete estimate,
+and unrecorded vetoed estimates are exactly what makes the veto
+unfalsifiable. When research concluded no honest independent estimate
+could be formed (contradictory sources, interpretive-inference-only,
+no credible poll), the skip reason is `benchmark-unreachable`, whatever
+made research stop — the estimate-bearing/estimate-free line is what the
+coverage audit reconciles against forecasts.jsonl. Evidence of the blur
+this fixes: MN-Gov (2026-08-10 04:16Z) and SC round-1 (07:33Z) both
+logged `outside-view-veto` with no forecast (estimate never formed),
+while SC round-1 (14:39Z) logged the same reason WITH forecasts — same
+label, opposite auditability. Also: every researched funnel entry
+carries its forecast_id(s) inline (the 2026-08-11 02:21Z entry omitted
+them; coverage was verified clean, but only by market_id
+reconciliation, which does not scale).
+
 **Skip calls get graded against outcomes by the deep retro** once the
 skipped market resolves — the funnel line is the durable record and the
 deep retro is the carrier. (First pass DEEP-2026-08-06: CRCL/OXY
@@ -1068,6 +1086,20 @@ from the window:
    WI Hong brackets (settle ~Aug 11) and PLBY (Aug 10 night) — declined
    side loses ⇒ veto validated; declined side would have won ⇒ first
    evidence the veto over-fires. CPI rows (Aug 12) grade the econ pivot.
+   **PLBY graded (DEEP-2026-08-11): veto validated, instance one.** Yes
+   resolved No; the declined bet (est 0.33 vs ask 0.19, claimed edge
+   0.14) would have lost $5. Nuance worth keeping: the 04:16Z revised
+   estimate (0.33) was WORSE against the outcome than the stale 00:23Z
+   row (0.28) — a re-verification that "confirms a real signal" can
+   still move the number the wrong way, which is why revised-away rows
+   should be scored as their own slice if revision support lands
+   (journal/proposals.md 2026-08-10). Still pre-registered, settling
+   2026-08-11 night: WI Hong brackets (claimed edges to 0.117), SC
+   Nordone (claimed 0.27) / Fry (claimed 0.196) / Norman, MN Craig
+   (claimed 0.15) / Flanagan. The next deep retro grades EVERY one of
+   these rows explicitly — each is veto-validated or veto-over-fires;
+   an over-fire (Fry or Craig hitting) reopens the well-evidenced-
+   polling-exception question at a measured foregone cost.
 3. **A materially revised estimate deserves a row, but forecast.py holds
    one live row per market+outcome** (anti-flooding, by design —
    revision support is proposed, journal/proposals.md 2026-08-10). Until

@@ -331,4 +331,66 @@ estimates, which is calibration data too.
 reads recorded in funnel.jsonl notes so retros can weigh the current
 estimate at settlement.
 
+**Status:** endorsed by deep-retro (2026-08-11 — the gap now has a settled
+worked example: PLBY resolved No with the stale 00:23Z row (est 0.28) as
+the graded row and the materially different 04:16Z read (est 0.33)
+unscored. Design note from that same settlement: the revision was WORSE
+than the original against the outcome, so score revised-away rows as a
+separate slice rather than assuming revisions improve estimates —
+"do my revisions help?" is itself an open empirical question the
+mechanism should answer. Low urgency confirmed; the funnel-note
+workaround held up this window)
+
+---
+
+## 2026-08-11 — deep-retro trigger prompt: unshallow before judging divergence
+
+**Evidence:** today's deep-retro session started on a SHALLOW clone
+(2-commit boundary) with a stale origin/main ref. `git fetch origin main`
+reported a spurious "forced update"; local main vs origin/main showed NO
+merge-base and 50 "local-only" vs 50 "origin-only" commits — a textbook
+false divergence, indistinguishable at first glance from a real
+force-push. The trigger prompt's rule ("if the histories have genuinely
+diverged, warn and continue on local state — never reset") is correct for
+real divergence but destructive on this artifact: continuing on local
+state would have meant auditing and editing a strategy tree 3 days stale,
+and pushing conclusions derived from it. `git fetch --unshallow origin`
+resolved it instantly — local main was strictly behind, plain
+fast-forward, no divergence at all. Same failure family as the 2026-08-04
+and 2026-08-05 stale-clone proposals (both actioned), one layer deeper:
+those fixed stale REFS, this is the shallow BOUNDARY manufacturing fake
+history.
+
+**Proposed change:** in the deep-retro routine prompt's step 1 (and
+arguably CYCLE.md step 0 — operator's call), before any behind/diverged
+determination: `git rev-parse --is-shallow-repository` and, if true,
+`git fetch --unshallow origin` (fall back to `--depth=1000` if the remote
+refuses). Only then apply the behind ⇒ checkout -B / diverged ⇒ warn
+rule. Trigger prompt and CYCLE.md are operator-owned.
+
+**Status:** open
+
+---
+
+## 2026-08-11 — core/score.py: forecasts by_skip_reason slice
+
+**Evidence:** the most informative forecast split this window was
+brier_delta by skip reason — no-edge n=41 at -0.0004 (at-market by
+construction, as designed) vs architecture-mismatch n=2 at +0.1093 (the
+market beat the naive model exactly as the skip reason predicts) vs
+market-agrees n=2 at -0.0089 — and it was hand-computed in the deep
+retro because score.py's forecasts section slices by category only.
+Skip-reason calibration is the selection-grading the 2026-08-05 operator
+mandate asked for ("did the skip reasons hold up in hindsight"), and
+DEEP retros will need it every day as the disagreement rows settle
+(outside-view-veto rows are the ones that grade the veto). Hand-computed
+daily stats are the same failure class as the hand-asserted cycle counts
+(v1-v3 lineage) — machine-computed or eventually wrong.
+
+**Proposed change:** score.py forecasts section adds `by_skip_reason`
+(same fields as by_category: n, wins, brier_agent, brier_market,
+brier_delta). Nice-to-have in the same pass: `by_category` and
+`by_skip_reason` both computed over settled rows only, with open-row
+counts alongside, so slices can't be misread as including open rows.
+
 **Status:** open
