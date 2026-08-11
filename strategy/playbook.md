@@ -1159,6 +1159,47 @@ actually printed on and whether an off-grid GDP value produced a NO sweep
 across all listed brackets — that would confirm or refute the gap-bucket
 reading with real data at zero cost.
 
+## PPI YoY brackets: base-effect projection, first instance (2026-08-11)
+
+New category, econ-ppi (never researched before this cycle; scan's econ-tag
+query surfaced only 3 of the event's 10 sibling brackets, same
+discovery-gap shape already seen repeatedly on CPI — full set only
+recoverable by pulling the gamma event directly). Method for projecting
+next month's YoY print from the current one: `YoY_next(NSA) ≈
+YoY_current(NSA) × (1+MoM_next_consensus) / (1+MoM_sameMonthLastYear_actual)
+− 1`. This works because the 12-month change is NSA but a same-calendar-
+month seasonal factor cancels between the two years, so chaining forward
+with SA consensus MoM figures (the only ones publicly forecast) is a valid
+approximation, not a basis mismatch — confirmed by cross-checking the BLS
+release text explicitly labels the 12-month change "not seasonally
+adjusted" and MoM "seasonally adjusted" (bls.gov/news.release/ppi.nr0.htm).
+Applied to July 2026: Jun26 YoY 5.5% NSA (BLS-confirmed) × Jul26 MoM
+consensus +0.1% (tradingeconomics) / Jul25 MoM actual +0.9% (an unusually
+hot print rolling out of the base) ⇒ central estimate ~4.7% NSA, wide of
+the market's own apparent mode. Practical notes for reuse:
+
+1. **Needs the actual (not just consensus-implied) same-month-last-year
+   MoM** — this is where the edge came from (Jul25's atypical +0.9% MoM
+   makes Jul26 YoY decelerate faster than a naive "MoM stays flat"
+   read would suggest). Skipping this step is the most likely way to get
+   the method wrong.
+2. **SD calibration is thin** (n=2: May consensus-miss +0.4pp, June
+   -0.3pp) — used sd=0.45pp, deliberately on the wide/conservative side.
+   Revisit once more monthly misses are observed.
+3. **This event's book was bumpy/non-monotonic across adjacent 0.1pt
+   brackets** (Yes prices ...0.073, 0.168, 0.0485... not smoothly
+   decreasing away from the mode) and summed to ~1.14 — a thinner,
+   less-arbitraged book than the CPI event. Several legs showed large
+   nominal model-vs-market disagreement (5.3%, 5.4%, ≥6.0% all >0.10
+   apparent edge) but all had spread > max_spread 0.06 — wide-book veto
+   applied and declined regardless of edge size, per the DEEP-2026-08-07
+   large-claimed-edge caution. Only the `<=5.1%` leg had a tight book
+   (spread 0.02) and a sub-0.10 edge (0.06) — that's the one bet placed.
+4. **Pre-registered for grading**: settles with the Aug 13 08:30 ET BLS
+   PPI release. First out-of-sample test of this technique — do not
+   reuse it confidently on other econ-print brackets (CPI, PCE, etc.)
+   until this one grades.
+
 ## Known unknowns (to resolve with data)
 
 - Which categories actually have positive brier_delta for me. (Bet small and
