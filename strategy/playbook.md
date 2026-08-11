@@ -1129,6 +1129,36 @@ Revisit on an internationally-polled race (Afrobarometer-covered country,
 or one with an Economist/YouGov country tracker) before generalizing further
 to this category.
 
+**UK Q2 GDP re-check, one day pre-release (2026-08-11 06:xxZ) — two new red
+flags beyond the 08-08/08-10 contradictory-forecast finding.** (1) The
+sibling set (`siblings.py` on event 486133, 7 legs: negative, 0-0.1%,
+0.2-0.3%, 0.4-0.5%, 0.6-0.7%, 0.8-0.9%, >=1.0%) has unexplained GAPS —
+0.1-0.2%, 0.3-0.4%, 0.5-0.6%, 0.7-0.8%, 0.9-1.0% have no corresponding
+market at all, so a print landing in one of those bands would apparently
+make every listed sibling resolve No simultaneously. Either Polymarket
+defines an implicit rounding/bucketing rule not stated in any one market's
+description, or the bracket set is genuinely incomplete — don't treat the
+7-leg sum-check (1.0695, normal-looking vig) as informative until this is
+understood, since a sum computed over a non-exhaustive partition means
+nothing. (2) Each market's own resolution text says it resolves off the
+**"Second quarterly estimate, UK"** release "scheduled for August 12,
+2026," but links to the ONS's `gdpfirstquarterlyestimateuk` bulletin page,
+and a fresh WebSearch (Berenberg's Andrew Wishart, named source, Q2 growth
+"0.3% or 0.4%" barring a weak June) independently found the *first*
+quarterly estimate is scheduled for **August 13**, not the 12th — first
+vs. second estimate is a real distinction (different data vintage) and the
+date named in the market contradicts external reporting on the actual ONS
+calendar. Compounding: Berenberg's 0.3-0.4% point sits exactly in one of
+the undefined gaps above. Two independent ambiguities (which release, and
+whether the brackets even partition the outcome space) on top of the
+already-known forecast disagreement — treated as `ambiguous-resolution`,
+not `benchmark-unreachable` (the earlier framing): even a perfect
+benchmark wouldn't tell me which bracket wins here. No forecast recorded.
+If revisited after the release actually lands, check which day it
+actually printed on and whether an off-grid GDP value produced a NO sweep
+across all listed brackets — that would confirm or refute the gap-bucket
+reading with real data at zero cost.
+
 ## Known unknowns (to resolve with data)
 
 - Which categories actually have positive brier_delta for me. (Bet small and
