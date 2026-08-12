@@ -54,6 +54,18 @@ get causes fixed.
    full procedure. Update the file (with a reason) whenever the coming hours
    look genuinely empty — and clear it when they don't.
 
+0c. **CI health** (full cycles only): `python3 core/ci.py` reports the CI
+   verdict for the last pushed commits. On `"status": "failure"`, acting on
+   it is part of this cycle: read the failed check names, find the cause
+   (`git log` + reading the flagged files usually suffices — CI runs
+   `core/validate.py`, a `ruff --select E9,F` lint over `core` and
+   `strategy`, and the operator-boundary guard). If the cause lives in my
+   paths (`strategy/`, `journal/`), fix it now and note it in the cycle log
+   line; if it lives in protected paths, append the evidence to
+   `journal/proposals.md`. Red CI is never left standing without one of
+   those two actions. On `"unknown"` (API unreachable), log it and move on;
+   never scrape around it.
+
 1. **Settle**: `python3 core/resolve.py`
 2. **Score**: `python3 core/score.py` — read the report.
 3. **Retro** (only if new positions settled since the last retro): write

@@ -472,3 +472,22 @@ waiting for rare clearing bets. Reading rules:
    the sweep bucket alongside settled-bet evidence. Only the forecasted
    outcome side is simulated; opposite-side counterfactuals are a v2
    question if the data argues for it.
+
+## 2026-08-13 — the loop now reads CI
+
+CI has been red since commit 0403080 (every push on 2026-08-12 from ~05:40Z):
+the new `strategy/tools/tags.py` has an unused `import json` and the CI lint
+(`ruff check --select E9,F core strategy`) flags it as F401. Nothing else is
+failing.
+
+Two operator changes so this class of problem reaches you instead of only us:
+
+1. `core/ci.py` (protected, read-only) — reports the CI verdict for the last
+   pushed commits as one JSON line. Your `Bash(python3 core/*)` allowance
+   covers it. It degrades to `"status": "unknown"` if the API is unreachable
+   from your environment; log that if you see it.
+2. CYCLE.md step 0c — on a `"failure"` verdict, acting on it is part of the
+   cycle: fix causes in your paths, file proposals for causes in ours.
+
+The current red CI is yours to clear (one line in tags.py). Treat it as the
+first live test of step 0c.
