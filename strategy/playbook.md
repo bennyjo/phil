@@ -18,6 +18,21 @@ Rank every candidate by WHY the market should be wrong, strongest first:
 1. **Structural — information race**: the resolution-relevant fact is already
    public and the book demonstrably hasn't finished repricing (verify at the
    live book, not the mid). Evidence: `2dc417ed68f6` won.
+   **Multi-source verification standard (DEEP-2026-08-12, enacting the
+   DEEP-2026-08-02 pre-registration now that both pair legs have settled
+   lost — `b21e42c123a1` 2026-08-04, `d2dd24206542` 2026-08-12):** "the fact
+   is already public" requires at least one non-party primary source (wire
+   service Reuters/AP/AFP, host-government official statement, or the
+   resolver's own named source) — a consensus composed entirely of state
+   media of the parties to the event (PressTV, Mehr, TASS, Xinhua on the
+   Iran-vs-Gulf-states claims) does not qualify on its own, however many
+   outlets repeat it or how internally consistent they are. This is now a
+   general condition of the class, not just the spread-rule exception
+   below (which already applied a narrower version of this to
+   `b21e42c123a1` alone, DEEP-2026-08-05). Both pair legs lost on
+   state-media-only corroboration of a contested Iran-conflict claim: the
+   reporting was plausible and mutually consistent, and the resolver still
+   read the fact the opposite way on both legs.
    **Fact-finality requirement (DEEP-2026-08-03):** the fact must be FINAL
    as the resolver will see it — an official print/close/result — not an
    estimate subject to scheduled revision, whenever the bet's margin sits
@@ -85,22 +100,20 @@ Rank every candidate by WHY the market should be wrong, strongest first:
    hypothetical. Unchanged at n=2; the blocked 0.02–0.05 band on tight
    MLB books is exactly the sharp-counterparty zone the 0/7 came from.
 
-Info-race status (updated DEEP-2026-08-05): the class is **2W/3L by
+Info-race status (updated DEEP-2026-08-12): the class is **2W/4L by
 decision** — wins on mechanical/final facts (`2dc417ed68f6` official
 print, `1e8dec1078ba` cross-market), losses on provisional or
 interpretation-dependent ones (ai-leaderboard pair as one decision,
-`84ec821167d5`, and now `b21e42c123a1`, settled LOST -$5 on 2026-08-04 via
-a normal UMA flow: est 0.90 on state-media-sourced claims, resolver waited
-out the market's 3-day conflicting-reports clause and resolved No — graded
-reasoning-wrong per the DEEP-2026-08-02 pre-registration). One leg still
-open: `d2dd24206542` (ceasefire No @ 0.92), 5+ days past end date with NO
-UMA proposal ever submitted. Pre-registered rule-candidate, to be enacted
-ONLY if BOTH pair legs settle as losses (one has; if d2dd loses too):
-"multi-source verified" tightens to require at least one non-party primary
-source (wire service Reuters/AP/AFP, host-government statement, or the
-resolver's own named source) — a consensus composed of state media of the
-parties to the event (PressTV, Mehr, TASS, Xinhua on the Iran claims) does
-not qualify on its own. If d2dd wins, this stays a caution, not a rule.
+`84ec821167d5`, `b21e42c123a1` settled LOST -$5 on 2026-08-04 via a normal
+UMA flow: est 0.90 on state-media-sourced claims, resolver waited out the
+market's 3-day conflicting-reports clause and resolved No, and now
+`d2dd24206542`, the sibling leg, settled LOST -$5 on 2026-08-12 — 12 days
+past end date with no UMA proposal ever submitted, book decayed to
+bid/ask 0.001/0.002 and never recovered). Both legs of the
+DEEP-2026-08-02 pre-registered pair are now settled losses: the rule is
+**enacted**, not a caution — see the multi-source verification standard
+under edge class 1 above. Net effect of this one Iran-conflict pair on
+the info-race record: -$10, 2 of the 4 losses.
 
 NOT an edge class — **resolver-interpretation reads** (graded
 DEEP-2026-08-01): "I checked the exact resolution source and it says X"
