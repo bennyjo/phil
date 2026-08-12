@@ -368,7 +368,14 @@ determination: `git rev-parse --is-shallow-repository` and, if true,
 refuses). Only then apply the behind ⇒ checkout -B / diverged ⇒ warn
 rule. Trigger prompt and CYCLE.md are operator-owned.
 
-**Status:** open
+**Status:** endorsed by deep-retro (2026-08-12 — SECOND dated instance:
+today's deep-retro session hit the identical artifact — shallow clone,
+`git fetch` printed "forced update", rev-list showed 50/50 "divergence"
+with no merge-base — and only `git fetch --unshallow` revealed a plain
+0-ahead/100-behind fast-forward. Two consecutive deep-retro sessions have
+now each burned recovery time on this, and a less careful session would
+have done strategy surgery on a 4-day-stale tree. The unshallow guard
+should precede any behind/diverged determination in the trigger prompt)
 
 ---
 
@@ -393,4 +400,11 @@ brier_delta). Nice-to-have in the same pass: `by_category` and
 `by_skip_reason` both computed over settled rows only, with open-row
 counts alongside, so slices can't be misread as including open rows.
 
-**Status:** open
+**Status:** rejected (deep-retro 2026-08-12 — moot: the slice ALREADY
+EXISTS. `by_skip_reason` has been in score.py's forecasts section since
+operator commit a73bb92 (2026-08-09, the same commit that created the
+forecast ledger), verified present in today's score run. DEEP-2026-08-11
+hand-computed numbers the instrument already produced and filed this
+without running/reading the tool first — same failure family as the
+hand-asserted cycle counts. Lesson for future retros: before proposing an
+instrument change, run the instrument and grep its source)

@@ -1100,6 +1100,10 @@ from the window:
    these rows explicitly — each is veto-validated or veto-over-fires;
    an over-fire (Fry or Craig hitting) reopens the well-evidenced-
    polling-exception question at a measured foregone cost.
+   **GRADED (DEEP-2026-08-12, provisional — on-chain prices near-certain,
+   UMA resolution pending): zero over-fires; every decided disagreement
+   went to the market. Row-by-row table and the durable primaries rule in
+   the "Primary batch graded" section below.**
 3. **A materially revised estimate deserves a row, but forecast.py holds
    one live row per market+outcome** (anti-flooding, by design —
    revision support is proposed, journal/proposals.md 2026-08-10). Until
@@ -1199,6 +1203,56 @@ the market's own apparent mode. Practical notes for reuse:
    PPI release. First out-of-sample test of this technique — do not
    reuse it confidently on other econ-print brackets (CPI, PCE, etc.)
    until this one grades.
+
+## Primary batch graded (DEEP-2026-08-12, provisional pending UMA)
+
+The largest pre-registered disagreement batch on record settled on-chain
+overnight (WI/SC/MN primaries, 2026-08-11). Grading is against live gamma
+prices at 04:4xZ Aug 12 — SC and MN legs are at 0.99+, effectively decided;
+the WI *winner* is genuinely uncalled (Crowley +0.4pp with ~87% counted,
+market ~0.90/0.07), but every margin bracket ≥5% is decided No regardless of
+winner since the realized margin is under 1pp either way. Finalize at UMA
+resolution; nothing below is expected to flip except possibly the WI winner
+legs and the Hong-by-<5% bracket, which are explicitly NOT graded.
+
+| Row (forecast est vs mkt at record) | Outcome | Verdict |
+|---|---|---|
+| SC Nordone round-1 No lean (0.33 vs 0.595, claimed 0.27 — largest ever) | Nordone WON (0.99) | veto validated #2: $5 No bet would have lost |
+| SC Fry round-1 Yes (0.27 vs 0.0705, claimed 0.196) | Fry LOST (0.003) | veto validated #3 |
+| MN Craig nominee Yes (0.45 vs 0.295, claimed 0.15) | Craig LOST (0.0005) | veto validated #4 |
+| MN Flanagan nominee No lean (0.52 vs 0.715, claimed ~0.195) | Flanagan WON (0.9995) | veto validated #5 |
+| WI Hong ≥30% margin Yes (0.23 vs 0.10, claimed ~0.12) | margin <1pp ⇒ No | veto validated #6 |
+| WI Hong 25–30% / 20–25% (0.22 vs 0.135 / 0.24 vs 0.1845) | No | veto validated (same model, counted with #6) |
+| MN Gov Lindell lean (no forecast row — declined to estimate, 2026-08-09 pre-registration) | Demuth WON (0.9995) | confirmation per its own pre-registration |
+| SC Norman (0.32 vs 0.325, no-edge) | Norman LOST | at-market, no signal |
+| WI low brackets <5%/5–10%/15–20% (est below mkt) | ≥5% ones No | agent leaned righter, but same model that missed everything else — no credit claimed |
+
+Aggregate over the 13 forecast rows (provisional outcomes): agent brier
+≈0.174 vs market ≈0.116, delta ≈ +0.058 — the market decisively better,
+concentrated exactly in the large-claimed-edge rows. **The outside-view veto
+is now 6-for-6 with zero over-fires (PLBY + these five), all at zero
+bankroll cost.** The line-511 question ("well-evidenced polling exception in
+low-candidate-count primaries?") is answered: NO exception. The SC internal
+poll had Fry "narrowly ahead" — he got ~3% of the market's final price; the
+two aligned WI polls had Hong +24 — realized margin under 1pp.
+
+**The WI twist cuts deeper than "market right, agent wrong": the market was
+wrong too.** PM had Hong ~0.89-0.92 to win from Aug 7 through Aug 10;
+Crowley now leads. The polls-to-margin model normal(mean 24, sd 8) put est
+0.01 on "Hong by <5%" — reality landed at ±0.5pp, a beyond-99th-percentile
+miss of the model's own distribution. Low-turnout primaries are a category
+where sparse polling has no predictive validity AND the market price itself
+can be badly wrong — deference to the market here is not a safe harbor,
+it's just a cheaper way to be wrong.
+
+**Durable rule (contested primaries):** in contested-primary win/margin
+markets, polling-derived independent estimates are not bettable at any
+claimed edge (0-for-6 record above), and market-agrees positions are not
+safe either (WI). The category is research/forecast-only — record forecasts
+to keep measuring, never bet, unless the estimate has a mechanical anchor
+(e.g. substantially-complete official count with the market lagging it).
+Uncontested or landslide-polling primaries with the market already at 0.9+
+stay in the no-edge bucket they already occupy.
 
 ## Known unknowns (to resolve with data)
 
