@@ -1254,6 +1254,17 @@ the market's own apparent mode. Practical notes for reuse:
    reuse it confidently on other econ-print brackets (CPI, PCE, etc.)
    until this one grades.
 
+**Graded (DEEP-2026-08-13, RETRO-20260813-1707): WON.** July PPI printed
+inside the ≤5.1% NSA YoY bucket as the projection estimated; the bet leg
+(`b35963f465b4`, est 0.84 vs ask 0.78) settled +1.41, and all nine sibling
+forecast legs (5.2% through ≥6.0%, est_prob 0.00-0.05) correctly resolved
+lost, confirming the whole distribution shape, not just the one bucket.
+n=1 event — this clears the pre-registration bar (reuse with the same
+small-n caution as the sd=0.45pp calibration note above, not yet a proven
+technique) but is not a track record; do not port to CPI/PCE brackets
+without separately checking the sibling book's mode against the projected
+central estimate each time.
+
 ## Primary batch graded (DEEP-2026-08-12, provisional pending UMA)
 
 The largest pre-registered disagreement batch on record settled on-chain
