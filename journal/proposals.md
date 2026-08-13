@@ -408,3 +408,31 @@ hand-computed numbers the instrument already produced and filed this
 without running/reading the tool first — same failure family as the
 hand-asserted cycle counts. Lesson for future retros: before proposing an
 instrument change, run the instrument and grep its source)
+
+---
+
+## 2026-08-13 — deep-retro status pass (no new asks)
+
+**Open-item review, DEEP-2026-08-13:**
+
+- **2026-08-11 unshallow-before-divergence-judgment (endorsed): third dated
+  data point, benign form.** Today's deep-retro session again started on a
+  shallow clone (50-commit boundary) and `git fetch origin main` again
+  printed a spurious `+ 6bb2664...1a651a5 (forced update)`. No recovery time
+  was burned this time only because HEAD happened to already sit at the
+  origin tip — the artifact (shallow boundary + stale container-image main
+  ref at 6bb2664) is still live and every hourly cycle log since 2026-08-12
+  carries the same "local main ref stale at 6bb2664" recovery line. The
+  endorsement stands; the guard belongs in the trigger prompt before the
+  behind/diverged determination.
+- **2026-08-10 forecast.py revision support (endorsed): stays endorsed,
+  unchanged priority.** No material revisions occurred this window (the one
+  candidate that moved, AMAT, was correctly held as a duplicate estimate),
+  so the funnel-note workaround again cost nothing. Low urgency confirmed
+  for a second window.
+- No new operator proposals. Nothing this window was blocked on protected
+  code: the window's findings (sweep demotion, category-bar taxonomy,
+  election-bar extension, recheck stop rule) were all implementable in
+  strategy/ and are applied in this commit.
+
+**Status:** informational (statuses of the two open items unchanged)

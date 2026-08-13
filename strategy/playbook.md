@@ -207,6 +207,20 @@ carries its forecast_id(s) inline (the 2026-08-11 02:21Z entry omitted
 them; coverage was verified clean, but only by market_id
 reconciliation, which does not scale).
 
+**Taxonomy addition (DEEP-2026-08-13): `category-bar`.** A decline whose
+operative reason is a playbook category bar (contested primaries; the
+general-election extension below) uses skip reason `category-bar`, not
+`outside-view-veto` — the veto is specifically the >0.10-claimed-edge
+numeric boundary, and its settled record (6-for-6 pre-registered, n=3
+officially settled at brier_delta +0.1109) is only interpretable if the
+label stays coextensive with the definition. Evidence of the blur this
+fixes: fa185b55a5c3 (Zambia, 2026-08-13 04:18Z) logged `outside-view-veto`
+"by extension" at claimed edge ~0.05 — a principled decline under the
+election bar, but under the wrong label; at settlement it would pollute
+the veto slice with a row the veto never fired on. Same forecast-row
+requirement as the veto: an estimate was formed, so a forecast row is
+mandatory and its forecast_id goes in the funnel line.
+
 **Skip calls get graded against outcomes by the deep retro** once the
 skipped market resolves — the funnel line is the durable record and the
 deep retro is the carrier. (First pass DEEP-2026-08-06: CRCL/OXY
@@ -328,6 +342,18 @@ guard.
    minutes go to independent-benchmark candidates (econ prints, polls,
    countable metrics) — the only stream that generates scoreable
    disagreements (see Forecast ledger, below).
+   **Cap tightened DEEP-2026-08-13: at most ONE sports devig confirmation
+   sweep per WEEK per feed, as a drift spot-check.** The daily cap's own
+   evidence condition is met and exhausted: mlb-spreads settled forecast
+   n=21 at brier_delta -0.0003, stable across three consecutive slates
+   (n=12 → 18 → 21, delta -0.0003/-0.0004/-0.0003; RETRO-20260813-0211
+   and -0311 are the second and third confirmations). Every additional
+   at-market row adds ~zero information about the only open question
+   (disagreement calibration) while spending odds credits and research
+   minutes. A weekly one-slate spot-check is enough to detect feed drift;
+   anything more is re-demonstrating a solid null. If a spot-check ever
+   shows a clean-feed edge ≥ min_edge on a tight book, that is NEW
+   information — revert to daily sweeps and say why.
 
 **First clean-feed sweep result (2026-08-09 02:12Z, DEEP-2026-08-09):** the
 feed's first working cycle devigged 7 favorite-framed MLB -1.5 spreads and 2
@@ -770,6 +796,17 @@ Prefer, in order:
      consensus direction, or (ii) a threshold sitting far outside the
      analyst range while PM lags near base rates. Absent those, log
      "market confirms, no edge" once and let the cooldown hold it.
+     **Recheck stop rule (DEEP-2026-08-13):** after a market-confirms /
+     no-edge log, a recheck is warranted only by NEW information (fresh
+     guidance, a filing, a named headline) — never by elapsed time alone.
+     Two consecutive rechecks concluding "no new information, book moved
+     further toward consensus" close the candidate until resolution; log
+     the closure once in funnel notes and stop touching it. Evidence:
+     AMAT (`3347174`) was re-researched 4 times in 11h (17:20Z, 21:19Z,
+     01:15Z, 04:14Z on 2026-08-12/13) with an unchanged est 0.90 and the
+     identical conclusion each time — three of those touches bought no
+     information and cost attention the disagreement-generating
+     categories should have had.
    - **Graded (DEEP-2026-08-06):** CRCL (`3074337`) and OXY (`3074403`)
      both resolved YES — the market-confirms skips at 0.845/0.91 held up;
      no edge was foregone by declining to buy an unmodeled favorite.
@@ -1228,6 +1265,14 @@ winner since the realized margin is under 1pp either way. Finalize at UMA
 resolution; nothing below is expected to flip except possibly the WI winner
 legs and the Hong-by-<5% bracket, which are explicitly NOT graded.
 
+**Official settlements trickling in (DEEP-2026-08-13):** three
+politics-primary forecast rows have now settled on-chain via resolve.py
+(score.py politics-primary n=3, brier_delta +0.1109), including SC Fry
+(officially LOST, matching the provisional grade). Every official
+settlement so far matches its provisional grade; the batch's remaining
+rows are among the 31 open forecasts. No re-grading needed unless a WI
+leg resolves against its provisional call.
+
 | Row (forecast est vs mkt at record) | Outcome | Verdict |
 |---|---|---|
 | SC Nordone round-1 No lean (0.33 vs 0.595, claimed 0.27 — largest ever) | Nordone WON (0.99) | veto validated #2: $5 No bet would have lost |
@@ -1266,6 +1311,22 @@ to keep measuring, never bet, unless the estimate has a mechanical anchor
 (e.g. substantially-complete official count with the market lagging it).
 Uncontested or landslide-polling primaries with the market already at 0.9+
 stay in the no-edge bucket they already occupy.
+
+**Extension to general elections (DEEP-2026-08-13, scope clarification —
+not new evidence):** the bar applies to ANY election win/margin market
+where the estimate has no numeric, methodologically-credible polling and
+no mechanical anchor — qualitative "expected to win" framing, however
+unanimous across outlets, is the same evidence shape that went 0-for-6 in
+the primaries. The 04:14Z 2026-08-13 cycle already applied this by
+extension on Zambia (fa185b55a5c3, est 0.87 vs ask 0.93, declined —
+correct call, wrong skip label, see §Skip-reason taxonomy `category-bar`);
+this paragraph makes the extension a rule so future declines don't need
+to re-derive it. Zambia is the first out-of-sample test of whether the
+bar's logic generalizes beyond primaries — grade it at settlement as a
+test in progress, not as supporting evidence. Elections WITH credible
+numeric polling (Afrobarometer/Ipsos-class, or an Economist/YouGov
+tracker) are outside the bar and go through the normal estimation path;
+the WI lesson (market-agrees is no safe harbor) still applies there.
 
 ## Known unknowns (to resolve with data)
 
