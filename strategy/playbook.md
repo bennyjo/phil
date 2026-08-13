@@ -615,6 +615,30 @@ did. **Caveat for reuse:** always compute pace from `cumulative / actual
 elapsed days` yourself; do not trust the API's own `pace` field, which
 undercounts a still-running partial day as a full one.
 
+**Fat-tail mechanism found on near-end recheck (2026-08-13, RETRO-20260813-1707,
+no forecast filed — both prior open forecast rows on this event, `b7a58fd571c8`
+et al. from 2026-08-12, blocked a duplicate).** A Gaussian model of the
+running count (mean from elapsed-days pace, sd from the daily-count series)
+systematically UNDERSTATES the right tail relative to the market: on the
+Aug7-14 Musk event at 23h remaining (cumulative 138, model N(159.74, 7.85)),
+the model gave the 180-199 + 200-219 brackets combined ~0.6% while the book
+(siblings.py, sum_check 0.9875 — a well-calibrated book) priced them at
+8.85% combined. This isn't noise-sized: it's an order of magnitude, and it's
+directional (Gaussian always under-weights tails vs. any real bursty count
+process — a single high-volume posting day, retweet storm, or news-driven
+spike). Consequence: the model's claimed edge on the modal brackets
+(140-159 here, edge 0.133 vs the veto's 0.10 boundary) is inflated by the
+same mechanism that starves the tail — probability mass the Gaussian denies
+the tail has to go somewhere, and it lands in the bulk brackets, manufacturing
+a fake edge there even when the true mean estimate is fine. This is the
+same "large claimed edge in an efficient, information-rich market = modeling
+gap, not alpha" pattern as the SPX Brownian-bridge case, now with an
+identified mechanism specific to this category: **do not use a plain
+Gaussian for these brackets near a boundary; either fatten the tail
+(mixture, or empirical bootstrap off the observed daily-count series) or
+treat any Gaussian-derived edge here as presumptively overclaimed and route
+it through the outside-view veto regardless of nominal size.**
+
 **Cloud-runner egress note (2026-08-09 02:1xZ):** `api.the-odds-api.com`,
 `gamma-api.polymarket.com`, `clob.polymarket.com`, `clevelandfed.org`, and
 `xtracker.polymarket.com` were ALL reachable from the cloud runner this
