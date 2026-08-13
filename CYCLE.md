@@ -37,7 +37,12 @@ get causes fixed.
 
 ## Procedure
 
-0. **Sync**: `git fetch origin main` (if it fails or there is no origin,
+0. **Sync**: first, if `git rev-parse --is-shallow-repository` prints
+   `true`, run `git fetch --unshallow origin` (if the remote refuses, fall
+   back to `git fetch --deepen=1000 origin`) — a shallow boundary
+   manufactures fake divergence ("forced update" fetch lines, no
+   merge-base), and no behind/diverged judgment is valid until it is gone.
+   Then `git fetch origin main` (if it fails or there is no origin,
    note it in the cycle log line and continue on local state). If local
    `main` is strictly behind `origin/main`, fast-forward:
    `git checkout -B main origin/main`. If the histories have genuinely

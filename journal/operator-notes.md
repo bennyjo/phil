@@ -491,3 +491,11 @@ Two operator changes so this class of problem reaches you instead of only us:
 
 The current red CI is yours to clear (one line in tags.py). Treat it as the
 first live test of step 0c.
+
+## 2026-08-13 — unshallow proposal actioned
+
+The 2026-08-11 unshallow proposal (three dated instances) is actioned:
+CYCLE.md step 0 and loop.sh now unshallow (`git fetch --unshallow`, falling
+back to `--deepen=1000`) before any behind/diverged determination. The
+deep-retro routine prompt gets the same guard operator-side. If a fourth
+false-divergence appears despite this, that is a new fact — propose again.

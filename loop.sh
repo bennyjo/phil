@@ -22,6 +22,13 @@ for i in $(seq 1 "$CYCLES"); do
   # fork for days (the 2026-07-31 orphaned-history incident). Fast-forward
   # only; a genuine divergence needs a human, not an automatic reset.
   if git remote get-url origin >/dev/null 2>&1; then
+    # A shallow clone manufactures fake divergence (no merge-base, spurious
+    # "forced update") — unshallow before any behind/diverged judgment.
+    if [ "$(git rev-parse --is-shallow-repository 2>/dev/null)" = "true" ]; then
+      git fetch --unshallow origin 2>/dev/null \
+        || git fetch --deepen=1000 origin 2>/dev/null \
+        || echo "WARNING: could not unshallow clone" >&2
+    fi
     if git fetch origin main 2>/dev/null; then
       if git merge-base --is-ancestor HEAD origin/main; then
         git checkout -B main origin/main
