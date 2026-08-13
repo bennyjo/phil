@@ -25,7 +25,6 @@ previously-empty tags (weather 1474 is the named example) on the same
 cadence.
 """
 import argparse
-import json
 import sys
 from pathlib import Path
 
