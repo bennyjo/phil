@@ -221,6 +221,25 @@ the veto slice with a row the veto never fired on. Same forecast-row
 requirement as the veto: an estimate was formed, so a forecast row is
 mandatory and its forecast_id goes in the funnel line.
 
+**Taxonomy addition (DEEP-2026-08-14): `wide-spread-veto`.** A decline
+whose operative reason is the max_spread rule (book spread > 0.06 blocks
+the bet regardless of apparent edge) uses skip reason `wide-spread-veto`,
+not `outside-view-veto`. Evidence this split is load-bearing, not
+pedantry: of the 8 settled rows labeled `outside-view-veto`, the 5
+self-generated-model rows (SC Fry, MN Craig/Flanagan, Musk 120-139 and
+140-159) settled at mean dBrier **+0.118 — market better on every row**,
+while the 3 wide-spread rows (PPI 5.3%/5.4%/≥6.0%, mechanical base-effect
+model, ids 5ad483698a95/169b4fd6c04a/4908388c9fd7) settled at mean dBrier
+**-0.010 — agent better on every row**. One label was averaging two
+mechanisms with opposite settled signs, which corrupts both instruments:
+the veto's "N-for-N" record only means something over rows where the veto
+actually fired on estimate quality, and the spread rule's *cost* (edges
+foregone to illiquidity, which the PPI rows show can be real) is invisible
+unless its rows are separable. Same forecast-row requirement as the other
+estimate-bearing labels. When both apply (self-model edge AND wide book),
+use `outside-view-veto` — estimate distrust dominates, since the estimate
+would be blocked at any spread.
+
 **Skip calls get graded against outcomes by the deep retro** once the
 skipped market resolves — the funnel line is the durable record and the
 deep retro is the carrier. (First pass DEEP-2026-08-06: CRCL/OXY
@@ -638,6 +657,17 @@ Gaussian for these brackets near a boundary; either fatten the tail
 (mixture, or empirical bootstrap off the observed daily-count series) or
 treat any Gaussian-derived edge here as presumptively overclaimed and route
 it through the outside-view veto regardless of nominal size.**
+
+**Graded (DEEP-2026-08-14): the prediction above settled correct within
+12 hours.** Both of the model's center-mass brackets resolved No — 120-139
+(5ef2f363f039, est 0.165, RETRO-20260813-2130) and 140-159 (b7a58fd571c8,
+est 0.64, the model's modal bracket, RETRO-20260814-0045). Together those
+two legs carried ~80% of the Gaussian's probability mass; the count landed
+above both, i.e. in exactly the right tail the model starved. Two
+same-model, same-direction misses on the highest-mass legs is a mechanism
+confirmation, not variance. The open 160-179 (market 0.385 vs model 0.189)
+and 180-199 (0.095 vs 0.003) rows grade the market's side of the same
+comparison at settlement.
 
 **Cloud-runner egress note (2026-08-09 02:1xZ):** `api.the-odds-api.com`,
 `gamma-api.polymarket.com`, `clob.polymarket.com`, `clevelandfed.org`, and
@@ -1151,6 +1181,17 @@ from the window:
    minutes, weigh a candidate partly by whether it can ADD a
    disagreement row, since that is the only stream that will ever answer
    "are we calibrated when we disagree?".
+   **No-side blind spot (DEEP-2026-08-14):** score.py's threshold_sweep
+   simulates only the forecasted-outcome side at the recorded ask
+   (operator note 2026-08-09), so a disagreement where the model sits far
+   BELOW a wide market computes a negative Yes-edge and lands in no
+   bucket. "Every sweep bucket negative ⇒ zero settled evidence of edge
+   when disagreeing" is therefore a claim about the Yes-side stream only.
+   The settled No-side disagreements to date (PPI 5.3%: est 0.036 vs mid
+   0.171; ≥6.0%: 0.003 vs 0.042) both went the agent's way — n=2,
+   event-correlated, proves nothing, but retros must not cite the sweep
+   as if it covered this stream. Proposal for a No-side sweep slice filed
+   2026-08-14 (journal/proposals.md).
 2. **Record even when declining — especially when declining.** The
    outside-view veto (>0.10 claimed edge) would be unfalsifiable if
    declined estimates were never scored. The 2026-08-10 declines (PLBY
@@ -1237,6 +1278,19 @@ actually printed on and whether an off-grid GDP value produced a NO sweep
 across all listed brackets — that would confirm or refute the gap-bucket
 reading with real data at zero cost.
 
+**Post-release grading (DEEP-2026-08-14) — test run, result inconclusive,
+item CLOSED.** The hourly cycles dropped this watch item (no cycle after
+2026-08-11 23:24Z touched it — third instance of the no-carrier failure,
+see schedule.json `watch_items`); the deep retro ran it: event 486133 is
+fully resolved, **0.4-0.5% bracket Yes, all six other legs No** (gamma,
+umaResolutionStatus resolved on every leg). The print landed on-grid, so
+the gap-bucket hypothesis (off-grid print ⇒ all-No sweep) was never
+exercised — untested, not confirmed. The abstention cost nothing (no
+bettable structure either way), and the first-vs-second-estimate date
+ambiguity evidently did not prevent clean resolution. Carry the lesson,
+not the item: bracket sets with undefined gaps stay `ambiguous-resolution`
+until a listed bracket is priced wrong on its own terms.
+
 ## PPI YoY brackets: base-effect projection, first instance (2026-08-11)
 
 New category, econ-ppi (never researched before this cycle; scan's econ-tag
@@ -1288,6 +1342,22 @@ small-n caution as the sd=0.45pp calibration note above, not yet a proven
 technique) but is not a track record; do not port to CPI/PCE brackets
 without separately checking the sibling book's mode against the projected
 central estimate each time.
+
+**Correction (DEEP-2026-08-14) to RETRO-20260813-1707's counterfactual
+claim.** That retro stated the two wide-spread-vetoed sibling legs (5.3%,
+≥6.0%) "would have lost had they been bet, reconfirming that veto." Wrong
+side: the model's apparent edge on both legs was **No-side** (the funnel
+notes themselves say "large No-side edge"). Redone with fill arithmetic:
+5.3% (5ad483698a95, bid/ask 0.133/0.209) — No ask 0.867 vs model No
+0.964, realizable edge 0.097, and the bracket resolved No, so a $5 No bet
+would have **WON ≈ +$0.77**; ≥6.0% (4908388c9fd7, bid/ask 0.003/0.08) —
+No ask 0.997 vs model No 0.9973, edge ≈0.0003, **no realizable trade**
+(the apparent edge vs the mid evaporates crossing the spread — which is
+the actual justification of the spread veto on that leg). Net: the
+wide-spread veto's settled counterfactual record here is 1 missed win +
+1 correct non-trade, not 2 saves. Rule for future retros: counterfactuals
+get the same arithmetic as real fills — side, realizable ask, spread —
+never a narrative verdict.
 
 ## Primary batch graded (DEEP-2026-08-12, provisional pending UMA)
 
@@ -1367,5 +1437,11 @@ the WI lesson (market-agrees is no safe harbor) still applies there.
 
 - Which categories actually have positive brier_delta for me. (Bet small and
   wide until `core/score.py` shows n≥30 per category.)
+  **Status DEEP-2026-08-14:** the mechanical-econ family (econ + econ-cpi +
+  econ-ppi settled forecasts) is the first family-sized slice on the good
+  side: pooled brier_delta -0.0104 over 27 rows — but those rows are ~6
+  independent release events, so treat as a concentration signal (keep
+  routing research to official-print releases), not a proven edge. Both
+  settled econ bets won (a3bc5c4, b35963f465b4).
 - Whether thin esports books are exploitable or just wide.
 - Whether earnings markets are efficient at pricing whisper numbers.

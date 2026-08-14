@@ -368,14 +368,14 @@ determination: `git rev-parse --is-shallow-repository` and, if true,
 refuses). Only then apply the behind ⇒ checkout -B / diverged ⇒ warn
 rule. Trigger prompt and CYCLE.md are operator-owned.
 
-**Status:** endorsed by deep-retro (2026-08-12 — SECOND dated instance:
-today's deep-retro session hit the identical artifact — shallow clone,
-`git fetch` printed "forced update", rev-list showed 50/50 "divergence"
-with no merge-base — and only `git fetch --unshallow` revealed a plain
-0-ahead/100-behind fast-forward. Two consecutive deep-retro sessions have
-now each burned recovery time on this, and a less careful session would
-have done strategy surgery on a 4-day-stale tree. The unshallow guard
-should precede any behind/diverged determination in the trigger prompt)
+**Status:** actioned (operator, 2026-08-13 — CYCLE.md step 0, loop.sh, and
+the deep-retro trigger prompt all unshallow before any behind/diverged
+determination; see operator-notes.md 2026-08-13. Confirmed working by
+deep-retro 2026-08-14: first session with the guard in the prompt hit the
+usual artifact — shallow clone, spurious "forced update" — and resolved it
+per the guard: unshallow, plain 0-ahead/160-behind fast-forward, zero
+recovery time. Prior history: endorsed 2026-08-12 after a second dated
+instance; third benign instance recorded 2026-08-13)
 
 ---
 
@@ -436,3 +436,54 @@ instrument change, run the instrument and grep its source)
   strategy/ and are applied in this commit.
 
 **Status:** informational (statuses of the two open items unchanged)
+
+---
+
+## 2026-08-14 — core/score.py: threshold_sweep No-side counterfactual slice
+
+**Evidence:** the operator's 2026-08-09 note introducing the sweep said
+"Only the forecasted outcome side is simulated; opposite-side
+counterfactuals are a v2 question if the data argues for it." The data now
+argues for it, with a settled worked example. The sweep computes edge as
+`est_prob − recorded ask` on the forecasted (Yes) side, so a disagreement
+where the model sits far BELOW a wide market — a No-side edge — is
+excluded from every bucket. Consequence: the headline both DEEP-2026-08-13
+and the risk.json notes have been carrying ("every sweep bucket negative;
+zero settled instances of being right against the market") is a claim
+about the Yes-side stream only. The settled No-side disagreements to date
+both went the agent's way: PPI 5.3% (`5ad483698a95`, est 0.036 vs mid
+0.171, No-side edge 0.097 realizable NET of the wide spread at No ask
+0.867, bracket resolved No — a flat $5 bet wins +$0.77) and PPI ≥6.0%
+(`4908388c9fd7`, est 0.003 vs mid 0.042 — not realizable through the
+spread, correctly a non-trade, but still a settled row where the estimate
+beat the market's mid). n=2 and event-correlated, worth nothing as edge
+evidence yet — but the instrument should count this stream before anyone
+concludes from the sweep that the disagreement pipe is uniformly bad.
+RETRO-20260813-1707 separately mis-graded these two counterfactuals as
+"both would have lost" (corrected in playbook, DEEP-2026-08-14): per-row
+fill arithmetic in the instrument would have prevented the narrative error.
+
+**Proposed change:** score.py threshold_sweep adds a No-side pass per
+settled forecast row: complement edge = `(1 − est_prob) − (1 − best_bid_at_record)`
+= `best_bid_at_record − est_prob`, i.e. buy No at `1 − best_bid`; bucket by
+the same floors, report the same fields, in a parallel `threshold_sweep_no`
+block (or a `side` field per bucket). Rows lacking `best_bid_at_record`
+are skipped and counted. This keeps the existing Yes-side block unchanged
+for continuity.
+
+**Status:** open
+
+---
+
+## 2026-08-14 — deep-retro status pass
+
+- **2026-08-11 unshallow-before-divergence-judgment → actioned & confirmed**
+  (status updated above: operator actioned 2026-08-13; first live deep-retro
+  test today worked exactly as specified).
+- **2026-08-10 forecast.py revision support (endorsed): stays endorsed,
+  unchanged priority.** Third consecutive window with zero cost from the
+  funnel-note workaround; no material revision occurred this window.
+- New proposal above (No-side sweep slice). Everything else this window
+  was implementable in strategy/ and is applied in this commit (taxonomy
+  split, counterfactual correction, watch_items carrier in schedule.json,
+  fat-tail and UK-GDP gradings).
