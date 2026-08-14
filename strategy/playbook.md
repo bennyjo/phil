@@ -689,13 +689,22 @@ comparison at settlement.
 settled No** (e06e9b2bea70, est 0.189). n=3 now, all same model instance,
 all same direction — the count has landed above every bracket checked so
 far, tracking the market's fatter-tail pricing rather than the Gaussian's.
-The last sibling, 180-199 (eb09f3632c5d, est 0.003), is still open; if it
-also settles No the true count is 200+, ~4.6 model-sd above the mean —
-confirmation that a plain elapsed-pace Gaussian is unusable for this
-category's tail without a fatter-tailed model (mixture or empirical
-bootstrap), not just a one-off miss. No numeric floor change yet (n=3,
-below the ~15 threshold, and the outside-view veto is already catching
-these) — grade the last leg before considering one.
+
+**Fully graded (2026-08-14 19:16Z, RETRO-20260814-1916): 180-199 settled
+Yes** (eb09f3632c5d, est 0.003) — the true count landed in 180-199 itself,
+the exact bracket the Gaussian starved to 0.3%, not the 200+ tail beyond it.
+All four same-model siblings on this event are now settled (120-139 No,
+140-159 No modal-bracket miss, 160-179 No, 180-199 Yes), same direction
+throughout: a plain elapsed-pace Gaussian is confirmed unusable for this
+category's tail brackets (est 0.003 vs. an outcome the market's own book
+priced around 9.5%) — not a one-off, a repeatable mechanism. The outside-view
+veto correctly blocked a bet on this leg pre-settlement; no ledger loss. n=4
+is still below the ~15-settlement floor-change threshold, so no numeric
+min_edge change yet, but the modeling requirement (fatten the tail — mixture
+or empirical bootstrap off the observed daily-count series — before trusting
+any Gaussian-derived edge on this category's outer brackets) is now
+confirmed rather than provisional. This event's sibling set is closed out;
+next test is a fresh event/pace, not a re-check of this one.
 
 **Cloud-runner egress note (2026-08-09 02:1xZ):** `api.the-odds-api.com`,
 `gamma-api.polymarket.com`, `clob.polymarket.com`, `clevelandfed.org`, and
