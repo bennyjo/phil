@@ -669,6 +669,18 @@ confirmation, not variance. The open 160-179 (market 0.385 vs model 0.189)
 and 180-199 (0.095 vs 0.003) rows grade the market's side of the same
 comparison at settlement.
 
+**Graded again (2026-08-14 09:05Z, RETRO-20260814-0905): 160-179 also
+settled No** (e06e9b2bea70, est 0.189). n=3 now, all same model instance,
+all same direction — the count has landed above every bracket checked so
+far, tracking the market's fatter-tail pricing rather than the Gaussian's.
+The last sibling, 180-199 (eb09f3632c5d, est 0.003), is still open; if it
+also settles No the true count is 200+, ~4.6 model-sd above the mean —
+confirmation that a plain elapsed-pace Gaussian is unusable for this
+category's tail without a fatter-tailed model (mixture or empirical
+bootstrap), not just a one-off miss. No numeric floor change yet (n=3,
+below the ~15 threshold, and the outside-view veto is already catching
+these) — grade the last leg before considering one.
+
 **Cloud-runner egress note (2026-08-09 02:1xZ):** `api.the-odds-api.com`,
 `gamma-api.polymarket.com`, `clob.polymarket.com`, `clevelandfed.org`, and
 `xtracker.polymarket.com` were ALL reachable from the cloud runner this
