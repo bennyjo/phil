@@ -554,6 +554,22 @@ first test: reachable, tight, no edge. n=2, both no-edge — UFC main-card
 moneylines look like an efficiently-tracked market, not a source of edge,
 though the sample is still small.
 
+**Exploration budget, ATP/WTA tennis moneylines (2026-08-14 09:1xZ, first
+test of this category).** Hypothesis: same shape as UFC-moneyline — dense
+multi-book coverage (the-odds-api `tennis_atp_cincinnati_open`/
+`tennis_wta_cincinnati_open`, 5-8 books per match) might leave PM lagging or
+loose. Three Cincinnati Open matches today, all high-liquidity ($71k-$79k):
+Royer/Tsitsipas (8 books, power devig fair 0.231/0.769 vs PM ask 0.24/0.77,
+edges -0.009/-0.001), Machac/Carreno Busta (8 books, fair 0.523/0.477 vs PM
+ask 0.53/0.48, edges -0.007/-0.003), Zandschulp/Griekspoor (8 books, fair
+0.516/0.484 vs PM ask 0.52/0.49, edges -0.004/-0.006). Result: **reachable**
+(dense book coverage confirmed, same as UFC) but **no edge** on any of the
+6 sides across 3 matches, all |edge| < 0.01 — PM tracks the devigged
+consensus about as tightly here as on UFC and MLB. Category ruled in, not
+out (n=3 matches, all no-edge, same efficient-market pattern as every other
+liquid PM sports book tested so far); revisit only if a lower-liquidity or
+in-play match shows a wider gap.
+
 **Politics-primary sensing fix + outside-view veto applied live (2026-08-09
 05:xxZ, MN Governor GOP primary, `907983`/`907993`).** The 2026-08-08 18:11Z
 cycle logged this candidate benchmark-unreachable ("polls inconsistent across
