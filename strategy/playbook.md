@@ -753,6 +753,15 @@ beats the market on those legs, the Gaussian, not the class, was the
 problem, and the category stays estimate-bearing under the veto. Grade
 same-tick at each settlement against exactly this fork.
 
+**First settlement, off-fork (2026-08-15 18:12Z, RETRO-20260815-1812):** the
+Aug13-15 2-day pair's 65-89 leg (`53c5bf348303`) settled No against a
+bootstrap est of 0.501 and a market ask of 0.63 — model brier 0.251 vs
+market brier 0.384, model beat market by 0.133 on this leg. This pair is
+NOT the pre-registered fork (that's the weekly 180-199/220-239 legs,
+settling Aug 18) — it's a useful early n=1 data point in the bootstrap's
+favor but does not resolve the fork. The sibling 40-64 leg (`10029a75295e`)
+is still open. No bet either way (outside-view veto still applied).
+
 **Cloud-runner egress note (2026-08-09 02:1xZ):** `api.the-odds-api.com`,
 `gamma-api.polymarket.com`, `clob.polymarket.com`, `clevelandfed.org`, and
 `xtracker.polymarket.com` were ALL reachable from the cloud runner this
