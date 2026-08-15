@@ -762,6 +762,13 @@ settling Aug 18) — it's a useful early n=1 data point in the bootstrap's
 favor but does not resolve the fork. The sibling 40-64 leg (`10029a75295e`)
 is still open. No bet either way (outside-view veto still applied).
 
+**Pair complete, still off-fork (2026-08-15 19:12Z, RETRO-20260815-1912):**
+the sibling 40-64 leg (`10029a75295e`) settled Yes against a bootstrap est
+of 0.499 and a market ask of 0.40 — model brier 0.251 vs market brier
+0.372, model beat market by 0.121. Both legs of the Aug13-15 pair now agree:
+bootstrap beat market (n=2). Still off-fork — the fork verdict is decided
+only by the weekly 180-199/220-239 legs settling Aug 18. No bet either way.
+
 **Cloud-runner egress note (2026-08-09 02:1xZ):** `api.the-odds-api.com`,
 `gamma-api.polymarket.com`, `clob.polymarket.com`, `clevelandfed.org`, and
 `xtracker.polymarket.com` were ALL reachable from the cloud runner this
