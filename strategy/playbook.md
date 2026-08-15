@@ -263,6 +263,23 @@ resolution day was never executed; watch items alone are not a carrier
 for deferred obligations, the same lesson as the b21 settlement-retro
 drop.)
 
+**Operational trap (2026-08-15 17:1xZ): `forecast.py record --outcome` takes
+the outcome you name, not "the side I have an opinion about" — a mismatch
+silently records the complement of the intended belief.** Recorded a
+Canada-GDP "less than 0.0%" bracket forecast intending est_prob 0.11 for
+the market's stated Yes side (matches market's own Yes=0.107), but passed
+`--outcome "No"` with that same 0.11 value — the row now reads "I believe
+P(No)=0.11" i.e. P(Yes)=0.89, the opposite of the intended belief, and
+disagrees with market by ~0.78 instead of ~0. Forecast rows are immutable
+(only core writes forecasts.jsonl); this one (fe954ed9f325, market 3388182)
+stays on the books as recorded and will score as a large miscalibration
+when it settles — flag it in that retro as a labeling bug, not a belief
+failure, so it doesn't get read as evidence about econ-bracket calibration.
+Rule going forward: state the target outcome string in the note/reasoning
+BEFORE the CLI call, and sanity-check the returned `mid`/`delta_vs_mid`
+against the intended direction immediately after recording, since the tool
+prints exactly the number needed to catch this before moving on.
+
 ## Exploration budget (DEEP-2026-08-05, operator mandate)
 
 Selection rules learned only from wins overfit to the categories already
