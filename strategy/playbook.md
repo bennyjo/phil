@@ -240,6 +240,20 @@ estimate-bearing labels. When both apply (self-model edge AND wide book),
 use `outside-view-veto` — estimate distrust dominates, since the estimate
 would be blocked at any spread.
 
+**Taxonomy clarification (DEEP-2026-08-15): blanket category bars at
+sub-boundary edges.** When a category carries a blanket self-model bar
+(contested primaries/elections; social-media-postcount) and a leg's
+claimed edge is ≤0.10, the decline's operative reason is the bar, not the
+numeric veto — label it `category-bar`. `outside-view-veto` stays
+coextensive with the >0.10 boundary (DEEP-2026-08-13), otherwise the
+veto's settled ledger accumulates rows the veto never fired on. Instance
+that prompted this: the 2026-08-15 04:18Z Musk weekly set labeled all 5
+legs `outside-view-veto` though three (70331099597c, c24926a5c9d7,
+7808b6f5a4ef, claimed edges 0.025-0.045) were sub-boundary. Recorded rows
+are immutable (core writes forecasts.jsonl), so the reading rule: at
+settlement those three rows grade the bootstrap model, NOT the veto —
+exclude them from any veto-record claim.
+
 **Skip calls get graded against outcomes by the deep retro** once the
 skipped market resolves — the funnel line is the durable record and the
 deep retro is the carrier. (First pass DEEP-2026-08-06: CRCL/OXY
@@ -705,6 +719,22 @@ or empirical bootstrap off the observed daily-count series — before trusting
 any Gaussian-derived edge on this category's outer brackets) is now
 confirmed rather than provisional. This event's sibling set is closed out;
 next test is a fresh event/pace, not a re-check of this one.
+
+**Test in progress (DEEP-2026-08-15, pre-registered reading).** The
+2026-08-15 04:18Z cycle ran the required bootstrap (14-day empirical
+daily-count resample) on two fresh events: the Aug11-18 weekly set (5
+rows, 70331099597c…cf16f6424af7) and the first 2-day window Aug13-15
+(10029a75295e, 53c5bf348303 — settles ~Aug 15 16:00Z; weekly settles Aug
+18 16:00Z). The bootstrap still disagrees with the market by >0.10 on two
+weekly legs (180-199 est 0.494 vs 0.325; 220-239 est 0.024 vs 0.145).
+Reading committed BEFORE settlement: if the market again beats the model
+on the large-disagreement legs, the verdict escalates from "wrong tail
+shape" (fixed by the bootstrap) to "self-model class untrustworthy in
+this category at any model sophistication" — i.e. a permanent category
+bar like contested primaries, forecast-only. If the bootstrap materially
+beats the market on those legs, the Gaussian, not the class, was the
+problem, and the category stays estimate-bearing under the veto. Grade
+same-tick at each settlement against exactly this fork.
 
 **Cloud-runner egress note (2026-08-09 02:1xZ):** `api.the-odds-api.com`,
 `gamma-api.polymarket.com`, `clob.polymarket.com`, `clevelandfed.org`, and
@@ -1469,6 +1499,44 @@ test in progress, not as supporting evidence. Elections WITH credible
 numeric polling (Afrobarometer/Ipsos-class, or an Economist/YouGov
 tracker) are outside the bar and go through the normal estimation path;
 the WI lesson (market-agrees is no safe harbor) still applies there.
+
+## Outside-view veto: settled counterfactual ledger (DEEP-2026-08-15)
+
+Per-row fill arithmetic over ALL settled `outside-view-veto` forecast rows
+(flat 1u on the model's side at the recorded book; the discipline the
+RETRO-20260813-1707 correction demanded). This table supersedes every
+narrative "N-for-N" veto claim; future veto-record statements cite it and
+extend it at each settlement.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| SC Nordone (57f222efb516) | 0.33 / 0.595 | No | +0.260 | Yes | −1.00 |
+| SC Fry (e5666c235356) | 0.27 / 0.071 | Yes | +0.196 | No | −1.00 |
+| MN Flanagan (75f2545a7a0e) | 0.52 / 0.715 | No | +0.190 | Yes | −1.00 |
+| MN Craig (9ab914d80a5b) | 0.45 / 0.295 | Yes | +0.150 | No | −1.00 |
+| PPI 5.3% (5ad483698a95) | 0.036 / 0.171 | No | +0.097 | No | **+0.15** |
+| PPI 5.4% (169b4fd6c04a) | 0.027 / 0.049 | No | −0.019 | No | non-trade |
+| PPI ≥6.0% (4908388c9fd7) | 0.003 / 0.042 | No | ~0.000 | No | non-trade |
+| Musk 120-139 (5ef2f363f039) | 0.165 / 0.085 | Yes | +0.080 | No | −1.00 |
+| Musk 140-159 (b7a58fd571c8) | 0.64 / 0.415 | Yes | +0.220 | No | −1.00 |
+| Musk 160-179 (e06e9b2bea70) | 0.189 / 0.385 | No | +0.191 | No | **+0.61** |
+| Musk 180-199 (eb09f3632c5d) | 0.003 / 0.095 | No | +0.087 | Yes | −1.00 |
+
+**Totals: 9 realizable disagreement trades, 2W/7L, net −6.24u (−$31.20 at
+$5 flat).** Sub-classes: self-model rows 1W/7L (−6.39u); wide-spread rows
+1 realizable, won (+0.15u) — the spread rule's entire settled cost remains
+one foregone ~+$0.77 win. Side split: Yes-side 0W/4L (−4.0u); No-side
+2W/3L (−1.24u) — both wins live on the No side (invisible to the current
+threshold sweep, see the 2026-08-14 proposal), but the No-side stream is
+NOT positive. Brier view of the same rows: self-model n=8 mean dBrier
++0.117, market better 7/8.
+
+**Decision implications:** (1) the 0.10 veto boundary is confirmed by
+P&L, not just brier — do not relax it; (2) the path to more placements is
+NOT trusting self-models harder, it is expanding the mechanical/No-side
+realizable classes (econ prints, cross-market arithmetic); (3) every
+counterfactual claim uses this table's arithmetic — side, realizable ask,
+spread — never a narrative "would have lost/won".
 
 ## Known unknowns (to resolve with data)
 

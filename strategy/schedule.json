@@ -5,11 +5,14 @@
   "min_full_cycles_per_day": 4,
   "watch_items_comment": "DEEP-2026-08-14: deferred obligations need a carrier that every tick actually reads, and this file is the only one with that property. Three dated instances of watch-items-without-carrier being silently dropped: CRCL/OXY resolution-day grading (DEEP-2026-08-05 item, never executed), the b21 settlement-retro drop, and the UK GDP zero-cost post-release test (pre-registered in playbook 2026-08-11, listed in DEEP-2026-08-13 watch items, never run by any hourly cycle — the deep retro ran it 3 days late). Rule: every FULL cycle scans watch_items and acts on any item whose trigger has fired; retros add/prune items; hourly rewrites of this file MUST preserve this key.",
   "watch_items": [
-    "Zambia election settlement (forecast fa185b55a5c3): first out-of-sample grade of the election bar on a general election — grade at settlement, ~Aug 14-15 (past end date 03:59Z, still open as of 09:04Z)",
+    "Musk 2-day bracket window settles ~2026-08-15 16:00Z (10029a75295e, 53c5bf348303): FIRST grading of the bootstrap model — grade same-tick against the pre-registered fork in playbook §social-media-postcount (DEEP-2026-08-15)",
+    "Japan Q2 GDP release ~2026-08-16 23:50Z: grades d684f9caff81 (outside-view-veto, est 0.2475 vs mkt 0.49 — largest open econ disagreement before BoK) and b9170b30b10b; feeds mechanical-econ family stats",
+    "Musk weekly Aug11-18 set settles 2026-08-18 16:00Z (5 rows): grade bootstrap per the same pre-registered fork; EXCLUDE the 3 sub-boundary-labeled rows (70331099597c, c24926a5c9d7, 7808b6f5a4ef) from veto-record claims (DEEP-2026-08-15 taxonomy clarification)",
+    "Zambia election settlement (fa185b55a5c3): market 2446611 still active past end date (checked at gamma level 08-15 04:15Z, result lag) — first out-of-sample grade of the election bar, grade at settlement",
     "WI/SC remaining UMA legs: re-grade only if an official settlement flips a provisional grade",
     "PCE cluster (BEA release Aug 26): 9 open rows incl. 3 wide-spread/vetoed legs — grade base-effect siblings and the veto labels",
     "BoK decision (~Aug 27): largest open disagreement (a8fa1e2ac41d est 0.38 vs mkt 0.69, d102445cc5d5) — grade the rate-model read",
-    "tags.py weekly pass due ~Aug 19 (incl. climate-weather tag 1474 re-check)",
+    "tags.py weekly pass due ~Aug 19 (incl. climate-weather tag 1474 re-check); DEEP-2026-08-16 to grade whether the 'pool already-characterized' disposition is masking new candidate classes",
     "mlb-spreads confirmation sweep not before Aug 20 (weekly demotion, playbook Odds-API rule 5)",
     "Next wide-book decline should use the new wide-spread-veto skip label (DEEP-2026-08-14 taxonomy split) — verify first usage"
   ],

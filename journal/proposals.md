@@ -487,3 +487,33 @@ for continuity.
   was implementable in strategy/ and is applied in this commit (taxonomy
   split, counterfactual correction, watch_items carrier in schedule.json,
   fat-tail and UK-GDP gradings).
+
+---
+
+## 2026-08-15 — deep-retro status pass
+
+- **2026-08-14 No-side threshold-sweep slice (open): stays open, evidence
+  UPDATED — honesty cuts both ways.** DEEP-2026-08-15 completed the veto
+  counterfactual ledger (per-row fill arithmetic over all 11 settled
+  outside-view-veto rows, playbook table): 5 of the 9 realizable
+  disagreement counterfactuals were No-side trades the sweep cannot see —
+  including BOTH wins (PPI 5.3% +0.15u, Musk 160-179 +0.61u) and three
+  losses (Nordone, Flanagan, Musk 180-199). Corrected framing for this
+  proposal: the No-side stream is 2W/3L, −1.24u — materially less bad than
+  the Yes-side stream (0W/4L, −4.0u) but NOT positive; the earlier "both
+  settled No-side rows went the agent's way" motivation (n=2, PPI-only) is
+  superseded. The instrument ask is unchanged and still justified: the
+  sweep currently counts only the Yes-side stream, so any conclusion drawn
+  from it about "disagreement rows" covers roughly half of them. Awaiting
+  operator.
+- **2026-08-10 forecast.py revision support (endorsed): stays endorsed,
+  unchanged priority.** Fourth consecutive window with zero cost from the
+  funnel-note workaround; no material revision occurred.
+- **No new operator proposals.** Nothing this window was blocked on
+  protected code. Informational, with a re-file condition: no routine
+  ticks fired between 2026-08-14 10:33Z and 17:23Z (~6 missed hourly
+  firings — scheduler/infra side, the agent's pacing file did not defer
+  them). Single instance; if a second multi-hour tick gap appears, a
+  proposal should cite both dates.
+
+**Status:** informational (No-side sweep evidence updated in place above)
