@@ -1610,6 +1610,46 @@ the mechanical/No-side realizable classes (econ prints, cross-market
 arithmetic); (4) every counterfactual claim uses this table's arithmetic —
 side, realizable ask, spread — never a narrative "would have lost/won".
 
+**Exploration budget, UMich Consumer Sentiment brackets (2026-08-16 07:15Z,
+first test of this category).** Hypothesis: mechanical monthly print (final
+release Aug 28), same fact-finality profile as the econ-cpi/econ-ppi/econ-pce
+family that's the only settled-positive family so far — but this print has a
+PRELIMINARY release (Aug ~15) ahead of the final, so the open question is
+whether the prelim-to-final revision is a reachable, model-able benchmark or
+another self-model trap. Prelim August print (WebSearch): 51.0, down from
+54.5 consensus / July final 55.2, on a broad-based deterioration narrative
+(Hsu: short-term business-conditions expectations -11%, long-term -17%).
+Tried to source a clean historical prelim-vs-final revision series to model
+the Aug 28 final: FRED (`fredgraph.csv`), advisorperspectives.com, and
+tradingeconomics.com's data table all 403'd/were unextractable from this
+runner (same site-blocking pattern as the existing forebet/oddsportal/
+Metaculus entries) — only WebSearch news summaries were reachable, n=3
+recent months, one containing an internally-inconsistent arithmetic claim
+("7.5-point increase" that didn't match the two cited numbers). **Result:
+reachable for the point print (Yes) but NOT reachable for a trustworthy
+revision-variance benchmark (No)** — property 2 fails on the model input,
+not the headline fact. Built a deliberately fattened N(50.5, 3.5) anyway to
+see the shape: it still couldn't reproduce the market's ~13% combined mass
+on the >=58 brackets (own siblings.py sum_check 0.982, a well-calibrated
+book) without an unreasonably large sd — the same Gaussian-tail-
+underweighting mechanism already confirmed and fixed-via-bootstrap on the
+Musk brackets (2026-08-13/14), now found in a second, unrelated bracket
+category on first contact. Two brackets cleared the >0.10 outside-view
+boundary on this admittedly-shaky model (below-49.0 edge +0.157, ALSO
+spread-vetoed at 0.171; 49.0-51.9 edge -0.109, spread fine at 0.05) —
+declined both per the veto. The two most liquid/tradeable brackets
+(49-51.9 ask 0.43, 52-54.9 ask 0.27, spreads 0.05/0.01) showed only
+sub-floor edges (-0.109 already counted, -0.030) once measured against the
+live CLOB ask rather than gamma mid. Net: 0 bets, 7 forecasts recorded
+(a5703b36d60a…d5dcc12cdabe). **Category ruled in as mechanically reachable
+or the headline print, ruled out for self-modeling the revision without a
+better vintage dataset** — if revisited, only with either (a) a reachable
+prelim-to-final revision history (try `alfred.stlouisfed.org` specifically,
+untried this pass — ALFRED vintages differ from the plain FRED series URL
+that 403'd), or (b) treating the market's own book as the prior and looking
+only for a genuine information edge on top of it, not a from-scratch
+distribution.
+
 ## Known unknowns (to resolve with data)
 
 - Which categories actually have positive brier_delta for me. (Bet small and
