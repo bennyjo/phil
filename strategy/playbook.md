@@ -585,6 +585,26 @@ first test: reachable, tight, no edge. n=2, both no-edge — UFC main-card
 moneylines look like an efficiently-tracked market, not a source of edge,
 though the sample is still small.
 
+**Third moneyline test + first props test (2026-08-16 00:21Z), same
+Makhachev/Garry fight, ~3.7h pre-fight via odds.py's clean feed:** h2h
+power devig 0.7585/0.2415 vs live ask 0.74/0.27, edges +0.0185/-0.0285 —
+n=3, still no-edge, the class stays efficiently-tracked even this close to
+first walk. **Exploration budget, single-book method-of-victory props
+(first test, named property: does UFC prop coverage have complete
+single-book lines the way moneylines do?):** WebSearch surfaced DraftKings
+decision/submission odds for both fighters (Makhachev Dec +120/Sub +200,
+Garry Dec +450/Sub +3300/KO +1100) but Makhachev's own KO/TKO price was
+never quoted by DraftKings in any result — only a FanDuel range (+850/+950)
+that the source itself flagged as merely "expected to be similar" on DK,
+not an actual DK number. Completing the 6-way distribution would require
+substituting a different book for the one missing leg, which is the
+cross-book-mixing trap (Boca/Estudiantes precedent) applied to a prop
+market instead of a 1X2. Declined rather than mix; **result: UFC props are
+only PARTIALLY single-book-coverable from WebSearch (2 of 3 methods per
+fighter found on one book, the KO/TKO leg missing) — treat any UFC
+method-of-victory candidate as benchmark-unreachable unless a single
+source quotes all methods for both fighters from the same book.**
+
 **Exploration budget, ATP/WTA tennis moneylines (2026-08-14 09:1xZ, first
 test of this category).** Hypothesis: same shape as UFC-moneyline — dense
 multi-book coverage (the-odds-api `tennis_atp_cincinnati_open`/
