@@ -1650,6 +1650,36 @@ that 403'd), or (b) treating the market's own book as the prior and looking
 only for a genuine information edge on top of it, not a from-scratch
 distribution.
 
+**Exploration budget, one-off exhibition match via single-book WebSearch,
+first test (2026-08-16 11:18Z).** Named property: does a one-off exhibition
+fixture with no dedicated odds-api league feed still have a trustworthy
+single-book line reachable by WebSearch (as opposed to the odds-aggregator
+"best odds across bookmakers" trap already ruled a no-go, Boca/Estudiantes
+2026-08-05), and does a 3-way h2h devig map cleanly onto a PM derivative
+submarket when the pool has no plain moneyline submarket for the event? FA
+Community Shield Arsenal vs Man City (today, not in the-odds-api's
+`soccer_epl` fixture list — a separate exhibition, not a league match).
+WebSearch surfaced a DraftKings-network article (dknetwork.draftkings.com,
+DK's own staff analysis piece quoting DK's own line, not an aggregator) with
+a clean 3-way moneyline: Arsenal +145 / Draw +240 / City +155 → power devig
+fair Arsenal 0.3764 / Draw 0.2633 / City 0.3603. The PM pool for this event
+has no plain "Arsenal wins"/"City wins" submarket, only derivative ones
+(draw-yes/no, five O/U total lines, BTTS, neither-scores-first); of those,
+only draw-yes/no maps directly onto a devigged h2h number without needing a
+goals-distribution model. PM draw market (3449517) ask Yes 0.29/bid 0.28,
+ask No 0.72/bid 0.71 — edges No +0.0167, Yes -0.0267, both well under
+min_edge_book_devig 0.07. **Result: reachable** (single named-book source
+held up, no aggregation-mixing needed) **and the devig-to-derivative-
+submarket mapping works cleanly for a draw/no-draw split specifically** —
+but **no edge**, the same efficient-market pattern as every other liquid PM
+sports book tested (UFC, MLB, tennis). The O/U and BTTS submarkets on this
+same event were left unresearched: matching them would require a total-
+goals number from the same single book, which this source didn't provide,
+and building one from a different book would repeat the cross-book-mixing
+trap — a genuinely separate, still-untested question (does a single book
+publish a matching total alongside its h2h for an exhibition fixture) if
+revisited.
+
 ## Known unknowns (to resolve with data)
 
 - Which categories actually have positive brier_delta for me. (Bet small and
