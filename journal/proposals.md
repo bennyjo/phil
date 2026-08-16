@@ -471,7 +471,15 @@ block (or a `side` field per bucket). Rows lacking `best_bid_at_record`
 are skipped and counted. This keeps the existing Yes-side block unchanged
 for continuity.
 
-**Status:** open
+**Status:** endorsed by deep-retro (2026-08-16 — evidence strengthened a
+third time: with the Musk 2-day pair settled, the No-side realizable
+counterfactual stream is now 3W/3L **+0.32u** (the only positive stream in
+the veto ledger) and the Yes-side stream 1W/4L −2.50u. Every conclusion
+currently drawn from the sweep — including the risk.json floor-keeping
+rationale — is computed over roughly half the disagreement rows, and the
+excluded half is the better-performing one. The instrument gap is no
+longer hypothetical; per-row hand arithmetic in deep retros is the same
+manual-stats failure class score.py exists to prevent. Awaiting operator)
 
 ---
 
@@ -517,3 +525,33 @@ for continuity.
   proposal should cite both dates.
 
 **Status:** informational (No-side sweep evidence updated in place above)
+
+---
+
+## 2026-08-16 — core/forecast.py: guard against inverted-outcome records
+
+**Evidence:** `fe954ed9f325` (Canada GDP MoM "<0.0%", 2026-08-15 17:12Z
+cycle). The agent intended "P(Yes)=0.11, matching the market's own 0.107"
+but passed `--outcome "No"` with `--est-prob 0.11` — the immutable row now
+asserts P(No)=0.11 ⇒ P(Yes)=0.89, a ~0.78 disagreement with the market in
+the exact opposite direction of the researched belief. The hourly agent
+caught and documented it same-cycle (playbook §operational trap
+2026-08-15), and the deep retro has added a watch item excluding the row
+from calibration claims at its ~Aug 28 settlement — but the row will still
+pollute `by_skip_reason`/`by_category` machine slices forever, and the
+failure mode (outcome string vs est_prob referent mismatch) is silent at
+record time despite the tool printing everything needed to catch it.
+
+**Proposed change:** `forecast.py record` computes
+`|est_prob − market_prob_at_record|` for the named outcome and, when it
+exceeds a threshold (0.50 catches only inversions; 0.40 adds margin),
+refuses to record unless an explicit `--confirm-extreme` flag is passed.
+Genuine extreme disagreements are rare and deliberate (the veto class), so
+the flag costs one keystroke exactly when the agent should be pausing
+anyway; inversion typos get caught at the only moment they are fixable.
+Optionally also: a `voided` status core could stamp on operator request for
+rows demonstrated to be recording errors, so machine slices stay clean —
+weaker alternative to full revision support (2026-08-10 proposal), which
+this complements but does not replace.
+
+**Status:** open

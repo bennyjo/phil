@@ -789,6 +789,14 @@ of 0.499 and a market ask of 0.40 — model brier 0.251 vs market brier
 bootstrap beat market (n=2). Still off-fork — the fork verdict is decided
 only by the weekly 180-199/220-239 legs settling Aug 18. No bet either way.
 
+**Counting caution (DEEP-2026-08-16):** the two legs of this pair are
+complementary claims on the SAME realized count — once the count landed in
+40-64, both "40-64 Yes" and "65-89 No" were decided by that single fact,
+and the bootstrap's edge over the market on both legs is one insight
+double-counted, not two replications. Treat the pair as n=1 independent
+outcome in any fork or veto-record reasoning (the same convention the veto
+ledger already applies to the weekly sibling sets).
+
 **Cloud-runner egress note (2026-08-09 02:1xZ):** `api.the-odds-api.com`,
 `gamma-api.polymarket.com`, `clob.polymarket.com`, `clevelandfed.org`, and
 `xtracker.polymarket.com` were ALL reachable from the cloud runner this
@@ -1574,22 +1582,33 @@ extend it at each settlement.
 | Musk 140-159 (b7a58fd571c8) | 0.64 / 0.415 | Yes | +0.220 | No | −1.00 |
 | Musk 160-179 (e06e9b2bea70) | 0.189 / 0.385 | No | +0.191 | No | **+0.61** |
 | Musk 180-199 (eb09f3632c5d) | 0.003 / 0.095 | No | +0.087 | Yes | −1.00 |
+| Musk 2d 40-64 (10029a75295e) | 0.499 / 0.39 | Yes | +0.099 | Yes | **+1.50** |
+| Musk 2d 65-89 (53c5bf348303) | 0.501 / 0.62 | No | +0.109 | No | **+1.56** |
 
-**Totals: 9 realizable disagreement trades, 2W/7L, net −6.24u (−$31.20 at
-$5 flat).** Sub-classes: self-model rows 1W/7L (−6.39u); wide-spread rows
-1 realizable, won (+0.15u) — the spread rule's entire settled cost remains
-one foregone ~+$0.77 win. Side split: Yes-side 0W/4L (−4.0u); No-side
-2W/3L (−1.24u) — both wins live on the No side (invisible to the current
-threshold sweep, see the 2026-08-14 proposal), but the No-side stream is
-NOT positive. Brier view of the same rows: self-model n=8 mean dBrier
-+0.117, market better 7/8.
+**Totals (DEEP-2026-08-16): 11 realizable disagreement trades, 4W/7L, net
+−3.18u (−$15.88 at $5 flat).** Sub-classes now split by MODEL GENERATION,
+because the two 2026-08-15 additions are the first settled rows from the
+14-day empirical bootstrap (every earlier self-model row was Gaussian or
+naive): pre-bootstrap self-model 1W/7L (−6.39u); bootstrap 2W/0L (+3.06u)
+— but the two bootstrap rows are complementary brackets on ONE realized
+tweet count (40-64 landing makes both legs win by arithmetic), so this is
+effectively n=1 independent outcome, off-fork, and buys no veto exception
+by itself. Wide-spread rows: 1 realizable, won (+0.15u); the spread rule's
+entire settled cost remains one foregone ~+$0.77 win. Side split: Yes-side
+1W/4L (−2.50u); No-side 3W/3L (**+0.32u**) — the No-side stream has turned
+slightly positive and remains fully invisible to the current threshold
+sweep (see the 2026-08-14 proposal, evidence updated again). Brier view:
+self-model n=10 mean dBrier +0.068, market better 7/10.
 
-**Decision implications:** (1) the 0.10 veto boundary is confirmed by
-P&L, not just brier — do not relax it; (2) the path to more placements is
-NOT trusting self-models harder, it is expanding the mechanical/No-side
-realizable classes (econ prints, cross-market arithmetic); (3) every
-counterfactual claim uses this table's arithmetic — side, realizable ask,
-spread — never a narrative "would have lost/won".
+**Decision implications:** (1) the 0.10 veto boundary stays — the full
+ledger is still net −3.18u and the only positive sub-slice is one
+correlated event pair from the new model; (2) whether the bootstrap
+deserves different treatment is exactly the pre-registered fork
+(§social-media-postcount), decided by the Aug 18 weekly legs — not here,
+not on off-fork rows; (3) the path to more placements is still expanding
+the mechanical/No-side realizable classes (econ prints, cross-market
+arithmetic); (4) every counterfactual claim uses this table's arithmetic —
+side, realizable ask, spread — never a narrative "would have lost/won".
 
 ## Known unknowns (to resolve with data)
 
