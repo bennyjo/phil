@@ -1680,6 +1680,45 @@ trap — a genuinely separate, still-untested question (does a single book
 publish a matching total alongside its h2h for an exhibition fixture) if
 revisited.
 
+**Exploration budget, AAA gas-price touch-anytime brackets, first test
+(2026-08-17 00:24Z).** New candidate class found in scan: "Will gas hit $X
+(Low/High) by August 31?" (event 769509, 8 sibling legs, resolves Yes if the
+AAA US national-average regular-gas price touches the threshold on ANY day
+from market creation to end date — a barrier/touch condition, not a
+point-in-time print). Named property: is a mechanical, officially-sourced
+(AAA) commodity threshold, with weekly public data (AAA newsroom, EIA),
+reachable and modelable the way the mechanical-econ family (CPI/PPI) has
+been. Current price $4.0656 (Aug 16); the observed window since market
+creation (Jul 27 $4.096 -> Aug 16 $4.0656, weekly n=4) stayed inside a tight
+~$4.00-4.10 band. Built a no-drift diffusion/barrier-touch model (reflection
+principle) off a daily sigma estimated from those 4 weekly deltas (~2.1c/day,
+explicitly an UNVALIDATED small-n estimate, same caveat class as the Japan-
+GDP and UMich-sentiment SD choices) — gives near-zero touch probability for
+every one of the 8 thresholds (nearest legs $3.90/$4.25 at 3.5%/1.9%, the
+rest <0.5%), while live asks price every leg at 9-29%. **Result: the
+disagreement is large (>0.10) AND uniform across all 8 siblings
+simultaneously** (not one outlier leg) — the same shape as the already-
+documented siblings.py sum-check caveat (2026-08-05: thin/placeholder
+pricing produces sum-check flags that are a data-quality tell, not an edge)
+and a fourth instance of the Gaussian/diffusion-tail-underweighting failure
+already confirmed on Musk brackets and UMich sentiment. Book quality was
+mixed — the nearest leg ($3.90) actually has a real book (spread 0.02, ask
+depth 200), so this isn't purely a thin-book artifact there, which makes the
+uniform-gap read (self-model distrust) the operative reason over
+wide-spread-veto; several other legs are separately thin (null bid, spread
+up to 0.20). Declined all 8 as `outside-view-veto` (self-model + large
+disagreement, both-apply case per the DEEP-2026-08-14 taxonomy rule —
+estimate distrust dominates), 8 forecasts recorded (e2cbca37fe88, plus 7
+siblings same batch), 0 bets. **Category ruled in as mechanically reachable
+and worth tracking (public AAA/EIA source, new touch-barrier structure not
+seen before) but the naive small-n diffusion self-model is not trustworthy
+enough to act on here, exactly like the other self-model categories** — if
+revisited, needs either a validated historical daily-price series (not just
+4 weekly points) to get a real sigma, or evidence the 24h-volume=0 legs
+specifically are seeded/placeholder (would explain the wide-leg gaps without
+needing a sigma fix at all, leaving only the $3.90 leg's real-book gap to
+explain).
+
 ## Known unknowns (to resolve with data)
 
 - Which categories actually have positive brier_delta for me. (Bet small and
