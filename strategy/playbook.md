@@ -1843,3 +1843,19 @@ characterization pass.
   settled econ bets won (a3bc5c4, b35963f465b4).
 - Whether thin esports books are exploitable or just wide.
 - Whether earnings markets are efficient at pricing whisper numbers.
+
+**ATP/WTA tennis, lower-liquidity retest (2026-08-17 20:xxZ).** The
+2026-08-14 test (n=3, liq $71-79k) said "revisit only if a lower-liquidity
+or in-play match shows a wider gap." Today's Cincinnati Open pool had three
+matches at meaningfully lower liquidity ($40.6k, $46.2k, $47.8k vs the prior
+$71-79k floor): Gauff/Li, Bouzkova/Jovic, Siniakova/Keys, all DraftKings
+power-devigged against the live CLOB ask. Edges: -0.0121, -0.0184, -0.0274
+(all favorite-side; underdog sides correspondingly small positive, max
++0.0174 Siniakova). **Result: book stayed just as tight (spread 0.01 on
+every leg) and just as accurate at $40-48k liquidity as at $71-79k** — no
+edge, same efficiently-tracked pattern. The lower-liquidity hypothesis is
+now tested and does not hold in this $40k+ range; if revisited, the
+interesting range is thinner still (sub-$20k) or genuinely in-play books,
+not this band. 4 forecasts recorded (e55e146a3195, d70b70d9ed59,
+1b550471f8f5, plus WNBA Dream/Aces 710604907e82 at edge -0.0227, same
+result), 0 bets.
