@@ -1584,9 +1584,10 @@ extend it at each settlement.
 | Musk 180-199 (eb09f3632c5d) | 0.003 / 0.095 | No | +0.087 | Yes | −1.00 |
 | Musk 2d 40-64 (10029a75295e) | 0.499 / 0.39 | Yes | +0.099 | Yes | **+1.50** |
 | Musk 2d 65-89 (53c5bf348303) | 0.501 / 0.62 | No | +0.109 | No | **+1.56** |
+| Japan GDP 0.0-0.8% (d684f9caff81) | 0.2475 / 0.49 | No | +0.2125 | No | **+0.85** |
 
-**Totals (DEEP-2026-08-16): 11 realizable disagreement trades, 4W/7L, net
-−3.18u (−$15.88 at $5 flat).** Sub-classes now split by MODEL GENERATION,
+**Totals (2026-08-17): 12 realizable disagreement trades, 5W/7L, net
+−2.33u (−$11.65 at $5 flat).** Sub-classes now split by MODEL GENERATION,
 because the two 2026-08-15 additions are the first settled rows from the
 14-day empirical bootstrap (every earlier self-model row was Gaussian or
 naive): pre-bootstrap self-model 1W/7L (−6.39u); bootstrap 2W/0L (+3.06u)
@@ -1595,10 +1596,25 @@ tweet count (40-64 landing makes both legs win by arithmetic), so this is
 effectively n=1 independent outcome, off-fork, and buys no veto exception
 by itself. Wide-spread rows: 1 realizable, won (+0.15u); the spread rule's
 entire settled cost remains one foregone ~+$0.77 win. Side split: Yes-side
-1W/4L (−2.50u); No-side 3W/3L (**+0.32u**) — the No-side stream has turned
-slightly positive and remains fully invisible to the current threshold
-sweep (see the 2026-08-14 proposal, evidence updated again). Brier view:
-self-model n=10 mean dBrier +0.068, market better 7/10.
+1W/4L (−2.50u); No-side 4W/3L (**+1.17u**) — the No-side stream has turned
+positive and remains fully invisible to the current threshold sweep (see
+the 2026-08-14 proposal, evidence updated again). Brier view: self-model
+n=10 mean dBrier +0.068, market better 7/10.
+
+**New sub-class, first instance (2026-08-17): mechanical-econ Gaussian
+self-model.** Japan GDP 0.0-0.8% is a Gaussian model on an official macro
+print (Normal around a named survey consensus, unvalidated sd), same model
+generation as the pre-bootstrap SC/MN/Musk rows but a different domain —
+those are behavioral/political predictions, this is a mechanical release
+the way econ-cpi/econ-ppi bets already are (DEEP-2026-08-14 "Known
+unknowns" mechanical-econ family, pooled brier_delta -0.0104 over 27
+settled bets/forecasts). This one row won at +0.2125 realizable edge,
+opposite the "0-for-multiple" framing the pre-bootstrap self-model rows
+established — but n=1 in this specific sub-class is not evidence of
+anything on its own (schedule.json's own guardrail: no category verdict
+below ~15 settlements). Track separately going forward; do not fold into
+the pre-bootstrap self-model 1W/7L line above, and do not grant a veto
+exception on this single row.
 
 **Decision implications:** (1) the 0.10 veto boundary stays — the full
 ledger is still net −3.18u and the only positive sub-slice is one
