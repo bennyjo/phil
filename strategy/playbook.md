@@ -1782,6 +1782,32 @@ specifically are seeded/placeholder (would explain the wide-leg gaps without
 needing a sigma fix at all, leaving only the $3.90 leg's real-book gap to
 explain).
 
+**Odds-API domestic-league soccer (EPL), first clean-feed test (2026-08-17
+10:2xZ).** Named property, per the exploration-budget prioritization
+guidance above (reachable EXTERNAL benchmark, not another self-model
+instance): does `core/odds.py`'s clean feed cover a full domestic soccer
+league slate the way it already does MLB/WNBA, closing the gap where prior
+soccer book-devig tests were all one-off WebSearch lookups vulnerable to
+the cross-book-mixing and stale-line traps (§Search-result traps)? EPL's
+opening weekend (10 fixtures, Aug 21-24, 5-8 days out) is fully covered by
+`soccer_epl` — same 9 books as MLB/WNBA, same fixtures PM's pool lists.
+Single-book (BetMGM, present on every fixture) power devig of h2h + totals
+across all 10 games (24 win/draw markets + 7 totals lines, 31 PM markets
+total, one `odds` API call, 2 credits): every edge (devig fair vs PM mid)
+sat in **-0.018 to +0.012**, the same 0.00-0.02 efficiently-tracked band as
+MLB spreads (n=21), UFC moneylines (n=3), and ATP/WTA tennis (n=3) — no
+candidate approached min_edge 0.04, let alone min_edge_book_devig 0.07.
+**Result: reachable** (single-book multi-market coverage matches the PM
+pool 1:1, no cross-book-mixing needed, unlike the earlier WebSearch-only
+soccer traps) **but no edge** — domestic-league soccer joins the
+efficiently-tracked-book list. 31 forecasts recorded (skip-reason
+`no-edge`, fit-score 5, `soccer`/`soccer-totals` categories,
+`strategy/funnel.jsonl` 2026-08-17T10:20:00Z) for calibration; 0 bets.
+Category ruled in as clean-feed-coverable (a new use of an already-proven
+pipe, not a new self-model risk) — the open question if revisited is
+whether a THINNER domestic league (outside the-odds-api's top-tier
+coverage) shows a wider gap than EPL's tight one.
+
 **Exploration-budget prioritization (DEEP-2026-08-17).** Three of the
 window's four exploration first-tests (UMich sentiment, gas touch
 brackets, and the Musk 2-day set the day before) ended at the same
