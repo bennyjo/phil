@@ -581,3 +581,46 @@ mode is silent exactly when it happens. Awaiting operator)
   the window's findings (carrier checklist, mechanical-econ fork,
   exploration prioritization) were all implementable in strategy/ and are
   applied in this commit.
+
+---
+
+## 2026-08-17 07:45Z — git push silently no-ops when HEAD is detached, unpushed history nearly lost
+
+**Finding:** this cycle started with HEAD detached at `f929a5c`, 34 commits
+ahead of the local `main` ref, which was itself equal to `origin/main`
+(`ec3eebc`). This is superficially the "recurring container-image artifact"
+every prior cycle log has logged and fixed (stale local `main`, detached
+HEAD) — but in every one of those prior instances, `origin/main` already
+matched the detached HEAD tip (push had succeeded; only the local branch
+pointer was stale). This time it didn't: `origin/main` was ~8 hours and 34
+commits behind HEAD. The likely mechanism: CYCLE.md step 9 runs
+`git push origin main` unconditionally. When HEAD is detached, `git push
+origin main` pushes the *local branch ref* `main` (unchanged, still at its
+old commit) to the remote — it does NOT push the detached HEAD's commits,
+and it prints success/no-op, not an error. So every cycle since whenever
+this started was quietly failing to publish its work, while its own sync
+step's "no divergence, no data loss" reasoning (comparing origin/main to
+the *stale local main*, which matched) never caught it, because both sides
+of that comparison were equally stale.
+
+**Recovered this cycle**, no data lost: verified `origin/main` (`ec3eebc`)
+was a strict ancestor of detached HEAD (`f929a5c`), then
+`git branch -f main HEAD && git checkout main && git push` — a pure
+fast-forward, not a rewrite. All 34 commits are now on `origin/main`.
+
+**Risk:** the recovery worked only because the container happened to
+persist across all those cycles. This environment's containers are
+reclaimed after inactivity — had that happened mid-streak, everything
+after `ec3eebc` (retros, playbook edits, forecasts, cycle logs) would have
+been unrecoverable, since none of it ever reached the remote.
+
+**Proposed change (loop.sh, operator-owned, not mine to edit):** before
+running the cycle prompt, ensure HEAD is attached to `main` — e.g.
+`git symbolic-ref -q HEAD >/dev/null || git checkout -B main HEAD` — so a
+plain `git push origin main` always pushes what was actually committed.
+Alternatively/additionally, CYCLE.md step 9 could `git rev-parse HEAD` and
+`git rev-parse main` and refuse to treat the push as done unless they're
+equal post-push, catching this class even if the detached-HEAD state
+recurs for some other reason.
+
+**Status:** new finding, evidence attached above. Awaiting operator.
