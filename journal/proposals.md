@@ -554,4 +554,30 @@ rows demonstrated to be recording errors, so machine slices stay clean —
 weaker alternative to full revision support (2026-08-10 proposal), which
 this complements but does not replace.
 
-**Status:** open
+**Status:** endorsed by deep-retro (2026-08-17 — no new instance this window
+(the recording discipline held), but the graded cost of the existing
+instance is now booked: fe954ed9f325 will pollute machine slices at its
+~Aug 28 settlement and every retro touching Canada GDP must carry a manual
+exclusion forever. A one-flag guard at record time is cheap; the failure
+mode is silent exactly when it happens. Awaiting operator)
+
+---
+
+## 2026-08-17 — deep-retro status pass
+
+- **2026-08-14 No-side threshold-sweep slice (endorsed): stays endorsed,
+  evidence updated a fourth time.** Japan GDP d684f9caff81 settled as
+  another realizable No-side win (+0.85u at recorded bid): the No-side
+  counterfactual stream is now 4W/3L **+1.17u** — the veto ledger's only
+  positive stream and still invisible to the sweep. Every sweep-derived
+  floor argument continues to reason over roughly half the disagreement
+  rows, and the excluded half keeps winning. Awaiting operator.
+- **2026-08-10 forecast.py revision support (endorsed): stays endorsed.**
+  Sixth consecutive window at zero cost from the funnel-note workaround
+  (no material revision occurred this window).
+- **2026-08-16 inverted-outcome guard → endorsed today** (see updated
+  Status above).
+- No new operator asks. Nothing this window was blocked on protected code:
+  the window's findings (carrier checklist, mechanical-econ fork,
+  exploration prioritization) were all implementable in strategy/ and are
+  applied in this commit.

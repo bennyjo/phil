@@ -826,6 +826,22 @@ leading-question trap above was originally documented only there and
 survived solely in git history. Any instrument finding or method trap
 worth keeping goes in this playbook in the same cycle that finds it.
 
+**Forecast-batch carrier checklist (DEEP-2026-08-17, after 4 dated
+misses).** Recording a batch of forecasts creates two obligations that
+MUST land in the SAME commit as the batch, or they get silently dropped:
+(1) a `strategy/funnel.jsonl` line for the cycle (operator mandate
+2026-08-05 §2 — the 2026-08-15 box-office cycle and the 2026-08-17 00:31Z
+gas-price cycle both recorded estimate-bearing batches with no funnel
+line); (2) a `schedule.json` watch_items entry naming the settlement
+date, the row ids, and any reading rule (exclusions, one-independent-
+outcome counting) — the box-office, Musk 2-day, UMich, and gas-price
+batches all shipped without one and each had to be back-filled by a deep
+retro. watch_items is the only carrier hourly ticks actually read
+(DEEP-2026-08-14); a batch without a carrier is a grading that will not
+happen. Empty FULL cycles: write the funnel line anyway (researched: [])
+— 2026-08-16 15:19Z did, 19:14Z/23:21Z didn't; pick the convention that
+keeps the funnel↔cycle reconciliation mechanical.
+
 **Re-research cooldown + pacing (DEEP-2026-08-04).** A candidate researched
 to a no-edge / no-benchmark conclusion stays concluded for ~2 hours unless
 something new happens (material line move, news, event-status change).
@@ -1617,14 +1633,45 @@ the pre-bootstrap self-model 1W/7L line above, and do not grant a veto
 exception on this single row.
 
 **Decision implications:** (1) the 0.10 veto boundary stays — the full
-ledger is still net −3.18u and the only positive sub-slice is one
-correlated event pair from the new model; (2) whether the bootstrap
-deserves different treatment is exactly the pre-registered fork
-(§social-media-postcount), decided by the Aug 18 weekly legs — not here,
-not on off-fork rows; (3) the path to more placements is still expanding
-the mechanical/No-side realizable classes (econ prints, cross-market
-arithmetic); (4) every counterfactual claim uses this table's arithmetic —
-side, realizable ask, spread — never a narrative "would have lost/won".
+ledger is still net −2.33u (figure corrected DEEP-2026-08-17; the 02:17Z
+grading updated the totals but left −3.18u here) and the positive
+sub-slices are one correlated bootstrap event pair plus one n=1
+mechanical-econ row; (2) whether the bootstrap deserves different
+treatment is exactly the pre-registered fork (§social-media-postcount),
+decided by the Aug 18 weekly legs — not here, not on off-fork rows;
+(3) the path to more placements is still expanding the mechanical/No-side
+realizable classes (econ prints, cross-market arithmetic); (4) every
+counterfactual claim uses this table's arithmetic — side, realizable ask,
+spread — never a narrative "would have lost/won". Counting note
+(DEEP-2026-08-17): the two settled Japan GDP rows (d684f9caff81 veto,
+b9170b30b10b no-edge) are complementary brackets on ONE print — one
+independent outcome, same convention as the Musk 2-day pair; only the
+veto row enters this table.
+
+**Pre-registered fork: mechanical-econ Gaussian veto sub-class
+(DEEP-2026-08-17).** The sub-class opened by Japan GDP (a Gaussian around
+a NAMED survey/consensus benchmark on an official mechanical print, vetoed
+at >0.10 disagreement) has three more tests already queued: the PCE
+cluster's vetoed legs (settle Aug 26), the BoK rate read (a8fa1e2ac41d,
+Aug 27), and the Canada GDP set (Aug 28, EXCLUDING fe954ed9f325 — recorded
+inverted, graded as process error). Decision rule, fixed now so it is not
+made post-hoc: **at DEEP-2026-08-28/29, if the sub-class has ≥3
+independent settled events (Japan GDP counts as one) with net realizable
+counterfactual P&L > 0 AND the agent ahead on dBrier in a majority, file
+an operator-visible playbook change proposing a NARROW carve-out**
+(candidate shape: mechanical official prints with a named external survey
+benchmark may bet at min_edge inside the 0.10–0.20 disagreement band,
+standard floors and spread rule unchanged; pure behavioral self-models —
+Musk, box-office — stay vetoed regardless). **If the record is net
+negative or mixed, the veto stays untouched and the sub-class folds into
+the general self-model line.** Readings for both outcomes are hereby
+pre-registered; hourly cycles extend the table but do NOT act on this
+fork early — the same discipline as the Musk Aug 18 fork. Rationale: the
+mechanical-econ family is the only consistently agent-favorable region
+(pooled forecast dBrier −0.0139 over 29 settled rows as of today,
+sibling-correlated so effective n is smaller), and the veto's only
+settled fire in this family cost +0.85u of realizable counterfactual.
+n=1 grants nothing; the fork defines what WOULD.
 
 **Exploration budget, UMich Consumer Sentiment brackets (2026-08-16 07:15Z,
 first test of this category).** Hypothesis: mechanical monthly print (final
@@ -1735,7 +1782,25 @@ specifically are seeded/placeholder (would explain the wide-leg gaps without
 needing a sigma fix at all, leaving only the $3.90 leg's real-book gap to
 explain).
 
-## Known unknowns (to resolve with data)
+**Exploration-budget prioritization (DEEP-2026-08-17).** Three of the
+window's four exploration first-tests (UMich sentiment, gas touch
+brackets, and the Musk 2-day set the day before) ended at the same
+conclusion: "category mechanically reachable, but the self-model
+(Gaussian/diffusion, unvalidated sd) is not trustworthy enough to act" —
+a finding already confirmed on Musk and UMich brackets. That conclusion
+now has diminishing information value: the veto guarantees no action in
+self-model territory until a validated model generation exists (the
+bootstrap fork, Aug 18, is that test). When choosing exploration
+candidates, weight the deciding property: **does a reachable EXTERNAL
+benchmark plausibly exist for this category** (odds feed, official
+survey/consensus, cross-market arithmetic)? A first-test that can only
+ever produce "self-model, vetoed" should rank below one that could
+produce a benchmarked, actionable class — e.g. the still-untested
+single-book-total question (Community Shield entry above), Kalshi
+cross-venue overlaps on econ prints, or new odds-api-covered sports
+entering the pool. This is a ranking heuristic, not a bar: a genuinely
+new market STRUCTURE (like touch-anytime barriers) is still worth one
+characterization pass.
 
 - Which categories actually have positive brier_delta for me. (Bet small and
   wide until `core/score.py` shows n≥30 per category.)
