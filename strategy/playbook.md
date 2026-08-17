@@ -1601,21 +1601,26 @@ extend it at each settlement.
 | Musk 2d 40-64 (10029a75295e) | 0.499 / 0.39 | Yes | +0.099 | Yes | **+1.50** |
 | Musk 2d 65-89 (53c5bf348303) | 0.501 / 0.62 | No | +0.109 | No | **+1.56** |
 | Japan GDP 0.0-0.8% (d684f9caff81) | 0.2475 / 0.49 | No | +0.2125 | No | **+0.85** |
+| Musk 2d <40 (8f663df4a762) | 0.0146 / 0.195 | No | +0.175 | Yes | −1.00 |
 
-**Totals (2026-08-17): 12 realizable disagreement trades, 5W/7L, net
-−2.33u (−$11.65 at $5 flat).** Sub-classes now split by MODEL GENERATION,
-because the two 2026-08-15 additions are the first settled rows from the
-14-day empirical bootstrap (every earlier self-model row was Gaussian or
-naive): pre-bootstrap self-model 1W/7L (−6.39u); bootstrap 2W/0L (+3.06u)
-— but the two bootstrap rows are complementary brackets on ONE realized
-tweet count (40-64 landing makes both legs win by arithmetic), so this is
-effectively n=1 independent outcome, off-fork, and buys no veto exception
-by itself. Wide-spread rows: 1 realizable, won (+0.15u); the spread rule's
-entire settled cost remains one foregone ~+$0.77 win. Side split: Yes-side
-1W/4L (−2.50u); No-side 4W/3L (**+1.17u**) — the No-side stream has turned
-positive and remains fully invisible to the current threshold sweep (see
-the 2026-08-14 proposal, evidence updated again). Brier view: self-model
-n=10 mean dBrier +0.068, market better 7/10.
+**Totals (2026-08-17, updated 19:13Z settlement): 13 realizable
+disagreement trades, 5W/8L, net −3.33u (−$16.65 at $5 flat).** Sub-classes
+now split by MODEL GENERATION, because the 2026-08-15/16 additions are the
+first settled rows from the 14-day empirical bootstrap (every earlier
+self-model row was Gaussian or naive): pre-bootstrap self-model 1W/7L
+(−6.39u); bootstrap 2W/1L (+2.06u) — the three bootstrap rows are all
+complementary brackets on ONE realized tweet count (40-64 and 65-89 both
+lost, <40 won — one realized count, arithmetic ties all three legs
+together), so this is effectively n=1 independent outcome, off-fork, and
+buys no veto exception by itself (the <40 leg's miss — est 0.0146 on the
+outcome that happened — is exactly the "confident middle, wrong tails"
+shape to watch for on the still-open Aug 18 weekly fork; see
+RETRO-20260817-1913). Wide-spread rows: 1 realizable, won (+0.15u); the
+spread rule's entire settled cost remains one foregone ~+$0.77 win. Side
+split: Yes-side 1W/4L (−2.50u); No-side 4W/4L (**+0.17u**) — the No-side
+stream is roughly flat now, one loss short of the positive tilt the prior
+count showed (see the 2026-08-14 proposal, evidence updated again). Brier
+view: self-model n=11 mean dBrier now weighted down by the <40 miss.
 
 **New sub-class, first instance (2026-08-17): mechanical-econ Gaussian
 self-model.** Japan GDP 0.0-0.8% is a Gaussian model on an official macro
@@ -1633,10 +1638,10 @@ the pre-bootstrap self-model 1W/7L line above, and do not grant a veto
 exception on this single row.
 
 **Decision implications:** (1) the 0.10 veto boundary stays — the full
-ledger is still net −2.33u (figure corrected DEEP-2026-08-17; the 02:17Z
-grading updated the totals but left −3.18u here) and the positive
-sub-slices are one correlated bootstrap event pair plus one n=1
-mechanical-econ row; (2) whether the bootstrap deserves different
+ledger is now net −3.33u (updated 19:13Z, the <40 leg of the off-fork
+bootstrap triple settled as a miss) and the positive sub-slices are one
+correlated bootstrap event triple (now 2W/1L, not a clean 2W/0L) plus one
+n=1 mechanical-econ row; (2) whether the bootstrap deserves different
 treatment is exactly the pre-registered fork (§social-media-postcount),
 decided by the Aug 18 weekly legs — not here, not on off-fork rows;
 (3) the path to more placements is still expanding the mechanical/No-side
