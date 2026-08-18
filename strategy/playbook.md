@@ -1693,7 +1693,9 @@ is far below any category-verdict bar; track separately, do not fold into
 the pre-bootstrap self-model 1W/7L line, no veto exception granted. Fifth
 row (20-23m, no-edge skip, not in this ledger) and PAW Patrol (no-edge
 skip, already settled 2026-08-17, not in this ledger) round out the
-six-row set; the set is now 5/6 settled.
+six-row set; **set now fully settled (RETRO-20260818-0717): both no-edge
+rows resolved consistent with their price (no counterfactual entry, no
+calibration surprise at n=2), watch item closed.**
 
 **Decision implications:** (1) the 0.10 veto boundary stays — the full
 ledger is now net −3.58u (updated 2026-08-18 01:12Z, four box-office rows
