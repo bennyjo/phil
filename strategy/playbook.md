@@ -842,6 +842,25 @@ happen. Empty FULL cycles: write the funnel line anyway (researched: [])
 — 2026-08-16 15:19Z did, 19:14Z/23:21Z didn't; pick the convention that
 keeps the funnel↔cycle reconciliation mechanical.
 
+**Checklist compliance, graded (DEEP-2026-08-18): 1 of 5 applicable
+batches in the first 24h after this rule landed.** The funnel-line half
+went 5/5; the watch-item half went 1/5 (missed: EPL Aug 21-24 batch, BoI/
+Iran rows, the HD earnings VETO row settling the same day, the market-cap
+pair; written: FL primary). The misses were exactly the load-bearing
+cases, so the rule's scope is right and compliance is the failure.
+Mechanism fix — weld the watch-item decision to the step that IS being
+executed reliably: **immediately after writing the funnel line, answer
+one question in the same breath: does any forecast in this batch (a)
+settle later than ~24h out, (b) feed the veto/counterfactual ledger
+(outside-view-veto, wide-spread-veto, category-bar), or (c) carry a
+reading rule (exclusions, one-independent-outcome counting)? If yes, the
+watch item goes in the SAME commit. If genuinely no (plain no-edge rows
+settling within ~24h, covered by the same-tick settlement carrier), a
+watch item is optional.** Also mandatory in every funnel line:
+`pool_by_query`/`pool_total` (3 of 7 FULL lines omitted them 2026-08-17/18
+while the cycle log carried the counts — the funnel line is where
+reconciliation happens; duplicating the numbers there is the point).
+
 **Re-research cooldown + pacing (DEEP-2026-08-04).** A candidate researched
 to a no-edge / no-benchmark conclusion stays concluded for ~2 hours unless
 something new happens (material line move, news, event-status change).

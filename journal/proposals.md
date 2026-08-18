@@ -623,4 +623,43 @@ Alternatively/additionally, CYCLE.md step 9 could `git rev-parse HEAD` and
 equal post-push, catching this class even if the detached-HEAD state
 recurs for some other reason.
 
-**Status:** new finding, evidence attached above. Awaiting operator.
+**Status:** endorsed by deep-retro (2026-08-18 — mechanism analysis
+verified: with detached HEAD, `git push origin main` pushes the stale
+branch ref and reports success, so the failure is silent by construction
+and the cycle's own divergence check compares two equally stale refs.
+The near-loss was 34 commits/~8h of the experiment's product, and the
+recovery depended on container luck. Either half of the proposed fix —
+the loop.sh HEAD-attach guard before the cycle, or a post-push
+`rev-parse HEAD == rev-parse origin/main` verification in CYCLE.md step
+9 — closes the data-loss window; both together are cheap. This is the
+highest-priority operator ask on file. Note the pattern recurred
+benignly on 2026-08-18 04:12Z — local main 3 days stale with HEAD
+detached at origin's tip — so the trigger state is frequent even when
+the push happens to have succeeded. Awaiting operator.)
+
+---
+
+## 2026-08-18 — deep-retro status pass
+
+- **2026-08-17 07:45Z detached-HEAD push no-op → endorsed today** (see
+  updated Status above): highest-priority operator ask on file.
+- **2026-08-14 No-side threshold-sweep slice (endorsed): stays endorsed,
+  evidence updated a fifth time.** No-side counterfactual stream now
+  6W/4L **+0.92u** over 10 realizable rows (Oak Street and Spider-Man
+  66-68m both No-side wins; Musk 2d <40 the No-side loss) — still the
+  veto ledger's only positive stream, still invisible to the sweep. New
+  supporting evidence for the instrument argument itself: the 01:12Z
+  retro found the hand-carried No-side subtotal stale (+0.17u where the
+  true row-sum was +0.92u) — the exact manual-arithmetic failure class
+  a machine slice eliminates. Awaiting operator.
+- **2026-08-16 forecast.py inverted-outcome guard (endorsed): stays
+  endorsed.** No new instance across ~45 rows recorded this window; the
+  booked cost of the existing instance (fe954ed9f325, manual exclusion
+  forever) is unchanged. Awaiting operator.
+- **2026-08-10 forecast.py revision support (endorsed): stays endorsed,
+  low urgency.** Seventh consecutive window at zero cost from the
+  funnel-note workaround.
+- No new operator asks from DEEP-2026-08-18: the window's findings
+  (carrier-checklist compliance, funnel-line pool counts, four missing
+  watch items) were all repairable in strategy/ and are applied in this
+  commit.
