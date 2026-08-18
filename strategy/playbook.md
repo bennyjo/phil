@@ -1146,6 +1146,30 @@ date-precision bets absent a primary-source (official blog post, SEC
 filing, named-exec statement) announcement with an actual date; revisit
 only if one surfaces for a specific candidate.
 
+**Exploration budget, NFL player-trade-destination markets (2026-08-18
+21:xxZ, first test of this category).** Hypothesis: "sports-media trade
+speculation has a reachable benchmark (a beat-writer/insider report with a
+specific team and probability-bearing signal) the way roster/injury news
+does." Tested on `1387121` (Tyreek Hill -> Vikings by Aug 31, PM Yes 0.452,
+liquidity $69) and `1361018` (Maxx Crosby -> Cowboys by Sep 1, PM Yes
+0.0645, liquidity $1080). WebSearch on both surfaced only the same
+rumor-aggregator-blog swarm as the AI-model-release category above —
+"chatter," "cryptic social media comment," "hears trade chatter," dueling
+takes from SI/Yardbarker/Heavy/fansided — with no team, executive, or
+league source confirming a specific pending trade on either leg; the one
+concrete fact found (a Cowboys-Crosby trade *fell through* at the
+2026-02/03 deadline over a failed physical) is old and already priced in.
+Result: **not reachable for a specific-destination call** — same shape as
+the AI-release trap, an aggregator swarm around real-but-vague interest
+signals, no primary source to independently price against the market's own
+rumor-sentiment read. Recorded `benchmark-unreachable`, no forecast (no
+credible independent estimate formed, per the no-invented-estimate rule).
+Category ruled OUT for "will player X land on team Y" markets absent a
+primary-source (team/league official, or a specific insider report naming
+terms) announcement; revisit only if one surfaces for a specific
+candidate. Distinct from settled roster-status facts (played/inactive/
+released), which are mechanical and would score differently on property 1.
+
 ## Open-position monitoring (DEEP-2026-08-02)
 
 Positions are held to resolution — never exited — but their live prices
