@@ -1920,3 +1920,35 @@ interesting range is thinner still (sub-$20k) or genuinely in-play books,
 not this band. 4 forecasts recorded (e55e146a3195, d70b70d9ed59,
 1b550471f8f5, plus WNBA Dream/Aces 710604907e82 at edge -0.0227, same
 result), 0 bets.
+
+**Exploration budget, commodity touch-anytime brackets (2026-08-18 07:23Z,
+first test of this category).** WTI/Gold "hit HIGH/LOW $X by Sep 1" markets
+(8 legs: WTI HIGH 90/95/100, WTI LOW 70/75, Gold HIGH 4500/4600/4700) — same
+architecture as the AAA gas-price touch-anytime family (DEEP-2026-08-16/17):
+a barrier-touch probability over a ~14-day window, self-modeled via GBM
+reflection-principle (P(touch) ≈ 2·(1−N(d)), d=ln(B/S₀)/(σ√T)) since no
+options-market-implied touch probability is available from any reachable
+source. Inputs: WTI spot ~$82 (source range $81.5-84.25), vol ~38%
+annualized (no precise sourced figure — general commentary on 2026 crude
+volatility only); Gold spot ~$4410 (source range $4390-4430), vol ~22%
+annualized (World Gold Council mid-year outlook: "below 30%, above the
+20-year average of 17%," moderated from a 50%+ spike earlier in 2026). Both
+vol inputs are order-of-magnitude estimates, not measured — this self-model
+carries the same "unvalidated sd" caveat as gas-price and box-office.
+Result: 3 of 8 legs disagreed with the market ask by >0.10 (WTI HIGH 95:
+model 0.048 vs ask 0.20; WTI HIGH 90: model 0.211 vs ask 0.46; Gold HIGH
+4600: model 0.327 vs ask 0.22) — routed to outside-view-veto per the
+standing self-model rule, regardless of claimed edge direction (2 WTI legs
+disagreed low, 1 Gold leg disagreed high — not a uniform directional bias
+this time, unlike gas-price's uniform-low pattern). The other 5 legs were
+within 0.08 of the market (WTI HIGH 100: 0.008 vs 0.09; WTI LOW 75/70 and
+Gold HIGH 4500 essentially at-market, gaps ≤0.04; Gold HIGH 4700: 0.139 vs
+0.07, gap 0.07) — recorded no-edge, no bet, consistent with declining
+self-modeled non-structural edges below the veto boundary too given the
+unvalidated-sd caveat and the family's poor settled track record elsewhere
+(Yes-side self-model 1W/6L per the veto counterfactual ledger). 8 forecasts
+recorded (d57caacce801, fbc6aff9c7f4, 5ae6bf97d6a9, 56f75d436269,
+7a00c4bdac14, 90fafe7b3c2a, afcf9c077796, 56091803227c), 0 bets. Grade at
+settlement (~Sep 1) against both the veto boundary and the vol-input
+accuracy (realized WTI/Gold range over the window will show whether ~38%/
+~22% ann. was in the right neighborhood).
