@@ -1602,9 +1602,13 @@ extend it at each settlement.
 | Musk 2d 65-89 (53c5bf348303) | 0.501 / 0.62 | No | +0.109 | No | **+1.56** |
 | Japan GDP 0.0-0.8% (d684f9caff81) | 0.2475 / 0.49 | No | +0.2125 | No | **+0.85** |
 | Musk 2d <40 (8f663df4a762) | 0.0146 / 0.195 | No | +0.175 | Yes | −1.00 |
+| Oak Street 17-20m (f0672a1a69e7) | 0.29 / 0.455 | No | +0.140 | No | **+0.75** |
+| Spider-Man <66m (9ad9a1e605a5) | 0.42 / 0.31 | Yes | +0.020 | No | −1.00 |
+| Spider-Man 66-68m (db6bd4ff0cb7) | 0.31 / 0.54 | No | +0.190 | No | **+1.00** |
+| Spider-Man 68-70m (64695326b358) | 0.19 / 0.0695 | Yes | +0.061 | No | −1.00 |
 
-**Totals (2026-08-17, updated 19:13Z settlement): 13 realizable
-disagreement trades, 5W/8L, net −3.33u (−$16.65 at $5 flat).** Sub-classes
+**Totals (2026-08-18, updated 01:12Z settlement): 17 realizable
+disagreement trades, 7W/10L, net −3.58u (−$17.88 at $5 flat).** Sub-classes
 now split by MODEL GENERATION, because the 2026-08-15/16 additions are the
 first settled rows from the 14-day empirical bootstrap (every earlier
 self-model row was Gaussian or naive): pre-bootstrap self-model 1W/7L
@@ -1616,11 +1620,22 @@ buys no veto exception by itself (the <40 leg's miss — est 0.0146 on the
 outcome that happened — is exactly the "confident middle, wrong tails"
 shape to watch for on the still-open Aug 18 weekly fork; see
 RETRO-20260817-1913). Wide-spread rows: 1 realizable, won (+0.15u); the
-spread rule's entire settled cost remains one foregone ~+$0.77 win. Side
-split: Yes-side 1W/4L (−2.50u); No-side 4W/4L (**+0.17u**) — the No-side
-stream is roughly flat now, one loss short of the positive tilt the prior
-count showed (see the 2026-08-14 proposal, evidence updated again). Brier
-view: self-model n=11 mean dBrier now weighted down by the <40 miss.
+spread rule's entire settled cost remains one foregone ~+$0.77 win. Box-
+office rows (new 2026-08-18, see sub-class paragraph below) are pre-
+bootstrap-generation Gaussian self-model, 2W/2L (+0.75−1.00+1.00−1.00 =
+−0.25u), folded into the side split below but NOT into the behavioral
+pre-bootstrap self-model 1W/7L line (different domain, tracked
+separately). Side split, recomputed row-by-row from the table above
+(**correction**: the prior "+0.17u" No-side figure was stale — it was the
+pre-Musk-2d-<40 subtotal, never updated after that loss settled, and was
+carried forward mislabeled as the post-settlement 4W/4L total; verified
+2026-08-18 by summing all 17 realizable rows' P&L directly rather than
+trusting the running subtotal): Yes-side 1W/6L (−4.50u); No-side 6W/4L
+(**+0.92u**) — the No-side stream is solidly positive once correctly
+summed, not "roughly flat" as previously stated (see the 2026-08-14
+proposal, evidence updated again). Brier view: self-model n=11 mean
+dBrier now weighted down by the <40 miss (box-office rows are forecast-
+only entries, not bets, so they don't change this bet-brier figure).
 
 **New sub-class, first instance (2026-08-17): mechanical-econ Gaussian
 self-model.** Japan GDP 0.0-0.8% is a Gaussian model on an official macro
@@ -1637,13 +1652,38 @@ below ~15 settlements). Track separately going forward; do not fold into
 the pre-bootstrap self-model 1W/7L line above, and do not grant a veto
 exception on this single row.
 
+**New sub-class, first instance (2026-08-18): box-office Gaussian
+self-model.** Four of the six-row box-office watch item (Oak Street
+17-20m, Spider-Man BND <66m/66-68m/68-70m) settled this tick — same model
+generation as the pre-bootstrap SC/MN/Musk rows (Normal around a
+tracker/studio-guide central estimate, unvalidated sd) but a third
+distinct domain: not behavioral/political, not a mechanical macro print,
+but entertainment-revenue self-modeling against same-day tracking data
+the agent lacks. 2W/2L, net −0.25u — the wins came on the No side where
+the model correctly judged the market's bracket-mass placement wrong; the
+losses were both Yes-side bets where the model trusted its own Gaussian
+over the market's tighter same-day-tracking-informed price (see
+Spider-Man 66-68m: 0.23 mid-disagreement, "textbook case for the veto,"
+and it did lose — but the market's true edge showed up on the Yes-side
+picks, not the No-side ones, splitting this set unlike the uniform
+pre-bootstrap behavioral losses). Per the schedule.json watch item, keep
+these OUT of the Aug 18 weekly bootstrap-fork claims — this is a
+different generation AND a different domain question. n=4 (2 realized
+independent events: Oak Street opening weekend, Spider-Man 3rd weekend)
+is far below any category-verdict bar; track separately, do not fold into
+the pre-bootstrap self-model 1W/7L line, no veto exception granted. Fifth
+row (20-23m, no-edge skip, not in this ledger) and PAW Patrol (no-edge
+skip, already settled 2026-08-17, not in this ledger) round out the
+six-row set; the set is now 5/6 settled.
+
 **Decision implications:** (1) the 0.10 veto boundary stays — the full
-ledger is now net −3.33u (updated 19:13Z, the <40 leg of the off-fork
-bootstrap triple settled as a miss) and the positive sub-slices are one
-correlated bootstrap event triple (now 2W/1L, not a clean 2W/0L) plus one
-n=1 mechanical-econ row; (2) whether the bootstrap deserves different
-treatment is exactly the pre-registered fork (§social-media-postcount),
-decided by the Aug 18 weekly legs — not here, not on off-fork rows;
+ledger is now net −3.58u (updated 2026-08-18 01:12Z, four box-office rows
+added) and the positive sub-slices are one correlated bootstrap event
+triple (2W/1L, not a clean 2W/0L), one n=1 mechanical-econ row, and now a
+split 2W/2L box-office set that nets slightly negative; (2) whether the
+bootstrap deserves different treatment is exactly the pre-registered fork
+(§social-media-postcount), decided by the Aug 18 weekly legs — not here,
+not on off-fork rows;
 (3) the path to more placements is still expanding the mechanical/No-side
 realizable classes (econ prints, cross-market arithmetic); (4) every
 counterfactual claim uses this table's arithmetic — side, realizable ask,
