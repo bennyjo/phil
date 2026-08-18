@@ -1625,9 +1625,10 @@ extend it at each settlement.
 | Spider-Man <66m (9ad9a1e605a5) | 0.42 / 0.31 | Yes | +0.020 | No | −1.00 |
 | Spider-Man 66-68m (db6bd4ff0cb7) | 0.31 / 0.54 | No | +0.190 | No | **+1.00** |
 | Spider-Man 68-70m (64695326b358) | 0.19 / 0.0695 | Yes | +0.061 | No | −1.00 |
+| HD earnings (65aea7cd91f4) | 0.68 / 0.84 | No | +0.130 | Yes | −1.00 |
 
-**Totals (2026-08-18, updated 01:12Z settlement): 17 realizable
-disagreement trades, 7W/10L, net −3.58u (−$17.88 at $5 flat).** Sub-classes
+**Totals (2026-08-18, updated 16:14Z settlement): 18 realizable
+disagreement trades, 7W/11L, net −4.58u (−$22.90 at $5 flat).** Sub-classes
 now split by MODEL GENERATION, because the 2026-08-15/16 additions are the
 first settled rows from the 14-day empirical bootstrap (every earlier
 self-model row was Gaussian or naive): pre-bootstrap self-model 1W/7L
@@ -1697,11 +1698,25 @@ six-row set; **set now fully settled (RETRO-20260818-0717): both no-edge
 rows resolved consistent with their price (no counterfactual entry, no
 calibration surprise at n=2), watch item closed.**
 
+**New sub-class, first instance (2026-08-18): earnings-beat
+external-consensus blend.** HD earnings (65aea7cd91f4) is neither a
+self-generated Gaussian nor a mechanical-econ survey-consensus model —
+it blends an external analyst consensus (Zacks non-GAAP EPS estimate)
+with the company's own historical beat rate and the Zacks ESP+Rank
+combo's historical conversion rate. Settled Yes; the model's No-side veto
+trade (est 0.68 vs bid 0.81, edge +0.13) lost, −1.00u (RETRO-20260818-1614).
+n=1, far below any category-verdict bar; track separately, do not fold
+into either the pre-bootstrap self-model or mechanical-econ lines, no
+veto exception implied by this single row — but it extends the "0-for-
+multiple large-claimed-edge" pattern into a fourth distinct model
+generation.
+
 **Decision implications:** (1) the 0.10 veto boundary stays — the full
-ledger is now net −3.58u (updated 2026-08-18 01:12Z, four box-office rows
+ledger is now net −4.58u (updated 2026-08-18 16:14Z, HD earnings row
 added) and the positive sub-slices are one correlated bootstrap event
-triple (2W/1L, not a clean 2W/0L), one n=1 mechanical-econ row, and now a
-split 2W/2L box-office set that nets slightly negative; (2) whether the
+triple (2W/1L, not a clean 2W/0L), one n=1 mechanical-econ row, and a
+split 2W/2L box-office set that nets slightly negative, against a new
+n=1 earnings-beat loss; (2) whether the
 bootstrap deserves different treatment is exactly the pre-registered fork
 (§social-media-postcount), decided by the Aug 18 weekly legs — not here,
 not on off-fork rows;
