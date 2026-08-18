@@ -773,6 +773,29 @@ beats the market on those legs, the Gaussian, not the class, was the
 problem, and the category stays estimate-bearing under the veto. Grade
 same-tick at each settlement against exactly this fork.
 
+**Fork settled, mixed (2026-08-18 18:16Z, RETRO-20260818-1816).** Both
+decisive legs are in. 180-199 LOST (model brier 0.244 vs market 0.106 —
+market beat the model by 0.138 on the modal bracket, the model's single
+most confident prediction in the set). 220-239 WON (model brier 0.0006 vs
+market 0.021 — model beat the market by 0.020). Net over the two legs:
+brier delta −0.118, market ahead in aggregate, but driven almost entirely
+by the one large miss, not a uniform beating. **Neither pre-registered
+branch triggers cleanly** — this is not "market beats on the
+large-disagreement legs" (only one of two, decisively; the other went to
+the model) and not "bootstrap materially beats" (net is negative).
+Following the same conservative default the mechanical-econ fork commits
+to for its own mixed case: the veto boundary (0.10) stays untouched, no
+carve-out for the bootstrap sub-class, and it is NOT escalated to a
+permanent category bar either — the fork stays open, folded back into
+ordinary self-model tracking rather than resolved. The 180-199 miss
+repeats a pattern now seen three times (this leg, the Aug15-17 set's <40
+leg, box-office Spider-Man 66-68m): the model's highest-confidence
+bracket is where it has missed worst. 160-179 (c24926a5c9d7) is still
+open — not one of the two designated legs, but its eventual settlement
+(the true count almost certainly lands there, by elimination against the
+other four brackets) is a bonus, non-decisive data point worth logging
+when it lands.
+
 **First settlement, off-fork (2026-08-15 18:12Z, RETRO-20260815-1812):** the
 Aug13-15 2-day pair's 65-89 leg (`53c5bf348303`) settled No against a
 bootstrap est of 0.501 and a market ask of 0.63 — model brier 0.251 vs
@@ -1589,9 +1612,14 @@ the primaries. The 04:14Z 2026-08-13 cycle already applied this by
 extension on Zambia (fa185b55a5c3, est 0.87 vs ask 0.93, declined —
 correct call, wrong skip label, see §Skip-reason taxonomy `category-bar`);
 this paragraph makes the extension a rule so future declines don't need
-to re-derive it. Zambia is the first out-of-sample test of whether the
-bar's logic generalizes beyond primaries — grade it at settlement as a
-test in progress, not as supporting evidence. Elections WITH credible
+to re-derive it. Zambia was the first out-of-sample test of whether the
+bar's logic generalizes beyond primaries. **Settled (2026-08-18 18:16Z,
+RETRO-20260818-1816): Yes, market right (ask 0.93), model's 0.87 discount
+wrong — same evidence shape (qualitative "expected to win" framing, no
+numeric poll) as the primaries, same result (market beat the discounted
+estimate).** n=1 out-of-sample, consistent with but not by itself proof of
+generalization; the extension rule stands, confirmed rather than untested.
+Elections WITH credible
 numeric polling (Afrobarometer/Ipsos-class, or an Economist/YouGov
 tracker) are outside the bar and go through the normal estimation path;
 the WI lesson (market-agrees is no safe harbor) still applies there.
@@ -1626,9 +1654,20 @@ extend it at each settlement.
 | Spider-Man 66-68m (db6bd4ff0cb7) | 0.31 / 0.54 | No | +0.190 | No | **+1.00** |
 | Spider-Man 68-70m (64695326b358) | 0.19 / 0.0695 | Yes | +0.061 | No | −1.00 |
 | HD earnings (65aea7cd91f4) | 0.68 / 0.84 | No | +0.130 | Yes | −1.00 |
+| Musk wk 180-199 (99feadecc33b) | 0.494 / 0.325 | Yes | +0.164 | No | −1.00 |
+| Musk wk 220-239 (cf16f6424af7) | 0.024 / 0.145 | No | +0.116 | No | **+0.16** |
 
-**Totals (2026-08-18, updated 16:14Z settlement): 18 realizable
-disagreement trades, 7W/11L, net −4.58u (−$22.90 at $5 flat).** Sub-classes
+Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
+(fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
+both settled this tick too, but both carry claimed edges ≤0.10 under a
+blanket category bar (elections; social-media-postcount respectively) —
+the bar, not the numeric veto, is the operative decline reason, so they
+grade their category narratives (§Extension to general elections; the
+bootstrap fork below), not this ledger. Same treatment already applied to
+140-159 (70331099597c) and the still-open 160-179 (c24926a5c9d7).
+
+**Totals (2026-08-18, updated 18:16Z settlement): 20 realizable
+disagreement trades, 8W/12L, net −5.42u (−$27.10 at $5 flat).** Sub-classes
 now split by MODEL GENERATION, because the 2026-08-15/16 additions are the
 first settled rows from the 14-day empirical bootstrap (every earlier
 self-model row was Gaussian or naive): pre-bootstrap self-model 1W/7L
