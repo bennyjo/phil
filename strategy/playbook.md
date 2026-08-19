@@ -1196,6 +1196,26 @@ corroborated by a second independent source that agrees on both the
 frontrunner and the poll's existence, or (b) a mechanical anchor
 (substantially-complete official count).
 
+**Exploration budget, Musk net-worth brackets (2026-08-19 04:xxZ, first
+test; ruling recorded here by DEEP-2026-08-19 — the 04:20Z cycle logged it
+only in funnel.jsonl/schedule.json, and rulings the pool re-check relies
+on belong in this file).** Event 770193, 6 sibling $100B-wide brackets
+settling Aug 31 (3213957-62), PM book internally well-calibrated (Yes-sum
+~1.001, mode $800-900B at 0.35). The stated resolution source (Bloomberg
+Billionaires Index Musk profile) WebFetch-403s (bot block, consistent with
+every prior Bloomberg attempt), and the fallback cross-check produced a
+~$300B same-day source-conflation spread ($675B Celebrity Net Worth;
+$777B and $889B both attributed to Bloomberg within one search summary;
+$744B stale Forbes contradicted by a same-day direct Forbes fetch showing
+$879.2B; one $0.97T outlier tracker) against $100B-wide brackets — worse
+than the HK-weather 3°C-vs-1°C-bracket precedent. No honest independent
+bracket estimate is possible; `benchmark-unreachable`, no forecast, no
+invented estimate. **Category ruled OUT while Bloomberg is unreachable
+and no single corroborated proxy exists.** Revisit only if a reachable
+proxy that the resolution source demonstrably tracks appears. Do NOT
+conflate with the Musk tweet-count family (xtracker.polymarket.com),
+which IS reachable and has its own standing characterization.
+
 ## Open-position monitoring (DEEP-2026-08-02)
 
 Positions are held to resolution — never exited — but their live prices
@@ -1735,16 +1755,25 @@ bootstrap-generation Gaussian self-model, 2W/2L (+0.75−1.00+1.00−1.00 =
 −0.25u), folded into the side split below but NOT into the behavioral
 pre-bootstrap self-model 1W/7L line (different domain, tracked
 separately). Side split, recomputed row-by-row from the table above
-(**correction**: the prior "+0.17u" No-side figure was stale — it was the
-pre-Musk-2d-<40 subtotal, never updated after that loss settled, and was
-carried forward mislabeled as the post-settlement 4W/4L total; verified
-2026-08-18 by summing all 17 realizable rows' P&L directly rather than
-trusting the running subtotal): Yes-side 1W/6L (−4.50u); No-side 6W/4L
-(**+0.92u**) — the No-side stream is solidly positive once correctly
-summed, not "roughly flat" as previously stated (see the 2026-08-14
-proposal, evidence updated again). Brier view: self-model n=11 mean
-dBrier now weighted down by the <40 miss (box-office rows are forecast-
-only entries, not bets, so they don't change this bet-brier figure).
+(**correction #2, DEEP-2026-08-19**: the 18:16Z retro updated the ledger
+totals to 20 trades but left THIS side split at its 17-trade values
+("1W/6L −4.50u / 6W/4L +0.92u") — the second stale-subtotal instance in
+two days, same failure class as the +0.17u error corrected 2026-08-18
+01:12Z. Re-summed row-by-row from the table above, all 20 realizable
+rows: the three rows added 16:14–18:16Z are HD earnings (65aea7cd91f4,
+No-side, −1.00), Musk wk 180-199 (99feadecc33b, Yes-side, −1.00) and
+Musk wk 220-239 (cf16f6424af7, No-side, +0.16)): **Yes-side 1W/7L
+(−5.50u); No-side 7W/5L (+0.08u)**. The honest read: the No-side stream
+is FLAT, not "solidly positive" — the +0.92u lead was three settlements
+old the moment it was cited. 7W/5L at +0.08u over 12 correlated rows is
+indistinguishable from zero edge; what survives is only the asymmetry
+(Yes-side disagreements remain uniformly bad, −5.50u at 1W/7L). The
+2026-08-14 No-side-sweep proposal's evidence is updated accordingly —
+the instrument argument (machine slice instead of hand-summed subtotals)
+is now proven twice, even as the edge claim weakens. Brier view:
+self-model n=11 mean dBrier still weighted down by the <40 miss
+(box-office rows are forecast-only entries, not bets, so they don't
+change this bet-brier figure).
 
 **New sub-class, first instance (2026-08-17): mechanical-econ Gaussian
 self-model.** Japan GDP 0.0-0.8% is a Gaussian model on an official macro

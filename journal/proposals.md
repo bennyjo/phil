@@ -481,6 +481,25 @@ excluded half is the better-performing one. The instrument gap is no
 longer hypothetical; per-row hand arithmetic in deep retros is the same
 manual-stats failure class score.py exists to prevent. Awaiting operator)
 
+**Status update (deep-retro 2026-08-19): stays endorsed, but the evidence
+basis shifts from edge to instrument.** Honest correction: the No-side
+stream is no longer positive once correctly summed over all 20 realizable
+rows — the 18:16Z 2026-08-18 retro updated the ledger totals (20 trades,
+8W/12L, −5.42u) but carried the 17-trade side split forward unchanged, so
+the "+0.92u, only positive stream" claim cited here and in DEEP-2026-08-18
+was stale the moment the HD earnings (No, −1.00) and Musk weekly fork
+(180-199 Yes −1.00, 220-239 No +0.16) rows settled. True split:
+**Yes-side 1W/7L −5.50u; No-side 7W/5L +0.08u** — flat, not solidly
+positive. That WEAKENS the edge motivation for this slice and the retro
+says so plainly. But it is also the SECOND hand-arithmetic failure on this
+exact quantity in two days (after the +0.17u→+0.92u correction of
+2026-08-18 01:12Z), which is the strongest form of the instrument
+argument: a machine-computed No-side slice cannot go stale. Endorsement
+stands on that basis; the "excluded half is the better-performing one"
+sentence above should now read "the excluded half is the flat one, vs a
+clearly negative included half — still a materially different picture
+than the sweep reports." Awaiting operator.
+
 ---
 
 ## 2026-08-14 — deep-retro status pass
@@ -662,4 +681,33 @@ the push happens to have succeeded. Awaiting operator.)
 - No new operator asks from DEEP-2026-08-18: the window's findings
   (carrier-checklist compliance, funnel-line pool counts, four missing
   watch items) were all repairable in strategy/ and are applied in this
+  commit.
+
+---
+
+## 2026-08-19 — deep-retro status pass
+
+- **2026-08-17 07:45Z detached-HEAD push no-op (endorsed): stays endorsed,
+  still the highest-priority operator ask on file.** Every container start
+  this window again came up shallow with a detached HEAD (see the
+  schedule.json reason fields, 2026-08-18/19); the hourly agent's manual
+  `checkout -B main origin/main` recovery is holding, but the loop.sh
+  guard remains unimplemented and the data-loss window remains open.
+  Awaiting operator.
+- **2026-08-14 No-side threshold-sweep slice (endorsed): stays endorsed
+  with materially corrected evidence** — see the status update on the
+  entry itself. Short version: the No-side stream is 7W/5L **+0.08u**
+  (flat), not +0.92u; the stale figure was a second consecutive
+  hand-arithmetic failure on this quantity, which is now the proposal's
+  strongest argument. Awaiting operator.
+- **2026-08-16 forecast.py inverted-outcome guard (endorsed): stays
+  endorsed.** No new instance this window (~16 rows recorded); the booked
+  cost (fe954ed9f325, manual exclusion at the ~Aug 28 Canada GDP
+  settlement) is unchanged. Awaiting operator.
+- **2026-08-10 forecast.py revision support (endorsed): stays endorsed,
+  low urgency.** Eighth consecutive window at zero cost from the
+  funnel-note workaround.
+- No new operator asks from DEEP-2026-08-19: the window's findings (stale
+  side split, one carrier-checklist miss, a playbook-vs-funnel ruling
+  placement gap) were all repairable in strategy/ and are applied in this
   commit.
