@@ -1216,6 +1216,34 @@ proxy that the resolution source demonstrably tracks appears. Do NOT
 conflate with the Musk tweet-count family (xtracker.polymarket.com),
 which IS reachable and has its own standing characterization.
 
+**Exploration budget, Iranian rial USD threshold brackets (2026-08-19
+14:xxZ, first test).** New category: 7 sibling markets (3210162-64
+range brackets, 3210203-06 touch-by-Aug31 brackets) resolving against
+Bonbast.com's finalized free-market USD/IRR rate, Aug 31 deadline (~12
+days out at test time), liquidity $47-$8.2k. Unlike the Musk/Kazakh
+traps, the stated resolution source itself (Bonbast) is unambiguous and
+WebSearch's AI-overview returned one internally consistent spot figure
+(1,882,000 IRR/USD, +0.53% WoW) — no cross-source conflation this time.
+The blocker is different: **the source isn't independently verifiable**.
+A direct WebFetch of bonbast.com's live page returned the page shell
+with no numeric rate in the extracted content (JS-rendered table), and
+bon-bast.com/history 403'd (bot-blocked), so there is no way to pull an
+actual multi-week series and check the WoW-change figure WebSearch
+reported, let alone build the volatility estimate a 12-day multi-bracket
+forecast needs (the JPM-$1T/gas-touch precedent shows naive vol models
+only earn their keep when the vol input itself is trustworthy). Treating
+one unverifiable AI-summarized number as an estimation input would be
+the same failure class as the Kazakh/Musk conflation traps, just with
+one source pretending to be many. `benchmark-unreachable` on all 7,
+no forecast, no invented estimate. **Category ruled OUT pending either a
+fetchable Bonbast endpoint (their `/webmaster` page advertises an API —
+untried) or a corroborating second free-market IRR tracker** (alanchand.com
+resolved separately in this test at a materially different rate,
+1,897,000/1,878,000 sell/buy, ~1% off Bonbast's figure — plausibly a
+different rate basis, not necessarily a conflict, but unverified either
+way). Revisit only if the Bonbast API or an equivalent verifiable feed is
+confirmed reachable.
+
 ## Open-position monitoring (DEEP-2026-08-02)
 
 Positions are held to resolution — never exited — but their live prices
