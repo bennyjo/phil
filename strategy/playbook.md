@@ -1170,6 +1170,32 @@ terms) announcement; revisit only if one surfaces for a specific
 candidate. Distinct from settled roster-status facts (played/inactive/
 released), which are mechanical and would score differently on property 1.
 
+**Exploration budget, foreign general-election seat-place brackets
+(2026-08-19 00:xxZ, first test of this category, market `2915350` "Will
+Auyl win the second most seats in the 2026 Kazakh Kurultai elections?",
+PM Yes ask 0.80 spread 0.02 liq $24.9k, election Aug 23).** Hypothesis
+under test: does this clear the general-election-extension's carve-out
+(playbook §Durable rule (contested primaries) > Extension to general
+elections — "elections WITH credible numeric polling... go through the
+normal estimation path")? WebSearch's own summary claimed three national
+surveys placing Auyl clearly 2nd; a direct WebFetch on a second source
+(timesca.com) found only ONE named poll (Kaliyev, published May 27 — 3
+months stale relative to the Aug 23 vote), naming a DIFFERENT party as
+frontrunner (Amanat, not Adilet — likely rebrand/naming confusion the
+summarizer didn't catch), and explicitly describing the 2nd/3rd-place seat
+as contested: "Auyl was not widely viewed as the leading contender for
+third place... most observers expected that role to belong to Ak Zhol,"
+with only a late, non-numeric perception shift cited for Auyl. Same
+WebSearch-summary-vs-source-conflation shape as the HK-weather and
+stale-year-actuals traps above, this time on poll *count* and *frontrunner
+identity* rather than a number. Result: fails the extension's "credible
+numeric polling" gate — the one real poll is stale and contradicted, not a
+tracker. Recorded `benchmark-unreachable`, no forecast. Category ruled OUT
+for foreign election seat-place brackets absent either (a) a numeric poll
+corroborated by a second independent source that agrees on both the
+frontrunner and the poll's existence, or (b) a mechanical anchor
+(substantially-complete official count).
+
 ## Open-position monitoring (DEEP-2026-08-02)
 
 Positions are held to resolution — never exited — but their live prices
