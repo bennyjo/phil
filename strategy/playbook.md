@@ -598,6 +598,33 @@ first test: reachable, tight, no edge. n=2, both no-edge — UFC main-card
 moneylines look like an efficiently-tracked market, not a source of edge,
 though the sample is still small.
 
+**Exploration budget, Dota 2 esports moneylines (2026-08-20 06:2xZ, first
+test since the 2026-08-05 esports-echo trap was named).** Hypothesis
+(flagged as an open candidate 2026-08-20 02:17Z, thick TI books $130-390k
+liquidity, no benchmark attempted): does odds-api or WebSearch multi-book
+coverage exist for The International? odds-api's `sports` list has zero
+esports keys (checked live, no `dota`/`csgo`/`lol` entries) — that channel
+is closed for this category. WebSearch, however, cleared the esports-echo
+check this time: results named actual books (Spinbetter explicitly, plus
+an aggregator average) with decimal odds distinct from PM's own price
+(e.g. Team Liquid vs Team Yandex: books averaged 1.732/2.014 vs PM ask
+implying 1.786 — close but not identical, unlike the 2026-08-05 "74¢ ×
+1.35" echo where the odds number literally was the PM price). Two
+pre-match TI quarterfinals power-devigged clean: Liquid/Yandex edges
+-0.018/+0.008, Nigma/Falcons edges -0.043/+0.033 — both pairs well under
+the 0.07 book-devig floor, both PM books 0.01-spread, $150-215k liquidity.
+Result: **reachable** (multi-book esports coverage exists via WebSearch
+odds-comparison aggregators, same channel as UFC) but **no edge** — PM's
+thick TI books track the sportsbook consensus as tightly as MLB/soccer/
+WNBA/UFC do. Category ruled in for future book-devig research, not out;
+still bound by the existing esports pre-match-only rule (Market selection
+§3) — a third TI match in the same event was already in-play at check
+time and was correctly declined without forming an estimate. Always
+verify any esports odds snippet names a real book with a price
+distinguishable from PM's own before devigging — the echo trap is
+per-search, not per-category, and does not go away just because one
+search cleared it.
+
 **Third moneyline test + first props test (2026-08-16 00:21Z), same
 Makhachev/Garry fight, ~3.7h pre-fight via odds.py's clean feed:** h2h
 power devig 0.7585/0.2415 vs live ask 0.74/0.27, edges +0.0185/-0.0285 —
