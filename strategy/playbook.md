@@ -293,6 +293,28 @@ BEFORE the CLI call, and sanity-check the returned `mid`/`delta_vs_mid`
 against the intended direction immediately after recording, since the tool
 prints exactly the number needed to catch this before moving on.
 
+**Operational trap (2026-08-20 20:1xZ): at step 0, compare `refs/heads/main`
+to `origin/main` — NOT `HEAD`. The container image recurrently starts with a
+detached HEAD and a stale local `main` branch ref.** This cycle: HEAD sat at
+4c2355c (== origin/main, so my equality check passed and I declared the sync
+clean), while `refs/heads/main` was still at ec3eebc, **136 commits behind**.
+Every commit then landed on detached HEAD, and `git push origin main` pushed
+the *branch* — the stale one — and was rejected with "a pushed branch tip is
+behind its remote counterpart". That message names a *behind* condition on a
+repo whose work is strictly *ahead*, so it reads as spurious divergence and
+invites exactly the wrong reflex (pull --rebase, or worse, a reset). CYCLE.md
+step 0 already says to fast-forward when local `main` is strictly behind; the
+failure was checking the wrong ref, not a gap in the procedure. Rule going
+forward: run `git branch -vv` at step 0 — one line shows both the detachment
+and the branch's ahead/behind, which `git log HEAD` cannot. If HEAD is
+detached, reattach BEFORE doing any work (`git checkout -B main origin/main`
+when the stale ref is an ancestor of `origin/main` — verify with
+`git merge-base --is-ancestor`, which is what makes the overwrite provably
+lossless; if it is NOT an ancestor the ref holds unpushed local commits, so
+stop and log for the operator, never `-B` over it). Recovering after the fact
+works the same way (`git checkout -B main <detached-sha>`), but costs a failed
+push and tempts a destructive fix under time pressure.
+
 ## Exploration budget (DEEP-2026-08-05, operator mandate)
 
 Selection rules learned only from wins overfit to the categories already
