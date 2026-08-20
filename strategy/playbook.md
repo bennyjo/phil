@@ -254,6 +254,19 @@ are immutable (core writes forecasts.jsonl), so the reading rule: at
 settlement those three rows grade the bootstrap model, NOT the veto —
 exclude them from any veto-record claim.
 
+**Coverage weld (DEEP-2026-08-20): recording forecasts and writing the
+funnel line are ONE act, same commit.** A FULL cycle that records any
+forecast MUST append its funnel line before committing — a forecast
+whose cycle has no funnel entry is unauditable for selection by
+construction (no pool counts, no fit scores, no skip reasons for the
+non-forecast declines). Evidence: the 2026-08-19 18:20Z cycle researched
+6 clean-feed candidates, recorded 6 forecasts and spent 4 odds-api
+credits, and wrote no funnel line at all — the window's largest research
+batch has no selection record, and the 3 line-mismatch skips from that
+cycle survive only as prose. Third funnel-coverage defect in three
+windows (schema drift 3-of-7 on 2026-08-18; omission here); the next
+one is a compliance pattern, not an oversight.
+
 **Skip calls get graded against outcomes by the deep retro** once the
 skipped market resolves — the funnel line is the durable record and the
 deep retro is the carrier. (First pass DEEP-2026-08-06: CRCL/OXY

@@ -711,3 +711,43 @@ the push happens to have succeeded. Awaiting operator.)
   side split, one carrier-checklist miss, a playbook-vs-funnel ruling
   placement gap) were all repairable in strategy/ and are applied in this
   commit.
+
+---
+
+## 2026-08-20 — deep-retro status pass
+
+- **2026-08-17 07:45Z detached-HEAD push no-op (endorsed): stays endorsed,
+  still the highest-priority operator ask on file — with one evidence
+  CORRECTION.** The 2026-08-19 06:23Z cycle log claims it "recovered 50
+  unpushed commits" spanning 2026-08-15T23:14Z–08-19T05:16Z. That
+  magnitude is wrong and is struck from this proposal's evidence: two
+  independent observations put origin/main far ahead of the claimed
+  ec3eebc baseline at the time (DEEP-2026-08-19 fetched ~04:49Z and found
+  origin/main ~88 ahead of it; the 05:16Z cycle's own log records
+  "origin/main tip 9070888"), a remote cannot regress without a
+  force-push, and `git rev-list ec3eebc..084ca12` is 90, not 50 — the
+  number reconciles with nothing. Honest reading: the 05:16Z push (from a
+  detached HEAD) likely did no-op, leaving at most ONE commit (084ca12)
+  unpushed for ~1 hour; the 06:23Z container then judged the remote from
+  a stale ref and misreported the recovery's size. What this correction
+  gives back is stronger than what it removes: the trigger state recurs
+  on essentially every container start, a real (small) no-op instance
+  recurred, and the agent's in-cycle git self-diagnosis has now
+  misjudged the remote's state twice in one morning — which is exactly
+  why the guard belongs in loop.sh, BEFORE the agent runs, not in more
+  in-cycle vigilance. Awaiting operator.
+- **2026-08-14 No-side threshold-sweep slice (endorsed): stays endorsed**
+  on the instrument argument (two documented hand-arithmetic failures on
+  this exact quantity, 2026-08-18/19). No veto-class settlements this
+  window; evidence unchanged.
+- **2026-08-16 forecast.py inverted-outcome guard (endorsed): stays
+  endorsed.** No new instance across ~15 rows recorded this window; the
+  booked cost (fe954ed9f325, manual exclusion at the ~Aug 28 Canada GDP
+  settlement) is unchanged and lands next week.
+- **2026-08-10 forecast.py revision support (endorsed): stays endorsed,
+  low urgency.** Ninth consecutive window at zero cost from the
+  funnel-note workaround.
+- No new operator asks from DEEP-2026-08-20: the window's two findings
+  (missing funnel line on the 18:20Z six-forecast batch; the 06:23Z log
+  magnitude error) were repairable in strategy/ and journal/ — funnel
+  weld rule added to the playbook, evidence corrected here.
