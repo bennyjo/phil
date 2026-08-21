@@ -267,6 +267,27 @@ cycle survive only as prose. Third funnel-coverage defect in three
 windows (schema drift 3-of-7 on 2026-08-18; omission here); the next
 one is a compliance pattern, not an oversight.
 
+**Weld escalated to a mechanical check (DEEP-2026-08-21).** The declared
+"next one" happened twice on the weld's first day in force: the
+2026-08-20 14:27Z (Toulouse/Lyon, e5d0e44532c3 + 9a1c771fd651) and
+18:17Z (MLB h2h, 371aa91ed8bc + 84e1b257aa68) FULL cycles both recorded
+forecasts with no funnel line — five coverage defects in five windows.
+Prose rules have demonstrably not held, so the check is now code:
+**before the commit of any FULL cycle that recorded a forecast, run
+`python3 strategy/tools/reconcile.py` (24h window) and it must print OK.**
+It verifies both directions: every recent forecast id appears in a funnel
+`researched[].forecast_id`, and every estimate-bearing funnel entry
+carries a forecast_id. On FAIL, write the missing funnel line (or the
+missing forecast) in the same commit — committing over a FAIL is a
+discipline violation to be named in the next deep retro. The three gaps
+were backfilled 2026-08-21 from cycle logs (marked `"backfilled"`; the
+18:17Z cycle's third devigged h2h estimate was never recorded anywhere
+and is permanently lost — `"acknowledged"` marks that kind of documented
+unrepairable gap, and using `acknowledged` on a repairable one is itself
+a violation). Pre-weld history (Aug 15–17 box-office and gas-touch
+batches) has known gaps; the check's operating window is 24h precisely so
+old history doesn't drown current compliance.
+
 **Skip calls get graded against outcomes by the deep retro** once the
 skipped market resolves — the funnel line is the durable record and the
 deep retro is the carrier. (First pass DEEP-2026-08-06: CRCL/OXY
@@ -439,6 +460,27 @@ guard.
    anything more is re-demonstrating a solid null. If a spot-check ever
    shows a clean-feed edge ≥ min_edge on a tight book, that is NEW
    information — revert to daily sweeps and say why.
+   **Granularity loophole closed (DEEP-2026-08-21): the weekly cap is per
+   CHANNEL (the odds-api/multi-book power-devig-vs-tight-PM-book method),
+   not per league or market subtype.** The 2026-08-20 window ran the
+   compliant weekly MLB sweep (02:17Z) and then four more clean-feed devig
+   confirmations in one day by treating each new fixture or sub-market as
+   fresh research: La Liga 3-leg (10:34Z), Ligue1 2-leg (14:27Z), MLB h2h
+   3-leg (18:17Z), MLB/WNBA h2h (22:18Z). Every one confirmed the same
+   null the channel has confirmed at n=132 settled no-edge forecasts,
+   brier_delta −0.0004 — dead flat by construction. Sub-slicing (soccer →
+   La Liga → Ligue1; mlb-spreads → mlb-moneyline) lets every day be a
+   "first instance" of something; that is the pre-2026-08-13 daily-sweep
+   behavior wearing a new label. Rule: a new league/market-subtype on this
+   channel counts as EXPLORATION for its first ~2 instances only when the
+   funnel entry names the hypothesis being tested (e.g. "is NFL preseason
+   pricing looser than regular season?" — a real question; "does the
+   clean-feed null also hold for Ligue1?" — not one, the null is the
+   channel's property, not the league's). After that it folds into the
+   ONE weekly confirmation sweep, which may mix leagues. The freed FULL-
+   cycle research minutes go where the open questions actually are:
+   mechanical-econ (PCE/BoK/GDP cluster), countable metrics, cross-market
+   arithmetic, and the tags.py exploration pass.
 
 **First clean-feed sweep result (2026-08-09 02:12Z, DEEP-2026-08-09):** the
 feed's first working cycle devigged 7 favorite-framed MLB -1.5 spreads and 2
@@ -1510,6 +1552,18 @@ forbids add-ons).
 
 ## Forecast ledger: what it can and cannot test (DEEP-2026-08-10)
 
+**Sign convention is the instrument's, always (DEEP-2026-08-21):
+`brier_delta = brier_agent − brier_market`, NEGATIVE = agent beat the
+market** (score.py's own docstring, and how every score slice prints).
+Three retros in one window (RETRO-20260820-2012, RETRO-20260821-0212,
+RETRO-20260821-0413) quoted "brier_delta" with the sign flipped
+(positive = beat the mid) — each individually harmless because the prose
+said which side won, but a slice claim assembled from those retros later
+would be sign-corrupted, the same failure family as the stale hand-carried
+No-side subtotals (2026-08-18/19). When writing any retro number named
+`brier_delta`, copy it from score.py output, don't recompute with your own
+sign; if quoting "how much I beat the mid by", call it something else.
+
 First scored window (2026-08-09/10): 54 forecasts recorded, 18 settled,
 brier_delta +0.001 (z -0.15) — estimates that agree with the market settle
 at market. Reassuring, and expected by construction. Three durable rules
@@ -2117,8 +2171,11 @@ entering the pool. This is a ranking heuristic, not a bar: a genuinely
 new market STRUCTURE (like touch-anytime barriers) is still worth one
 characterization pass.
 
-- Which categories actually have positive brier_delta for me. (Bet small and
-  wide until `core/score.py` shows n≥30 per category.)
+- Which categories actually have NEGATIVE brier_delta for me — score.py's
+  convention is brier_agent − brier_market, so negative = beating the
+  market; this line originally said "positive" and is one of the sources of
+  the sign drift fixed DEEP-2026-08-21. (Bet small and wide until
+  `core/score.py` shows n≥30 per category.)
   **Status DEEP-2026-08-14:** the mechanical-econ family (econ + econ-cpi +
   econ-ppi settled forecasts) is the first family-sized slice on the good
   side: pooled brier_delta -0.0104 over 27 rows — but those rows are ~6

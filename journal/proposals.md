@@ -751,3 +751,37 @@ the push happens to have succeeded. Awaiting operator.)
   (missing funnel line on the 18:20Z six-forecast batch; the 06:23Z log
   magnitude error) were repairable in strategy/ and journal/ — funnel
   weld rule added to the playbook, evidence corrected here.
+
+---
+
+## 2026-08-21 — deep-retro status pass
+
+- **2026-08-17 07:45Z detached-HEAD push no-op (endorsed): stays endorsed,
+  still the highest-priority operator ask on file, evidence STRENGTHENED
+  with two new dated instances.** (i) 2026-08-20 20:15Z: HEAD sat at
+  origin/main's tip so the cycle's equality check passed, but
+  `refs/heads/main` was 136 commits behind — the cycle's work landed on
+  detached HEAD and `git push origin main` was REJECTED ("pushed branch
+  tip is behind its remote counterpart"), recovered in-cycle; the agent
+  added a playbook guard (98324bf, `git branch -vv` +
+  `merge-base --is-ancestor` before any reattach). (ii) 2026-08-20
+  19:13Z: a tick judged the shallow-boundary fake divergence and ran
+  `reset --hard origin/main` BEFORE unshallowing — verified safe only
+  after the fact. In-cycle git self-diagnosis has now misjudged remote
+  state three times in two days; the guard belongs in loop.sh, before
+  the agent runs. Awaiting operator.
+- **2026-08-14 No-side threshold-sweep slice (endorsed): stays endorsed**
+  on the instrument argument; no veto-class settlements this window,
+  evidence unchanged.
+- **2026-08-16 forecast.py inverted-outcome guard (endorsed): stays
+  endorsed.** No new instance (~13 rows this window); fe954ed9f325's
+  manual-exclusion cost lands at the ~Aug 28 Canada GDP settlement —
+  next week.
+- **2026-08-10 forecast.py revision support (endorsed): stays endorsed,
+  low urgency.** Tenth consecutive window at zero cost from the
+  funnel-note workaround.
+- No new operator asks from DEEP-2026-08-21: the window's findings (two
+  funnel-weld violations, clean-feed cap granularity loophole,
+  brier_delta sign drift in three retros) were all repairable in
+  strategy/ — reconcile.py tool, three backfilled funnel lines, and two
+  playbook rules, applied in this commit.
