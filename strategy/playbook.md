@@ -1870,6 +1870,8 @@ extend it at each settlement.
 | HD earnings (65aea7cd91f4) | 0.68 / 0.84 | No | +0.130 | Yes | −1.00 |
 | Musk wk 180-199 (99feadecc33b) | 0.494 / 0.325 | Yes | +0.164 | No | −1.00 |
 | Musk wk 220-239 (cf16f6424af7) | 0.024 / 0.145 | No | +0.116 | No | **+0.16** |
+| Musk wk 240-259 (cd3af116ed2a) | 0.16 / 0.2575 | No | +0.092 | Yes | −1.00 |
+| Musk wk 280-299 (cc08840449e9) | 0.31 / 0.165 | Yes | +0.141 | No | −1.00 |
 
 Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
 (fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
@@ -1878,10 +1880,24 @@ blanket category bar (elections; social-media-postcount respectively) —
 the bar, not the numeric veto, is the operative decline reason, so they
 grade their category narratives (§Extension to general elections; the
 bootstrap fork below), not this ledger. Same treatment already applied to
-140-159 (70331099597c) and the still-open 160-179 (c24926a5c9d7).
+140-159 (70331099597c) and the still-open 160-179 (c24926a5c9d7). Same
+exclusion again 2026-08-21: this week's Musk wk 260-279 (42dc4279d3b9,
+edge 0.05, category-bar) settled LOST but is off-ledger for the same
+reason — the blanket bar, not the veto, is what declined it.
 
-**Totals (2026-08-18, updated 18:16Z settlement): 20 realizable
-disagreement trades, 8W/12L, net −5.42u (−$27.10 at $5 flat).** Sub-classes
+**2026-08-21 update (18:11Z settlement): the Aug14-21 Musk weekly set's
+two >0.10-disagreement legs both settled, both LOST.** 240-259
+(cd3af116ed2a, No side, bid 0.252 vs est 0.16) lost to the actual count
+landing in that bracket — the model underweighted the bucket the market
+priced correctly. 280-299 (cc08840449e9, Yes side, ask 0.169 vs est 0.31)
+lost — the model overweighted the opposite tail, the same "confident
+middle/tail overweight" shape flagged as a watch pattern since
+RETRO-20260817-1913. Two more 0-for-2 behavioral self-model rows extend
+the pattern the Aug 18 fork already called MIXED-but-veto-stays; this is
+off-fork confirmation, not a new decision (no fork reopened).
+
+**Totals (2026-08-21, updated 18:11Z settlement): 22 realizable
+disagreement trades, 8W/14L, net −7.42u (−$37.10 at $5 flat).** Sub-classes
 now split by MODEL GENERATION, because the 2026-08-15/16 additions are the
 first settled rows from the 14-day empirical bootstrap (every earlier
 self-model row was Gaussian or naive): pre-bootstrap self-model 1W/7L
@@ -1906,18 +1922,38 @@ two days, same failure class as the +0.17u error corrected 2026-08-18
 01:12Z. Re-summed row-by-row from the table above, all 20 realizable
 rows: the three rows added 16:14–18:16Z are HD earnings (65aea7cd91f4,
 No-side, −1.00), Musk wk 180-199 (99feadecc33b, Yes-side, −1.00) and
-Musk wk 220-239 (cf16f6424af7, No-side, +0.16)): **Yes-side 1W/7L
-(−5.50u); No-side 7W/5L (+0.08u)**. The honest read: the No-side stream
-is FLAT, not "solidly positive" — the +0.92u lead was three settlements
-old the moment it was cited. 7W/5L at +0.08u over 12 correlated rows is
-indistinguishable from zero edge; what survives is only the asymmetry
-(Yes-side disagreements remain uniformly bad, −5.50u at 1W/7L). The
-2026-08-14 No-side-sweep proposal's evidence is updated accordingly —
-the instrument argument (machine slice instead of hand-summed subtotals)
-is now proven twice, even as the edge claim weakens. Brier view:
-self-model n=11 mean dBrier still weighted down by the <40 miss
-(box-office rows are forecast-only entries, not bets, so they don't
-change this bet-brier figure).
+Musk wk 220-239 (cf16f6424af7, No-side, +0.16)): Yes-side 1W/7L
+(−5.50u); No-side 7W/5L (+0.08u), as of the 2026-08-18 settlement. The
+honest read at that point: the No-side stream was FLAT, not "solidly
+positive" — the +0.92u lead was three settlements old the moment it was
+cited. 7W/5L at +0.08u over 12 correlated rows was indistinguishable
+from zero edge; what survived was only the asymmetry (Yes-side
+disagreements uniformly bad, −5.50u at 1W/7L). The 2026-08-14
+No-side-sweep proposal's evidence was updated accordingly — the
+instrument argument (machine slice instead of hand-summed subtotals) is
+now proven twice, even as the edge claim weakens. Brier view: self-model
+n=11 mean dBrier still weighted down by the <40 miss (box-office rows are
+forecast-only entries, not bets, so they don't change this bet-brier
+figure).
+
+**2026-08-21 update:** two more rows settled, Musk wk 240-259
+(cd3af116ed2a, No-side, −1.00) and Musk wk 280-299 (cc08840449e9,
+Yes-side, −1.00) — re-summed row-by-row from the full table above, all 22
+realizable rows: **Yes-side 1W/8L (−6.50u); No-side 7W/6L (−0.92u)**. The
+No-side stream — the one slice that had survived as "flat, not
+positive" — is now net NEGATIVE for the first time. With only 6 No-side
+losses total this is still a small-n read (schedule.json's own guardrail:
+no category verdict below ~15), but the asymmetry claim itself needs
+restating: it is no longer "Yes-side bad, No-side flat," it is "both
+sides net negative, Yes-side worse." The 2026-08-14 No-side-sweep
+proposal's evidence should be re-checked against this flip at the next
+deep retro rather than re-cited at its stale +0.08u figure. Model
+generation for the two new rows is not cleanly classified here (the
+underlying note describes a week-avg/last-24h pace blend, not clearly
+either the pure pre-bootstrap Gaussian or the pure 14-day resample
+bootstrap) — leave the per-generation sub-totals below as last updated
+2026-08-18 and resolve the classification at the next deep retro rather
+than guess it on a light tick.
 
 **New sub-class, first instance (2026-08-17): mechanical-econ Gaussian
 self-model.** Japan GDP 0.0-0.8% is a Gaussian model on an official macro
