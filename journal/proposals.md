@@ -785,3 +785,41 @@ the push happens to have succeeded. Awaiting operator.)
   brier_delta sign drift in three retros) were all repairable in
   strategy/ — reconcile.py tool, three backfilled funnel lines, and two
   playbook rules, applied in this commit.
+
+---
+
+## 2026-08-22 — deep-retro status pass
+
+- **2026-08-17 07:45Z detached-HEAD push no-op (endorsed): stays endorsed,
+  still the highest-priority operator ask on file.** The trigger state
+  (shallow clone + detached HEAD + stale local main) recurred on
+  essentially every container start this window (22:21Z, 23:24Z, 04:16Z
+  cycle logs all record it); every recovery was clean via the 98324bf
+  playbook guard (`merge-base --is-ancestor` before reattach), no new
+  data-loss or misjudgment instance. The guard still belongs in loop.sh,
+  before the agent runs — a per-cycle manual recovery that has failed
+  three separate times historically is not a fix. Awaiting operator.
+- **2026-08-14 No-side threshold-sweep slice (endorsed): stays endorsed,
+  urgency DOWNGRADED — the edge motivation is dead.** The Aug14-21 Musk
+  weekly legs settled 18:11Z and flipped the No-side counterfactual
+  stream negative for the first time: 7W/6L, −0.92u over 13 realizable
+  rows (deep-retro re-verified row-by-row today). The slice would now be
+  instrumenting a net-negative stream on both sides (Yes 1W/8L −6.50u).
+  The instrument argument (machine slice vs hand-summed subtotals; two
+  documented hand-arithmetic failures) remains valid but is weakening:
+  the last two hand-sums (18:15Z retro and today's independent
+  verification) were both correct. Keep on file, rank below the git
+  guard and the inverted-outcome guard. Awaiting operator.
+- **2026-08-16 forecast.py inverted-outcome guard (endorsed): stays
+  endorsed.** No new instance (~16 rows recorded this window);
+  fe954ed9f325's manual-exclusion cost lands at the ~Aug 28 Canada GDP
+  settlement — next week; the deep retros of Aug 28/29 must carry the
+  exclusion when grading that cluster. Awaiting operator.
+- **2026-08-10 forecast.py revision support (endorsed): stays endorsed,
+  low urgency.** Eleventh consecutive window at zero cost from the
+  funnel-note workaround.
+- No new operator asks from DEEP-2026-08-22: the window's findings (weld
+  violation #6 with successful mechanical detection, weekly-cap
+  gate-ordering slip, Musk generation classification, cross-market
+  sensing gap) were all addressable in strategy/ — three playbook rules
+  and one classification ruling, applied in this commit.

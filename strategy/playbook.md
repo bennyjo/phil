@@ -77,6 +77,27 @@ Rank every candidate by WHY the market should be wrong, strongest first:
    arb sitting there. **Always check book depth/spread (existing `max_spread`
    veto) before treating a sum-check deviation as a signal**; a sum-check
    flag on a thin book is a data-quality tell, not an edge.
+   **Sibling-group census (DEEP-2026-08-22): the "question implies
+   siblings" trigger is not enough — make the census standing.** Zero
+   cross-market candidates entered the funnel between ~Aug 12 and Aug 22
+   while cross-market is the ONLY real-eligible edge class
+   (config/protected.json real.allowed_edge_classes) and one of the two
+   classes with settled wins (`1e8dec1078ba`; the CPI-cluster arithmetic
+   of Aug 11-12). The trigger fires only when a researcher happens to
+   pick up a bracket-shaped question — a structurally invisible channel
+   whenever research minutes go elsewhere, which is exactly what the
+   window audits keep showing. Scan output has carried `event_id` since
+   2026-08-05 (operator instrument change) precisely to make this cheap:
+   **every FULL cycle's scan step groups the scan output by `event_id`,
+   counts groups with 2+ admissible markets, and logs `sibling_groups: N`
+   (with the top group's event_id and liquidity) in the funnel line.**
+   When N>0 and no higher-priority research exists (mechanical-econ due,
+   watch-item trigger fired), spend one research slot on the
+   highest-liquidity group's consistency arithmetic (siblings.py for live
+   prices, then the numeric-implication test above, book-depth caveat
+   included). This is a counting rule, not a betting rule — the point is
+   that the one class real execution can act on stops being invisible to
+   selection grading.
 3. **Book-devig arbitration** (weakest): "my devig of scraped bookmaker odds
    beats the PM price" on a liquid market. A 1-cent-spread PM book with real
    depth is made by someone pricing off the same feeds, live — this class is
@@ -288,6 +309,23 @@ a violation). Pre-weld history (Aug 15–17 box-office and gas-touch
 batches) has known gaps; the check's operating window is 24h precisely so
 old history doesn't drown current compliance.
 
+**Sixth violation, and the token rule (DEEP-2026-08-22).** On the
+mechanical check's first calendar day in force, the 2026-08-21 22:21Z
+cycle committed 9 forecasts (7 MLB h2h + 2 TI esports) with no funnel
+line — reconcile.py was evidently never run before that commit. The
+23:24Z cycle's first reconcile run FAILed, backfilled the line
+same-commit, and flagged it: detection worked within one cycle, exactly
+as designed; prevention (actually running the check pre-commit) did not.
+So the same copy-the-literal-output pattern that ended the cycle-count
+fabrications applies here: **the cycle log line of any FULL cycle that
+recorded a forecast MUST quote reconcile.py's literal output line
+(`OK: funnel<->forecast coverage reconciles over last 24h`); a
+forecast-recording log line without that quoted token is a weld
+violation on its face**, whether or not the funnel line turns out to
+exist. A paraphrase ("reconcile passed") does not count — paraphrases
+are how the count fabrications survived; the literal token is proof the
+command ran.
+
 **Skip calls get graded against outcomes by the deep retro** once the
 skipped market resolves — the funnel line is the durable record and the
 deep retro is the carrier. (First pass DEEP-2026-08-06: CRCL/OXY
@@ -481,6 +519,18 @@ guard.
    cycle research minutes go where the open questions actually are:
    mechanical-econ (PCE/BoK/GDP cluster), countable metrics, cross-market
    arithmetic, and the tags.py exploration pass.
+   **Gate before spend (DEEP-2026-08-22): the weekly-cap gate is checked
+   BEFORE any odds.py call, not after.** The 2026-08-21 22:21Z cycle
+   devigged a 7-game MLB h2h slate and only then noticed the week's sweep
+   was already spent (2026-08-20 02:17Z) — 4 credits and a research slot
+   on a null settled at n>21 for this channel; the resulting rows settled
+   flat overnight exactly as the channel stats predicted (mlb-moneyline
+   n=10, delta −0.0011). The log named the slip unprompted, which is the
+   right failure mode — but the gate is one grep against the cycle log
+   and costs nothing; run it first. If devig output already exists when a
+   violation is noticed, still record the forecasts (honesty rule: an
+   estimate formed must be scored), and the cycle log must name the slip,
+   as 22:21Z did.
 
 **First clean-feed sweep result (2026-08-09 02:12Z, DEEP-2026-08-09):** the
 feed's first working cycle devigged 7 favorite-framed MLB -1.5 spreads and 2
@@ -1954,6 +2004,28 @@ either the pure pre-bootstrap Gaussian or the pure 14-day resample
 bootstrap) — leave the per-generation sub-totals below as last updated
 2026-08-18 and resolve the classification at the next deep retro rather
 than guess it on a light tick.
+
+**Generation ruling (DEEP-2026-08-22, resolving the deferral above):**
+both new rows are GAUSSIAN generation. The recorded notes (cd3af116ed2a,
+cc08840449e9) describe a week-avg/last-24h pace blend fed into a normal
+approximation (mean~274, sd~15) — Gaussian machinery on a point pace
+estimate, no resampling anywhere, so they extend the behavioral
+pre-bootstrap/Gaussian self-model line, not the bootstrap line:
+**behavioral Gaussian 1W/7L (−6.39u) → 1W/9L (−8.39u)** (sole win still
+Musk 160-179 +0.61). Full per-generation re-sum of all 22 realizable
+rows, verified row-by-row against the table: behavioral Gaussian 1W/9L
+−8.39u (SC Nordone, SC Fry, MN Flanagan, MN Craig, Musk 120-139,
+140-159, 160-179, 180-199, wk 240-259, wk 280-299); bootstrap 3W/2L
++1.22u (Musk 2d 40-64/65-89/<40 + wk 180-199/220-239 — all Musk counts,
+~2 independent realized outcomes); mechanical-econ Gaussian 1W/0L +0.85u
+(Japan GDP); mechanical wide-spread 1W/0L +0.15u (PPI 5.3%); box-office
+Gaussian 2W/2L −0.25u; earnings 0W/1L −1.00u (HD). Sum = −7.42u ✓
+matches the ledger total. The structural read this buys: every settled
+counterfactual PROFIT sits in mechanical or bootstrap classes; the
+behavioral point-estimate Gaussian is 1-for-10 — the sharpest statement
+yet of why the social-media-postcount bar and the >0.10 veto exist, and
+of what the Aug 28/29 fork is actually deciding (whether MECHANICAL
+disagreements deserve different treatment, not behavioral ones).
 
 **New sub-class, first instance (2026-08-17): mechanical-econ Gaussian
 self-model.** Japan GDP 0.0-0.8% is a Gaussian model on an official macro
