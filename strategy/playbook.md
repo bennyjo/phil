@@ -2367,3 +2367,26 @@ recorded (d57caacce801, fbc6aff9c7f4, 5ae6bf97d6a9, 56f75d436269,
 settlement (~Sep 1) against both the veto boundary and the vol-input
 accuracy (realized WTI/Gold range over the window will show whether ~38%/
 ~22% ann. was in the right neighborhood).
+
+**New search-result trap: ISM PMI vs S&P Global PMI index conflation
+(2026-08-23 16:1xZ, ISM Services PMI Aug bracket, event 805222, release
+2026-09-03, first check).** WebSearch for "ISM Services PMI August 2026
+forecast" returned a snippet framing an already-published figure
+("S&P Global US Services PMI rose to 56.8 in August... well above market
+expectations of a drop to 54") as if it settled the ISM question — but the
+ISM (Institute for Supply Management) Non-Manufacturing/Services Index and
+the S&P Global Services PMI are two DIFFERENT surveys, different
+methodologies, materially different scale/levels (both happen to be
+reported as an index near 50-57, close enough to read as interchangeable
+at a glance), and different release dates within the same week. The 54.0
+"consensus" figure in the same result set was also unattributed to either
+index. Same failure shape as the stale-tense and cross-book-mixing traps:
+a plausible-looking number that answers a DIFFERENT question than the one
+the market resolves on. Treat any PMI search result as unusable unless it
+explicitly names "ISM" (not "S&P Global"/"Markit") AND ties the number to
+the specific ISM release the market cites — don't let matching index
+ranges substitute for matching index identity. Declined as
+benchmark-unreachable (same property-2 failure as JOLTS/ISM Manufacturing,
+DEEP-2026-08-18), no forecast recorded (never-invent-an-estimate rule).
+Added to schedule.json watch_items alongside the JOLTS/ISM Manufacturing
+cluster for a ~Aug 28-29 re-check.
