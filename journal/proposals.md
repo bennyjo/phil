@@ -823,3 +823,38 @@ the push happens to have succeeded. Awaiting operator.)
   gate-ordering slip, Musk generation classification, cross-market
   sensing gap) were all addressable in strategy/ — three playbook rules
   and one classification ruling, applied in this commit.
+
+---
+
+## 2026-08-23 — deep-retro status pass
+
+- **2026-08-17 07:45Z detached-HEAD push no-op (endorsed): stays endorsed,
+  still the highest-priority operator ask on file.** The trigger state
+  recurred again on essentially every container start this window,
+  including this deep-retro session itself (shallow clone, local main ref
+  6 commits behind origin, HEAD detached at the true tip — resolved per
+  the trigger-prompt guard, plain fast-forward). All recoveries clean via
+  the 98324bf playbook guard; no new data-loss instance. A per-cycle
+  manual recovery that has misfired three separate times historically is
+  still not a fix; the guard belongs in loop.sh, before the agent runs.
+  Awaiting operator.
+- **2026-08-14 No-side threshold-sweep slice (endorsed, downgraded):
+  unchanged.** No No-side settlements this window (the one veto-class
+  settlement, TI VISION/Yandex, was Yes-side); both streams remain net
+  negative (Yes 1W/9L −7.50u, No 7W/6L −0.92u). Instrument argument
+  unchanged; rank below the git guard and the inverted-outcome guard.
+  Awaiting operator.
+- **2026-08-16 forecast.py inverted-outcome guard (endorsed): stays
+  endorsed.** No new instance (~2 rows recorded this window, 27 settled);
+  fe954ed9f325's manual-exclusion cost lands at the ~Aug 28 Canada GDP
+  settlement — THIS COMING WEEK; the Aug 28/29 deep retros must carry the
+  exclusion when grading that cluster. Awaiting operator.
+- **2026-08-10 forecast.py revision support (endorsed): stays endorsed,
+  low urgency.** Twelfth consecutive window at zero cost from the
+  funnel-note workaround; no material revision occurred (Kazakh legs were
+  correctly held as unchanged estimates rather than re-recorded).
+- No new operator asks from DEEP-2026-08-23: the window's one finding
+  (veto-ledger table left stale by the 13:14Z settlement retro) was
+  repairable in strategy/ — table row added, totals re-summed, and a
+  same-commit table-extension rule welded into the playbook and the
+  schedule.json settlement-carrier comment, applied in this commit.

@@ -1922,6 +1922,7 @@ extend it at each settlement.
 | Musk wk 220-239 (cf16f6424af7) | 0.024 / 0.145 | No | +0.116 | No | **+0.16** |
 | Musk wk 240-259 (cd3af116ed2a) | 0.16 / 0.2575 | No | +0.092 | Yes | −1.00 |
 | Musk wk 280-299 (cc08840449e9) | 0.31 / 0.165 | Yes | +0.141 | No | −1.00 |
+| TI VISION/Yandex (6b84771a3bd6) | 0.383 / 0.235 | Yes | +0.143 | No | −1.00 |
 
 Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
 (fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
@@ -2026,6 +2027,32 @@ behavioral point-estimate Gaussian is 1-for-10 — the sharpest statement
 yet of why the social-media-postcount bar and the >0.10 veto exist, and
 of what the Aug 28/29 fork is actually deciding (whether MECHANICAL
 disagreements deserve different treatment, not behavioral ones).
+
+**2026-08-23 update (DEEP): TI VISION/Yandex row added, one settlement
+late.** The row settled 2026-08-22 13:14Z and RETRO-20260822-1314 graded
+it narratively ("veto correct, would-be loss avoided") but did NOT extend
+this table — the first time a settled veto row was omitted from the table
+entirely (the two 2026-08-18/19 incidents were stale sub-totals, not
+missing rows). Row arithmetic: est(Yandex) 0.383 vs mkt
+0.235, Yes-side buy at recorded ask 0.24, realizable edge +0.143, Yandex
+lost → −1.00u. **Totals now 23 realizable trades, 8W/15L, net −8.42u**;
+side split re-summed row-by-row: **Yes-side 1W/9L −7.50u; No-side 7W/6L
+−0.92u** (unchanged, no No-side settlements). Generation ruling: this is
+a FIFTH class — a non-sharp odds-blend (internally-inconsistent
+aggregator + play-stats model, no sharp book; the recorded note itself
+flagged the data-quality problem) — not a self-model of any generation
+and not a clean book-devig. Per-generation re-sum: behavioral Gaussian
+1W/9L −8.39u; bootstrap 3W/2L +1.22u; mechanical-econ Gaussian 1W/0L
++0.85u; mechanical wide-spread 1W/0L +0.15u; box-office Gaussian 2W/2L
+−0.25u; earnings 0W/1L −1.00u; non-sharp odds-blend 0W/1L −1.00u. Sum
+−8.42u ✓. The structural read sharpens: every profitable class is
+mechanical or bootstrap; every class whose benchmark or model is
+narrative, behavioral, or data-quality-flagged is a net loser.
+**Mechanical rule (this miss's fix): a settlement retro on any
+outside-view-veto or wide-spread-veto row must extend this table — row,
+re-summed totals, side split — in the SAME commit as the retro; a veto
+retro without a table edit is a violation on its face, same
+copy-the-arithmetic pattern as the weld and cap rules.**
 
 **New sub-class, first instance (2026-08-17): mechanical-econ Gaussian
 self-model.** Japan GDP 0.0-0.8% is a Gaussian model on an official macro
