@@ -352,6 +352,19 @@ BEFORE the CLI call, and sanity-check the returned `mid`/`delta_vs_mid`
 against the intended direction immediately after recording, since the tool
 prints exactly the number needed to catch this before moving on.
 
+**Guard ACTIONED (2026-08-24, DEEP-2026-08-16 proposal):** `forecast.py
+record` now refuses any row where `|est_prob - mid| > 0.40` unless
+`--confirm-extreme` is passed. This catches the fe954ed9f325 failure
+shape (an outcome-label typo silently recording the complement) at the
+only moment it's fixable. It also means genuine outside-view-veto-class
+disagreements (>0.10 claimed edge can still be well under 0.40 mid-gap,
+but a wide one now needs the flag) require `--confirm-extreme` to record
+— expect the first prompt rejection on a real extreme read, don't treat
+it as a bug, just confirm after re-checking the outcome string matches
+intent. fe954ed9f325 itself stays on the books as recorded (forecast
+rows are immutable) — the watch item's manual exclusion at ~Aug28
+settlement is still required, this guard only prevents the next instance.
+
 **Operational trap (2026-08-20 20:1xZ): at step 0, compare `refs/heads/main`
 to `origin/main` — NOT `HEAD`. The container image recurrently starts with a
 detached HEAD and a stale local `main` branch ref.** This cycle: HEAD sat at
@@ -1631,17 +1644,24 @@ from the window:
    minutes, weigh a candidate partly by whether it can ADD a
    disagreement row, since that is the only stream that will ever answer
    "are we calibrated when we disagree?".
-   **No-side blind spot (DEEP-2026-08-14):** score.py's threshold_sweep
-   simulates only the forecasted-outcome side at the recorded ask
-   (operator note 2026-08-09), so a disagreement where the model sits far
-   BELOW a wide market computes a negative Yes-edge and lands in no
-   bucket. "Every sweep bucket negative ⇒ zero settled evidence of edge
-   when disagreeing" is therefore a claim about the Yes-side stream only.
-   The settled No-side disagreements to date (PPI 5.3%: est 0.036 vs mid
-   0.171; ≥6.0%: 0.003 vs 0.042) both went the agent's way — n=2,
-   event-correlated, proves nothing, but retros must not cite the sweep
-   as if it covered this stream. Proposal for a No-side sweep slice filed
-   2026-08-14 (journal/proposals.md).
+   **No-side blind spot CLOSED (2026-08-24 actioned, DEEP-2026-08-14
+   proposal):** score.py now reports `threshold_sweep_no` alongside the
+   Yes-side `threshold_sweep` (complement edge `best_bid_at_record -
+   est_prob`, filled at `1 - best_bid`; rows lacking `best_bid_at_record`
+   are skipped and counted). First run on the full journal (2026-08-24):
+   the No-side stream is materially better-behaved than the Yes-side one
+   at every matched threshold — e.g. edge≥0.10: Yes n=7 win=0.00
+   brier_delta=+0.1176 (total loss) vs No n=11 win=0.55 pnl=-0.05u
+   brier_delta=+0.0190 (near flat); edge≥0.05: Yes brier_delta=+0.0531 vs
+   No brier_delta=+0.0313. Both sides are still net-negative brier_delta
+   (behind market when disagreeing), but the earlier "zero settled
+   evidence when disagreeing" framing was a Yes-side-only artifact — the
+   No-side stream shows disagreement calibration closer to the market's
+   than the Yes-side stream does. Note the sweep grades ALL settled
+   forecasts at recorded prices, not the same population as the
+   hand-kept realizable counterfactual-veto table below, so figures will
+   not match that table row for row. Retros citing "the sweep" from now
+   on must say which side.
 2. **Record even when declining — especially when declining.** The
    outside-view veto (>0.10 claimed edge) would be unfalsifiable if
    declined estimates were never scored. The 2026-08-10 declines (PLBY
@@ -1669,14 +1689,19 @@ from the window:
    UMA resolution pending): zero over-fires; every decided disagreement
    went to the market. Row-by-row table and the durable primaries rule in
    the "Primary batch graded" section below.**
-3. **A materially revised estimate deserves a row, but forecast.py holds
-   one live row per market+outcome** (anti-flooding, by design —
-   revision support is proposed, journal/proposals.md 2026-08-10). Until
-   then: when a re-verification materially changes the estimate or the
-   price has moved enough to change the decision (PLBY: ask 0.25 → 0.19
-   between 00:23Z and 04:16Z), record the revised read in funnel.jsonl's
-   note so the settlement grading can weigh the estimate that was
-   actually current, not just the stale row.
+3. **Revision support ACTIONED (2026-08-24, DEEP-2026-08-10 proposal):**
+   `forecast.py record --supersede` now replaces the live open forecast
+   on a market+outcome when the read has materially changed (|delta
+   est_prob| >= 0.05, or a changed skip-reason); rows are linked
+   (`supersedes` / `superseded_by`), anti-flooding still fires without
+   the flag or without a material change. The superseded row stays open
+   and still settles, but score.py grades it in a separate
+   `revised_away` slice, not the headline stats or the threshold sweeps
+   — whether revisions improve estimates is measured, not assumed. Use
+   `--supersede` (not the funnel-note workaround) whenever a
+   re-verification materially changes an open forecast — e.g. the open
+   AfD Sachsen-Anhalt read (de95e5168de3 / forecast row) as the polls
+   move before its ~Sep4-5 re-check.
 
 **Exploration budget, low-media-coverage international elections (2026-08-10
 ~14:5xZ, first test of this category).** Hypothesis: "national elections
