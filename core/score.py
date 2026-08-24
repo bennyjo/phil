@@ -99,6 +99,39 @@ def threshold_sweep(fsettled):
     return out
 
 
+def threshold_sweep_no(fsettled):
+    """Complement-side counterfactual of threshold_sweep: for each edge floor
+    X, simulate a flat 1.0-unit bet AGAINST every forecast whose complement
+    edge (best_bid_at_record - est_prob, i.e. buy the other side at
+    1 - best_bid) was >= X. A row wins when the forecasted outcome LOST.
+
+    Without this slice, a disagreement where the estimate sits far below a
+    wide market is invisible to the sweep, and every sweep-derived floor
+    argument reasons over only the Yes-side half of the disagreement rows
+    (2026-08-14 proposal; the side split went stale twice when hand-computed).
+    brier_delta is symmetric for a binary outcome, so fstats applies as-is.
+    Rows lacking best_bid_at_record are skipped; the caller reports the count.
+    """
+    eligible = [r for r in fsettled if r.get("best_bid_at_record") is not None
+                and r["best_bid_at_record"] < 1.0]
+    out = []
+    for x in EDGE_GRID:
+        rows = [r for r in eligible
+                if round(r["best_bid_at_record"] - r["est_prob"], 4) >= x]
+        if not rows:
+            out.append({"edge_min": x, "n": 0})
+            continue
+        wins = sum(1 for r in rows if r["status"] == "lost")
+        pnl = sum((1 / (1 - r["best_bid_at_record"]) - 1) if r["status"] == "lost" else -1.0
+                  for r in rows)
+        out.append({
+            "edge_min": x, "n": len(rows), "wins": wins,
+            "pnl_units": round(pnl, 3), "roi": round(pnl / len(rows), 3),
+            "brier_delta": fstats(rows)["brier_delta"],
+        })
+    return out
+
+
 def forecast_report(frows):
     # Superseded rows (record --supersede) still settle, but only the latest
     # row per market+outcome counts in the headline stats; the abandoned
@@ -117,7 +150,11 @@ def forecast_report(frows):
         return {"settled": 0, "open": n_open, "revised_away": revised_away}
     rep = {"overall": fstats(fsettled), "luck_adjusted": luck_adjusted(fsettled),
            "by_category": {}, "by_skip_reason": {}, "calibration": [],
-           "threshold_sweep": threshold_sweep(fsettled), "open": n_open,
+           "threshold_sweep": threshold_sweep(fsettled),
+           "threshold_sweep_no": threshold_sweep_no(fsettled),
+           "threshold_sweep_no_skipped": sum(
+               1 for r in fsettled if r.get("best_bid_at_record") is None),
+           "open": n_open,
            "revised_away": revised_away}
     by_cat = defaultdict(list)
     by_reason = defaultdict(list)
@@ -283,6 +320,13 @@ def main():
                 print(f"  sweep edge>={s['edge_min']:.2f}: n={s['n']:3} "
                       f"win={s['wins']/s['n']:.2f} pnl={s['pnl_units']:+.2f}u "
                       f"roi={s['roi']:+.3f} brier_delta={s['brier_delta']:+.4f}")
+        for s in fr.get("threshold_sweep_no", []):
+            if s["n"]:
+                print(f"  sweep-no edge>={s['edge_min']:.2f}: n={s['n']:3} "
+                      f"win={s['wins']/s['n']:.2f} pnl={s['pnl_units']:+.2f}u "
+                      f"roi={s['roi']:+.3f} brier_delta={s['brier_delta']:+.4f}")
+        if fr.get("threshold_sweep_no_skipped"):
+            print(f"  sweep-no skipped {fr['threshold_sweep_no_skipped']} rows lacking best_bid_at_record")
     else:
         print(f"\nforecasts: settled=0 open={fr.get('open', 0)}")
 

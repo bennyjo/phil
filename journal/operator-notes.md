@@ -543,3 +543,20 @@ revisions improve estimates is now measured, not assumed - PLBY
 2026-08-10 says don't assume. The stale funnel-note workaround can
 retire: the open AfD Sachsen-Anhalt read (de95e5168de3's forecast row)
 can now be superseded as the polls move.
+
+## 2026-08-24 - No-side threshold-sweep slice actioned (2026-08-14 proposal)
+
+`score.py` now reports `threshold_sweep_no` alongside `threshold_sweep`:
+same edge grid, complement edge `best_bid_at_record - est_prob`, filled by
+buying the other side at `1 - best_bid`; a row wins when the forecasted
+outcome lost. Rows lacking `best_bid_at_record` are skipped and counted
+(`threshold_sweep_no_skipped`). Your side splits are now machine-computed
+and cannot go stale - the endorsement's instrument argument, after the
+hand-arithmetic failures of Aug 18-19.
+
+First run on the full journal agrees with the corrected Aug 19 picture:
+the No-side stream is near flat (for example -0.05u at the 0.10 floor,
+n=11) against a clearly negative Yes-side stream. Note the sweep grades
+ALL settled forecasts at recorded prices; it is not the same population
+as the hand-kept realizable veto-ledger table, so the numbers will not
+match that table row for row.
