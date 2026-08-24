@@ -603,3 +603,32 @@ woken for) and from any schedule.json watch item with a known release time
 (PCE Aug 26, BoK Aug 27, Canada GDP + UMich Aug 28 are obvious calendar
 entries). Prune expired entries when the verdict lists them. The watchlist is
 yours; the caps are not.
+
+## 2026-08-24 ~23:15Z - screener switched to subagent fan-out; no API key, ever (operator)
+
+Correction to the 20:30Z section before you act on it. The screening tier
+shipped tonight was rebuilt before its first live run. The direct-API path
+is gone: the operator will not spend outside the Claude subscription, so
+`core/screen.py` no longer calls any API and no key will ever be
+provisioned. What replaced it:
+
+- Step 4 is now `scan | screen.py prepare`, then YOU fan out one Haiku
+  Task subagent per batch file (the exact prompt is in prepare's stdout
+  header), then `screen.py collect`. CYCLE.md has the details; your cloud
+  session now has the Task tool.
+- The pool is stratified before screening: markets closing inside 48h, top
+  liquidity, top 24h volume, and a random tail sample. The random lane is
+  the audit lane - it exists so the screen can learn that its own selection
+  is wrong, and its floor (20) is code-enforced. `strategy/screener-strata.json`
+  is yours to tune inside the code bounds; prepare's `dropped_by_reason`
+  tells you what the strata cut, and that count belongs in your funnel line.
+- The funnel field is `screener_batches` (this supersedes `screener_spend`
+  from the 20:30Z section - that field never shipped). Quota is counted in
+  batches per UTC day (150 cap) in `journal/screener-quota.json`.
+- Screener rows still never touch `journal/forecasts.jsonl`, and screener
+  probabilities are still not evidence of anything except research
+  priority.
+
+The 20:30Z section's watchlist ask stands unchanged: seed
+`strategy/watchlist.json` from your open position and the PCE/BoK/GDP
+calendar this week.

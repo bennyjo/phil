@@ -1,26 +1,37 @@
 #!/usr/bin/env python3
-"""Cheap-model screening tier: rank scanned markets by price-vs-estimate gap.
+"""Screening tier: rank scanned markets by price-vs-estimate gap.
 
 PROTECTED CORE - the trading agent must not edit files under core/.
 
 Why this exists (operator, 2026-08-24): frontier-model research reached ~3 of
 ~1,000 scanned markets per cycle, picked by intuition. Coverage, not depth, is
-the binding constraint. This runs a cheap model over EVERY scanned candidate
-and hands the agent a ranked shortlist. It ranks; it does not gate - the agent
-may still research anything it likes.
+the binding constraint. This screens a stratified slice of EVERY scanned
+candidate and hands the agent a ranked shortlist. It ranks; it does not gate -
+the agent may still research anything it likes.
 
-Split of responsibilities, same shape as scan.py/discovery.py:
-  * WHAT COUNTS AS A PROMISING GAP is the agent's: `strategy/screener-prompt.md`
-    is the judgment brief sent to the model as a system block. The agent owns it
-    under its normal evidence rules and can rewrite it as the screener's record
-    accumulates.
-  * THE MACHINERY stays here: batching, concurrency, the API contract, the
-    output schema, cost accounting and the budget guard. A prompt edit cannot
-    make this spend more, write elsewhere, or emit a different row shape.
+Why there is no API path (operator constraint, 2026-08-24): the operator will
+not spend outside the Claude subscription, so this file NEVER calls the
+Anthropic API and holds no API key. The screening judgment is produced by
+Haiku subagents that the cycle agent fans out with its own Task tool - they
+ride the session's plan, and their usage is subscription-billed. Anything that
+reintroduces a metered call belongs in journal/proposals.md, not here.
 
-If `strategy/screener-prompt.md` is missing or unreadable this falls back to a
-short built-in brief and says so loudly on stderr - a broken judgment file
-degrades ranking, it never silently stops the screen.
+Split of responsibilities, now three-way:
+  * THE MACHINERY is here: the stratified pre-filter, the strata bounds, the
+    batch files, the exact subagent prompt, the output schema, the daily batch
+    quota and the journal contract. None of it is reachable from a prompt edit.
+  * THE JUDGMENT is the agent's: `strategy/screener-prompt.md` is the brief
+    each subagent reads, and `strategy/screener-strata.json` tunes the strata
+    sizes within the code bounds below. Both are the agent's to rewrite from
+    the screener's own record.
+  * THE TRANSPORT is the cycle agent's Task fan-out: `prepare` writes what the
+    subagents read, the subagents write out-NN.json, `collect` reads it back.
+    This file is the two deterministic bookends and nothing in between.
+
+If `strategy/screener-strata.json` is missing or malformed this uses the
+built-in defaults and says so loudly on stderr - same rule as scan.py's
+discovery fallback. A broken tuning file degrades coverage, it never silently
+stops the screen.
 
 Two things this deliberately does NOT do:
   * It NEVER writes journal/forecasts.jsonl. Screener probabilities are cheap
@@ -35,129 +46,123 @@ STALE MIDS, not fillable prices. A large divergence means "worth a look", not
 "tradeable edge"; the live book (spread, depth) is still checked downstream by
 the normal research path before any bet.
 
+Row cost columns: `input_tokens`, `output_tokens` and `cost_usd` are always 0.
+Subagent usage is subscription-billed and is not metered here - the fields stay
+in the schema so the journal's shape is stable across the 2026-08-24 switch
+away from the metered API tier, and so a future metered path could fill them.
+
 Usage:
-  python3 core/scan.py | python3 core/screen.py          # normal cycle use
-  python3 core/screen.py --file candidates.jsonl
-  python3 core/screen.py --dry-run                       # contract check, no API
-Input:  scan.py candidate JSON lines on stdin or --file.
-Output: top-N rows (by divergence) as JSON lines on stdout; one row per
-        screened market appended to journal/screener.jsonl; a summary on stderr.
+  python3 core/scan.py --hours 336 --limit 800 | python3 core/screen.py prepare
+  python3 core/screen.py prepare --file candidates.jsonl
+  python3 core/screen.py prepare --dry-run     # header only, writes nothing
+  python3 core/screen.py collect --dir reports/screener-work/<stamp>
+Input:  scan.py candidate JSON lines on stdin or --file (prepare).
+Output: prepare prints a JSON header (work_dir, batches, screened_pool,
+        dropped_by_reason, subagent_prompt_template) on stdout and writes the
+        batch files under reports/screener-work/<UTCstamp>/ (gitignored).
+        collect prints the top-N rows by divergence as JSON lines on stdout,
+        appends one row per market to journal/screener.jsonl, and summarises
+        on stderr.
 
-Key: env ANTHROPIC_API_KEY, else ~/.config/phil/anthropic-api-key. NEVER store
-the key in the repo - journal and strategy are public.
+Quota: the day's cost is counted in BATCHES, not dollars, in
+journal/screener-quota.json - committed, so subagent load is public and
+survives container churn. `prepare` reserves the batches it writes before any
+subagent runs, so a cycle that crashes mid-fan-out still consumed its
+reservation; over-counting is the safe direction. Once the day's batches reach
+`max_batches_per_day` this exits 0 with an empty stdout: an exhausted quota
+must degrade the cycle, never kill it.
 
-Budget: cost is computed from the response's own usage counters at the Haiku
-pricing constants below and accumulated per UTC day in
-journal/screener-quota.json - committed, so spend is public and survives
-container churn. Once the day's spend reaches the budget this exits 0 before
-any API call: an exhausted budget must degrade the cycle, never kill it.
-`daily_budget_usd` is a tunable in config/protected.json; MAX_DAILY_BUDGET_USD
-here is the hard ceiling it is clamped to, so a config edit alone cannot raise
-spend past it (core/validate.py enforces the same ceiling in CI).
-
-The agent may call this freely but may not edit it; if the batching, the row
-schema or the budget guard are wrong, that is a journal/proposals.md entry.
+The agent may call this freely but may not edit it; if the strata, the row
+schema or the quota guard are wrong, that is a journal/proposals.md entry.
 """
 import argparse
-import concurrent.futures
 import datetime as dt
+import hashlib
 import json
-import os
 import pathlib
 import subprocess
 import sys
-import threading
 import time
-import urllib.error
-import urllib.request
 
-API_URL = "https://api.anthropic.com/v1/messages"
-ANTHROPIC_VERSION = "2023-06-01"
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 PROTECTED = json.loads((ROOT / "config" / "protected.json").read_text())
 PROMPT_FILE = ROOT / "strategy" / "screener-prompt.md"
+STRATA_FILE = ROOT / "strategy" / "screener-strata.json"
 LOG_FILE = ROOT / "journal" / "screener.jsonl"
 QUOTA_FILE = ROOT / "journal" / "screener-quota.json"
-KEY_FILE = pathlib.Path.home() / ".config" / "phil" / "anthropic-api-key"
+WORK_ROOT = ROOT / "reports" / "screener-work"
 
-MAX_WORKERS = 8
-HTTP_TIMEOUT_S = 60
-RETRIES = 3
-BACKOFF_S = 2.0
-MAX_RETRY_SLEEP_S = 60.0
-MAX_TOKENS_PER_MARKET = 200
-MAX_TOKENS_CEILING = 8000
+SCREENER_DEFAULTS = {"batch_size": 20, "top_n": 15, "max_batches_per_day": 150,
+                     "max_pool_after_strata": 400}
 
-# Hard ceiling on the config tunable. Raising it is a protected-core edit, by
-# design - same story as REAL_HARD_CEILINGS in core/validate.py.
-MAX_DAILY_BUDGET_USD = 20.0
+# Hard ceilings on the config tunables. Raising either is a protected-core
+# edit, by design - same story as REAL_HARD_CEILINGS in core/validate.py.
+MAX_POOL_CEILING = 400
+MAX_BATCHES_PER_DAY_CEILING = 300
 
-# Claude Haiku 4.5 list price, USD per million tokens (2026-08-24). Cache
-# writes are 1.25x base input for the default 5-minute TTL, cache reads 0.1x.
-# NOTE: Haiku 4.5's minimum cacheable prefix is 4096 tokens - a short system
-# prefix silently does not cache (both cache counters stay 0) and everything is
-# billed at PRICE_IN. The cache columns are logged so that is visible.
-PRICE_IN = 1.00
-PRICE_OUT = 5.00
-PRICE_CACHE_WRITE = 1.25
-PRICE_CACHE_READ = 0.10
-
-SCREENER_DEFAULTS = {"model": "claude-haiku-4-5", "batch_size": 20,
-                     "top_n": 15, "daily_budget_usd": 5.0}
+# The four strata, in the order they claim markets (a market lands in the
+# first stratum that takes it; later strata see only the remainder).
+#   closing_48h    - anything resolving inside CLOSING_WINDOW_H. Short fuse,
+#                    highest information turnover.
+#   top_liquidity  - deepest books. A gap here is a real disagreement.
+#   top_volume_24h - what is actually being traded right now.
+#   random_tail    - the long-tail audit lane. Without it the screen only ever
+#                    sees the markets the other three strata already like, and
+#                    can never learn that its own selection is the problem.
+# `min` is the floor a strategy/screener-strata.json edit may not go under and
+# `max` the default it may not go over: the agent can shrink a lane, and can
+# close every lane except the audit lane.
+CLOSING_WINDOW_H = 48
+STRATA_BOUNDS = {
+    "closing_48h": {"default": 80, "min": 0, "max": 80},
+    "top_liquidity": {"default": 120, "min": 0, "max": 120},
+    "top_volume_24h": {"default": 60, "min": 0, "max": 60},
+    "random_tail": {"default": 40, "min": 20, "max": 40},
+}
+STRATA_ORDER = ("closing_48h", "top_liquidity", "top_volume_24h", "random_tail")
 
 CONFIDENCES = {"low", "medium", "high"}
 
 REQUIRED_INPUT_FIELDS = ("market_id", "question", "outcomes", "outcome_prices")
 
-# Stable across every request and every cycle - no timestamps, no counts, no
-# per-batch text. This is the cached prefix; any byte that varies here costs
-# the whole system block its cache entry.
-PREAMBLE = """You are the screening tier of a prediction-market research \
-pipeline. You are shown a batch of live Polymarket markets. For each one, give \
-your quick honest probability for every outcome, how confident you are, and one \
-line of reasoning.
+DEFAULT_MODEL_LABEL = "subagent:haiku"
 
-You are NOT deciding trades. A downstream researcher spends real effort on the \
-markets whose probabilities differ most from the market price, so your job is \
-to be honestly calibrated and honestly uncertain - both a falsely confident \
-number and a lazy echo of the market price waste that effort.
+COLLECTED_MARKER = ".collected"
+
+# The exact text the cycle agent hands each Task subagent, one per batch file,
+# with {work_dir} already filled in and the literal NN left for the agent to
+# substitute. It carries the rules that used to be the API system preamble:
+# honest calibration, stale mids, no browsing, exact outcome names.
+SUBAGENT_PROMPT_TEMPLATE = """\
+You are the screening tier of a prediction-market research pipeline. Work from \
+the repository root. Do these three things, in order, and nothing else.
+
+1. Read {work_dir}/batch-NN.json. It holds {{"batch_id", "markets", "mids"}}; \
+"markets" is the batch, one object per market.
+2. Read strategy/screener-prompt.md. That is the judgment brief - what counts \
+as worth a researcher's next hour. Follow it.
+3. Use the Write tool to write a JSON array to {work_dir}/out-NN.json, one \
+object per market in "markets", every market exactly once:
+[{{"market_id": "<id exactly as given>", "prob": {{"<outcome name>": <0-1>, \
+...}}, "confidence": "low"|"medium"|"high", "reason": "<one short line>"}}]
 
 Rules:
-- Probabilities for a market's outcomes must be non-negative and sum to about 1.
-- The prices you are shown are stale mids. Do not copy them. If after thinking \
+- Use the exact outcome names given for that market. Probabilities must be \
+non-negative and sum to about 1.
+- You are NOT deciding trades. A downstream researcher spends real effort on \
+the markets whose probabilities differ most from the market price, so be \
+honestly calibrated and honestly uncertain - both a falsely confident number \
+and a lazy echo of the market price waste that effort.
+- The prices in the file are stale mids. Do not copy them. If after thinking \
 you genuinely agree with the price, say so with your own number and let the \
 divergence be small.
-- Use only what you already know plus the market text. You cannot browse. If \
-resolving the question needs information you do not have, that is exactly what \
-confidence "low" is for - say so in the reason.
+- Use only what you already know plus the market text. Do not browse, search \
+or fetch. If resolving the question needs information you do not have, that is \
+exactly what confidence "low" is for - say so in the reason.
 - confidence "high" means you would defend the number without further research.
-
-Output ONLY a JSON array, one object per market in the batch, no prose and no \
-code fences:
-[{"market_id": "<id as given>", "prob": {"<outcome name>": <0-1>, ...}, \
-"confidence": "low"|"medium"|"high", "reason": "<one short line>"}]
-
-Use the exact outcome names given for that market. Include every market in the \
-batch exactly once."""
-
-DEFAULT_BRIEF = """(built-in fallback brief - strategy/screener-prompt.md was \
-unreadable)
-
-Rank for research-worthiness, not for certainty. A large gap on a liquid, \
-well-defined market is worth more than a large gap on a thin or exotic one, \
-where the gap is usually your own ignorance. Be skeptical of your own \
-confidence on questions whose resolution source you cannot name. Known traps: \
-questions whose numbers read as already-settled for an event that has not \
-happened; provisional figures repeated by many outlets (that is one source, \
-not many); two different surveys reported on the same scale being treated as \
-interchangeable."""
-
-_lock = threading.Lock()
-_fatal = []
-
-
-class FatalAPIError(RuntimeError):
-    """A request the API will reject the same way every time (key, model, shape)."""
+- Write the file. Do not print the array, do not summarise it, do not explain \
+your reasoning. Your final message is one line: "wrote out-NN.json, <n> \
+markets"."""
 
 
 def utcnow():
@@ -168,21 +173,12 @@ def iso(ts):
     return ts.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def stamp(ts):
+    return ts.strftime("%Y%m%dT%H%M%SZ")
+
+
 def today():
     return time.strftime("%Y-%m-%d", time.gmtime())
-
-
-def api_key():
-    key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
-    if not key and KEY_FILE.is_file():
-        key = KEY_FILE.read_text().strip()
-    if not key:
-        sys.exit("ERROR: no ANTHROPIC_API_KEY in env and no "
-                 "~/.config/phil/anthropic-api-key.\n"
-                 "Operator has not provisioned the key on this runner - note "
-                 "'screener key not provisioned' in the cycle log, research "
-                 "unscreened candidates as before; do not work around.")
-    return key
 
 
 def screener_config():
@@ -194,35 +190,55 @@ def screener_config():
     out = dict(SCREENER_DEFAULTS)
     for k, v in SCREENER_DEFAULTS.items():
         got = cfg.get(k)
-        if isinstance(got, type(v)) or (isinstance(v, float)
-                                        and isinstance(got, (int, float))
-                                        and not isinstance(got, bool)):
+        if isinstance(got, int) and not isinstance(got, bool) and got > 0:
             out[k] = got
-    budget = float(out["daily_budget_usd"])
-    if budget > MAX_DAILY_BUDGET_USD:
-        print(f"screen: daily_budget_usd {budget} exceeds the protected ceiling "
-              f"{MAX_DAILY_BUDGET_USD}; clamping", file=sys.stderr)
-        budget = MAX_DAILY_BUDGET_USD
-    out["daily_budget_usd"] = budget
+        elif got is not None:
+            print(f"screen: config screener.{k} = {got!r} is not a positive "
+                  f"integer; using the default {v}", file=sys.stderr)
+    if out["max_pool_after_strata"] > MAX_POOL_CEILING:
+        print(f"screen: max_pool_after_strata {out['max_pool_after_strata']} "
+              f"exceeds the protected ceiling {MAX_POOL_CEILING}; clamping",
+              file=sys.stderr)
+        out["max_pool_after_strata"] = MAX_POOL_CEILING
+    if out["max_batches_per_day"] > MAX_BATCHES_PER_DAY_CEILING:
+        print(f"screen: max_batches_per_day {out['max_batches_per_day']} "
+              f"exceeds the protected ceiling {MAX_BATCHES_PER_DAY_CEILING}; "
+              f"clamping", file=sys.stderr)
+        out["max_batches_per_day"] = MAX_BATCHES_PER_DAY_CEILING
     return out
 
 
-def load_brief():
-    """Return (brief_text, prompt_rev). prompt_rev is 'default' on fallback."""
+def strata_sizes():
+    """Agent-tuned stratum sizes, clamped into the code bounds. Never raises."""
+    sizes = {k: b["default"] for k, b in STRATA_BOUNDS.items()}
     try:
-        text = PROMPT_FILE.read_text().strip()
-        if not text:
-            raise ValueError("file is empty")
+        raw = json.loads(STRATA_FILE.read_text())
+        if not isinstance(raw, dict):
+            raise ValueError(f"top level is {type(raw).__name__}, not an object")
     except Exception as e:  # noqa: BLE001 - any failure falls back, loudly
-        print(f"screen: strategy/screener-prompt.md unusable "
-              f"({type(e).__name__}: {e}); falling back to the built-in brief - "
-              f"screening judgment is degraded until it is fixed", file=sys.stderr)
-        return DEFAULT_BRIEF, "default"
-    return text, blob_rev(PROMPT_FILE)
+        print(f"screen: strategy/screener-strata.json unusable "
+              f"({type(e).__name__}: {e}); using the built-in strata sizes - "
+              f"coverage tuning is ignored until it is fixed", file=sys.stderr)
+        return sizes
+    for name, bounds in STRATA_BOUNDS.items():
+        got = raw.get(name)
+        if got is None:
+            continue
+        if not isinstance(got, int) or isinstance(got, bool):
+            print(f"screen: screener-strata.json {name} = {got!r} is not an "
+                  f"integer; keeping {sizes[name]}", file=sys.stderr)
+            continue
+        clamped = max(bounds["min"], min(bounds["max"], got))
+        if clamped != got:
+            print(f"screen: screener-strata.json {name} = {got} outside the "
+                  f"code bounds [{bounds['min']}, {bounds['max']}]; using "
+                  f"{clamped}", file=sys.stderr)
+        sizes[name] = clamped
+    return sizes
 
 
 def blob_rev(path):
-    """Git blob hash of the bytes actually sent, or 'unknown' outside a repo.
+    """Git blob hash of the bytes actually used, or 'unknown' outside a repo.
 
     `git hash-object` rather than `git rev-parse HEAD:<path>` on purpose: this
     log is the future training set, so the revision recorded must identify the
@@ -245,9 +261,9 @@ def load_quota():
                 return q
         except json.JSONDecodeError as e:
             print(f"screen: journal/screener-quota.json unreadable ({e}); "
-                  f"treating today as unspent", file=sys.stderr)
-    return {"day": today(), "spent_usd": 0.0, "calls": 0, "markets_screened": 0,
-            "input_tokens": 0, "output_tokens": 0, "last_request_utc": None}
+                  f"treating today as unused", file=sys.stderr)
+    return {"day": today(), "batches": 0, "markets_screened": 0,
+            "last_prepare_utc": None}
 
 
 def save_quota(q):
@@ -295,7 +311,7 @@ def mids_of(c):
 
 
 def brief_of(c):
-    """The per-market payload sent to the model. Kept small - 1,000 of these."""
+    """The per-market payload a subagent reads. Kept small - hundreds of these."""
     return {
         "market_id": str(c.get("market_id")),
         "question": c.get("question"),
@@ -312,50 +328,236 @@ def chunk(seq, size):
     return [seq[i:i + size] for i in range(0, len(seq), size)]
 
 
-def retry_after_s(headers):
-    try:
-        return float(headers.get("retry-after"))
-    except (TypeError, ValueError):
+def parse_end_date(value):
+    """Gamma endDate -> aware datetime, or None. Never raises."""
+    if not isinstance(value, str) or not value.strip():
         return None
+    text = value.strip().replace("Z", "+00:00")
+    try:
+        ts = dt.datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    return ts if ts.tzinfo else ts.replace(tzinfo=dt.timezone.utc)
 
 
-def anthropic_post(payload, key):
-    """POST /v1/messages with backoff. Raises FatalAPIError on non-retryables."""
-    body = json.dumps(payload).encode()
-    headers = {"x-api-key": key, "anthropic-version": ANTHROPIC_VERSION,
-               "content-type": "application/json"}
-    last = None
-    for attempt in range(RETRIES):
-        req = urllib.request.Request(API_URL, data=body, headers=headers,
-                                     method="POST")
-        try:
-            with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT_S) as resp:
-                return json.loads(resp.read().decode())
-        except urllib.error.HTTPError as e:
-            detail = e.read().decode(errors="replace")[:300]
-            if e.code != 429 and e.code < 500:
-                # 400/401/403/404 repeat identically - bad key, bad model id,
-                # bad request shape. Stop the whole run rather than fill the
-                # journal with one error row per market.
-                raise FatalAPIError(f"HTTP {e.code}: {detail}") from e
-            last = f"HTTP {e.code}: {detail}"
-            sleep_s = retry_after_s(e.headers) or BACKOFF_S * (2 ** attempt)
-        except Exception as e:  # noqa: BLE001 - transport hiccup, retry
-            last = f"{type(e).__name__}: {e}"
-            sleep_s = BACKOFF_S * (2 ** attempt)
-        if attempt == RETRIES - 1:
-            break
-        time.sleep(min(sleep_s, MAX_RETRY_SLEEP_S))
-    raise RuntimeError(f"POST {API_URL} failed after {RETRIES} tries: {last}")
+def num_of(c, field):
+    try:
+        return float(c.get(field) or 0)
+    except (TypeError, ValueError):
+        return 0.0
 
 
-def response_text(resp):
-    return "".join(b.get("text", "") for b in (resp.get("content") or [])
-                   if isinstance(b, dict) and b.get("type") == "text")
+def sample_key(seed, market_id):
+    """Deterministic per-run shuffle key, seeded on the prepare stamp.
+
+    Per-run (not per-day) on purpose: each FULL cycle draws a fresh random
+    tail, so the audit lane covers 4-6 x 40 distinct thin markets per day
+    instead of re-screening one draw of 40 all day.
+    """
+    return hashlib.sha256(f"{seed}:{market_id}".encode()).hexdigest()
+
+
+def stratify(candidates, sizes, pool_cap, now, seed):
+    """Pick the screened pool. Returns (pool, lane_of, strata_counts, dropped).
+
+    Strata claim markets in STRATA_ORDER; each sees only what earlier strata
+    left, so the pool is deduped by construction.
+    """
+    remaining = {str(c.get("market_id")): c for c in candidates}
+    horizon = now + dt.timedelta(hours=CLOSING_WINDOW_H)
+    picked, counts, dropped = {}, {}, {}
+
+    def take(name, ordered):
+        cap = sizes[name]
+        chosen = ordered[:cap]
+        counts[name] = {"eligible": len(ordered), "selected": len(chosen)}
+        if len(ordered) > len(chosen):
+            dropped[f"{name}_beyond_stratum_size"] = len(ordered) - len(chosen)
+        for c in chosen:
+            mid = str(c.get("market_id"))
+            picked[mid] = (c, name)
+            remaining.pop(mid, None)
+
+    closing = [c for c in remaining.values()
+               if (parse_end_date(c.get("end_date")) or horizon + dt.timedelta(1)) <= horizon]
+    closing.sort(key=lambda c: (parse_end_date(c.get("end_date")) or horizon,
+                                str(c.get("market_id"))))
+    take("closing_48h", closing)
+
+    by_liq = sorted(remaining.values(),
+                    key=lambda c: (-num_of(c, "liquidity"), str(c.get("market_id"))))
+    take("top_liquidity", by_liq)
+
+    by_vol = sorted(remaining.values(),
+                    key=lambda c: (-num_of(c, "volume_24h"), str(c.get("market_id"))))
+    take("top_volume_24h", by_vol)
+
+    tail = sorted(remaining.values(),
+                  key=lambda c: sample_key(seed, str(c.get("market_id"))))
+    take("random_tail", tail)
+
+    # Pool ceiling. Trim the biggest lane first and never below its floor, so a
+    # tight cap eats the bulk strata before it touches the audit lane.
+    trimmed = 0
+    selected = {n: [mid for mid, (_c, s) in picked.items() if s == n]
+                for n in STRATA_ORDER}
+    while sum(len(v) for v in selected.values()) > pool_cap:
+        lane = max(STRATA_ORDER,
+                   key=lambda n: (len(selected[n]) - STRATA_BOUNDS[n]["min"], n))
+        if len(selected[lane]) <= STRATA_BOUNDS[lane]["min"]:
+            break  # everything left is floor; the cap cannot close the lanes
+        dropped_mid = selected[lane].pop()
+        picked.pop(dropped_mid, None)
+        counts[lane]["selected"] -= 1
+        trimmed += 1
+    if trimmed:
+        dropped["pool_cap_trim"] = trimmed
+
+    # Interleave the lanes round-robin, each keeping its own rank order. Two
+    # reasons, both about failure modes: a batch trimmed off the end by the
+    # daily quota then costs every lane a little instead of closing the audit
+    # lane outright, and one subagent that dies takes a slice of each lane
+    # rather than all of one.
+    lanes = {n: [picked[mid][0] for mid in selected[n]] for n in STRATA_ORDER}
+    pool = []
+    for i in range(max((len(v) for v in lanes.values()), default=0)):
+        for name in STRATA_ORDER:
+            if i < len(lanes[name]):
+                pool.append(lanes[name][i])
+    lane_of = {str(c.get("market_id")): s for c, s in picked.values()}
+    return pool, lane_of, counts, dropped
+
+
+def recount_selected(pool, lane_of, counts):
+    """Re-derive each stratum's selected count from the pool that survived."""
+    for name in STRATA_ORDER:
+        counts.setdefault(name, {"eligible": 0, "selected": 0})["selected"] = 0
+    for c in pool:
+        lane = lane_of.get(str(c.get("market_id")))
+        if lane:
+            counts[lane]["selected"] += 1
+    return counts
+
+
+def write_work_dir(work_dir, batches, sizes, counts, dropped, cfg, prompt_rev, ts):
+    work_dir.mkdir(parents=True, exist_ok=True)
+    written = []
+    for i, batch in enumerate(batches, 1):
+        nn = f"{i:02d}"
+        payload = {
+            "batch_id": f"{work_dir.name}-{nn}",
+            "markets": [brief_of(c) for c in batch],
+            "mids": {str(c.get("market_id")): mids_of(c) for c in batch},
+        }
+        (work_dir / f"batch-{nn}.json").write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
+        written.append({"nn": nn, "batch_file": f"batch-{nn}.json",
+                        "out_file": f"out-{nn}.json", "markets": len(batch)})
+    manifest = {
+        "created_utc": iso(ts), "work_dir": str(work_dir.relative_to(ROOT)),
+        "batch_size": cfg["batch_size"], "top_n": cfg["top_n"],
+        "prompt_rev": prompt_rev, "strata_sizes": sizes, "strata": counts,
+        "dropped_by_reason": dropped, "batches": written,
+    }
+    (work_dir / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    return written
+
+
+def cmd_prepare(args):
+    cfg = screener_config()
+    if args.batch_size is not None:
+        cfg["batch_size"] = max(1, args.batch_size)
+    if args.top_n is not None:
+        cfg["top_n"] = max(1, args.top_n)
+
+    candidates, n_bad = read_candidates(args.file)
+    if n_bad:
+        print(f"screen: {n_bad} input line(s) failed the candidate contract",
+              file=sys.stderr)
+    if not candidates:
+        print("screen: no valid candidates on input; nothing to screen",
+              file=sys.stderr)
+        return 0
+
+    quota = load_quota()
+    used = int(quota.get("batches") or 0)
+    cap = cfg["max_batches_per_day"]
+    if used >= cap:
+        print(f"screen: daily screener batch quota exhausted ({used} / {cap} "
+              f"batches, UTC day {quota['day']}) - screening skipped, no "
+              f"subagents to spawn. Research unscreened candidates as before "
+              f"and log 'screener quota exhausted'; do not work around.",
+              file=sys.stderr)
+        return 0
+
+    sizes = strata_sizes()
+    now = utcnow()
+    pool, lane_of, counts, dropped = stratify(
+        candidates, sizes, cfg["max_pool_after_strata"], now, stamp(now))
+    if n_bad:
+        dropped["unparseable_input_line"] = n_bad
+
+    batches = chunk(pool, cfg["batch_size"])
+    if len(batches) > cap - used:
+        cut = batches[cap - used:]
+        batches = batches[:cap - used]
+        dropped["daily_batch_quota"] = sum(len(b) for b in cut)
+        print(f"screen: only {cap - used} of {cap} daily batches left; "
+              f"dropping {dropped['daily_batch_quota']} market(s) from this "
+              f"screen", file=sys.stderr)
+    pool = [c for b in batches for c in b]
+    counts = recount_selected(pool, lane_of, counts)
+
+    prompt_rev = blob_rev(PROMPT_FILE)
+    work_dir = WORK_ROOT / stamp(now)
+    rel_dir = str(work_dir.relative_to(ROOT))
+    template = SUBAGENT_PROMPT_TEMPLATE.format(work_dir=rel_dir)
+
+    if args.dry_run:
+        header = {"dry_run": True, "work_dir": rel_dir, "batch_count": len(batches),
+                  "batches": [{"nn": f"{i:02d}", "batch_file": f"batch-{i:02d}.json",
+                               "out_file": f"out-{i:02d}.json", "markets": len(b)}
+                              for i, b in enumerate(batches, 1)],
+                  "screened_pool": len(pool), "candidates_in": len(candidates),
+                  "strata": counts, "dropped_by_reason": dropped,
+                  "day_batches_used": used, "max_batches_per_day": cap,
+                  "prompt_rev": prompt_rev,
+                  "subagent_prompt_template": template}
+        print(json.dumps(header, indent=2))
+        print(f"screen: dry run - would screen {len(pool)} of {len(candidates)} "
+              f"candidates in {len(batches)} batches; nothing written, no quota "
+              f"reserved", file=sys.stderr)
+        return 0
+
+    if not batches:
+        print("screen: stratification left no markets to screen", file=sys.stderr)
+        return 0
+
+    written = write_work_dir(work_dir, batches, sizes, counts, dropped, cfg,
+                             prompt_rev, now)
+
+    # Reserve before any subagent runs: a cycle that dies mid-fan-out has still
+    # spent the reservation. Over-counting is the safe direction.
+    quota["batches"] = used + len(batches)
+    quota["markets_screened"] = int(quota.get("markets_screened") or 0) + len(pool)
+    quota["last_prepare_utc"] = iso(now)
+    save_quota(quota)
+
+    header = {"work_dir": rel_dir, "batch_count": len(written), "batches": written,
+              "screened_pool": len(pool), "candidates_in": len(candidates),
+              "strata": counts, "dropped_by_reason": dropped,
+              "day_batches_used": quota["batches"], "max_batches_per_day": cap,
+              "prompt_rev": prompt_rev, "subagent_prompt_template": template}
+    print(json.dumps(header, indent=2))
+    print(f"screen: prepared {len(pool)} markets in {len(written)} batches under "
+          f"{rel_dir}; day batches {quota['batches']}/{cap}. Spawn one Task "
+          f"subagent per batch with subagent_prompt_template, then run: "
+          f"python3 core/screen.py collect --dir {rel_dir}", file=sys.stderr)
+    return 0
 
 
 def parse_answers(text):
-    """Model text -> {market_id: answer}. Raises ValueError if unparseable."""
+    """Subagent out file -> {market_id: answer}. Raises ValueError if unusable."""
     t = (text or "").strip()
     if t.startswith("```"):
         t = t.split("\n", 1)[-1]
@@ -367,12 +569,12 @@ def parse_answers(text):
     except json.JSONDecodeError:
         start, end = t.find("["), t.rfind("]")
         if start < 0 or end <= start:
-            raise ValueError("no JSON array in model response") from None
+            raise ValueError("no JSON array in the out file") from None
         data = json.loads(t[start:end + 1])
     if isinstance(data, dict):
         data = [data]
     if not isinstance(data, list):
-        raise ValueError(f"model returned {type(data).__name__}, not a list")
+        raise ValueError(f"out file holds {type(data).__name__}, not a list")
     out = {}
     for item in data:
         if isinstance(item, dict) and item.get("market_id") is not None:
@@ -380,20 +582,10 @@ def parse_answers(text):
     return out
 
 
-def cost_of(usage):
-    n_in = int(usage.get("input_tokens") or 0)
-    n_out = int(usage.get("output_tokens") or 0)
-    n_write = int(usage.get("cache_creation_input_tokens") or 0)
-    n_read = int(usage.get("cache_read_input_tokens") or 0)
-    usd = (n_in * PRICE_IN + n_out * PRICE_OUT + n_write * PRICE_CACHE_WRITE
-           + n_read * PRICE_CACHE_READ) / 1e6
-    return usd, n_in + n_write + n_read, n_out
-
-
-def row_base(c, ts, model, prompt_rev, batch_id):
-    return {"ts": ts, "market_id": str(c.get("market_id")),
-            "question": c.get("question"), "model": model,
-            "prompt_rev": prompt_rev, "probs": None, "mids": mids_of(c),
+def row_base(market, mids, ts, model, prompt_rev, batch_id):
+    return {"ts": ts, "market_id": str(market.get("market_id")),
+            "question": market.get("question"), "model": model,
+            "prompt_rev": prompt_rev, "probs": None, "mids": mids,
             "divergence": None, "confidence": None, "reason": None,
             "batch_id": batch_id, "input_tokens": 0, "output_tokens": 0,
             "cost_usd": 0.0}
@@ -402,7 +594,7 @@ def row_base(c, ts, model, prompt_rev, batch_id):
 def grade_answer(row, answer):
     """Fill probs/divergence/confidence/reason, or set screen_error. No raises."""
     if not isinstance(answer, dict):
-        row["screen_error"] = "no answer for this market in the batch response"
+        row["screen_error"] = "no answer for this market in the batch out file"
         return row
     probs, mids = {}, row["mids"]
     raw = answer.get("prob")
@@ -422,7 +614,7 @@ def grade_answer(row, answer):
     row["probs"] = probs
     shared = set(probs) & set(mids)
     if not shared:
-        row["screen_error"] = ("model outcome names match none of the market's "
+        row["screen_error"] = ("subagent outcome names match none of the market's "
                                f"outcomes ({sorted(probs)} vs {sorted(mids)})")
         return row
     row["divergence"] = round(max(abs(probs[o] - mids[o]) for o in shared), 4)
@@ -433,172 +625,92 @@ def grade_answer(row, answer):
     return row
 
 
-def screen_batch(batch, batch_id, key, cfg, brief, prompt_rev, budget_state):
-    """One API call over `batch`. Returns (rows, spend_usd, called)."""
-    ts = iso(utcnow())
-    rows = [row_base(c, ts, cfg["model"], prompt_rev, batch_id) for c in batch]
-
-    with _lock:
-        if _fatal:
-            return [], 0.0, False
-        if budget_state["spent"] >= budget_state["budget"]:
-            return [], 0.0, False
-
-    payload = {
-        "model": cfg["model"],
-        "max_tokens": min(MAX_TOKENS_CEILING, MAX_TOKENS_PER_MARKET * len(batch)),
-        "temperature": 0,
-        "system": [
-            {"type": "text", "text": PREAMBLE},
-            # The breakpoint sits on the LAST system block so the cached prefix
-            # covers the preamble AND the judgment brief. Both are stable for
-            # the whole run; marking only the preamble would leave the brief
-            # billed at full price on every batch.
-            {"type": "text", "text": brief,
-             "cache_control": {"type": "ephemeral"}},
-        ],
-        "messages": [{"role": "user", "content": json.dumps(
-            {"markets": [brief_of(c) for c in batch]}, ensure_ascii=False)}],
-    }
-
+def load_batch_file(path):
+    """Read one batch-NN.json. Returns (batch_id, markets, mids) or None."""
     try:
-        resp = anthropic_post(payload, key)
-    except FatalAPIError as e:
-        with _lock:
-            _fatal.append(str(e))
-        return [], 0.0, False
-    except RuntimeError as e:
-        for row in rows:
-            row["screen_error"] = f"api call failed: {e}"
-        return rows, 0.0, False
-
-    spend, n_in, n_out = cost_of(resp.get("usage") or {})
-    with _lock:
-        budget_state["spent"] += spend
-    share_in = round(n_in / len(batch))
-    share_out = round(n_out / len(batch))
-    share_cost = round(spend / len(batch), 8)
-    for row in rows:
-        row["input_tokens"] = share_in
-        row["output_tokens"] = share_out
-        row["cost_usd"] = share_cost
-
-    try:
-        answers = parse_answers(response_text(resp))
-    except (ValueError, json.JSONDecodeError) as e:
-        for row in rows:
-            row["screen_error"] = f"unparseable batch response: {e}"
-        return rows, spend, True
-
-    return ([grade_answer(row, answers.get(row["market_id"])) for row in rows],
-            spend, True)
+        data = json.loads(path.read_text())
+        markets = data.get("markets")
+        if not isinstance(markets, list):
+            raise ValueError("'markets' is not a list")
+    except Exception as e:  # noqa: BLE001 - a corrupt batch file is skipped, loudly
+        print(f"screen: {path.name} unreadable ({type(e).__name__}: {e}); "
+              f"batch skipped", file=sys.stderr)
+        return None
+    mids = data.get("mids") if isinstance(data.get("mids"), dict) else {}
+    return str(data.get("batch_id") or path.stem), markets, mids
 
 
-def dry_run(candidates, cfg, prompt_rev, brief):
-    batches = chunk(candidates, cfg["batch_size"])
-    # ~4 chars per token, plus the fixed system prefix on every call.
-    prefix_tok = (len(PREAMBLE) + len(brief)) / 4
-    est_in = sum(prefix_tok + len(json.dumps({"markets": [brief_of(c) for c in b]})) / 4
-                 for b in batches)
-    est_out = 60 * len(candidates)
-    est_cost = (est_in * PRICE_IN + est_out * PRICE_OUT) / 1e6
-    q = load_quota()
-    print(json.dumps({
-        "dry_run": True, "candidates": len(candidates), "batches": len(batches),
-        "batch_size": cfg["batch_size"], "top_n": cfg["top_n"],
-        "model": cfg["model"], "prompt_rev": prompt_rev,
-        "est_input_tokens": round(est_in), "est_output_tokens": est_out,
-        "est_cost_usd": round(est_cost, 4),
-        "day_spent_usd": round(float(q.get("spent_usd") or 0), 4),
-        "daily_budget_usd": cfg["daily_budget_usd"],
-        "sample_market_ids": [str(c.get("market_id")) for c in candidates[:5]],
-    }, indent=2))
-    print(f"screen: dry run - would screen {len(candidates)} markets in "
-          f"{len(batches)} batches for about ${est_cost:.2f}; nothing written",
-          file=sys.stderr)
-
-
-def main():
-    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--file", default=None,
-                    help="read scan candidates from this file instead of stdin")
-    ap.add_argument("--dry-run", action="store_true",
-                    help="validate the input contract and estimate cost; no API "
-                         "calls, nothing written")
-    ap.add_argument("--batch-size", type=int, default=None,
-                    help="override config screener.batch_size")
-    ap.add_argument("--top-n", type=int, default=None,
-                    help="override config screener.top_n")
-    args = ap.parse_args()
-
+def cmd_collect(args):
     cfg = screener_config()
-    if args.batch_size is not None:
-        cfg["batch_size"] = max(1, args.batch_size)
     if args.top_n is not None:
         cfg["top_n"] = max(1, args.top_n)
 
-    candidates, n_bad = read_candidates(args.file)
-    if n_bad:
-        print(f"screen: {n_bad} input line(s) failed the candidate contract",
-              file=sys.stderr)
-    if not candidates:
-        print("screen: no valid candidates on input; nothing to screen",
-              file=sys.stderr)
-        return 0
-
-    brief, prompt_rev = load_brief()
-
-    if args.dry_run:
-        dry_run(candidates, cfg, prompt_rev, brief)
-        return 0
-
-    quota = load_quota()
-    day_spent = float(quota.get("spent_usd") or 0.0)
-    if day_spent >= cfg["daily_budget_usd"]:
-        print(f"screen: daily screener budget exhausted "
-              f"(${day_spent:.2f} / ${cfg['daily_budget_usd']:.2f}, UTC day "
-              f"{quota['day']}) - screening skipped, no API call made. Research "
-              f"unscreened candidates as before and log 'screener budget "
-              f"exhausted'; do not work around.", file=sys.stderr)
-        return 0
-
-    key = api_key()
-    batches = chunk(candidates, cfg["batch_size"])
-    budget_state = {"spent": 0.0, "budget": cfg["daily_budget_usd"] - day_spent}
-
-    rows, calls = [], 0
-    with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
-        futures = [pool.submit(screen_batch, b, f"{iso(utcnow())}-{i}", key, cfg,
-                               brief, prompt_rev, budget_state)
-                   for i, b in enumerate(batches)]
-        for fut in concurrent.futures.as_completed(futures):
-            got, _spend, called = fut.result()
-            rows.extend(got)
-            calls += 1 if called else 0
-
-    spent = budget_state["spent"]
-    if rows:
-        with LOG_FILE.open("a") as fh:
-            for row in rows:
-                fh.write(json.dumps(row) + "\n")
-    if calls:
-        quota["spent_usd"] = round(day_spent + spent, 8)
-        quota["calls"] = int(quota.get("calls") or 0) + calls
-        quota["markets_screened"] = int(quota.get("markets_screened") or 0) + len(rows)
-        quota["input_tokens"] = int(quota.get("input_tokens") or 0) + \
-            sum(r["input_tokens"] for r in rows)
-        quota["output_tokens"] = int(quota.get("output_tokens") or 0) + \
-            sum(r["output_tokens"] for r in rows)
-        quota["last_request_utc"] = iso(utcnow())
-        save_quota(quota)
-
-    if _fatal:
-        print(f"screen: ABORTED - the API rejected the request and will keep "
-              f"rejecting it: {_fatal[0]}\n"
-              f"screen: check screener.model in config/protected.json and the "
-              f"ANTHROPIC_API_KEY on this runner. {len(rows)} row(s) logged.",
+    work_dir = pathlib.Path(args.dir)
+    if not work_dir.is_absolute():
+        work_dir = ROOT / work_dir
+    if not work_dir.is_dir():
+        print(f"screen: {args.dir} is not a directory - nothing to collect",
               file=sys.stderr)
         return 1
+    marker = work_dir / COLLECTED_MARKER
+    if marker.is_file():
+        print(f"screen: {args.dir} was already collected "
+              f"({marker.read_text().strip()}) - refusing to append "
+              f"journal/screener.jsonl twice. Re-run prepare for a fresh "
+              f"screen; do not delete the marker.", file=sys.stderr)
+        return 1
+
+    batch_files = sorted(work_dir.glob("batch-*.json"))
+    if not batch_files:
+        print(f"screen: no batch-NN.json under {args.dir}", file=sys.stderr)
+        return 1
+
+    ts = iso(utcnow())
+    prompt_rev = blob_rev(PROMPT_FILE)
+    rows, n_batches, expected = [], 0, 0
+    for bf in batch_files:
+        loaded = load_batch_file(bf)
+        if loaded is None:
+            continue
+        batch_id, markets, mids_map = loaded
+        n_batches += 1
+        expected += len(markets)
+        out_path = work_dir / bf.name.replace("batch-", "out-", 1)
+        answers, out_err = {}, None
+        if not out_path.is_file():
+            out_err = f"subagent wrote no {out_path.name}"
+        else:
+            try:
+                answers = parse_answers(out_path.read_text())
+            except Exception as e:  # noqa: BLE001 - a bad out file is per-row error
+                out_err = f"unparseable {out_path.name}: {type(e).__name__}: {e}"
+        if out_err:
+            print(f"screen: {out_err}", file=sys.stderr)
+        for m in markets:
+            if not isinstance(m, dict):
+                continue
+            mid = str(m.get("market_id"))
+            mids = mids_map.get(mid)
+            if not isinstance(mids, dict):
+                mids = m.get("market_prices") if isinstance(
+                    m.get("market_prices"), dict) else {}
+            row = row_base(m, mids, ts, args.model_label, prompt_rev, batch_id)
+            if out_err:
+                row["screen_error"] = out_err
+                rows.append(row)
+            else:
+                rows.append(grade_answer(row, answers.get(mid)))
+
+    if not rows:
+        print(f"screen: {args.dir} held no readable markets; nothing logged",
+              file=sys.stderr)
+        return 1
+
+    with LOG_FILE.open("a") as fh:
+        for row in rows:
+            fh.write(json.dumps(row) + "\n")
+    marker.write_text(f"collected {ts} - {len(rows)} rows appended to "
+                      f"journal/screener.jsonl\n")
 
     ranked = sorted((r for r in rows if r.get("divergence") is not None),
                     key=lambda r: r["divergence"], reverse=True)
@@ -610,11 +722,43 @@ def main():
     if n_err:
         print(f"screen: {n_err} market(s) came back malformed (see screen_error "
               f"in journal/screener.jsonl)", file=sys.stderr)
-    day_total = day_spent + spent
-    print(f"screen: screened {len(rows)} markets in {calls} batches, "
-          f"escalated {len(escalated)}, spent ${spent:.4f}, day total "
-          f"${day_total:.4f} / ${cfg['daily_budget_usd']:.2f}", file=sys.stderr)
+    quota = load_quota()
+    print(f"screen: collected {len(ranked)}/{expected} markets from {n_batches} "
+          f"batches, escalated {len(escalated)}, day batches "
+          f"{int(quota.get('batches') or 0)}/{cfg['max_batches_per_day']}",
+          file=sys.stderr)
     return 0
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    sub = ap.add_subparsers(dest="cmd", required=True)
+
+    p = sub.add_parser("prepare", help="stratify, write batch files and the "
+                                       "subagent prompt; reserve the quota")
+    p.add_argument("--file", default=None,
+                   help="read scan candidates from this file instead of stdin")
+    p.add_argument("--dry-run", action="store_true",
+                   help="print the header only; nothing written, no quota reserved")
+    p.add_argument("--batch-size", type=int, default=None,
+                   help="override config screener.batch_size")
+    p.add_argument("--top-n", type=int, default=None,
+                   help="override config screener.top_n")
+    p.set_defaults(func=cmd_prepare)
+
+    c = sub.add_parser("collect", help="read the subagents' out files, log rows "
+                                       "and rank by divergence")
+    c.add_argument("--dir", required=True,
+                   help="the work dir prepare printed (reports/screener-work/<stamp>)")
+    c.add_argument("--model-label", default=DEFAULT_MODEL_LABEL,
+                   help=f"value for the row's model field (default "
+                        f"{DEFAULT_MODEL_LABEL})")
+    c.add_argument("--top-n", type=int, default=None,
+                   help="override config screener.top_n")
+    c.set_defaults(func=cmd_collect)
+
+    args = ap.parse_args()
+    return args.func(args)
 
 
 if __name__ == "__main__":

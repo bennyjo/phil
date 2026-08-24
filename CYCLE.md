@@ -106,19 +106,32 @@ Every invocation runs as one of three ticks:
      entries, and grade skip reasons against settled forecast outcomes).
    - Commit: `git add -A && git commit -m "retro: <one-line lesson>"`.
 4. **Scan & screen**: `python3 core/scan.py --hours 336 --limit 800 |
-   python3 core/screen.py` — queries come from `strategy/discovery.py`, which
-   is mine to edit. Read scan's stderr: it reports each query's yield, and says
-   loudly if my discovery module was unusable and it fell back. If a query is
-   returning nothing useful, fix the query rather than lowering my standards.
-   Then read screen's stderr summary (screened X, escalated N, spent $Y, quota
-   $Z): the screener scores every scanned market for price-vs-estimate
-   divergence on a cheap model. Research allocation in step 5 STARTS from its
-   top divergences - but the screener ranks, it does not gate: watch items, the
-   mechanical-econ calendar and the sibling census still claim their research
-   slots under the existing rules. The funnel line gains three mandatory
-   fields: `screened`, `escalated`, `screener_spend`. If the screener is
-   budget-exhausted or errors, fall back to the current unscreened selection
-   and say so in the funnel line.
+   python3 core/screen.py prepare` — queries come from `strategy/discovery.py`,
+   which is mine to edit. Read scan's stderr: it reports each query's yield, and
+   says loudly if my discovery module was unusable and it fell back. If a query
+   is returning nothing useful, fix the query rather than lowering my standards.
+   Then screen the pool with my own subagents - there is no API path, the
+   screening judgment runs on the subscription:
+   - Read `prepare`'s JSON header on stdout: `work_dir`, `batches` (one entry
+     per batch file), `screened_pool`, `dropped_by_reason`, and
+     `subagent_prompt_template`. `strategy/screener-strata.json` tunes which
+     markets reach the pool; `dropped_by_reason` says what the strata cut.
+   - Spawn ONE Task subagent PER BATCH FILE, all in parallel in a single
+     message (model `haiku` when the Task tool lets me choose it, otherwise the
+     default). Give each subagent exactly `subagent_prompt_template` with the
+     literal `NN` replaced by that batch's `nn`, and nothing else. Each writes
+     `<work_dir>/out-NN.json` itself; I do not relay its answers.
+   - When every subagent has finished: `python3 core/screen.py collect --dir
+     <work_dir>`. It validates the out files, computes divergence, appends
+     `journal/screener.jsonl`, and prints the top rows plus a stderr summary
+     (collected X/Y, escalated N, day batches Q/CAP).
+   Research allocation in step 5 STARTS from collect's top divergences - but
+   the screener ranks, it does not gate: watch items, the mechanical-econ
+   calendar and the sibling census still claim their research slots under the
+   existing rules. The funnel line gains three mandatory fields: `screened`,
+   `escalated`, `screener_batches`. If `prepare` reports quota exhaustion, the
+   Task tool is unavailable, or `collect` yields nothing, fall back to the
+   current unscreened selection and say so in the funnel line.
 5. **Select & research**: per `strategy/playbook.md`, pick candidates worth
    researching (respect `risk.json` per-category limits). Research each with
    web search / fetches. Form your estimate before anchoring on the price.

@@ -77,7 +77,7 @@ for i in $(seq 1 "$CYCLES"); do
 
   CMD=(claude -p "$PROMPT"
        --allowedTools "Read" "Glob" "Grep" "WebSearch" "WebFetch"
-         "Edit" "Write"
+         "Edit" "Write" "Task"
          "Bash(python3 core/*)" "Bash(git add:*)" "Bash(git commit:*)"
          "Bash(git rev-parse:*)" "Bash(git log:*)" "Bash(git diff:*)"
          "Bash(git fetch:*)" "Bash(git checkout -B main origin/main)"

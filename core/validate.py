@@ -12,7 +12,7 @@ Checks that an unattended cycle cannot have left the repo broken or unsafe:
   - the agent's editable sizing policy stays inside the protected caps
   - journal/ledger.jsonl is well-formed and every row respects the caps
   - journal/forecasts.jsonl (stake-free forecasts) rows are well-formed
-  - the screener block stays inside its hard budget ceiling, and
+  - the screener block stays inside its hard batch/pool ceilings, and
     journal/screener-quota.json / screener.jsonl are well-formed
   - every Python file under core/ and strategy/ still compiles
 
@@ -71,10 +71,17 @@ def check_iso_z(relpath, field, value):
 KNOWN_EDGE_CLASSES = {"info-race", "cross-market", "book-devig", "other"}
 REAL_HARD_CEILINGS = {"max_stake_usd": 2.0, "daily_stake_cap_usd": 10.0,
                       "max_open_positions": 20}
-# Same story for the screening tier's LLM spend: the config value is a tunable,
-# this is the ceiling it may not pass. core/screen.py clamps to the same number.
-SCREENER_BUDGET_CEILING_USD = 20.0
-SCREENER_INT_RANGES = {"batch_size": (1, 50), "top_n": (1, 50)}
+# Same story for the screening tier's load. Screening runs on subagents the
+# cycle agent fans out, so the day's cost is batches, not dollars: these are the
+# ceilings the config tunables may not pass, and core/screen.py clamps to the
+# same numbers.
+SCREENER_MAX_BATCHES_CEILING = 300
+SCREENER_POOL_CEILING = 400
+SCREENER_INT_RANGES = {
+    "batch_size": (1, 50), "top_n": (1, 50),
+    "max_batches_per_day": (1, SCREENER_MAX_BATCHES_CEILING),
+    "max_pool_after_strata": (50, SCREENER_POOL_CEILING),
+}
 
 protected = load_json("config/protected.json")
 if protected:
@@ -109,11 +116,9 @@ if protected:
     screener = protected.get("screener")
     if not isinstance(screener, dict):
         err("config/protected.json: the 'screener' block is missing - "
-            "core/screen.py needs model/batch_size/top_n/daily_budget_usd")
+            "core/screen.py needs batch_size/top_n/max_batches_per_day/"
+            "max_pool_after_strata")
     else:
-        model = screener.get("model")
-        if not (isinstance(model, str) and model.strip()):
-            err("config/protected.json: screener.model must be a non-empty string")
         for field, (low, high) in SCREENER_INT_RANGES.items():
             v = screener.get(field)
             if not isinstance(v, int) or isinstance(v, bool):
@@ -121,16 +126,8 @@ if protected:
                     f"integer")
             elif not low <= v <= high:
                 err(f"config/protected.json: screener.{field} = {v} outside "
-                    f"[{low}, {high}]")
-        budget = screener.get("daily_budget_usd")
-        if not isinstance(budget, (int, float)) or isinstance(budget, bool) \
-                or budget <= 0:
-            err("config/protected.json: screener.daily_budget_usd missing or not "
-                "a positive number")
-        elif budget > SCREENER_BUDGET_CEILING_USD:
-            err(f"config/protected.json: screener.daily_budget_usd = {budget} "
-                f"exceeds the hard ceiling {SCREENER_BUDGET_CEILING_USD} "
-                f"(raising it requires editing protected core, deliberately)")
+                    f"[{low}, {high}] (raising the ceiling requires editing "
+                    f"protected core, deliberately)")
 
 risk = load_json("strategy/risk.json")
 if risk and protected:
@@ -211,11 +208,14 @@ screener_quota_path = ROOT / "journal" / "screener-quota.json"
 if screener_quota_path.exists():
     quota = load_json("journal/screener-quota.json")
     if quota is not None:
-        spent = quota.get("spent_usd")
-        if not isinstance(spent, (int, float)) or isinstance(spent, bool):
-            err("screener-quota.json: spent_usd missing or not numeric")
-        elif spent < 0:
-            err(f"screener-quota.json: spent_usd {spent} is negative")
+        day = quota.get("day")
+        if not (isinstance(day, str) and day.strip()):
+            err("screener-quota.json: day missing or not a string")
+        batches = quota.get("batches")
+        if not isinstance(batches, int) or isinstance(batches, bool):
+            err("screener-quota.json: batches missing or not an integer")
+        elif batches < 0:
+            err(f"screener-quota.json: batches {batches} is negative")
 
 screener_path = ROOT / "journal" / "screener.jsonl"
 if screener_path.exists():

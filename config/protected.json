@@ -12,11 +12,11 @@
   "max_entry_price": 0.95,
   "min_entry_price": 0.02,
   "screener": {
-    "_comment": "Tunables for the cheap screening tier (core/screen.py). The daily_budget_usd hard ceiling lives in core/validate.py and core/screen.py; raising it is a protected-core edit by design.",
-    "model": "claude-haiku-4-5-20251001",
+    "_comment": "Tunables for the screening tier (core/screen.py). Screening judgment comes from Haiku subagents the cycle agent fans out with its Task tool, so the day's cost is counted in batches, not dollars - there is no API path and no model field. The max_batches_per_day and max_pool_after_strata hard ceilings live in core/validate.py and core/screen.py; raising either is a protected-core edit by design.",
     "batch_size": 20,
     "top_n": 15,
-    "daily_budget_usd": 5.0
+    "max_batches_per_day": 150,
+    "max_pool_after_strata": 400
   },
   "real_trading_enabled": true,
   "real": {
