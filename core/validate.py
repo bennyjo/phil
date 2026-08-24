@@ -12,6 +12,8 @@ Checks that an unattended cycle cannot have left the repo broken or unsafe:
   - the agent's editable sizing policy stays inside the protected caps
   - journal/ledger.jsonl is well-formed and every row respects the caps
   - journal/forecasts.jsonl (stake-free forecasts) rows are well-formed
+  - the screener block stays inside its hard budget ceiling, and
+    journal/screener-quota.json / screener.jsonl are well-formed
   - every Python file under core/ and strategy/ still compiles
 
 Usage: python3 core/validate.py
@@ -33,6 +35,12 @@ LEDGER_STATUSES = {"open", "won", "lost", "void"}
 FORECAST_REQUIRED = {
     "id", "ts", "market_id", "question", "outcome", "token_id",
     "est_prob", "market_prob_at_record", "category", "skip_reason", "status",
+}
+
+SCREENER_REQUIRED = {
+    "ts", "market_id", "question", "model", "prompt_rev", "probs", "mids",
+    "divergence", "confidence", "reason", "batch_id", "input_tokens",
+    "output_tokens", "cost_usd",
 }
 
 errors = []
@@ -63,6 +71,10 @@ def check_iso_z(relpath, field, value):
 KNOWN_EDGE_CLASSES = {"info-race", "cross-market", "book-devig", "other"}
 REAL_HARD_CEILINGS = {"max_stake_usd": 2.0, "daily_stake_cap_usd": 10.0,
                       "max_open_positions": 20}
+# Same story for the screening tier's LLM spend: the config value is a tunable,
+# this is the ceiling it may not pass. core/screen.py clamps to the same number.
+SCREENER_BUDGET_CEILING_USD = 20.0
+SCREENER_INT_RANGES = {"batch_size": (1, 50), "top_n": (1, 50)}
 
 protected = load_json("config/protected.json")
 if protected:
@@ -93,6 +105,32 @@ if protected:
                   "min_minutes_to_resolution", "max_entry_price", "min_entry_price"):
         if not isinstance(protected.get(field), (int, float)):
             err(f"config/protected.json: {field} missing or not numeric")
+
+    screener = protected.get("screener")
+    if not isinstance(screener, dict):
+        err("config/protected.json: the 'screener' block is missing - "
+            "core/screen.py needs model/batch_size/top_n/daily_budget_usd")
+    else:
+        model = screener.get("model")
+        if not (isinstance(model, str) and model.strip()):
+            err("config/protected.json: screener.model must be a non-empty string")
+        for field, (low, high) in SCREENER_INT_RANGES.items():
+            v = screener.get(field)
+            if not isinstance(v, int) or isinstance(v, bool):
+                err(f"config/protected.json: screener.{field} missing or not an "
+                    f"integer")
+            elif not low <= v <= high:
+                err(f"config/protected.json: screener.{field} = {v} outside "
+                    f"[{low}, {high}]")
+        budget = screener.get("daily_budget_usd")
+        if not isinstance(budget, (int, float)) or isinstance(budget, bool) \
+                or budget <= 0:
+            err("config/protected.json: screener.daily_budget_usd missing or not "
+                "a positive number")
+        elif budget > SCREENER_BUDGET_CEILING_USD:
+            err(f"config/protected.json: screener.daily_budget_usd = {budget} "
+                f"exceeds the hard ceiling {SCREENER_BUDGET_CEILING_USD} "
+                f"(raising it requires editing protected core, deliberately)")
 
 risk = load_json("strategy/risk.json")
 if risk and protected:
@@ -168,6 +206,46 @@ if forecasts_path.exists():
         if not 0 <= row["market_prob_at_record"] <= 1:
             err(f"forecasts.jsonl:{lineno}: market_prob_at_record "
                 f"{row['market_prob_at_record']} outside [0, 1]")
+
+screener_quota_path = ROOT / "journal" / "screener-quota.json"
+if screener_quota_path.exists():
+    quota = load_json("journal/screener-quota.json")
+    if quota is not None:
+        spent = quota.get("spent_usd")
+        if not isinstance(spent, (int, float)) or isinstance(spent, bool):
+            err("screener-quota.json: spent_usd missing or not numeric")
+        elif spent < 0:
+            err(f"screener-quota.json: spent_usd {spent} is negative")
+
+screener_path = ROOT / "journal" / "screener.jsonl"
+if screener_path.exists():
+    for lineno, line in enumerate(screener_path.read_text().splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError as e:
+            err(f"screener.jsonl:{lineno}: invalid JSON - {e}")
+            continue
+        missing = SCREENER_REQUIRED - row.keys()
+        if missing:
+            err(f"screener.jsonl:{lineno}: missing fields {sorted(missing)}")
+            continue
+        # A malformed model answer is a logged screen_error row, not a failure -
+        # but a row that claims a divergence must carry a usable one.
+        div = row["divergence"]
+        if div is not None and not (isinstance(div, (int, float))
+                                    and not isinstance(div, bool)
+                                    and 0 <= div <= 1):
+            err(f"screener.jsonl:{lineno}: divergence {div!r} is not a number "
+                f"in [0, 1]")
+        if div is None and not row.get("screen_error"):
+            err(f"screener.jsonl:{lineno}: no divergence and no screen_error - "
+                f"every unscored row must say why")
+        cost = row["cost_usd"]
+        if not isinstance(cost, (int, float)) or isinstance(cost, bool) or cost < 0:
+            err(f"screener.jsonl:{lineno}: cost_usd {cost!r} is not a "
+                f"non-negative number")
 
 real_ledger_path = ROOT / "journal" / "real-ledger.jsonl"
 if real_ledger_path.exists() and protected and isinstance(protected.get("real"), dict):

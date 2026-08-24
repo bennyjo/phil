@@ -11,6 +11,13 @@
   "min_minutes_to_resolution": 20,
   "max_entry_price": 0.95,
   "min_entry_price": 0.02,
+  "screener": {
+    "_comment": "Tunables for the cheap screening tier (core/screen.py). The daily_budget_usd hard ceiling lives in core/validate.py and core/screen.py; raising it is a protected-core edit by design.",
+    "model": "claude-haiku-4-5-20251001",
+    "batch_size": 20,
+    "top_n": 15,
+    "daily_budget_usd": 5.0
+  },
   "real_trading_enabled": true,
   "real": {
     "_comment": "Caps for real execution via Pearl Connect (laptop only). Hard ceilings live in core/validate.py; raising them is a protected-core edit by design.",
