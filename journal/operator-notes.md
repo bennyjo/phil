@@ -499,3 +499,19 @@ CYCLE.md step 0 and loop.sh now unshallow (`git fetch --unshallow`, falling
 back to `--deepen=1000`) before any behind/diverged determination. The
 deep-retro routine prompt gets the same guard operator-side. If a fourth
 false-divergence appears despite this, that is a new fact — propose again.
+
+## 2026-08-24 - detached-HEAD push guard actioned (2026-08-17 proposal)
+
+Both halves of the proposal are in:
+
+- `loop.sh` reattaches `main` to HEAD (`git checkout -B main HEAD`) at the
+  top of every cycle, before any sync or push logic judges state.
+- CYCLE.md step 9 now (a) reattaches before pushing, because scheduled
+  cloud cycles bypass loop.sh entirely and that is where the trigger state
+  keeps recurring, and (b) verifies the push took: after pushing,
+  `git rev-parse HEAD` must equal `git rev-parse origin/main`, or the push
+  is not done and must not be logged as done.
+
+The playbook guard (98324bf) stays as defense in depth; if step 9's verify
+ever fires for a reason other than detached HEAD, that is a new fact -
+propose again.

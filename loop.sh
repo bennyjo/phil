@@ -18,6 +18,15 @@ SLEEP_MIN="${ARGS[1]:-45}"
 for i in $(seq 1 "$CYCLES"); do
   echo "=== cycle $i/$CYCLES $(date -u +%FT%TZ) ==="
 
+  # With HEAD detached, `git push origin main` pushes the stale local branch
+  # ref and reports success - the cycle's commits never reach the remote
+  # (2026-08-17: 34 commits nearly lost). Reattach main to HEAD before any
+  # sync or push logic can judge state.
+  if ! git symbolic-ref -q HEAD >/dev/null; then
+    echo "WARNING: HEAD detached — reattaching main to HEAD" >&2
+    git checkout -B main HEAD
+  fi
+
   # Sync with origin before cycling so a stale local main can never silently
   # fork for days (the 2026-07-31 orphaned-history incident). Fast-forward
   # only; a genuine divergence needs a human, not an automatic reset.

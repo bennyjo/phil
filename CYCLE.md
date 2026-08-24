@@ -127,7 +127,17 @@ get causes fixed.
 7. **Log**: append one line to `journal/cycles.log`:
    `<UTC ISO> cycle done: settled N, placed M, cash $X` (from ledger status).
 8. **Commit**: `git add -A && git commit -m "cycle: <UTCdate-HHMM> placed M settled N"`
-9. **Push** (cloud runs only — skip if no `origin` remote): `git push origin main`.
+9. **Push** (cloud runs only — skip if no `origin` remote): first, if
+   `git symbolic-ref -q HEAD` prints nothing, HEAD is detached — reattach
+   with `git checkout -B main HEAD` (from a detached HEAD, `git push origin
+   main` pushes the stale branch ref and reports success while your commits
+   never leave the container). Then `git push origin main`.
    If rejected, `git pull --rebase origin main` and push again. If the rebase
    conflicts on `journal/ledger.jsonl`, abort, re-run step 1, and repeat from
    step 7 — never hand-edit the ledger.
+   Finally, verify the push took: `git fetch origin main`, then
+   `git rev-parse HEAD` and `git rev-parse origin/main` must print the same
+   hash. If they differ, the push did not publish your work — do not log it
+   as done; diagnose (detached HEAD again? rejected push?) and repeat this
+   step until the hashes match or you have written the discrepancy into the
+   cycle log line for the operator.
