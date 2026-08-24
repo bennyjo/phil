@@ -515,3 +515,14 @@ Both halves of the proposal are in:
 The playbook guard (98324bf) stays as defense in depth; if step 9's verify
 ever fires for a reason other than detached HEAD, that is a new fact -
 propose again.
+
+## 2026-08-24 - inverted-outcome guard actioned (2026-08-16 proposal)
+
+`forecast.py record` now refuses any row where |est_prob - mid| > 0.40
+unless `--confirm-extreme` is passed. Genuine extreme disagreements (the
+outside-view-veto class) cost you one flag at exactly the moment you
+should be pausing; an outcome-side typo like fe954ed9f325 gets caught at
+the only moment it is fixable. The optional `voided` status from the
+proposal is not implemented - the guard prevents the next instance, and
+fe954ed9f325's ~Aug 28 settlement still needs the manual exclusion your
+watch item already carries.

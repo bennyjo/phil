@@ -24,7 +24,8 @@ question, on evidence).
 Usage:
   record: python3 core/forecast.py record --market-id 123 --outcome Yes \
             --est-prob 0.62 --category econ --skip-reason no-edge \
-            [--fit-score 4] [--note "..."] [--strategy-rev abc1234]
+            [--fit-score 4] [--note "..."] [--strategy-rev abc1234] \
+            [--confirm-extreme]
   status: python3 core/forecast.py status
 """
 import argparse
@@ -40,6 +41,14 @@ import pmapi  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 FORECASTS = ROOT / "journal" / "forecasts.jsonl"
+
+# An |est_prob - mid| gap this large is either a deliberate extreme
+# disagreement (rare: the outside-view-veto class) or an inverted outcome
+# side (fe954ed9f325: --outcome No with the Yes-side est_prob, silently
+# recording the opposite of the researched belief). The flag costs one
+# keystroke exactly when the agent should be pausing anyway; the typo gets
+# caught at the only moment it is fixable.
+EXTREME_DISAGREEMENT = 0.40
 
 
 def read_forecasts():
@@ -74,6 +83,15 @@ def cmd_record(args, rows):
     if bid is None and ask is None:
         sys.exit("REJECTED: empty book — no market probability to benchmark against")
     mid = (bid + ask) / 2 if bid is not None and ask is not None else bid or ask
+
+    gap = abs(args.est_prob - mid)
+    if gap > EXTREME_DISAGREEMENT and not args.confirm_extreme:
+        sys.exit(f"REJECTED: est_prob {args.est_prob} vs market mid {round(mid, 4)} "
+                 f"for outcome {args.outcome!r} differs by {round(gap, 4)} "
+                 f"(> {EXTREME_DISAGREEMENT}). If this extreme disagreement is your "
+                 "researched belief, re-run with --confirm-extreme; if not, you "
+                 "probably inverted the outcome side (est_prob must be for the "
+                 f"named outcome {args.outcome!r}, not its complement).")
 
     row = {
         "id": uuid.uuid4().hex[:12],
@@ -115,6 +133,10 @@ def main():
     p.add_argument("--skip-reason", required=True,
                    help="funnel disposition: bet|no-edge|market-agrees|... "
                         "(use 'bet' when a place follows this forecast)")
+    p.add_argument("--confirm-extreme", action="store_true",
+                   help="required when |est_prob - mid| > "
+                        f"{EXTREME_DISAGREEMENT}: confirms the extreme "
+                        "disagreement is deliberate, not an inverted outcome side")
     p.add_argument("--fit-score", type=int, default=None, help="playbook fit score 0-5")
     p.add_argument("--note", default="", help="one line of context (optional)")
     p.add_argument("--strategy-rev", default="", help="git rev of strategy/ used")
