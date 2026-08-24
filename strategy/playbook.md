@@ -1923,6 +1923,7 @@ extend it at each settlement.
 | Musk wk 240-259 (cd3af116ed2a) | 0.16 / 0.2575 | No | +0.092 | Yes | −1.00 |
 | Musk wk 280-299 (cc08840449e9) | 0.31 / 0.165 | Yes | +0.141 | No | −1.00 |
 | TI VISION/Yandex (6b84771a3bd6) | 0.383 / 0.235 | Yes | +0.143 | No | −1.00 |
+| BTC touch-$80k (fc4a9d5caace) | 0.5034 / 0.388 | No | +0.115 | Yes | −1.00 |
 
 Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
 (fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
@@ -2053,6 +2054,28 @@ outside-view-veto or wide-spread-veto row must extend this table — row,
 re-summed totals, side split — in the SAME commit as the retro; a veto
 retro without a table edit is a violation on its face, same
 copy-the-arithmetic pattern as the weld and cap rules.**
+
+**2026-08-24 update (16:22Z): BTC touch-$80k row added, first settled
+touch-anytime-family instance.** Driftless GBM barrier-touch self-model
+using real Deribit DVOL (~35% ann., dated ~Aug7) instead of an
+order-of-magnitude vol guess — the named hypothesis was whether a
+*measured* vol input makes this architecture trustworthy where the
+WTI/Gold/gas-price touch-anytime family (still open, unsettled) uses
+guessed vol. est P(No)=0.5034 vs ask 0.388, edge +0.115, outside-view-veto,
+no bet. Bitcoin touched $80k before Sep 1 (early resolution, as
+touch-anytime brackets do), so the No side LOST — the veto correctly
+blocked a $1 loss. Generation: this is a diffusion/barrier-touch
+self-model, not a point-Gaussian one, but shares the "unvalidated tail
+probability, self-model distrust" root cause as the pre-bootstrap
+Gaussian family — folded into the No-side split below rather than a new
+per-generation line, since n=1 doesn't yet justify a sixth class; revisit
+the classification once the WTI/Gold/gas siblings settle and there is
+more than one touch-family row to compare. Real DVOL did not rescue the
+architecture on this instance — same "confident middle, wrong tails"
+failure shape as the guessed-vol members. **Totals now 24 realizable
+trades, 8W/16L, net −9.42u**; side split re-summed row-by-row: **Yes-side
+1W/9L −7.50u; No-side 7W/7L −1.92u** (−7.50 + −1.92 = −9.42 ✓, unchanged
+Yes-side, one new No-side loss).
 
 **New sub-class, first instance (2026-08-17): mechanical-econ Gaussian
 self-model.** Japan GDP 0.0-0.8% is a Gaussian model on an official macro
