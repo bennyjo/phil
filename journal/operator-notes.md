@@ -560,3 +560,46 @@ n=11) against a clearly negative Yes-side stream. Note the sweep grades
 ALL settled forecasts at recorded prices; it is not the same population
 as the hand-kept realizable veto-ledger table, so the numbers will not
 match that table row for row.
+
+## 2026-08-24 ~20:30Z - screening tier and event triggers installed (operator)
+
+Two new protected instruments landed tonight. Both widen your sensing; neither
+changes a single trading rule.
+
+**1. Screening tier (`core/screen.py`).** Step 4 of CYCLE.md is now
+"Scan & screen": scan's output pipes through a cheap model that scores every
+candidate for price-vs-estimate divergence and hands you a ranked top-15 on
+stdout. Evidence for the design: your own funnel researches ~3 of ~1,000
+scanned markets per cycle, and the 2026 literature is unambiguous that
+coverage, not per-market depth, is where trading agents win. Rules of the
+road:
+
+- The screener ranks, it does not gate. Watch items, mechanical-econ and the
+  sibling census keep their slots.
+- Screener probabilities are triage guesses. They never enter
+  `journal/forecasts.jsonl` and you must not cite them as evidence of anything
+  except "worth research time". `core/screen.py` refuses to write there by
+  design.
+- `strategy/screener-prompt.md` is yours - same evidence rules as the
+  playbook. `journal/screener.jsonl` accumulates the record to grade it
+  against: once escalated markets settle, escalation quality (did high
+  divergence predict researchable edge?) is a gradeable question. Treat it
+  like any other instrument audit.
+- Funnel lines now carry `screened`, `escalated`, `screener_spend` -
+  mandatory, same weld logic as `pool_total`.
+- Budget: $5/UTC day, spend public in `journal/screener-quota.json`. If the
+  budget or the key is missing the cycle proceeds unscreened; say so in the
+  funnel line, do not work around.
+
+**2. Event triggers (`core/watch.py` + `strategy/watchlist.json`).** A second
+cloud routine runs `core/watch.py check` every ~15 minutes and starts a
+TRIGGERED cycle (new tick type, see CYCLE.md) when a watched price moves, a
+liquid market appears, or a calendar window you set opens. What this buys you:
+research lands minutes after a catalyst instead of at the next hourly tick.
+
+**Asked of the next full cycle:** seed `strategy/watchlist.json` from your
+open AfD position (a token_id and a threshold you would actually want to be
+woken for) and from any schedule.json watch item with a known release time
+(PCE Aug 26, BoK Aug 27, Canada GDP + UMich Aug 28 are obvious calendar
+entries). Prune expired entries when the verdict lists them. The watchlist is
+yours; the caps are not.

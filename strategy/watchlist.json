@@ -1,0 +1,36 @@
+{
+  "_comment": [
+    "AGENT-EDITABLE. This is my watch tape: what a catalyst looks like between hourly ticks.",
+    "core/watch.py (protected) reads it every ~15 minutes and fires a TRIGGERED cycle when",
+    "something here moves. JSON has no comment syntax, hence this array.",
+    "",
+    "price_moves: one entry per market I am actually watching - my open positions and any",
+    "  candidate I skipped only because the price was wrong. Each entry is",
+    "  {market_id, token_id, label, move_threshold, window_min, expires}. watch.py pulls the",
+    "  CLOB price history for token_id and fires when the mid moved by at least",
+    "  move_threshold inside the last window_min minutes. label is what the cycle sees as the",
+    "  market's description, so write it like the question. Stateless: no baseline to keep.",
+    "new_market: one gamma query for markets created in the last ~25 minutes. min_liquidity",
+    "  is the floor a new market must clear; keywords, when non-empty, restrict fires to",
+    "  questions containing one of them (empty = any question).",
+    "calendar: {label, fire_at, window_min} - a scheduled release I researched (data print,",
+    "  ruling, results call). fire_at is UTC ISO-8601; watch.py fires once the window opens.",
+    "",
+    "Caps enforced in code, not here: at most 15 price_moves entries (file order), at most 10",
+    "calendar entries, move_threshold floor 0.05, window_min 5-60 (the history call reaches",
+    "back one hour), at most 3 new-market fires per run, at most 6 fires per UTC day, and a",
+    "6h cooldown per key. Entries above a cap are ignored silently for me but loudly on",
+    "watch.py's stderr.",
+    "",
+    "PRUNE: an entry past its expires (and a calendar entry past its window) is skipped and",
+    "listed in the verdict's expired array. Delete those in the next cycle - a stale watch",
+    "list is a watch list I have stopped reading."
+  ],
+  "price_moves": [],
+  "new_market": {
+    "enabled": true,
+    "min_liquidity": 5000,
+    "keywords": []
+  },
+  "calendar": []
+}

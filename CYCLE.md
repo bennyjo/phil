@@ -35,6 +35,22 @@ every candidate sits in one bucket, a whole research channel fails, or a
 category never appears, say so there. Cycle logs record symptoms; proposals
 get causes fixed.
 
+## Tick types
+
+Every invocation runs as one of three ticks:
+
+- **FULL**: the whole procedure below.
+- **LIGHT**: step 1 and the open-position monitor only, then log, commit, stop.
+  Entered from the collision guard (step 0) or from pacing (step 0b).
+- **TRIGGERED**: invoked by the watch routine when `core/watch.py check`
+  reported `trigger: true` this session. Skip step 0b's pacing and step 4's
+  broad scan: the candidate set is the verdict's `context` array (plus at most
+  one narrow gamma fetch when the trigger is a new market). Every other step
+  runs normally, scoped to those candidates. Before placing any bet, check the
+  ledger for an existing open position on the same market - a duplicate inside
+  the hour means the watcher double-fired: log it, do not re-bet. Triggered
+  cycles do not count toward `min_full_cycles_per_day`.
+
 ## Procedure
 
 0. **Sync**: first, if `git rev-parse --is-shallow-repository` prints
@@ -48,9 +64,13 @@ get causes fixed.
    `git checkout -B main origin/main`. If the histories have genuinely
    diverged, log a warning for the operator and continue on local state —
    never reset over local commits. Then the **collision guard**: if
-   `origin/main`'s tip is a `cycle:` commit committed less than 20 minutes
-   ago, another runner just cycled — run this invocation as a LIGHT tick
-   (step 1 and the open-position monitor only), regardless of pacing state.
+   `origin/main`'s tip is a `cycle:` or `cycle(triggered):` commit committed
+   less than 20 minutes ago, another runner just cycled — run this invocation
+   as a LIGHT tick (step 1 and the open-position monitor only), regardless of
+   pacing state. A TRIGGERED invocation is exempt and proceeds through the
+   guard (`core/watch.py` already applied its own suppression before firing),
+   with one exception: if the tip is a `cycle(triggered):` commit less than 45
+   minutes old naming the same trigger key, demote to LIGHT.
 
 0b. **Pace**: read `strategy/schedule.json`. If `next_full_cycle_after` is in
    the future AND at least `min_full_cycles_per_day` full cycles ran in the
@@ -85,11 +105,20 @@ get causes fixed.
      reconcile `journal/forecasts.jsonl` coverage against funnel researched
      entries, and grade skip reasons against settled forecast outcomes).
    - Commit: `git add -A && git commit -m "retro: <one-line lesson>"`.
-4. **Scan**: `python3 core/scan.py --hours 336 --limit 800` — queries come from
-   `strategy/discovery.py`, which is mine to edit. Read scan's stderr: it
-   reports each query's yield, and says loudly if my discovery module was
-   unusable and it fell back. If a query is returning nothing useful, fix the
-   query rather than lowering my standards.
+4. **Scan & screen**: `python3 core/scan.py --hours 336 --limit 800 |
+   python3 core/screen.py` — queries come from `strategy/discovery.py`, which
+   is mine to edit. Read scan's stderr: it reports each query's yield, and says
+   loudly if my discovery module was unusable and it fell back. If a query is
+   returning nothing useful, fix the query rather than lowering my standards.
+   Then read screen's stderr summary (screened X, escalated N, spent $Y, quota
+   $Z): the screener scores every scanned market for price-vs-estimate
+   divergence on a cheap model. Research allocation in step 5 STARTS from its
+   top divergences - but the screener ranks, it does not gate: watch items, the
+   mechanical-econ calendar and the sibling census still claim their research
+   slots under the existing rules. The funnel line gains three mandatory
+   fields: `screened`, `escalated`, `screener_spend`. If the screener is
+   budget-exhausted or errors, fall back to the current unscreened selection
+   and say so in the funnel line.
 5. **Select & research**: per `strategy/playbook.md`, pick candidates worth
    researching (respect `risk.json` per-category limits). Research each with
    web search / fetches. Form your estimate before anchoring on the price.
@@ -126,7 +155,13 @@ get causes fixed.
    Respect rejections — they are protected-cap enforcement, not errors to fix.
 7. **Log**: append one line to `journal/cycles.log`:
    `<UTC ISO> cycle done: settled N, placed M, cash $X` (from ledger status).
+   On a TRIGGERED cycle the detail that follows opens with
+   `(TRIGGERED cycle: <key>` before anything else, so the tick type stays
+   greppable.
 8. **Commit**: `git add -A && git commit -m "cycle: <UTCdate-HHMM> placed M settled N"`
+   A TRIGGERED cycle commits as
+   `cycle(triggered): <UTCdate-HHMM> <key> placed M settled N` instead - the
+   key in the subject is what watch.py's 45-minute same-key guard reads.
 9. **Push** (cloud runs only — skip if no `origin` remote): first, if
    `git symbolic-ref -q HEAD` prints nothing, HEAD is detached — reattach
    with `git checkout -B main HEAD` (from a detached HEAD, `git push origin
