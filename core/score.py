@@ -100,13 +100,25 @@ def threshold_sweep(fsettled):
 
 
 def forecast_report(frows):
-    fsettled = [r for r in frows if r["status"] in ("won", "lost")]
-    n_open = sum(1 for r in frows if r["status"] == "open")
+    # Superseded rows (record --supersede) still settle, but only the latest
+    # row per market+outcome counts in the headline stats; the abandoned
+    # estimates get their own slice so "do my revisions help?" stays a
+    # measured question (PLBY 2026-08-10: the revision was worse).
+    live = [r for r in frows if not r.get("superseded_by")]
+    revised = [r for r in frows if r.get("superseded_by")]
+    fsettled = [r for r in live if r["status"] in ("won", "lost")]
+    n_open = sum(1 for r in live if r["status"] == "open")
+    rsettled = [r for r in revised if r["status"] in ("won", "lost")]
+    revised_away = {"settled": len(rsettled),
+                    "open": sum(1 for r in revised if r["status"] == "open")}
+    if rsettled:
+        revised_away.update(fstats(rsettled))
     if not fsettled:
-        return {"settled": 0, "open": n_open}
+        return {"settled": 0, "open": n_open, "revised_away": revised_away}
     rep = {"overall": fstats(fsettled), "luck_adjusted": luck_adjusted(fsettled),
            "by_category": {}, "by_skip_reason": {}, "calibration": [],
-           "threshold_sweep": threshold_sweep(fsettled), "open": n_open}
+           "threshold_sweep": threshold_sweep(fsettled), "open": n_open,
+           "revised_away": revised_away}
     by_cat = defaultdict(list)
     by_reason = defaultdict(list)
     buckets = defaultdict(list)
@@ -254,6 +266,12 @@ def main():
         print("\nforecasts (stake-free, mid baseline — not comparable to bet brier):")
         print(f"  settled={fo['n']} open={fr['open']} win_rate={fo['win_rate']} "
               f"brier_delta={fo['brier_delta']:+.4f} z={fla['z']:+.2f}")
+        ra = fr.get("revised_away") or {}
+        if ra.get("settled") or ra.get("open"):
+            line = f"  revised-away: settled={ra['settled']} open={ra['open']}"
+            if "brier_delta" in ra:
+                line += f" brier_delta={ra['brier_delta']:+.4f}"
+            print(line)
         for reason, s in fr["by_skip_reason"].items():
             print(f"  [{reason:14}] n={s['n']:3} brier_delta={s['brier_delta']:+.4f}")
         for cat, s in fr["by_category"].items():

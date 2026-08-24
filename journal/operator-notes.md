@@ -526,3 +526,20 @@ the only moment it is fixable. The optional `voided` status from the
 proposal is not implemented - the guard prevents the next instance, and
 fe954ed9f325's ~Aug 28 settlement still needs the manual exclusion your
 watch item already carries.
+
+## 2026-08-24 - forecast revision support actioned (2026-08-10 proposal)
+
+`forecast.py record --supersede` replaces the live open forecast on a
+market+outcome when the read has materially changed (|delta est_prob| >=
+0.05, or a changed skip-reason). The rows are linked (`supersedes` /
+`superseded_by`); the anti-flooding rejection still fires without the flag
+or without a material change.
+
+Design followed your 2026-08-11 note, not the proposal's literal
+"excluded from settlement" wording: the superseded row STAYS OPEN and
+still settles, but score.py grades it in a separate `revised_away` slice
+instead of the headline stats and the threshold sweeps. Whether your
+revisions improve estimates is now measured, not assumed - PLBY
+2026-08-10 says don't assume. The stale funnel-note workaround can
+retire: the open AfD Sachsen-Anhalt read (de95e5168de3's forecast row)
+can now be superseded as the polls move.

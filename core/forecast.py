@@ -18,14 +18,19 @@ separate sections. est_prob is the agent's honest belief, formed before
 anchoring on the price, exactly as for bets.
 
 One live forecast per market+outcome: recurring re-checks of the same market
-must not flood the stats with correlated rows (revision support is a v2
-question, on evidence).
+must not flood the stats with correlated rows. A materially changed read
+(|delta est_prob| >= 0.05, or a changed funnel decision) may replace the live
+row via record --supersede: the rows are linked (supersedes / superseded_by),
+only the latest row counts in headline scoring, and the superseded row still
+settles into score.py's separate revised-away slice - whether revisions
+actually improve estimates is measured, not assumed (PLBY 2026-08-10: the
+revision was worse than the original).
 
 Usage:
   record: python3 core/forecast.py record --market-id 123 --outcome Yes \
             --est-prob 0.62 --category econ --skip-reason no-edge \
             [--fit-score 4] [--note "..."] [--strategy-rev abc1234] \
-            [--confirm-extreme]
+            [--confirm-extreme] [--supersede]
   status: python3 core/forecast.py status
 """
 import argparse
@@ -41,6 +46,11 @@ import pmapi  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 FORECASTS = ROOT / "journal" / "forecasts.jsonl"
+
+# A supersede must change something material: a re-record of an unchanged
+# estimate is the correlated-row flooding the one-live-row rule exists to
+# prevent, not a revision.
+MIN_REVISION_DELTA = 0.05
 
 # An |est_prob - mid| gap this large is either a deliberate extreme
 # disagreement (rare: the outside-view-veto class) or an inverted outcome
@@ -63,15 +73,33 @@ def cmd_status(rows):
         "by_status": dict(Counter(r["status"] for r in rows)),
         "by_skip_reason": dict(Counter(r.get("skip_reason") or "?" for r in rows)),
         "settled_wins": sum(1 for r in rows if r["status"] == "won"),
+        "revised_away": sum(1 for r in rows if r.get("superseded_by")),
     }, indent=2))
 
 
 def cmd_record(args, rows):
     if not 0.0 < args.est_prob < 1.0:
         sys.exit("REJECTED: est-prob must be in (0,1)")
-    if any(r["market_id"] == args.market_id and r["outcome"] == args.outcome
-           and r["status"] == "open" for r in rows):
-        sys.exit("REJECTED: already have an open forecast on this market+outcome")
+    live = [r for r in rows
+            if r["market_id"] == args.market_id and r["outcome"] == args.outcome
+            and r["status"] == "open" and not r.get("superseded_by")]
+    if live and not args.supersede:
+        sys.exit("REJECTED: already have an open forecast on this market+outcome "
+                 "(a materially changed read may supersede it: --supersede)")
+    old = None
+    if args.supersede:
+        if not live:
+            sys.exit("REJECTED: --supersede, but no live open forecast on this "
+                     "market+outcome to supersede")
+        old = live[0]
+        # round like ledger.py's edge field so an exactly-boundary revision
+        # (0.33 - 0.28 = 0.049999...) does not float-drop below the gate
+        if (round(abs(args.est_prob - old["est_prob"]), 4) < MIN_REVISION_DELTA
+                and args.skip_reason == old.get("skip_reason")):
+            sys.exit(f"REJECTED: supersede needs a material change — "
+                     f"|delta est_prob| >= {MIN_REVISION_DELTA} "
+                     f"(old {old['est_prob']}, new {args.est_prob}) or a changed "
+                     f"skip-reason (old {old.get('skip_reason')!r})")
 
     m = pmapi.gamma_market(args.market_id)
     if m.get("closed"):
@@ -113,11 +141,23 @@ def cmd_record(args, rows):
         "strategy_rev": args.strategy_rev,
         "status": "open",
     }
-    with FORECASTS.open("a") as f:
-        f.write(json.dumps(row) + "\n")
-    print(json.dumps({"recorded": row["id"], "mid": row["market_prob_at_record"],
-                      "bid": bid, "ask": ask, "delta_vs_mid": round(args.est_prob - mid, 4),
-                      "question": row["question"]}, indent=2))
+    if old is not None:
+        # The old row stays open so resolve.py still settles it (score.py
+        # grades it in the revised-away slice, not the headline stats).
+        row["supersedes"] = old["id"]
+        old["superseded_by"] = row["id"]
+        old["superseded_ts"] = row["ts"]
+        FORECASTS.write_text("".join(json.dumps(r) + "\n" for r in rows + [row]))
+    else:
+        with FORECASTS.open("a") as f:
+            f.write(json.dumps(row) + "\n")
+    out = {"recorded": row["id"], "mid": row["market_prob_at_record"],
+           "bid": bid, "ask": ask, "delta_vs_mid": round(args.est_prob - mid, 4),
+           "question": row["question"]}
+    if old is not None:
+        out["supersedes"] = old["id"]
+        out["delta_est_prob"] = round(args.est_prob - old["est_prob"], 4)
+    print(json.dumps(out, indent=2))
 
 
 def main():
@@ -133,6 +173,10 @@ def main():
     p.add_argument("--skip-reason", required=True,
                    help="funnel disposition: bet|no-edge|market-agrees|... "
                         "(use 'bet' when a place follows this forecast)")
+    p.add_argument("--supersede", action="store_true",
+                   help="replace this market+outcome's live open forecast with a "
+                        "materially changed read (links the rows; the old one is "
+                        "graded in the revised-away slice, not the headline stats)")
     p.add_argument("--confirm-extreme", action="store_true",
                    help="required when |est_prob - mid| > "
                         f"{EXTREME_DISAGREEMENT}: confirms the extreme "
