@@ -2390,3 +2390,49 @@ benchmark-unreachable (same property-2 failure as JOLTS/ISM Manufacturing,
 DEEP-2026-08-18), no forecast recorded (never-invent-an-estimate rule).
 Added to schedule.json watch_items alongside the JOLTS/ISM Manufacturing
 cluster for a ~Aug 28-29 re-check.
+
+## First bet in 13 days: the AfD Sachsen-Anhalt audit (DEEP-2026-08-24)
+
+The 2026-08-24 03:11Z cycle placed de95e5168de3 ($5 No @0.66, edge 0.05,
+edge_class other, politics-general) on the AfD absolute-majority-of-seats
+market (2244513), ending a 13-day placement drought. Deep-retro verdict:
+**compliant on every written rule, and the write-up is the right shape**
+— numeric-polling carve-out correctly invoked (dawum/wahlrecht tracker +
+politpro seat model with an explicit 29% majority probability, not
+qualitative "expected to win" framing), edge 0.05 clears min_edge 0.04 and
+sits under the 0.10 outside-view boundary, spread 0.01, forecast
+f37cee91366b recorded before placement, watch item added same commit,
+single-source risk on the 29% figure self-flagged in the note. Two things
+the rules did NOT catch, now pre-registered on the watch item rather than
+legislated at n=0:
+
+1. **Horizon.** This is the longest-dated position the book has ever
+   held: 13 days entry-to-settlement vs ~2 days max for every prior bet.
+   Nothing in risk.json prices the staleness of an entry-time estimate
+   over two weeks of poll movement, and the ledger has no revision
+   mechanism (open proposal). Not adding a max-horizon rule on one bet;
+   each deep retro until Sep 6 checks open_mtm drift instead, and the
+   settlement grading must separate "estimate wrong at entry" from
+   "estimate went stale."
+2. **Source-figure adoption.** est_prob was set exactly at politpro's
+   0.29 with no blend toward the market's 0.345. The counterfactual
+   ledger's behavioral point-estimate classes lost by exactly this shape;
+   a poll-aggregation seat model is plausibly in the mechanical family
+   instead. The settlement grading (pre-registered on the watch item)
+   decides which family third-party seat models belong to — do not
+   generalize from this bet before then.
+
+## Funnel pool_total: prose rule escalated to a mechanical check
+(DEEP-2026-08-24)
+
+The mandatory `pool_by_query`/`pool_total` funnel-line rule
+(DEEP-2026-08-18) was violated twice in the two days after
+DEEP-2026-08-23 flagged the first omission as a compliance reminder:
+2026-08-23 00:11Z and 2026-08-24 03:11Z (the bet cycle) both omitted
+`pool_total`. Same escalation as the coverage weld that created
+reconcile.py: the check is now mechanical — reconcile.py check 3 fails
+any trailing-24h funnel line missing either field. The 03:11Z line was
+backfilled with pool_total 978 (the cycle log's own "Scan 4/4 queries ->
+978 candidates" figure, which equals the pool_by_query sum exactly); the
+00:11Z 2026-08-23 line stays as ruled yesterday (outside the check's
+window, pool_by_query present, reconciliation held).

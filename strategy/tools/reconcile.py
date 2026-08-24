@@ -15,6 +15,13 @@ Checks, over a trailing window (default 24h):
   2. Every funnel `researched` entry with an estimate-bearing skip reason
      (no-edge, market-agrees, outside-view-veto, category-bar,
      wide-spread-veto, bet) carries a forecast_id.
+  3. Every funnel line carries `pool_by_query` (non-empty object) and
+     `pool_total` (number) — the mandatory-fields rule (playbook, Funnel
+     instrumentation / DEEP-2026-08-18). Added DEEP-2026-08-24 after the
+     prose rule was violated twice in two days post-flagging (2026-08-23
+     00:11Z and 2026-08-24 03:11Z lines both omitted pool_total, the
+     second one the AfD bet cycle); same escalation shape as this tool's
+     own origin: a mechanical check instead of more prose.
 
 Exit 0 with "OK" when both hold; exit 1 listing each orphan otherwise.
 Run before the commit of any FULL cycle that recorded a forecast — the
@@ -68,9 +75,19 @@ def main():
 
     funnel_ids = []          # all forecast_id strings seen in funnel entries
     missing_fid = []         # estimate-bearing funnel entries without one
+    schema_gaps = []         # funnel lines missing mandatory pool fields
     for entry in funnel:
         ts = parse_ts(entry.get("cycle", ""))
         recent = ts is not None and ts >= cutoff
+        if recent:
+            if not entry.get("pool_by_query"):
+                schema_gaps.append(
+                    f"funnel {entry.get('cycle')} missing pool_by_query"
+                )
+            if not isinstance(entry.get("pool_total"), (int, float)):
+                schema_gaps.append(
+                    f"funnel {entry.get('cycle')} missing pool_total"
+                )
         for cand in entry.get("researched", []):
             fid = cand.get("forecast_id")
             if fid:
@@ -100,7 +117,7 @@ def main():
                 f"has no funnel line"
             )
 
-    problems = orphans + missing_fid
+    problems = orphans + missing_fid + schema_gaps
     if problems:
         for p in problems:
             print(p)

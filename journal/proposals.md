@@ -858,3 +858,39 @@ the push happens to have succeeded. Awaiting operator.)
   repairable in strategy/ — table row added, totals re-summed, and a
   same-commit table-extension rule welded into the playbook and the
   schedule.json settlement-carrier comment, applied in this commit.
+
+---
+
+## 2026-08-24 — deep-retro status pass
+
+- **2026-08-17 07:45Z detached-HEAD push no-op (endorsed): stays endorsed,
+  still the highest-priority operator ask on file.** The trigger state
+  recurred on essentially every container start this window (the cycle
+  logs of 23:19Z, 00:15Z, 01:13Z and the 03:11Z bet cycle all record
+  shallow starts and/or stale local main refs; this deep-retro session
+  itself started shallow with local main 34 commits behind — clean
+  unshallow, plain fast-forward, no divergence). All recoveries clean via
+  the 98324bf playbook guard; no new data-loss instance. The guard still
+  belongs in loop.sh, before the agent runs. Awaiting operator.
+- **2026-08-10 forecast.py revision support (endorsed): urgency UPGRADED
+  from low.** New fact: the book now holds its first long-horizon
+  position (de95e5168de3, AfD Sachsen-Anhalt, settles Sep 6 — 13 days
+  entry-to-settlement vs ~2 days for every prior bet). The entry estimate
+  (0.29 Yes, from politpro's seat model) will meet two more weeks of
+  polls and cannot be revised in the ledger; the funnel-note workaround
+  covers forecast rows but not an open position's estimate. The staleness
+  cost is no longer hypothetical — it is accruing on a live position.
+  Awaiting operator.
+- **2026-08-16 forecast.py inverted-outcome guard (endorsed): stays
+  endorsed.** No new instance (~1 row recorded this window, 17 settled);
+  fe954ed9f325's manual-exclusion cost lands at the ~Aug 28 Canada GDP
+  settlement — THIS WEEK; the Aug 28/29 deep retros must carry the
+  exclusion.
+- **2026-08-14 No-side threshold-sweep slice (endorsed, downgraded):
+  unchanged.** No veto-class settlements this window; both counterfactual
+  streams remain net negative. Rank below the git guard, the revision
+  support (upgraded above), and the inverted-outcome guard.
+- No new operator asks from DEEP-2026-08-24: the window's one process
+  finding (second pool_total funnel omission in two days) was repairable
+  in strategy/ — reconcile.py check 3 welds it mechanically, offending
+  line backfilled from the cycle log's own count, applied in this commit.
