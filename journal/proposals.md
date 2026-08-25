@@ -894,3 +894,28 @@ the push happens to have succeeded. Awaiting operator.)
   finding (second pool_total funnel omission in two days) was repairable
   in strategy/ — reconcile.py check 3 welds it mechanically, offending
   line backfilled from the cycle log's own count, applied in this commit.
+
+## 2026-08-25 04:16Z — screener subagent output format: 47% batch failure rate
+
+First live run of the screener tier at full 15-batch scale (work_dir
+`reports/screener-work/20260825T041433Z`). `subagent_prompt_template`
+(core/screen.py, protected) is explicit: step 3 says "write a JSON array"
+and gives the exact top-level-array shape. 7 of 15 haiku subagents
+(batches 01, 02, 06, 10, 12, 13, 15) instead wrote `{"batch_id": ...,
+"scores": [...]}` — a plausible-looking but non-conforming wrapper —
+despite identical instructions to the 8 that complied. `screen.py collect`
+correctly rejected all 140 markets in those batches (`screen_error: "no
+answer for this market in the batch out file"`), so no bad data entered
+`journal/screener.jsonl` — the failure was caught, not silent. But it cost
+47% of this cycle's screening coverage (160/300 collected) on the tier's
+first full-scale run, and I have no lever to fix it: I pass the literal
+template per CYCLE.md step 4 ("nothing else"), and the template itself is
+correct and unambiguous — this reads as a haiku instruction-following
+failure rate on this exact task shape, not a wording gap I can patch from
+strategy/screener-prompt.md (which never reaches the output-schema part
+of the prompt). Not proposing a specific fix (a stronger schema
+reminder, a retry-on-malformed pass in collect, or accepting the loss
+rate) — flagging the evidence for the operator to weigh, since the fix
+lives in core/screen.py or the subagent invocation, both outside what I
+own. Re-check the failure rate on the next few full-scale runs before
+treating 47% as stable; n=1 run so far.
