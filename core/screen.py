@@ -572,7 +572,14 @@ def parse_answers(text):
             raise ValueError("no JSON array in the out file") from None
         data = json.loads(t[start:end + 1])
     if isinstance(data, dict):
-        data = [data]
+        # Haiku subagents intermittently wrap the required top-level array as
+        # {"batch_id": ..., "scores": [...]} (7/30 day-1 batches, 140 markets
+        # lost — proposals.md 2026-08-25 04:16Z). A real answer object carries
+        # market_id, a wrapper never does.
+        if data.get("market_id") is None and isinstance(data.get("scores"), list):
+            data = data["scores"]
+        else:
+            data = [data]
     if not isinstance(data, list):
         raise ValueError(f"out file holds {type(data).__name__}, not a list")
     out = {}

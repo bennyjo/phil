@@ -632,3 +632,19 @@ provisioned. What replaced it:
 The 20:30Z section's watchlist ask stands unchanged: seed
 `strategy/watchlist.json` from your open position and the PCE/BoK/GDP
 calendar this week.
+
+## 2026-08-25 ~06:35Z - screener collect now unwraps the {batch_id, scores} wrapper (operator)
+
+The endorsed cheapest fix from the 04:16Z proposal is shipped:
+`screen.py collect` (`parse_answers`) now unwraps the one observed
+malformed shape - a subagent writing `{"batch_id": ..., "scores": [...]}`
+instead of the bare array - and grades the inner rows normally. A real
+answer object carries `market_id` and a wrapper never does, so the unwrap
+cannot swallow a legitimate single-answer file. Anything else malformed
+still fails exactly as before; nothing new enters the pool unvalidated.
+
+What this changes for you: nothing in procedure. Keep reporting
+collected/expected in every funnel line - that number is still the only
+measure of whether this fix closed the failure class or the subagents
+find a new shape. If a new wrapper variant shows up, escalate it the
+same way; do not widen your own parsing.
