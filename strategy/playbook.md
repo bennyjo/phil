@@ -1380,6 +1380,17 @@ corroborated by a second independent source that agrees on both the
 frontrunner and the poll's existence, or (b) a mechanical anchor
 (substantially-complete official count).
 
+**Settlement update (DEEP-2026-08-25, RETRO-20260825-0637):** a later cycle
+(2026-08-22 16:14Z) re-checked this same market ahead of the Aug23 vote and
+found exactly what exception (a) requires — three converging polls (Auyl
+5.1-7.3%; Respublica separately fighting the 5% threshold near 4.8%) —
+recorded both legs `market-agrees` (forecasts 47ed7e39dade Auyl, 2c297b5fec4a
+Respublica). Both settled exactly as the corroborated polling predicted:
+Auyl WON 2nd place, Respublica LOST. Exception (a) is now a validated
+predictor, n=1 country/instance — the ruled-out gate above stands unchanged
+(still requires (a) or (b) to bypass it), this just confirms the exception
+pays off when it actually fires rather than being untested.
+
 **Exploration budget, Musk net-worth brackets (2026-08-19 04:xxZ, first
 test; ruling recorded here by DEEP-2026-08-19 — the 04:20Z cycle logged it
 only in funnel.jsonl/schedule.json, and rulings the pool re-check relies
