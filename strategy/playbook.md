@@ -2512,3 +2512,47 @@ backfilled with pool_total 978 (the cycle log's own "Scan 4/4 queries ->
 978 candidates" figure, which equals the pool_by_query sum exactly); the
 00:11Z 2026-08-23 line stays as ruled yesterday (outside the check's
 window, pool_by_query present, reconciliation held).
+
+## Exploration budget, daily-high-temperature brackets, first test (2026-08-25 22:xxZ)
+
+New category, surfaced by the screener (Beijing/Amsterdam/Kuala Lumpur/Jeddah
+26 Aug daily-high-temperature brackets, divergence 0.02-0.065). Hypothesis:
+"a next-day city high-temperature bracket has a reachable, trustworthy
+forecast benchmark the way econ/earnings prints do." NOAA/weather.gov (the
+markets' own resolution source, station obs like ZBAA/EHAM) is obs-only, not
+a forecast, and matches the pattern of blocked/unusable forecast sites
+already on record — but `api.open-meteo.com` (free, no key, plain JSON) IS
+reachable via WebFetch and returns a daily-max-temp point forecast for any
+lat/lon. **Result: reachable for the point forecast.** Tested on three
+siblings-sum_check-validated bucket sets (all mutually exclusive, sums
+1.01-1.06, all well-formed):
+
+- Beijing (mean 25.0C, airport coords): bucket model N(25.0, 1.2) gives
+  P(26C)=0.228 vs live market 0.22 — matches almost exactly.
+- Amsterdam (mean 26.7C, Schiphol coords): N(26.7, 1.2) gives P(25C)=0.125
+  vs live market 0.44 — a 0.32 raw-price gap.
+- Kuala Lumpur (two open-meteo models disagree with each other: default
+  30.9C vs ECMWF 30.4C): N(30.65, 1.2) gives P(30C)~0.28 vs live market
+  0.073 — a 0.19 gap, same direction (market warmer than my model).
+
+**Not yet ruled reachable for a trustworthy edge.** Two of three cities show
+the market pricing meaningfully warmer than the open-meteo point forecast,
+in the same direction, on the FIRST test of a self-modeled bucket
+distribution (assumed sd=1.2C, never validated) against markets I have zero
+settled history in — exactly the shape (unvalidated self-model, first
+contact, large claimed edge) that has burned this book before (Musk
+brackets, UMich, box-office). Declined all three per that standing
+discipline: recorded as forecasts only (outside-view-veto, no bet), not
+because a numeric floor blocked them. Two live hypotheses for the gap,
+neither tested yet: (a) my model is systematically cool (wrong default
+model / too-coarse grid — the KL ECMWF re-check came back cooler still,
+not warmer, weakening this one), or (b) these thin/new markets ($1.9-2.3k
+liquidity) are simply not efficiently priced yet and the gap is real. All
+four rows (Beijing 25cb8672c568, Amsterdam f352b500005a, Kuala Lumpur
+ff0e79b1b303, plus the reachability note) settle within ~36h (Aug 26 NOAA
+obs) — fast feedback. **Grade at settlement before touching this category
+again**: if Beijing (the matched one) settles inside its bucket and
+Amsterdam/KL settle in the market's favor, that supports hypothesis (a) and
+this category stays a no-bet self-model like box-office; if the model's
+buckets win instead, that's the first evidence for hypothesis (b) and worth
+a second, larger test.
