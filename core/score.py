@@ -99,6 +99,55 @@ def threshold_sweep(fsettled):
     return out
 
 
+BLEND_GRID = [0.5, 0.6, 0.7, 0.8, 0.9]
+
+
+def blend_sweep(fsettled):
+    """Does the estimate add information at the market's margin? For each
+    market weight w, the Brier of the blend w*mid + (1-w)*est over settled
+    forecasts, against the market's own Brier, plus the closed-form optimal
+    w (the least-squares minimizer over the blend line). Reported overall
+    and on the disagreement slice (|est-mid| >= 0.05) — the only rows where
+    a blend policy would change a decision; at-market rows drag every blend
+    delta toward zero by construction.
+
+    This is the adoption gate for market-prior blending (edge-research plan
+    2026-08-24, rec 2): blending replaces the outside-view veto only if
+    w_opt moves materially below 1.0 on a disagreement slice big enough to
+    trust. First run (2026-08-25, n=254/42): w_opt 0.93 overall, 1.11 on
+    disagreements — the estimate added no information at the margin and the
+    veto stayed.
+    """
+    def slice_stats(rows):
+        if not rows:
+            return {"n": 0}
+        d = [(r["est_prob"], r["market_prob_at_record"],
+              1.0 if r["status"] == "won" else 0.0) for r in rows]
+        n = len(d)
+        bm = sum((m - y) ** 2 for e, m, y in d) / n
+        out = {"n": n, "brier_market": round(bm, 4),
+               "brier_est": round(sum((e - y) ** 2 for e, m, y in d) / n, 4),
+               "by_weight": []}
+        for w in BLEND_GRID:
+            bb = sum((w * m + (1 - w) * e - y) ** 2 for e, m, y in d) / n
+            out["by_weight"].append(
+                {"w_market": w, "brier": round(bb, 4),
+                 "delta_vs_market": round(bb - bm, 4)})
+        den = sum((m - e) ** 2 for e, m, y in d)
+        if den > 0:
+            wopt = sum((m - e) * (y - e) for e, m, y in d) / den
+            bo = sum((wopt * m + (1 - wopt) * e - y) ** 2 for e, m, y in d) / n
+            out["w_opt"] = round(wopt, 3)
+            out["brier_at_w_opt"] = round(bo, 4)
+            out["w_opt_delta_vs_market"] = round(bo - bm, 4)
+        return out
+
+    return {"overall": slice_stats(fsettled),
+            "disagreement": slice_stats(
+                [r for r in fsettled
+                 if abs(r["est_prob"] - r["market_prob_at_record"]) >= 0.05])}
+
+
 def threshold_sweep_no(fsettled):
     """Complement-side counterfactual of threshold_sweep: for each edge floor
     X, simulate a flat 1.0-unit bet AGAINST every forecast whose complement
@@ -152,6 +201,7 @@ def forecast_report(frows):
            "by_category": {}, "by_skip_reason": {}, "calibration": [],
            "threshold_sweep": threshold_sweep(fsettled),
            "threshold_sweep_no": threshold_sweep_no(fsettled),
+           "blend_sweep": blend_sweep(fsettled),
            "threshold_sweep_no_skipped": sum(
                1 for r in fsettled if r.get("best_bid_at_record") is None),
            "open": n_open,
@@ -327,6 +377,13 @@ def main():
                       f"roi={s['roi']:+.3f} brier_delta={s['brier_delta']:+.4f}")
         if fr.get("threshold_sweep_no_skipped"):
             print(f"  sweep-no skipped {fr['threshold_sweep_no_skipped']} rows lacking best_bid_at_record")
+        for name, s in (fr.get("blend_sweep") or {}).items():
+            if s.get("n") and "w_opt" in s:
+                print(f"  blend[{name}]: n={s['n']:3} "
+                      f"brier mkt={s['brier_market']:.4f} est={s['brier_est']:.4f} "
+                      f"w_opt={s['w_opt']:.3f} (delta {s['w_opt_delta_vs_market']:+.4f}) "
+                      + " ".join(f"w{b['w_market']:.1f}:{b['delta_vs_market']:+.4f}"
+                                 for b in s["by_weight"]))
     else:
         print(f"\nforecasts: settled=0 open={fr.get('open', 0)}")
 

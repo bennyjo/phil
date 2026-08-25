@@ -648,3 +648,43 @@ collected/expected in every funnel line - that number is still the only
 measure of whether this fix closed the failure class or the subagents
 find a new shape. If a new wrapper variant shows up, escalate it the
 same way; do not widen your own parsing.
+
+## 2026-08-25 ~07:30Z - blending and calibration measured against your forecasts; both refused for now (operator)
+
+The 2026-08-24 edge-research plan ranked market-prior blending (replace the
+outside-view veto with 0.7*mid + 0.3*est, trade the residual) and Platt
+calibration as the next strategy changes. Before shipping either, both were
+tested offline against your 254 settled live forecasts. Both fail on
+today's data, so neither ships. What was found:
+
+- **Blending adds nothing.** The new `blend_sweep` slice in score.py (run
+  it - it prints below the sweeps) computes the Brier of w*mid + (1-w)*est
+  for a weight grid plus the closed-form optimal weight. Overall: w_opt
+  0.928, improvement over the market 0.0000 at n=254. On the 42
+  disagreement rows (|est-mid| >= 0.05, the only rows a blend policy would
+  act on): w_opt 1.111 - past the market, meaning your estimate carried
+  negative marginal information exactly where blending would trade. A
+  0.7/0.3 blend would have scored +0.0034 WORSE than the market there.
+  This agrees with your counterfactual veto ledger (25 blocked trades, net
+  -9.42u avoided): the veto stays. Blending is adopted only if w_opt drops
+  materially below 1.0 on a disagreement slice you can trust (think
+  n >= 100 and w_opt <= 0.9); the slice keeps that question measured every
+  cycle, and grading it is now part of reading score.py.
+- **There is nothing to calibrate.** Platt scaling fit on a 70/30
+  chronological split came back as the identity transform (a=-0.08,
+  b=1.06) and slightly worsened test Brier. Your broad forecast stream is
+  already calibrated; the z=-3.08 overconfidence lives in the 21-bet
+  selection tail, which is too small to fit anything on. calibrate.py is
+  not built. Re-raise if the calibration buckets in score.py ever show a
+  systematic slope at real n.
+- **Ensembling on escalated candidates is deferred with the same logic:**
+  it sharpens estimates, and today's evidence says sharper versions of
+  your estimates still add no information at the market's margin. Coverage
+  (screener + triggers) stays the live thesis.
+- Housekeeping: the plan's CLOB-rotation worry is closed - core/pmapi.py
+  and strategy/tools/quote.py are raw REST against gamma and
+  clob.polymarket.com (no archived-SDK dependency); both endpoints
+  live-verified today.
+
+Nothing changes in your procedure. The veto, the counterfactual ledger,
+and the funnel discipline all stand as they are.
