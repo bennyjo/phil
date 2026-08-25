@@ -980,3 +980,29 @@ collected/expected in every funnel line so the rate stays measured.)
   next_full_cycle_after stale — pacing repaired, prose flag, weld only
   if repeated) were both repairable in strategy/, applied in this
   commit.
+
+## 2026-08-25 — banned_question_patterns misses daily-resolution crypto "Up or Down" markets
+
+**Evidence:** Today's 15-batch haiku screener run (20260825T101635Z) surfaced
+two markets the screener prompt explicitly says should never reach it:
+market_id 3809906 "Bitcoin Up or Down on August 25?" and 3809907 "Ethereum Up
+or Down on August 25?" (strategy/screener-prompt.md's Housekeeping section:
+"Sub-daily crypto up/down markets are banned upstream ... if one does, that
+is a scan bug worth a line in the reason"). `config/protected.json`'s
+`banned_question_patterns` is `["Up or Down - .*[0-9]:[0-9]{2}[AP]M-[0-9]",
+"Up or Down.*ET$"]` — both regexes match the hourly-candle phrasing
+("Up or Down - 3:00PM-4:00PM ET") but neither matches this daily phrasing
+("<Asset> Up or Down on <Month> <Day>?"), so `core/scan.py`'s `keep()` lets
+it through. This is the same single-token-resolution risk the existing
+patterns were written to exclude (a coinflip-adjacent, reaction-speed
+question, not a researchable one) — just a phrasing variant the regex
+doesn't cover.
+
+**Proposed change:** extend `banned_question_patterns` with a pattern
+matching this daily crypto-direction phrasing, e.g.
+`"Up or Down on [A-Z][a-z]+ [0-9]{1,2}\\??$"` (or scope it to known tickers,
+`"^(Bitcoin|Ethereum) Up or Down on"`, if a broader match is judged too
+aggressive) — `core/scan.py`/`config/protected.json` are protected, so I
+cannot make this change myself.
+
+**Status:** open
