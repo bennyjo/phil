@@ -919,3 +919,64 @@ rate) — flagging the evidence for the operator to weigh, since the fix
 lives in core/screen.py or the subagent invocation, both outside what I
 own. Re-check the failure rate on the next few full-scale runs before
 treating 47% as stable; n=1 run so far.
+
+**Status:** endorsed by deep-retro (2026-08-25 — endorsed with one factual
+correction that changes the framing: this was NOT the tier's first
+full-scale run. journal/screener.jsonl holds two 300-market/15-batch runs
+on 2026-08-25 — 00:19Z run: 300/300 collected, 0 errors; 04:14Z run:
+160/300, 140 lost across 7 malformed batches. Day-1 record is therefore
+7/30 batches failed (23%), with per-run variance of 0%→47%, not a stable
+47% — the failure is intermittent, which points at output-format
+instability under identical prompts rather than a deterministic template
+gap. The diagnosis is otherwise verified: the 140 error rows are all
+`screen_error: "no answer for this market in the batch out file"`, nothing
+malformed entered the pool, and the agent has no lever — the template
+lives in protected core/screen.py. Recommended operator fix, cheapest
+first: (1) make `screen.py collect` unwrap the one known-shape wrapper
+`{"batch_id":..., "scores":[...]}` when the inner array validates — this
+recovers the entire observed failure class for a few lines of tolerant
+parsing and no re-spend; (2) failing that, a retry-once-on-malformed pass
+in collect (costs quota); a stronger schema reminder in the template is
+the weakest option since the 00:19Z run shows the current wording can
+already achieve 15/15. Keep the agent's own duty as stated: report
+collected/expected in every funnel line so the rate stays measured.)
+
+---
+
+## 2026-08-25 — deep-retro status pass
+
+- **2026-08-17 07:45Z detached-HEAD push no-op: ACTIONED (operator,
+  2026-08-24, commit bf0e8be).** loop.sh now reattaches main to HEAD
+  before each cycle; CYCLE.md step 9 reattaches before pushing and
+  verifies HEAD == origin/main after. The highest-priority ask on file
+  since Aug 17 is closed. This deep-retro session still started shallow
+  with a stale local main (the container-image state persists) but the
+  recovery path is now code on the loop.sh side and procedure in
+  CYCLE.md — no further carry needed unless a new silent no-op instance
+  appears.
+- **2026-08-10 forecast.py revision support: ACTIONED (operator,
+  2026-08-24, commit 6b29ccd).** `record --supersede` with linked rows
+  and the `revised_away` score slice — exactly the endorsed shape,
+  including the "measure whether revisions help" design note from the
+  PLBY worked example. First expected use: the open AfD forecast
+  (f37cee91366b) if polls move before ~Sep 4-5. Zero uses so far;
+  revised_away slice empty (settled 0 / open 0) — correct, no material
+  revision has occurred since it shipped.
+- **2026-08-16 inverted-outcome guard: ACTIONED (operator, 2026-08-24,
+  commit 0980816).** `|est_prob - mid| > 0.40` now refused without
+  `--confirm-extreme`. The fe954ed9f325 manual exclusion at the ~Aug 28
+  Canada GDP settlement is still required (rows are immutable); the
+  watch item carries it.
+- **2026-08-14 No-side threshold-sweep slice: ACTIONED (operator,
+  2026-08-24, commit 877a133).** `threshold_sweep_no` live in score.py;
+  first-run numbers already integrated into the playbook (c3492ce). The
+  two documented hand-arithmetic failures this instrument prevents are
+  now moot.
+- **2026-08-25 04:16Z screener output format: endorsed above** (with the
+  n=2-runs correction). This is the only open operator ask on file.
+- No other new operator asks from DEEP-2026-08-25: the window's two
+  process findings (census rows mislabeled `no-edge` — reconcile FAIL,
+  fixed by relabel + playbook taxonomy addition; 04:13Z FULL cycle left
+  next_full_cycle_after stale — pacing repaired, prose flag, weld only
+  if repeated) were both repairable in strategy/, applied in this
+  commit.

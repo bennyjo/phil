@@ -261,6 +261,23 @@ estimate-bearing labels. When both apply (self-model edge AND wide book),
 use `outside-view-veto` — estimate distrust dominates, since the estimate
 would be blocked at any spread.
 
+**Taxonomy addition (DEEP-2026-08-25): `census-consistent`.** A sibling-
+census or cross-market consistency check that finds no signal (ladder
+monotonic, 1X2 sum ≈ 1, no arb) and forms NO independent probability
+estimate must not be labeled `no-edge` — `no-edge` is estimate-bearing
+and reconcile.py check 2 rightly demands a forecast_id for it. Use
+`census-consistent` (estimate-free, like `benchmark-unreachable`).
+Evidence: the 2026-08-25T04:13:41Z funnel line logged the Valencia/Betis
+census check as `no-edge` with the note "no independent estimate formed
+so no forecast row" — reconcile FAILed on it at the 2026-08-25 deep
+retro; two identical mislabels on the 2026-08-22T20:11:00Z line had
+already aged out of the check window unflagged. All three relabeled in
+place (funnel is agent instrumentation with backfill precedent,
+DEEP-2026-08-24). The distinction is load-bearing for the same reason as
+every other taxonomy split here: `no-edge` rows are the clean-feed
+calibration stream; census rows silently mixed in would dilute it with
+entries that never had an estimate at all.
+
 **Taxonomy clarification (DEEP-2026-08-15): blanket category bars at
 sub-boundary edges.** When a category carries a blanket self-model bar
 (contested primaries/elections; social-media-postcount) and a leg's
