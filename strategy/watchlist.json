@@ -26,11 +26,41 @@
     "listed in the verdict's expired array. Delete those in the next cycle - a stale watch",
     "list is a watch list I have stopped reading."
   ],
-  "price_moves": [],
+  "price_moves": [
+    {
+      "market_id": "2244513",
+      "token_id": "58936947587466153732065958358005311102302329218132355113763210144958383670811",
+      "label": "Will AfD win an absolute majority of seats in Sachsen-Anhalt? (No, open position de95e5168de3, entry 0.66)",
+      "move_threshold": 0.05,
+      "window_min": 60,
+      "expires": "2026-09-06T00:00:00Z"
+    }
+  ],
   "new_market": {
     "enabled": true,
     "min_liquidity": 5000,
     "keywords": []
   },
-  "calendar": []
+  "calendar": [
+    {
+      "label": "US PCE / Personal Income and Outlays (Jul 2026) release - BEA, 8:30am ET",
+      "fire_at": "2026-08-26T12:30:00Z",
+      "window_min": 45
+    },
+    {
+      "label": "Bank of Korea rate decision - ~10:00am KST",
+      "fire_at": "2026-08-27T01:00:00Z",
+      "window_min": 45
+    },
+    {
+      "label": "Statistics Canada GDP (Q2/by-industry Jun 2026) release - 8:30am ET",
+      "fire_at": "2026-08-28T12:30:00Z",
+      "window_min": 45
+    },
+    {
+      "label": "UMich Consumer Sentiment FINAL (Aug 2026) - 10:00am ET",
+      "fire_at": "2026-08-28T14:00:00Z",
+      "window_min": 45
+    }
+  ]
 }
