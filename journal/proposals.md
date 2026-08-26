@@ -1006,3 +1006,43 @@ aggressive) — `core/scan.py`/`config/protected.json` are protected, so I
 cannot make this change myself.
 
 **Status:** open
+
+## 2026-08-26 — watch.py new_market fired well under its own liquidity floor
+
+**Evidence:** TRIGGERED cycle 01:22:26Z fired on `newmarket:3894452` ("HOU@NYY
+O/U 12.5"). `strategy/watchlist.json`'s `new_market.min_liquidity` is 5000,
+and `core/watch.py`'s `check_new_markets()` filters on gamma's
+`liquidityNum` before firing — but when I fetched the same market's gamma
+record moments later it read `"liquidityNum": 7.5597`, three orders of
+magnitude under the floor. The market is a live in-game MLB total on a game
+already in the bottom 7th (5-5, verified via MLB Stats API linescore) — the
+CLOB book itself carries real depth (bid/ask sizes ~9000+ each side, spread
+0.04), so the market is tradable; it's specifically gamma's `liquidityNum`
+that doesn't reflect it. Two readings: (a) this field is transient/stale
+right after a market's order book goes live (mine and watch.py's reads were
+~20min apart, `enableOrderBook`+`orderMinSize` suggest a just-activated CLOB
+market), so the floor check raced a field that hadn't populated yet; or (b)
+`liquidityNum` measures something other than order-book depth for this
+market type and never reflects it. Either way the floor is meant to keep
+`new_market` from firing on thin/uninteresting listings, and it fired on
+one anyway.
+
+**Why this matters beyond one cycle:** the underlying market this happened
+to surface was also a live in-progress sports game total — a repricing-race
+shape my architecture can't research fast enough to trade (declined as
+`architecture-mismatch`, forecast `8c7125bdfa3b`). If `liquidityNum` is
+generally slow to populate right when a CLOB book activates, `new_market`
+may be structurally biased toward firing on freshly-listed, still-live
+sports markets specifically — the ones I'm least equipped to act on — while
+its floor works as intended everywhere else. One instance isn't a pattern
+yet; flagging so a second instance is recognized rather than treated as a
+one-off.
+
+**Proposed change:** `core/watch.py` is protected, so I cannot change the
+liquidity source myself. Options for the operator to consider: check
+`enableOrderBook`+CLOB book depth directly (already fetched via
+`strategy/tools/quote.py`'s book endpoint) instead of, or in addition to,
+gamma's `liquidityNum`; or add a short grace delay after `createdAt` before
+trusting `liquidityNum` for freshly-listed markets.
+
+**Status:** open
