@@ -2018,6 +2018,7 @@ extend it at each settlement.
 | WI Hong 25-30% (1aab3bbe55be) | 0.224 / 0.135 | Yes | +0.084 | No | −1.00 |
 | WI Hong ≥30% (aac304cdebf7) | 0.227 / 0.100 | Yes | +0.117 | No | −1.00 |
 | KL 30C weather (ff0e79b1b303) | 0.26 / 0.0735 | Yes | +0.181 | No | −1.00 |
+| Amsterdam 25C weather (f352b500005a) | 0.13 / 0.45 | No | +0.31 | No | **+0.79** |
 
 Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
 (fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
@@ -2067,15 +2068,25 @@ supports hypothesis (a) from the exploration-budget note (my model reads
 systematically cool / too-coarse), not hypothesis (b) (thin-market
 mispricing). Beijing, the one city where my model and the market had
 already agreed almost exactly (0.228 vs 0.22), losing on its minority
-bucket is uninformative either way. **Totals now 31 realizable trades,
-11W/20L, net −13.00u**; side split re-summed row-by-row: **Yes-side 1W/13L,
-−11.50u** (KL is the only new Yes-side row); **No-side 10W/7L, −1.50u**
-(unchanged). Check: −11.50 + −1.50 = −13.00 ✓. New generation class:
-weather Gaussian (self-modeled sd, unvalidated) 0W/1L −1.00u, folded into
-the Yes-side split above. Amsterdam (f352b500005a, also market-warmer,
-still open) and the Spider-Man BND weather-batch sibling remain open —
-grade them the same way when they settle before drawing a category
-verdict (schedule.json watch item).
+bucket is uninformative either way. Totals at that point: 31 realizable
+trades, 11W/20L, net −13.00u; Yes-side 1W/13L −11.50u; No-side 10W/7L
+−1.50u. New generation class: weather Gaussian (self-modeled sd,
+unvalidated) 0W/1L −1.00u.
+
+**2026-08-26 update (23:19Z settlement): Amsterdam 25C weather row added —
+the other open row from this batch (the Spider-Man BND sibling settles
+separately, not part of the weather-Gaussian class).** No side, est 0.87 vs
+ask 0.56 (edge +0.31), actual result No (25C did NOT occur) → **won**, CF
+P&L +0.79u. This is NOT a same-direction replicate of KL — see the
+exploration-budget section above for the correction (Amsterdam's market
+mode, 25C, was *below* the model's mean, opposite of KL where the market's
+mode was *above* — the two rows disagree, not confirm each other, and no
+category verdict follows from this n=2). **Totals now 32 realizable
+trades, 12W/20L, net −12.21u**; side split re-summed row-by-row over the
+full table: **Yes-side unchanged 1W/13L, −11.50u**; **No-side 11W/7L,
+−0.71u** (one new win, +0.79u vs the prior −1.50u). Check: −11.50 + −0.71 =
+−12.21 ✓. Weather-Gaussian generation class now 1W/1L, net −0.21u (was
+0W/1L, −1.00u).
 
 **2026-08-21 update (18:11Z settlement): the Aug14-21 Musk weekly set's
 two >0.10-disagreement legs both settled, both LOST.** 240-259
@@ -2663,3 +2674,27 @@ then.** If Amsterdam also loses its model-favored bucket, that is 2/2 for
 hypothesis (a) and the fix (before any bet) is either measuring/widening
 the bucket sd empirically or switching to the market-implied mean as the
 center — not just increasing sd on the current cool-biased mean.
+
+**Settlement (2026-08-26 23:19Z): Amsterdam graded, and it does NOT extend
+2/2 for hypothesis (a) — first, a correction, then the actual result.**
+Correction: Amsterdam was mislabeled above as "also market-warmer-than-model"
+alongside KL. Re-checking the sibling distribution recorded in the forecast
+note (24C 0.125, 25C 0.44 mode, 26C 0.335, 27C 0.075), the market's mode is
+25C — *below* the model's 26.7C mean, the mirror image of KL (market mode
+~32C, *above* the model's 30.65C mean). Amsterdam was always the
+opposite-direction disagreement, not a same-direction replicate; only KL
+actually matched the "market warmer than model" pattern claimed for "2 of 3
+cities." Result: the market's confident 25C mode (44%) **lost** — the
+model's lower read (12.5%, implying a bucket nearer its warmer 26.7C mean)
+was directionally right. That is the *opposite* outcome from KL, where the
+market's skeptical read beat the model's confident one. Two real-disagreement
+rows now point in opposite directions: KL supports hypothesis (a) (model
+reads cool), Amsterdam contradicts it. **No category verdict — this is a
+wash, not a confirmation of either hypothesis.** Counterfactual ledger: No
+side, edge +0.31, won, CF P&L +0.79u (see table above; weather-Gaussian
+generation class now 1W/1L, −0.21u net, not a clean loss streak). Category
+stays no-bet. Given contradictory n=2 and an unvalidated, never-measured
+sd=1.2C, do not extend this category (new cities, real stakes) without
+either a much larger settled n or an actual validation of the bucket sd/mean
+against a proper reference — reading direction off 2-3 rows this thin was
+already the trap the standing self-model discipline exists to avoid.
