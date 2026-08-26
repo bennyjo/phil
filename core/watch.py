@@ -347,6 +347,12 @@ def check_new_markets(cfg, now, notes):
             continue
         if any(p.search(question) for p in banned):
             continue
+        # Listings whose game is already underway are repricing races the
+        # cycle agent cannot research in time (4 declined fires, 2026-08-26);
+        # gamma listing time is not research-opportunity time for these.
+        game_start = parse_iso(m.get("gameStartTime"))
+        if game_start is not None and game_start <= now:
+            continue
         market_id = str(m.get("id") or "").strip()
         if not market_id:
             continue

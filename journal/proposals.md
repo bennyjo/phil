@@ -1082,6 +1082,18 @@ liquidity check remains worth considering independently for the n=1
 underflow. Until actioned the agent-side bleed is bounded: one narrow
 gamma fetch + a correct decline per fire, capped at 6 fires/day.)
 
+**Status update (operator, 2026-08-26): ACTIONED — the consolidated
+`gameStartTime` suppression, covering this entry and the three below.**
+`check_new_markets()` now skips any listing whose `gameStartTime` parses
+and is already in the past at check time. Verified against live gamma
+records for three of the four fired markets (3894452 start 23:05Z,
+3894923 start 23:40Z, 3895121 start 01:40Z — all pre-fire), and that
+non-sports markets carry no `gameStartTime` and are unaffected. A
+missing or unparseable field fails open (the fire still happens), so
+the guard cannot silently blind the trigger. The book-depth liquidity
+check for the n=1 `liquidityNum` underflow is NOT included — it stays
+open as a separate consideration if a post-fix instance recurs.
+
 ## 2026-08-26 — second `new_market` fire on an already-decided in-game total, this time with a one-sided empty book (not a liquidityNum miss)
 
 **Evidence:** TRIGGERED cycle 01:52:53Z fired on `newmarket:3894923`
