@@ -2005,6 +2005,12 @@ extend it at each settlement.
 | Musk wk 280-299 (cc08840449e9) | 0.31 / 0.165 | Yes | +0.141 | No | −1.00 |
 | TI VISION/Yandex (6b84771a3bd6) | 0.383 / 0.235 | Yes | +0.143 | No | −1.00 |
 | BTC touch-$80k (fc4a9d5caace) | 0.5034 / 0.388 | No | +0.115 | Yes | −1.00 |
+| WI Hong <5% (6a7decac51f2) | 0.007 / 0.0785 | No | +0.070 | No | **+0.08** |
+| WI Hong 5-10% (7ae672a0a6db) | 0.031 / 0.096 | No | +0.051 | No | **+0.09** |
+| WI Hong 15-20% (e6c093fc7660) | 0.178 / 0.209 | No | +0.023 | No | **+0.25** |
+| WI Hong 20-25% (597ed3729e91) | 0.241 / 0.1845 | Yes | +0.052 | No | −1.00 |
+| WI Hong 25-30% (1aab3bbe55be) | 0.224 / 0.135 | Yes | +0.084 | No | −1.00 |
+| WI Hong ≥30% (aac304cdebf7) | 0.227 / 0.100 | Yes | +0.117 | No | −1.00 |
 
 Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
 (fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
@@ -2016,7 +2022,29 @@ bootstrap fork below), not this ledger. Same treatment already applied to
 140-159 (70331099597c) and the still-open 160-179 (c24926a5c9d7). Same
 exclusion again 2026-08-21: this week's Musk wk 260-279 (42dc4279d3b9,
 edge 0.05, category-bar) settled LOST but is off-ledger for the same
-reason — the blanket bar, not the veto, is what declined it.
+reason — the blanket bar, not the veto, is what declined it. Excluded
+again 2026-08-26 (RETRO-20260826-0528): WI Hong 10-15% (03901079bd63) —
+est (0.090) sits on the market mid (0.089), and the fill-price check shows
+negative edge both sides (Yes 0.090−0.107=−0.017; No 0.910−0.929=−0.019),
+so there is no realizable disagreement at all, not merely one under the
+0.10 bar — same non-trade treatment as the PPI 5.4%/≥6.0% rows.
+
+**2026-08-26 update (05:28Z settlement): six-row Wisconsin Hong
+margin-of-victory bracket batch settled, all No (Hong lost the primary
+outright).** 3W (No side, small longshot-payout profits: +0.08+0.09+0.25 =
++0.42u) / 3L (Yes side, all −1.00u) — a clean, uncorrelated confirmation of
+the existing pattern: every Yes-side disagreement in this batch lost,
+every No-side disagreement won. **Totals now 30 realizable trades, 11W/19L,
+net −12.00u**; side split re-summed row-by-row over the full table:
+**Yes-side 1W/12L, −10.50u** (three new losses, no new wins — extends the
+Yes-side lifetime record to 1-for-13); **No-side 10W/7L, −1.50u** (three
+new wins — the No-side hit rate is now a genuine majority, 59%, even
+though the side stays net-negative in dollars because longshot-No fills
+pay little on a win and the earlier No-side losses were larger stakes at
+worse prices). Check: −10.50 + −1.50 = −12.00 ✓. No playbook rule change
+from this row alone (see RETRO-20260826-0528) — the widened Yes-side split
+is flagged for the next deep retro's Yes/No-side asymmetry discussion, not
+acted on here.
 
 **2026-08-21 update (18:11Z settlement): the Aug14-21 Musk weekly set's
 two >0.10-disagreement legs both settled, both LOST.** 240-259
