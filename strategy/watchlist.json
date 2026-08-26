@@ -61,6 +61,11 @@
       "label": "UMich Consumer Sentiment FINAL (Aug 2026) - 10:00am ET",
       "fire_at": "2026-08-28T14:00:00Z",
       "window_min": 45
+    },
+    {
+      "label": "ISM Manufacturing PMI (Aug 2026) release - 10:00am ET (forecast 700dfea982ec, 55.0-55.9 bracket, est 0.28 vs ask 0.26, no-edge)",
+      "fire_at": "2026-09-01T14:00:00Z",
+      "window_min": 45
     }
   ]
 }
