@@ -158,7 +158,13 @@ core writes the ledger); retros grade `5fbf676cfd7f` under fact-final
 manually. score.py's by-class table picks the split up automatically as
 labeled rows settle. If fact-final reaches n>=5 settled with the record
 the operator's note predicts, a proposal to add it to
-`real.allowed_edge_classes` is warranted; not before. The wide-book
+`real.allowed_edge_classes` is warranted; not before.
+
+**First settlement (RETRO-20260826-0818): `5fbf676cfd7f` WON, +$31.23**,
+brier_delta -0.7421 — no resolver deviation, official box score matched the
+already-final fact at bet time. **fact-final running total: n=1, 1W/0L,
++$31.23.** 1 of the 5 settlements needed before the `real.allowed_edge_classes`
+proposal is warranted. The wide-book
 exception (§Spread-rule scope) reads on both labels wherever it says
 "info-race class" — its tightened condition (1) (fact FINAL/MECHANICAL)
 is definitionally satisfied by fact-final and remains the binding test
