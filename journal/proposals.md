@@ -1119,3 +1119,18 @@ rediscover the same shape live each time. Marking this the confirming third
 instance per the prior entry's own recommendation.
 
 **Status:** open
+
+## 2026-08-26 — fourth `new_market` fire on an already-live in-game total (same session)
+
+**Evidence:** TRIGGERED cycle 02:41Z fired on `newmarket:3895121` (PIT@SD
+O/U 4.5), listed after the game was already in the bottom of the 4th
+(1 out, 0-0, MLB Stats API gamePk 823259) — same timing shape as the prior
+three entries. Book-unfillability symptom repeats too: Over bid/ask
+0.34/0.99, Under bid/ask 0.07/0.99, both asks pinned near 1.0 regardless of
+which side the pace-extrapolation model favored (est 0.59 Over). Fourth
+instance in one session (after 3894452, 3894923, and the 3895012/3895006/
+3895005 triple) — adding this purely as a running tally; the pattern and
+its consequence are already fully evidenced by the prior three entries and
+this changes no conclusion, just the count.
+
+**Status:** open (unchanged — see prior three entries for the proposed fix)
