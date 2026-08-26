@@ -1088,3 +1088,34 @@ than spending a narrow gamma fetch discovering that live. Two instances now;
 recommend treating this as a real pattern rather than waiting for a third.
 
 **Status:** open
+
+## 2026-08-26 — third `new_market` fire on already-live in-game totals (2 games, 3 markets, one cycle)
+
+**Evidence:** TRIGGERED cycle 02:23Z fired on `newmarket:3895012`,
+`newmarket:3895006`, `newmarket:3895005` together — CLE@LAA O/U 10.5 and O/U
+9.5 (bottom 2nd, 4-0, ~45min post-commence) and TEX@CWS O/U 20.5 (bottom
+7th, 11-7=18 combined runs). Same shape as the two prior entries above: all
+three markets were listed after their games were already underway, not
+pre-game. This time `core/forecast.py`'s own CLOB book read makes the
+untradeable part concrete rather than inferred: all three books were wide
+and one-sided (3895012 bid=0.19/ask=0.99, 3895006 bid=0.14/ask=0.98,
+3895005 bid=0.43/ask=0.94) — asks near 1.0 regardless of which side a quick
+pace-extrapolation model favored, so even where a real edge might exist
+(e.g. TEX@CWS: ~3 more runs needed over ~2.5 remaining half-innings at an
+already-elevated scoring pace, est ~0.60 Over vs a stale-looking 0.29
+last-trade price) the actual fillable ask (0.98) makes the trade a clear
+loser. Third instance in one session; the pattern (in-game listing timing)
+and now also its practical consequence (unfillable/mispriced book on the
+side any live-state model would favor) look confirmed rather than
+coincidental.
+
+**Proposed change:** unchanged from the prior two entries — still not mine
+to fix (`core/watch.py`, `config/protected.json`). Given three instances
+now share both the timing cause and the same book-unfillability symptom,
+recommend treating `new_market` fires tagged as sports segment/total
+markets as a distinct category the agent should triage with a live-game-state
+check before spending any research budget, rather than continuing to
+rediscover the same shape live each time. Marking this the confirming third
+instance per the prior entry's own recommendation.
+
+**Status:** open
