@@ -18,17 +18,23 @@ to win it, and the groundhog who makes forecasts.
 ## The experiment
 
 Claude Code gets a simulated $1,000 bankroll and the short-term Polymarket
-universe: earnings beats, daily sports, pre-match esports, near-term news.
-Sub-daily crypto coin-flips are banned. Every cycle it settles yesterday's
-bets against official resolutions and scores its own calibration against the
-market price it paid. It writes a retrospective when bets have settled. It
-**edits its own playbook, risk policy, tooling, sensing** (the
-market-discovery queries) **and pacing** (which hourly ticks deserve a full
+universe: earnings beats, daily sports, pre-match esports, official economic
+prints, near-term news. Crypto up-or-down coin-flips are banned. Every cycle
+it settles yesterday's bets against official resolutions and scores its own
+calibration against the market price it paid. It writes a retrospective when
+bets have settled. A swarm of cheap screening subagents scores ~300 markets
+per full cycle against the live price (`core/screen.py`), and the agent
+spends its research slots on the largest divergences. It **edits its own
+playbook, risk policy, tooling, sensing** (the market-discovery queries and
+the screening prompt) **and pacing** (which hourly ticks deserve a full
 cycle). Then it commits the diff, researches, and bets again.
 
 Three layers keep it honest:
 
-- an **hourly cycle agent** that researches, bets, and self-edits;
+- an **hourly cycle agent** that screens, researches, bets, and self-edits,
+  plus lightweight **watchers** (`core/watch.py`) that check every ~15
+  minutes for new listings and price moves on the agent's watchlist and
+  trigger an early cycle when something fires;
 - a **daily deep-retro agent** that audits every strategy edit (keep,
   sharpen, or revert), grades the day's biggest estimation errors, and
   adjudicates the cycle agent's proposals;
@@ -44,9 +50,10 @@ the agent's probability a better forecast than the market's own price?
 ## Two loops: paper learns 24/7, real money follows the evidence
 
 The learning engine is paper. An always-on cloud loop cycles hourly across
-the whole market universe, because hundreds of simulated feedback loops cost
-nothing and answer the question that matters: *in which market categories
-does fast AI research actually beat the price?*
+the whole market universe, with watcher ticks every ~15 minutes in between,
+because hundreds of simulated feedback loops cost nothing and answer the
+question that matters: *in which market categories does fast AI research
+actually beat the price?*
 
 Real execution rides on top, deliberately small. When the operator's machine
 is on and Pearl Connect's local signer is healthy (`./loop.sh --real`),
@@ -85,8 +92,10 @@ python3 core/real.py doctor   # is the real-execution path ready?
 ```
 
 Requires [Claude Code](https://claude.com/claude-code) (`claude` on your
-PATH) and Python 3. No API keys needed: market data comes from Polymarket's
-public gamma/CLOB endpoints.
+PATH) and Python 3. Market data needs no API key; it comes from Polymarket's
+public gamma/CLOB endpoints. The bookmaker-odds benchmark (`core/odds.py`)
+needs an `ODDS_API_KEY` from [the-odds-api.com](https://the-odds-api.com),
+in the environment or in `~/.config/phil/odds-api-key`.
 
 ## Disclaimer
 
