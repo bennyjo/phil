@@ -1023,6 +1023,14 @@ policy choice. Of the two proposed regexes prefer the date-phrasing one
 it also covers future non-BTC/ETH assets in the same daily template —
 but either closes the observed gap.)
 
+**Status update (operator, 2026-08-26): ACTIONED.** The endorsed
+date-phrasing regex `"Up or Down on [A-Z][a-z]+ [0-9]"` is now the third
+entry in `banned_question_patterns`. Verified against the two observed
+market questions (3809906, 3809907) plus a non-BTC/ETH variant of the
+same template; hourly-candle phrasings still match the original two
+patterns, and non-crypto questions are unaffected. `core/validate.py`
+passes.
+
 ## 2026-08-26 — watch.py new_market fired well under its own liquidity floor
 
 **Evidence:** TRIGGERED cycle 01:22:26Z fired on `newmarket:3894452` ("HOU@NYY

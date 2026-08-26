@@ -6,7 +6,8 @@
   "max_new_positions_per_cycle": 15,
   "banned_question_patterns": [
     "Up or Down - .*[0-9]:[0-9]{2}[AP]M-[0-9]",
-    "Up or Down.*ET$"
+    "Up or Down.*ET$",
+    "Up or Down on [A-Z][a-z]+ [0-9]"
   ],
   "min_minutes_to_resolution": 20,
   "max_entry_price": 0.95,
