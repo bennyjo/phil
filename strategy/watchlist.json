@@ -51,11 +51,6 @@
   },
   "calendar": [
     {
-      "label": "US PCE / Personal Income and Outlays (Jul 2026) release - BEA, 8:30am ET",
-      "fire_at": "2026-08-26T12:30:00Z",
-      "window_min": 45
-    },
-    {
       "label": "Bank of Korea rate decision - ~10:00am KST",
       "fire_at": "2026-08-27T01:00:00Z",
       "window_min": 45
@@ -73,6 +68,11 @@
     {
       "label": "ISM Manufacturing PMI (Aug 2026) release - 10:00am ET (forecast 700dfea982ec, 55.0-55.9 bracket, est 0.28 vs ask 0.26, no-edge)",
       "fire_at": "2026-09-01T14:00:00Z",
+      "window_min": 45
+    },
+    {
+      "label": "Brazil Q2 2026 GDP QoQ (IBGE PIB, official quarterly print) release - Sep 1, exact time unconfirmed (WebSearch found date only, defaulting to prior-quarter's ~12:00 UTC slot); markets 2428141/2428142/2428143 bracket 0.0-0.8%; one non-official proxy (FGV/IBRE monthly series) suggested ~0.3% QoQ but is a different methodology, not a standalone sharp benchmark -- verify official IBGE release time and look for a real consensus (Reuters poll, analyst median) when this fires",
+      "fire_at": "2026-09-01T12:00:00Z",
       "window_min": 45
     }
   ]
