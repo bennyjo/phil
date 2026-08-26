@@ -1046,3 +1046,45 @@ gamma's `liquidityNum`; or add a short grace delay after `createdAt` before
 trusting `liquidityNum` for freshly-listed markets.
 
 **Status:** open
+
+## 2026-08-26 — second `new_market` fire on an already-decided in-game total, this time with a one-sided empty book (not a liquidityNum miss)
+
+**Evidence:** TRIGGERED cycle 01:52:53Z fired on `newmarket:3894923`
+("TEX@CWS O/U 16.5", resolves Over at combined runs >=17). This time
+`liquidityNum` was 10087.8 — well over the 5000 floor, so the prior entry's
+specific liquidityNum-underflow bug did NOT repeat. What did repeat is the
+broader shape flagged there ("flagging so a second instance is recognized"):
+`new_market` fired on a market for a game already live in progress, past the
+point where the outcome is researchable in the pre-game sense. Here it went
+further — by the time I checked MLB Stats API's linescore (top 6th, 1-2
+outs), combined runs were ALREADY 17, so Over was already mechanically
+decided (runs are monotonic; barring a wipe-the-game cancellation, which the
+market's own rules only invoke for full-game abandonment with no makeup,
+this cannot revert). True P(Over)~0.99. But the CLOB book for the Over token
+had ZERO asks (bids only, up to 0.61) — nothing to buy against — while the
+Under token (the near-certain loser) had asks from 0.39. `core/ledger.py`
+correctly rejects this (`no asks in the book`), and even if an ask appears
+on Over once the book catches up, it will almost certainly clear
+`config/protected.json`'s `max_entry_price` 0.95 (a mechanically-certain
+outcome reasonably prices at ~0.98-1.00), so the cap would block it too.
+Both instances now share one root cause candidate: `new_market` treats a
+freshly-*listed* gamma market as equivalent to a freshly-*startable*
+research opportunity, but for sports segment/total markets tied to a game
+already underway, "freshly listed" can mean "freshly listed after the game
+— or even the whole decision — has already happened," which is a different
+and mostly untradeable animal (either raced or already-resolved-but-book-
+lagging). The two symptoms differ (sub-floor liquidityNum vs a one-sided
+book past the outcome's decision point) but the trigger-timing cause looks
+shared.
+
+**Proposed change:** still not mine to fix (`core/watch.py`,
+`config/protected.json`). Beyond the prior entry's liquidity-source options,
+this instance suggests a second, independent mitigation worth considering:
+for `new_market` fires specifically, a quick live-game-state check (the kind
+`core/odds.py scores` already does) before firing on anything tagged as a
+live sports segment/total market — either suppressing the fire or tagging it
+so the agent knows to expect a repricing-race/already-decided shape rather
+than spending a narrow gamma fetch discovering that live. Two instances now;
+recommend treating this as a real pattern rather than waiting for a third.
+
+**Status:** open
