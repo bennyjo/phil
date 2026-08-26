@@ -2017,6 +2017,7 @@ extend it at each settlement.
 | WI Hong 20-25% (597ed3729e91) | 0.241 / 0.1845 | Yes | +0.052 | No | −1.00 |
 | WI Hong 25-30% (1aab3bbe55be) | 0.224 / 0.135 | Yes | +0.084 | No | −1.00 |
 | WI Hong ≥30% (aac304cdebf7) | 0.227 / 0.100 | Yes | +0.117 | No | −1.00 |
+| KL 30C weather (ff0e79b1b303) | 0.26 / 0.0735 | Yes | +0.181 | No | −1.00 |
 
 Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
 (fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
@@ -2051,6 +2052,30 @@ worse prices). Check: −10.50 + −1.50 = −12.00 ✓. No playbook rule change
 from this row alone (see RETRO-20260826-0528) — the widened Yes-side split
 is flagged for the next deep retro's Yes/No-side asymmetry discussion, not
 acted on here.
+
+**2026-08-26 update (17:12Z settlement): Kuala Lumpur 30C weather row
+added, first settled row from the new weather category (exploration
+budget, DEEP-2026-08-25 22:xxZ); Beijing 26C sibling settled the same tick
+but is EXCLUDED from this table — est 0.23 vs ask 0.23/bid 0.21 leaves no
+realizable edge either side (Yes: 0.23−0.23=0.00; No: 0.21−0.23=−0.02),
+same non-trade treatment as WI Hong 10-15%.** KL: est 0.26 (Yes) vs ask
+0.079, edge +0.181, actual high was NOT 30C → Yes lost, −1.00u. The
+directional read matters more than the single row: the market priced the
+30C bucket at just 0.073 against my model's 0.26-0.28 (implied warmer
+actual than my open-meteo N(30.65,1.2) mean), and the market was right —
+supports hypothesis (a) from the exploration-budget note (my model reads
+systematically cool / too-coarse), not hypothesis (b) (thin-market
+mispricing). Beijing, the one city where my model and the market had
+already agreed almost exactly (0.228 vs 0.22), losing on its minority
+bucket is uninformative either way. **Totals now 31 realizable trades,
+11W/20L, net −13.00u**; side split re-summed row-by-row: **Yes-side 1W/13L,
+−11.50u** (KL is the only new Yes-side row); **No-side 10W/7L, −1.50u**
+(unchanged). Check: −11.50 + −1.50 = −13.00 ✓. New generation class:
+weather Gaussian (self-modeled sd, unvalidated) 0W/1L −1.00u, folded into
+the Yes-side split above. Amsterdam (f352b500005a, also market-warmer,
+still open) and the Spider-Man BND weather-batch sibling remain open —
+grade them the same way when they settle before drawing a category
+verdict (schedule.json watch item).
 
 **2026-08-21 update (18:11Z settlement): the Aug14-21 Musk weekly set's
 two >0.10-disagreement legs both settled, both LOST.** 240-259
@@ -2618,3 +2643,23 @@ Amsterdam/KL settle in the market's favor, that supports hypothesis (a) and
 this category stays a no-bet self-model like box-office; if the model's
 buckets win instead, that's the first evidence for hypothesis (b) and worth
 a second, larger test.
+
+**Settlement (2026-08-26 17:12Z): Beijing and Kuala Lumpur graded, both the
+26C/30C buckets LOST — neither settlement is itself surprising (both
+buckets were minority outcomes under my own model), but the KL row is the
+useful signal.** KL's market (0.073) and my model (0.26-0.28) disagreed by
+0.19 in the same direction as Amsterdam (market pricing warmer); the actual
+high was not 30C, consistent with the market's warmer read being closer to
+correct. That is one data point for hypothesis (a) — my open-meteo point
+forecast + N(mean,1.2) bucket reads systematically cool, not that these
+thin books are mispriced — and zero evidence yet for hypothesis (b).
+Beijing (already matched, no realizable edge — see counterfactual ledger
+exclusion above) losing its 23% bucket is uninformative either way. n=1
+directional read, not a category verdict: Amsterdam (also market-warmer)
+and the Spider-Man BND sibling are still open and settle within the same
+window. **Category stays no-bet until Amsterdam confirms or breaks the
+direction; do not extend this category (new cities, real stakes) before
+then.** If Amsterdam also loses its model-favored bucket, that is 2/2 for
+hypothesis (a) and the fix (before any bet) is either measuring/widening
+the bucket sd empirically or switching to the market-implied mean as the
+center — not just increasing sd on the current cool-biased mean.
