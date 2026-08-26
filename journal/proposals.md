@@ -940,6 +940,15 @@ in collect (costs quota); a stronger schema reminder in the template is
 the weakest option since the 00:19Z run shows the current wording can
 already achieve 15/15. Keep the agent's own duty as stated: report
 collected/expected in every funnel line so the rate stays measured.)
+→ **actioned** (operator, 2026-08-25 ~06:35Z — the endorsed cheapest fix
+shipped: `screen.py collect` now unwraps the known wrapper shape, see
+operator-notes.md. Verified closed by DEEP-2026-08-26: every 300-market
+run since the fix collected 300/300 except a single 299/300 (one
+malformed row, correctly reported in its funnel line) — cycles.log shows
+eight clean-or-near-clean runs against the pre-fix 160/300. The failure
+class is closed on current evidence; per the
+operator's note, any NEW wrapper variant gets escalated the same way,
+never absorbed by agent-side parsing.)
 
 ---
 
@@ -1005,7 +1014,14 @@ matching this daily crypto-direction phrasing, e.g.
 aggressive) — `core/scan.py`/`config/protected.json` are protected, so I
 cannot make this change myself.
 
-**Status:** open
+**Status:** endorsed by deep-retro (2026-08-26 — verified: both existing
+regexes target only the hourly-candle phrasings; "Bitcoin Up or Down on
+August 25?" passes `keep()`. Same single-token-resolution/reaction-speed
+class the existing patterns exclude, so the gap is an oversight, not a
+policy choice. Of the two proposed regexes prefer the date-phrasing one
+(`"Up or Down on [A-Z][a-z]+ [0-9]"`, unanchored) over the ticker list —
+it also covers future non-BTC/ETH assets in the same daily template —
+but either closes the observed gap.)
 
 ## 2026-08-26 — watch.py new_market fired well under its own liquidity floor
 
@@ -1045,7 +1061,18 @@ liquidity source myself. Options for the operator to consider: check
 gamma's `liquidityNum`; or add a short grace delay after `createdAt` before
 trusting `liquidityNum` for freshly-listed markets.
 
-**Status:** open
+**Status:** endorsed by deep-retro (2026-08-26 — consolidated with the
+three later entries below: four fires in one session, two distinct
+symptoms (this entry's liquidityNum underflow n=1; one-sided unfillable
+post-listing books n=4), one shared root cause — gamma listing time is
+not research-opportunity time for in-game sports totals. Cheapest fix
+first: suppress or tag `new_market` fires whose gamma record carries a
+`gameStartTime` already in the past (a field the watcher's fetch already
+returns — no extra call, and it addresses the timing cause directly
+where liquidity-source changes only address one symptom); the book-depth
+liquidity check remains worth considering independently for the n=1
+underflow. Until actioned the agent-side bleed is bounded: one narrow
+gamma fetch + a correct decline per fire, capped at 6 fires/day.)
 
 ## 2026-08-26 — second `new_market` fire on an already-decided in-game total, this time with a one-sided empty book (not a liquidityNum miss)
 
@@ -1087,7 +1114,10 @@ so the agent knows to expect a repricing-race/already-decided shape rather
 than spending a narrow gamma fetch discovering that live. Two instances now;
 recommend treating this as a real pattern rather than waiting for a third.
 
-**Status:** open
+**Status:** endorsed by deep-retro (2026-08-26 — see the consolidated
+endorsement on the first entry above; the `gameStartTime`-in-the-past
+suppression covers this instance too, and would have caught 3894923
+before the fire: the game was mechanically decided pre-listing.)
 
 ## 2026-08-26 — third `new_market` fire on already-live in-game totals (2 games, 3 markets, one cycle)
 
@@ -1118,7 +1148,11 @@ check before spending any research budget, rather than continuing to
 rediscover the same shape live each time. Marking this the confirming third
 instance per the prior entry's own recommendation.
 
-**Status:** open
+**Status:** endorsed by deep-retro (2026-08-26 — see the consolidated
+endorsement on the first entry; pattern-confirming third instance, and
+the 04:16Z retro's settlement grading adds that the pace model behind
+these fires is 2W/2L on the model side — no skill being left on the
+table by suppressing them.)
 
 ## 2026-08-26 — fourth `new_market` fire on an already-live in-game total (same session)
 
@@ -1133,4 +1167,28 @@ instance in one session (after 3894452, 3894923, and the 3895012/3895006/
 its consequence are already fully evidenced by the prior three entries and
 this changes no conclusion, just the count.
 
-**Status:** open (unchanged — see prior three entries for the proposed fix)
+**Status:** endorsed by deep-retro (2026-08-26 — running-tally entry,
+folded into the consolidated endorsement on the first 2026-08-26 entry;
+no separate ask.)
+
+## 2026-08-26 — deep-retro status pass
+
+**Evidence/summary:** six statuses moved this pass. The 2026-08-25
+screener output-format proposal is closed as actioned (operator shipped
+the tolerant unwrap ~06:35Z; eight subsequent runs verify the failure
+class closed — 300/300 on all but one 299/300). The daily crypto
+Up/Down `banned_question_patterns` gap is endorsed (verified against the
+config regexes; date-phrasing variant preferred). The four `new_market`
+in-game-fire entries are endorsed as ONE consolidated pattern with a
+concrete cheapest fix: suppress or tag fires whose gamma
+`gameStartTime` is already in the past — it addresses the shared timing
+cause, would have pre-empted all four fires including the
+mechanically-decided 3894923, and costs no extra API call. No new
+operator asks from DEEP-2026-08-26: the window's other findings (pacing
+weld → reconcile.py check 4; fact-final/info-race ledger taxonomy
+split; GTA VI liquid-book grading fork) are all agent-side and applied
+in the same commit.
+
+**Status:** informational (open operator asks after this pass: the
+crypto-pattern extension and the consolidated new_market fix, both
+endorsed above)

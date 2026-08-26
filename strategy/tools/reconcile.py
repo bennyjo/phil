@@ -28,8 +28,21 @@ Checks, over a trailing window (default 24h):
      broad scan by design, so those lines structurally have no pool to
      report — flagging them as gaps trained nothing, it just repeated a
      known-expected omission every trigger.
+  4. Pacing-pointer freshness (DEEP-2026-08-26): the newest FULL-cycle
+     funnel line in the window must not postdate schedule.json's
+     `next_full_cycle_after` by more than 65 minutes. DEEP-2026-08-25
+     flagged a FULL cycle that ran past a stale pointer without
+     advancing it (prose flag, first instance, weld pre-committed on
+     repeat); it then repeated six times in 12 hours (the 2026-08-25
+     22:16Z through 2026-08-26 04:17Z FULLs all ran against the
+     17:21Z-set 20:15Z pointer). Running FULL every tick stays legal —
+     but only by consciously advancing the pointer (to ~now or the next
+     boundary) each FULL, which is the contract: every FULL commit
+     touches the field or inherits a pointer still in the future. The
+     65-minute grace absorbs the single tick that legitimately fires
+     just past the pointer.
 
-Exit 0 with "OK" when both hold; exit 1 listing each orphan otherwise.
+Exit 0 with "OK" when all hold; exit 1 listing each problem otherwise.
 Run before the commit of any FULL cycle that recorded a forecast — the
 check is the weld; a FULL-cycle commit while this fails is a discipline
 violation, not an oversight (playbook, Coverage weld).
@@ -112,6 +125,30 @@ def main():
                 )
     joined = " ".join(funnel_ids)
 
+    # Check 4: pacing-pointer freshness (see module docstring).
+    pacing_gaps = []
+    full_ts = [
+        parse_ts(e.get("cycle", ""))
+        for e in funnel
+        if e.get("tick_type", "FULL") == "FULL" and parse_ts(e.get("cycle", ""))
+    ]
+    newest_full = max(full_ts) if full_ts else None
+    if newest_full is not None and newest_full >= cutoff:
+        try:
+            sched = json.loads(
+                (ROOT / "strategy" / "schedule.json").read_text()
+            )
+        except (OSError, json.JSONDecodeError):
+            sched = {}
+        pointer = parse_ts(sched.get("next_full_cycle_after", ""))
+        if pointer is None or pointer < newest_full - timedelta(minutes=65):
+            pacing_gaps.append(
+                f"schedule.json next_full_cycle_after "
+                f"({sched.get('next_full_cycle_after')}) is stale: newest "
+                f"FULL funnel line {newest_full.isoformat()} ran >65min past "
+                f"it — each FULL must advance the pointer or say why not"
+            )
+
     orphans = []
     for row in forecasts:
         ts = parse_ts(row.get("ts", ""))
@@ -124,7 +161,7 @@ def main():
                 f"has no funnel line"
             )
 
-    problems = orphans + missing_fid + schema_gaps
+    problems = orphans + missing_fid + schema_gaps + pacing_gaps
     if problems:
         for p in problems:
             print(p)

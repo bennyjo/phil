@@ -136,6 +136,34 @@ DEEP-2026-08-02 pre-registered pair are now settled losses: the rule is
 under edge class 1 above. Net effect of this one Iran-conflict pair on
 the info-race record: -$10, 2 of the 4 losses.
 
+**Ledger edge_class split (DEEP-2026-08-26): `fact-final` is its own
+class.** The 2W/4L info-race record above splits exactly on
+fact-finality (wins on already-final mechanical facts, losses on
+provisional/interpretation-dependent ones), and the operator's
+architectural ruling (operator-notes 2026-08-05 ~19:45Z) draws the same
+line: fact-final reads — "official numbers the market hasn't priced
+correctly" — are what this architecture is built for, while racing a
+reprice is not. 2026-08-26 04:27Z produced the clean prototype:
+`5fbf676cfd7f`, $5 Diamondbacks ML @0.138 on a game already Final
+(ARI 5-4, MLB Stats API gamePk 825042, independently re-verified by
+DEEP-2026-08-26 against the market slug `mlb-chc-ari-2026-08-25`) with
+the book still pricing Cubs 0.866. Rule for future bets: when the
+resolving fact is ALREADY IMMUTABLE at bet time (official print
+published, game over, vote counted — only resolver deviation can lose),
+record ledger `edge_class` **`fact-final`**; **`info-race`** keeps only
+pre-final shapes (scheduled-but-unhappened events like the GTA VI
+trailer `c6f16acc55d9`, running counts, announced-not-confirmed facts).
+The two open 2026-08-25/26 rows are ledger-frozen as `info-race` (only
+core writes the ledger); retros grade `5fbf676cfd7f` under fact-final
+manually. score.py's by-class table picks the split up automatically as
+labeled rows settle. If fact-final reaches n>=5 settled with the record
+the operator's note predicts, a proposal to add it to
+`real.allowed_edge_classes` is warranted; not before. The wide-book
+exception (§Spread-rule scope) reads on both labels wherever it says
+"info-race class" — its tightened condition (1) (fact FINAL/MECHANICAL)
+is definitionally satisfied by fact-final and remains the binding test
+for info-race proper.
+
 NOT an edge class — **resolver-interpretation reads** (graded
 DEEP-2026-08-01): "I checked the exact resolution source and it says X"
 where the reading requires a judgment call (UI toggle, table choice, which

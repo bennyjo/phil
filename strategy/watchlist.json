@@ -34,6 +34,14 @@
       "move_threshold": 0.05,
       "window_min": 60,
       "expires": "2026-09-06T00:00:00Z"
+    },
+    {
+      "market_id": "2732505",
+      "token_id": "46385861612869030000228048005089520231567995423356571308494589747914443897549",
+      "label": "Another GTA VI trailer released by August 31? (Yes, open position c6f16acc55d9, entry 0.36 -- premiere reported Aug 27; a drop = market pricing labeling/cancellation risk, a jump toward 1.0 = release happened, check sibling GTA markets for lag)",
+      "move_threshold": 0.1,
+      "window_min": 60,
+      "expires": "2026-09-01T04:00:00Z"
     }
   ],
   "new_market": {
