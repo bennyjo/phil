@@ -51,11 +51,6 @@
   },
   "calendar": [
     {
-      "label": "Bank of Korea rate decision - ~10:00am KST",
-      "fire_at": "2026-08-27T01:00:00Z",
-      "window_min": 45
-    },
-    {
       "label": "Statistics Canada GDP (Q2/by-industry Jun 2026) release - 8:30am ET",
       "fire_at": "2026-08-28T12:30:00Z",
       "window_min": 45
