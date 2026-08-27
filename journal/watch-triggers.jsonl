@@ -11,3 +11,5 @@
 {"utc": "2026-08-26T02:22:44Z", "kind": "new_market", "key": "newmarket:3895005", "market_id": "3895005", "detail": "created 2026-08-26T02:05:09.375871Z, liquidity 9943 (floor 5000)"}
 {"utc": "2026-08-26T02:38:57Z", "kind": "new_market", "key": "newmarket:3895121", "market_id": "3895121", "detail": "created 2026-08-26T02:28:08.94886Z, liquidity 18267 (floor 5000)"}
 {"utc": "2026-08-27T01:22:40Z", "kind": "calendar", "key": "cal:Bank of Korea rate decision - ~10:00am KST", "market_id": null, "detail": "window 2026-08-27T01:00:00Z .. 2026-08-27T01:45:00Z"}
+{"utc": "2026-08-27T05:23:07Z", "kind": "new_market", "key": "newmarket:3926710", "market_id": "3926710", "detail": "created 2026-08-27T05:05:17.338627Z, liquidity 5837 (floor 5000)"}
+{"utc": "2026-08-27T05:23:07Z", "kind": "new_market", "key": "newmarket:3926700", "market_id": "3926700", "detail": "created 2026-08-27T05:05:03.869656Z, liquidity 7526 (floor 5000)"}
