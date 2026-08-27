@@ -28,6 +28,27 @@ Checks, over a trailing window (default 24h):
      broad scan by design, so those lines structurally have no pool to
      report — flagging them as gaps trained nothing, it just repeated a
      known-expected omission every trigger.
+  5. Veto-settlement table duty (DEEP-2026-08-27): every settled
+     (won/lost) forecasts.jsonl row with skip_reason outside-view-veto or
+     wide-spread-veto and settled_ts >= 2026-08-23 (when DEEP-2026-08-23
+     made the same-commit counterfactual-table extension a rule) must have
+     its id appear somewhere in strategy/playbook.md — either as a table
+     row or as a documented exclusion. The prose rule was violated three
+     times on 2026-08-26 alone (Crowley 7dac557c4c19 at 07:28Z, the three
+     PCE MoM rows at 15:21Z, the BoK pair at 04:13Z next day — the last
+     logged as "veto-correct" when the vetoed read had in fact WON its
+     counterfactual), so it gets the same escalation as checks 1-4: a
+     mechanical check instead of more prose. A mere id mention doesn't
+     prove the arithmetic was done — deep retros still audit quality —
+     but it makes silent omission impossible.
+  6. FULL-cycle funnel-line presence (DEEP-2026-08-27): every cycles.log
+     line in the window whose first marker is "(FULL cycle" must have a
+     funnel.jsonl line whose cycle ts falls in the 45 minutes before the
+     log ts. The 2026-08-26 09:24Z FULL ran a complete scan+screen+research
+     pass, recorded zero forecasts, wrote NO funnel line — and that absence
+     blinded checks 3 and 4 (its 99-minute pacing-pointer breach was
+     invisible because check 4 reads funnel lines, not cycle logs). The
+     operator mandate says every FULL appends a line, forecasts or not.
   4. Pacing-pointer freshness (DEEP-2026-08-26): the newest FULL-cycle
      funnel line in the window must not postdate schedule.json's
      `next_full_cycle_after` by more than 65 minutes. DEEP-2026-08-25
@@ -149,6 +170,62 @@ def main():
                 f"it — each FULL must advance the pointer or say why not"
             )
 
+    # Check 5: veto-settlement table duty (see module docstring).
+    VETO_TABLE_SINCE = "2026-08-23"
+    try:
+        playbook = (ROOT / "strategy" / "playbook.md").read_text()
+    except OSError:
+        playbook = ""
+    latest = {}
+    for row in forecasts:
+        rid = str(row.get("id", ""))
+        if rid:
+            latest[rid] = row  # last write wins (supersede/settle updates)
+    table_gaps = []
+    for rid, row in latest.items():
+        if (
+            row.get("status") in ("won", "lost")
+            and row.get("skip_reason") in ("outside-view-veto", "wide-spread-veto")
+            and str(row.get("settled_ts", "")) >= VETO_TABLE_SINCE
+            and rid not in playbook
+        ):
+            table_gaps.append(
+                f"settled {row.get('skip_reason')} row {rid} "
+                f"({row.get('settled_ts')} {row.get('category')}) absent from "
+                f"playbook.md counterfactual ledger (add the row or a "
+                f"documented exclusion)"
+            )
+
+    # Check 6: FULL-cycle funnel-line presence (see module docstring).
+    funnel_line_gaps = []
+    funnel_ts = sorted(t for t in full_ts if t is not None)
+    cycles_path = ROOT / "journal" / "cycles.log"
+    if cycles_path.exists():
+        for line in cycles_path.read_text().splitlines():
+            if not line[:4].isdigit() or " cycle done" not in line:
+                continue
+            i = line.find("(FULL cycle")
+            j = line.find("(LIGHT tick")
+            k = line.find("(TRIGGERED")
+            markers = [(x, n) for n, x in (("FULL", i), ("LIGHT", j), ("TRIG", k)) if x != -1]
+            if not markers or min(markers)[1] != "FULL":
+                continue
+            done_ts = parse_ts(line.split()[0])
+            if done_ts is None or done_ts < cutoff:
+                continue
+            # Funnel lines are usually stamped during the cycle (up to
+            # ~45min before "cycle done") but occasionally seconds after
+            # the log line — hence the 10min grace on the other side.
+            if not any(
+                timedelta(minutes=-10) <= done_ts - ft <= timedelta(minutes=45)
+                for ft in funnel_ts
+            ):
+                funnel_line_gaps.append(
+                    f"FULL cycle logged {done_ts.isoformat()} has no funnel "
+                    f"line in the preceding 45min — every FULL appends one "
+                    f"(operator mandate, playbook Funnel instrumentation)"
+                )
+
     orphans = []
     for row in forecasts:
         ts = parse_ts(row.get("ts", ""))
@@ -161,7 +238,10 @@ def main():
                 f"has no funnel line"
             )
 
-    problems = orphans + missing_fid + schema_gaps + pacing_gaps
+    problems = (
+        orphans + missing_fid + schema_gaps + pacing_gaps + table_gaps
+        + funnel_line_gaps
+    )
     if problems:
         for p in problems:
             print(p)

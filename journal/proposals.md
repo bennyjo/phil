@@ -1212,3 +1212,26 @@ in the same commit.
 **Status:** informational (open operator asks after this pass: the
 crypto-pattern extension and the consolidated new_market fix, both
 endorsed above)
+
+## 2026-08-27 — deep-retro status pass
+
+**Evidence/summary:** both operator asks left open by the 2026-08-26 pass
+were actioned by the operator the same day and are verified closed here:
+the daily crypto Up/Down `banned_question_patterns` extension (commit
+0db77ca, regex verified present in config and matching the observed
+3809906/3809907 phrasings) and the consolidated `new_market` in-game-fire
+suppression (commit 0a13990, watch.py now skips listings whose gamma
+gameStartTime is past at check time; zero in-game fires in the subsequent
+window vs four the day before). No new operator asks from DEEP-2026-08-27:
+the window's findings are all agent-side and applied in the same commit —
+reconcile.py checks 5 (veto-settlement table duty; three prose-rule misses
+on 2026-08-26 alone) and 6 (FULL-cycle funnel-line presence; the 09:24Z
+line-less FULL masked its own 99-minute pacing breach), the six missing
+counterfactual-table rows (Crowley, PCE MoM x3, BoK pair), and the
+mechanical-econ fork tally. NOTE the fork decision lands tomorrow
+(DEEP-2026-08-28/29, pre-registered): if the condition holds after Canada
+GDP settles, THAT retro files an operator-visible carve-out proposal
+touching real-eligibility taxonomy — flagging it a day ahead so it is not
+a surprise ask.
+
+**Status:** informational (open operator asks after this pass: none)

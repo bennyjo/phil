@@ -2019,6 +2019,12 @@ extend it at each settlement.
 | WI Hong ≥30% (aac304cdebf7) | 0.227 / 0.100 | Yes | +0.117 | No | −1.00 |
 | KL 30C weather (ff0e79b1b303) | 0.26 / 0.0735 | Yes | +0.181 | No | −1.00 |
 | Amsterdam 25C weather (f352b500005a) | 0.13 / 0.45 | No | +0.31 | No | **+0.79** |
+| WI Crowley win (7dac557c4c19) | 0.0012 / 0.032 | No | +0.011 | Yes | −1.00 |
+| PCE MoM 0.1% (381c3e38473c) | 0.219 / 0.129 | Yes | +0.070 | No | −1.00 |
+| PCE MoM 0.2% (b6df56da3754) | 0.594 / 0.57 | Yes | +0.014 | Yes | **+0.72** |
+| PCE MoM 0.3% (c07caa45a8dc) | 0.175 / 0.25 | No | +0.065 | No | **+0.32** |
+| BoK hold (a8fa1e2ac41d) | 0.38 / 0.69 | No | +0.300 | No | **+2.13** |
+| BoK hike 25bps (d102445cc5d5) | 0.60 / 0.32 | Yes | +0.270 | Yes | **+2.03** |
 
 Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
 (fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
@@ -2087,6 +2093,77 @@ full table: **Yes-side unchanged 1W/13L, −11.50u**; **No-side 11W/7L,
 −0.71u** (one new win, +0.79u vs the prior −1.50u). Check: −11.50 + −0.71 =
 −12.21 ✓. Weather-Gaussian generation class now 1W/1L, net −0.21u (was
 0W/1L, −1.00u).
+
+**2026-08-27 update (DEEP retro): six rows added that the hourly cycles
+settled but never entered — Crowley (07:28Z, no retro written), the three
+PCE MoM legs (15:21Z retro graded them but skipped the same-commit table
+duty), and the BoK pair (04:13Z, logged "at-market/veto-correct" with no
+retro when the vetoed read had in fact WON — see reconcile.py check 5,
+welded off the back of exactly these three misses).** Row notes:
+Crowley is the day's ugliest row — the same single-poll margin model that
+generated the Hong brackets put 0.0012 on the man who actually won the
+primary at a market 0.032; the No-side fill edge (+0.011) was tiny but
+positive, so it enters as a No-side LOSS, a reminder that the No side of a
+bad model is still the bad model. PCE MoM 0.2% (+0.014 edge) is effectively
+at-market and enters only for convention's consistency (any positive
+fill-price edge enters; the WI 15-20% row at +0.023 set the floor).
+The BoK pair is ONE underlying decision (complementary books, same
+convention as the Musk 2-day and Japan GDP pairs — both rows enter the
+table, ONE independent event for any evidence-counting): the analyst-poll
+Gaussian-free read (est hike 0.60 vs market 0.32, recorded five days
+early) was RIGHT against a confident market, the largest counterfactual
+win this ledger has ever recorded (+2.03/+2.13u on the two legs of the one
+trade). score.py buckets the pair under `revised_away` (both legs were
+superseded to market-agrees rows at 01:25Z after live-CLOB convergence,
+hours before on-chain settlement) — the supersede was correct hygiene, but
+the counterfactual grades the ORIGINAL record-time book, where the edge
+was real and realizable.
+
+**Totals now 38 realizable trades, 16W/22L, net −9.01u.** Side split
+re-summed row-by-row: **Yes-side 3W/14L, −9.75u** (adds BoK hike W +2.03,
+PCE 0.2% W +0.72, PCE 0.1% L −1.00); **No-side 13W/8L, +0.74u** (adds BoK
+hold W +2.13, PCE 0.3% W +0.32, Crowley L −1.00) — the No side crosses
+into positive territory for the first time. Check: −9.75 + 0.74 = −9.01 ✓.
+
+**The Yes/No asymmetry discussion RETRO-20260826-0528 flagged for this
+deep retro, resolved: the asymmetry is a CLASS effect wearing a side
+costume.** Before today the split read Yes 1W/13L vs No 11W/7L, which
+tempts a side rule ("stop trusting Yes-side disagreements"). Today's two
+Yes-side wins (BoK hike, PCE modal bucket) are both mechanical-econ rows
+with named external benchmarks, and the historical Yes-side graveyard
+(Musk brackets, TI, box-office, WI Hong upside legs) is almost entirely
+behavioral self-models — the side was proxying for the generation class.
+No side rule is written; the mechanical-vs-behavioral carve-out fork
+(below) is the correct instrument, and it already exists with a
+pre-registered decision date.
+
+**Mechanical-econ fork running tally (decision due DEEP-2026-08-28/29 as
+pre-registered — NOT today; Canada GDP settles Aug 28 and adds a fourth
+event):** Japan GDP +0.85u (agent ahead on dBrier), PCE MoM +0.04u net
+across the three legs of one print (agent ahead, 0.244 vs 0.264 summed
+Brier), BoK +2.03u counting the one trade once (agent ahead, 0.16 vs 0.46
+on the hike leg). Three independent settled events, net **+2.92u**, agent
+ahead on dBrier in 3/3 — the fork's ≥3-events / net-positive / dBrier-
+majority condition is currently MET. Tomorrow's deep retro makes the call
+with Canada GDP in hand; firing it a day early on the strongest print in
+the sample (BoK, hours old) is exactly the hot-streak overreaction the
+pre-registration exists to prevent.
+
+**BoK watch-item grading notes (pre-registered asks (a) and (b)):**
+(a) live-CLOB-convergence-ahead-of-search — YES, reusable, but as a VETO
+input, not an edge: the 01:25Z cycle saw the book collapse to hike-0.972
+before any indexed news confirmed the announcement. For scheduled
+announcements on liquid books, the CLOB is structurally faster than
+WebSearch indexing, which means (i) a cheap "the market already knows"
+detector exists (quote the book before claiming an info edge on anything
+scheduled), and (ii) it is one more reason the GTA-VI-style liquid-book
+"market hasn't noticed" claim should be treated as self-refuting — this is
+now the second independent line of evidence for the thin/stale-book
+credibility condition pre-registered on c6f16acc55d9. (b) TRIGGERED-vs-
+FULL race on the same catalyst: n=1, the rebase collision was resolved
+correctly by dropping the redundant less-evidenced row; no coordination
+rule until it recurs — the existing cycle-start collision guard stays as
+is.
 
 **2026-08-21 update (18:11Z settlement): the Aug14-21 Musk weekly set's
 two >0.10-disagreement legs both settled, both LOST.** 240-259
