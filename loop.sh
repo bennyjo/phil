@@ -50,8 +50,9 @@ for i in $(seq 1 "$CYCLES"); do
   fi
 
   # Pearl Connect attach: when the local signer is up, expose its read-only
-  # wallet_info MCP tool and deny the session the token file (journal is
-  # public — the bearer token must never be readable, let alone committed).
+  # wallet_info MCP tool plus the mech marketplace tools, and deny the
+  # session the token file (journal is public — the bearer token must never
+  # be readable, let alone committed).
   # The probe must positively identify the connect signer: every Pearl agent
   # serves /healthcheck on 8716, and a full trader FSM also reports
   # is_healthy=true — but only connect's body is bare (no "rounds" field).
@@ -83,7 +84,13 @@ for i in $(seq 1 "$CYCLES"); do
          "Bash(git fetch:*)" "Bash(git checkout -B main origin/main)"
          "Bash(git pull:*)" "Bash(git push:*)")
   if [ "$PEARL_UP" -eq 1 ]; then
+    # wallet_info is read-only; the mech_* tools buy predictions from the
+    # Olas mech marketplace (~$0.01 USDC each, paid by the service safe) per
+    # CYCLE.md step 5a. No other signing tools are exposed.
     CMD+=("mcp__pearl-connect__wallet_info"
+          "mcp__pearl-connect__mech_tools"
+          "mcp__pearl-connect__mech_request"
+          "mcp__pearl-connect__mech_result"
           --mcp-config "$STORE/.mcp.json"
           --disallowedTools "Read($STORE/.mcp.json)")
   fi

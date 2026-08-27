@@ -22,8 +22,11 @@ additive.
 
 ## Hard rules for real mode
 
-- core/real.py is the ONLY way you touch real funds. Never call Pearl
-  Connect signing tools or the skill scripts directly.
+- core/real.py is the ONLY way you touch real funds for trading. Never
+  call Pearl Connect signing tools or the skill scripts directly — with
+  one exception: the `mcp__pearl-connect__mech_*` tools, which buy
+  predictions per CYCLE.md step 5a and can never place orders or move
+  funds anywhere but the mech payment.
 - Never blind-retry a failed or timed-out real order — buys are not
   idempotent. core/real.py blocks new bets while any order is
   unreconciled; respect that.

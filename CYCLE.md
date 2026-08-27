@@ -144,6 +144,37 @@ Every invocation runs as one of three ticks:
    are cached and free, but budget the rest — roughly 10-12 credits/day
    across all cycles. If it reports the key missing or the budget exhausted,
    log that and skip; never scrape around it.
+5a. **Mech second opinion** (only when the `mcp__pearl-connect__mech_*`
+   tools are present in this session — operator-machine runs with the Pearl
+   Connect signer up; cloud cycles skip this step entirely): for candidates
+   you researched to a concrete estimate, you may buy an independent
+   prediction from the Olas mech marketplace (~$0.01 USDC per request, paid
+   from the service safe). The point is comparison: over time, learn which
+   mech tools are informative and say so in retros.
+   - Form your OWN estimate first, before requesting. The mech's answer is
+     evidence like any other: if it honestly moves your belief, your
+     recorded est-prob moves — but always note your pre-mech estimate.
+   - `mech_tools()` lists live mechs; call it again with
+     `priority_mech=<address>` for a mech's tool names and price
+     (`max_delivery_rate`, base units of its payment asset). The
+     high-volume Polygon mechs serve `superforcaster-polymarket-v4`
+     (returns structured `{"p_yes": ...}`) among other tools.
+   - Call `mech_request` with the market's resolution question stated
+     precisely (criteria, resolution source, deadline in UTC — never just
+     the market title), `tool` and `priority_mech` set, `max_payment`
+     20000 (0.02 USDC), and a `request_id` you invent, so a retry can
+     never pay twice.
+   - At most 3 requests per full cycle. Trying different tools or mechs
+     across cycles to compare them is encouraged, within that cap.
+   - Record the comparison in the step-5b forecast `--note` (and in a
+     bet's rationale) as `own:<pre-mech p> mech:<tool>=<p_yes>`, so retros
+     can grade the mech against you and against the market.
+   - No mech failure is ever blocking: insufficient funds, a guardrail
+     refusal, a timeout, an unreachable mech — log one line and proceed
+     without the second opinion. On timeout you may poll each id in
+     `pending_request_ids` once with `mech_result`; do not wait beyond
+     that, and never re-send a request whose outcome you don't know
+     without its original `request_id`.
 5b. **Forecast**: for EVERY candidate you researched to a concrete (market,
    outcome, probability) — including no-edge and market-agrees skips:
    `python3 core/forecast.py record --market-id <id> --outcome "<name>" \

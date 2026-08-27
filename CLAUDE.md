@@ -30,12 +30,19 @@ operator's machine via `./loop.sh --real`: qualifying paper bets (edge
 classes in `config/protected.json` → `real.allowed_edge_classes`) get a $1
 real twin on Polymarket through Pearl Connect.
 
+Whenever the local Pearl Connect signer is up (paper or real cycles on the
+operator's machine), the agent may also buy second-opinion predictions from
+the Olas mech marketplace (~$0.01 USDC each, paid by the service safe) —
+see CYCLE.md step 5a. Cloud cycles have no signer and skip this.
+
 ## Real execution (operator machine only)
 
 - Env: `PEARL_CONNECT_STORE` = Pearl Connect workspace dir (contains
   `.mcp.json`); optional `CONNECT_POLYMARKET_VENV` (default
   `~/.cache/connect-polymarket/venv`).
-- `core/real.py` (protected) is the only code that touches funds — it wraps
+- `core/real.py` (protected) is the only code that touches funds for
+  trading (mech second opinions per CYCLE.md 5a are the one non-trading
+  spend) — it wraps
   the connect-polymarket skill scripts Pearl Connect provisions, enforces
   the `real` caps block, and is the sole writer of
   `journal/real-ledger.jsonl` (paper `ledger.jsonl` discipline mirrored).
