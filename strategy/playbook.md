@@ -2775,3 +2775,44 @@ sd=1.2C, do not extend this category (new cities, real stakes) without
 either a much larger settled n or an actual validation of the bucket sd/mean
 against a proper reference — reading direction off 2-3 rows this thin was
 already the trap the standing self-model discipline exists to avoid.
+
+## New hypothesis: Poisson-fit devig-derivative pricing for soccer totals/spreads (2026-08-28 02:12Z)
+
+Sibling-check on the Man City/Crystal Palace event (33 markets, gamma events
+API) found the O/U and spread ladders internally monotonic with no arithmetic
+violation — cross-market consistency alone gave no edge on this event. Tried
+a second-order method instead: fit an independent-Poisson scoreline model
+(two lambdas, grid search) to the power-devigged 1X2 (the-odds-api EPL/
+Ligue1/Bundesliga h2h), then price the derivative O/U and spread markets off
+the fitted lambdas rather than devigging them directly (no derivative odds
+available in the free odds-api feed — h2h only). This is genuinely new
+arithmetic ("the market hasn't done this specific derivation"), consistent
+with the fact-finality thesis, but the independent-goals assumption is a
+known real simplification (ignores home/away goal correlation; real matches
+run slightly negative), and the fit is a coarse 0.02-step grid search, not a
+closed-form solve.
+
+Three legs tested this cycle:
+- Man City -1.5 spread: model 0.332 vs mid 0.325 (diff 0.007) — no edge.
+- PSG -1.5 spread: model 0.312 vs mid 0.315 (diff 0.003) — no edge.
+- Crystal Palace/Man City halftime draw (half-match lambdas via a 45%-of-
+  full-match heuristic): model 0.405 vs mid 0.38 (diff 0.025) — no edge.
+- Lille/PSG O/U3.5: model Under=0.736 vs mid Under=0.655 — edge 0.081.
+- Bayern/Stuttgart O/U4.5: model Over=0.556 vs mid Over=0.48 — edge 0.076.
+
+The spread/halftime legs came back essentially at-market (the method
+reproduces PM's own pricing when there's nothing to find, a mild point in
+its favor). The two totals legs cleared min_edge (0.04) and would clear
+min_edge_book_devig (0.07) — but declined to bet either: this is a first
+contact with an unvalidated method, no settled track record, and the
+standing lesson from every other self-modeled-without-mechanical-benchmark
+class (weather-Gaussian, WTI/other, the outside-view veto ledger at 8W/15L
+net -8.42u) is that a maiden voyage on real capital is how this book keeps
+losing money. Recorded both as forecasts only (`unvalidated-method` skip
+reason, ids b3a14f1733a3 and de3f3a9c2685) to build a graded track record
+first. Both matches kick off 2026-08-28 ~18:30-19:00Z and should settle
+within a day — **grade at settlement**: if the model's totals calls land
+closer to the outcome than the market's mid did (dBrier favorable on both
+or on net), that's the evidence needed to consider betting the next instance
+of this method; if it loses like every other maiden self-model, fold it into
+the same standing discipline as weather-Gaussian without a second thought.
