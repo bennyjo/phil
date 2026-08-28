@@ -1,0 +1,126 @@
+{
+  "work_dir": "reports/screener-work/20260828T063506Z",
+  "batch_count": 15,
+  "batches": [
+    {
+      "nn": "01",
+      "batch_file": "batch-01.json",
+      "out_file": "out-01.json",
+      "markets": 20
+    },
+    {
+      "nn": "02",
+      "batch_file": "batch-02.json",
+      "out_file": "out-02.json",
+      "markets": 20
+    },
+    {
+      "nn": "03",
+      "batch_file": "batch-03.json",
+      "out_file": "out-03.json",
+      "markets": 20
+    },
+    {
+      "nn": "04",
+      "batch_file": "batch-04.json",
+      "out_file": "out-04.json",
+      "markets": 20
+    },
+    {
+      "nn": "05",
+      "batch_file": "batch-05.json",
+      "out_file": "out-05.json",
+      "markets": 20
+    },
+    {
+      "nn": "06",
+      "batch_file": "batch-06.json",
+      "out_file": "out-06.json",
+      "markets": 20
+    },
+    {
+      "nn": "07",
+      "batch_file": "batch-07.json",
+      "out_file": "out-07.json",
+      "markets": 20
+    },
+    {
+      "nn": "08",
+      "batch_file": "batch-08.json",
+      "out_file": "out-08.json",
+      "markets": 20
+    },
+    {
+      "nn": "09",
+      "batch_file": "batch-09.json",
+      "out_file": "out-09.json",
+      "markets": 20
+    },
+    {
+      "nn": "10",
+      "batch_file": "batch-10.json",
+      "out_file": "out-10.json",
+      "markets": 20
+    },
+    {
+      "nn": "11",
+      "batch_file": "batch-11.json",
+      "out_file": "out-11.json",
+      "markets": 20
+    },
+    {
+      "nn": "12",
+      "batch_file": "batch-12.json",
+      "out_file": "out-12.json",
+      "markets": 20
+    },
+    {
+      "nn": "13",
+      "batch_file": "batch-13.json",
+      "out_file": "out-13.json",
+      "markets": 20
+    },
+    {
+      "nn": "14",
+      "batch_file": "batch-14.json",
+      "out_file": "out-14.json",
+      "markets": 20
+    },
+    {
+      "nn": "15",
+      "batch_file": "batch-15.json",
+      "out_file": "out-15.json",
+      "markets": 20
+    }
+  ],
+  "screened_pool": 300,
+  "candidates_in": 1049,
+  "strata": {
+    "closing_48h": {
+      "eligible": 902,
+      "selected": 80
+    },
+    "top_liquidity": {
+      "eligible": 969,
+      "selected": 120
+    },
+    "top_volume_24h": {
+      "eligible": 849,
+      "selected": 60
+    },
+    "random_tail": {
+      "eligible": 789,
+      "selected": 40
+    }
+  },
+  "dropped_by_reason": {
+    "closing_48h_beyond_stratum_size": 822,
+    "top_liquidity_beyond_stratum_size": 849,
+    "top_volume_24h_beyond_stratum_size": 789,
+    "random_tail_beyond_stratum_size": 749
+  },
+  "day_batches_used": 30,
+  "max_batches_per_day": 150,
+  "prompt_rev": "f055b03529dc259a9c960f12e9c00093b19f6092",
+  "subagent_prompt_template": "You are the screening tier of a prediction-market research pipeline. Work from the repository root. Do these three things, in order, and nothing else.\n\n1. Read reports/screener-work/20260828T063506Z/batch-NN.json. It holds {\"batch_id\", \"markets\", \"mids\"}; \"markets\" is the batch, one object per market.\n2. Read strategy/screener-prompt.md. That is the judgment brief - what counts as worth a researcher's next hour. Follow it.\n3. Use the Write tool to write a JSON array to reports/screener-work/20260828T063506Z/out-NN.json, one object per market in \"markets\", every market exactly once:\n[{\"market_id\": \"<id exactly as given>\", \"prob\": {\"<outcome name>\": <0-1>, ...}, \"confidence\": \"low\"|\"medium\"|\"high\", \"reason\": \"<one short line>\"}]\n\nRules:\n- Use the exact outcome names given for that market. Probabilities must be non-negative and sum to about 1.\n- You are NOT deciding trades. A downstream researcher spends real effort on the markets whose probabilities differ most from the market price, so be honestly calibrated and honestly uncertain - both a falsely confident number and a lazy echo of the market price waste that effort.\n- The prices in the file are stale mids. Do not copy them. If after thinking you genuinely agree with the price, say so with your own number and let the divergence be small.\n- Use only what you already know plus the market text. Do not browse, search or fetch. If resolving the question needs information you do not have, that is exactly what confidence \"low\" is for - say so in the reason.\n- confidence \"high\" means you would defend the number without further research.\n- Write the file. Do not print the array, do not summarise it, do not explain your reasoning. Your final message is one line: \"wrote out-NN.json, <n> markets\"."
+}

@@ -170,6 +170,33 @@ exception (§Spread-rule scope) reads on both labels wherever it says
 is definitionally satisfied by fact-final and remains the binding test
 for info-race proper.
 
+**Liquid-book credibility rule (pre-registered on `c6f16acc55d9`
+DEEP-2026-08-26, trigger fired 2026-08-28 06:xx Z cycle):** the fork's
+"premiere airs unlabeled" branch occurred. Rockstar's Aug 27 premiere
+aired as "Grand Theft Auto VI: An Extended Look" (official Newswire and
+YouTube title, a 26-minute gameplay presentation), while market 2732505
+requires content "clearly labelled and marketed as a trailer" — the
+liquid book ($23.6k), which had refused to converge toward the est-0.90
+read for two weeks, now prices Yes 0.069 vs the 0.36 entry (MTM ~-$4).
+The market was never inattentive; it was pricing resolution-criteria
+risk the research treated as noise. RULE, effective now: **an info-race
+rationale claiming "the market hasn't noticed X" is credible only on a
+thin or stale book.** On a LIQUID book (roughly, liquidity >= $10k or
+spread <= 0.02 with real depth) that has not converged after an
+apparently-known catalyst, the presumption reverses: the market is
+pricing a criteria/eligibility risk the research missed. Before betting
+such a book, the rationale must (i) quote the exact resolution wording,
+(ii) name the specific non-obvious reading the market is discounting,
+and (iii) say why that discount is wrong — "they haven't seen the news"
+is not admissible for liquid books on scheduled catalysts. Two
+independent evidence lines: this row (liquid-book analog of
+`b21e42c123a1`, the criteria-risk loss class), and the BoK live-CLOB
+convergence observation (§BoK grading notes: on scheduled announcements
+the CLOB is structurally faster than WebSearch indexing, so quote the
+book before claiming an info edge). Ledger grading of `c6f16acc55d9`
+itself still happens at settlement (Sep 1; a labeled trailer by Aug 31
+would flip it, market says ~7%).
+
 NOT an edge class — **resolver-interpretation reads** (graded
 DEEP-2026-08-01): "I checked the exact resolution source and it says X"
 where the reading requires a judgment call (UI toggle, table choice, which
