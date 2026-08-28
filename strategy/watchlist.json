@@ -42,6 +42,14 @@
       "move_threshold": 0.1,
       "window_min": 60,
       "expires": "2026-09-01T04:00:00Z"
+    },
+    {
+      "market_id": "3943918",
+      "token_id": "107479569089808936177192100737585319775482984780419085662957572397605831280283",
+      "label": "Google Maps renames Lake Ontario to \"Lake America\" by August 31, 2026? (No, open position bbe450e04eb9, entry 0.668 -- thesis is the EO's 30-day GNIS process can't finish by Aug31; a jump toward 1.0 in Yes = Google moved unexpectedly fast, re-check immediately)",
+      "move_threshold": 0.1,
+      "window_min": 60,
+      "expires": "2026-08-31T23:59:00Z"
     }
   ],
   "new_market": {
@@ -50,16 +58,6 @@
     "keywords": []
   },
   "calendar": [
-    {
-      "label": "Statistics Canada GDP (Q2/by-industry Jun 2026) release - 8:30am ET",
-      "fire_at": "2026-08-28T12:30:00Z",
-      "window_min": 45
-    },
-    {
-      "label": "UMich Consumer Sentiment FINAL (Aug 2026) - 10:00am ET",
-      "fire_at": "2026-08-28T14:00:00Z",
-      "window_min": 45
-    },
     {
       "label": "ISM Manufacturing PMI (Aug 2026) release - 10:00am ET (forecast 700dfea982ec, 55.0-55.9 bracket, est 0.28 vs ask 0.26, no-edge)",
       "fire_at": "2026-09-01T14:00:00Z",
