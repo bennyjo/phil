@@ -2052,6 +2052,8 @@ extend it at each settlement.
 | PCE MoM 0.3% (c07caa45a8dc) | 0.175 / 0.25 | No | +0.065 | No | **+0.32** |
 | BoK hold (a8fa1e2ac41d) | 0.38 / 0.69 | No | +0.300 | No | **+2.13** |
 | BoK hike 25bps (d102445cc5d5) | 0.60 / 0.32 | Yes | +0.270 | Yes | **+2.03** |
+| UMich <49.0 (a5703b36d60a) | 0.334 / 0.177 | Yes | +0.157 | No | −1.00 |
+| UMich 49.0-51.9 (fdfd9e781481) | 0.321 / 0.38 | No | +0.059 | Yes | −1.00 |
 
 Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
 (fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
@@ -2151,6 +2153,50 @@ re-summed row-by-row: **Yes-side 3W/14L, −9.75u** (adds BoK hike W +2.03,
 PCE 0.2% W +0.72, PCE 0.1% L −1.00); **No-side 13W/8L, +0.74u** (adds BoK
 hold W +2.13, PCE 0.3% W +0.32, Crowley L −1.00) — the No side crosses
 into positive territory for the first time. Check: −9.75 + 0.74 = −9.01 ✓.
+
+**2026-08-28 update (16:18Z, LIGHT tick, RETRO-20260828-1618): UMich
+Consumer Sentiment FINAL settled (final print 51.7, in-bracket for
+49.0-51.9).** Two outside-view-veto rows enter this table. UMich <49.0
+(a5703b36d60a): model P(Yes)=0.334 vs live ask 0.177, Yes side, fill-price
+edge +0.157 (est − ask); actual No → **lost, −1.00u**. UMich 49.0-51.9
+(fdfd9e781481): model P(Yes)=0.321 vs live bid 0.38, No side (model
+favored No since est sits below the bid), fill-price edge = bid − est =
+0.38−0.321 = +0.059; actual Yes (the final print landed in this exact
+bracket) → the No side **lost, −1.00u** — the veto correctly avoided this
+loss, same shape as the BTC touch-$80k and Japan GDP-veto precedents. The
+sibling 55.0-57.9 row (81af56a9a430, wide-spread-veto) is EXCLUDED, not
+entered: fill-price check both sides negative (Yes: 0.087−0.14=−0.053; No:
+(1−0.087)−(1−0.04)=0.913−0.96=−0.047) — est sits inside the bid/ask
+spread, no realizable disagreement either side, same non-trade treatment
+as WI Hong 10-15% and the PPI 5.4%/≥6.0% rows. The other four UMich
+brackets (6e1ba0c74bf2, a1f502906022, 3e269764b9e6, d5dcc12cdabe) settled
+no-edge, not entered per the standing rule. **Totals now 40 realizable
+trades, 16W/24L, net −11.01u.** Side split re-summed row-by-row over the
+full table: **Yes-side 3W/15L, −10.75u** (adds UMich <49.0 L −1.00);
+**No-side 13W/9L, −0.26u** (adds UMich 49.0-51.9 L −1.00, pulling the No
+side back to net-negative after one tick at +0.74u). Check: −10.75 + −0.26
+= −11.01 ✓.
+
+**Mechanical-econ fork bookkeeping correction (same tick):** the Canada
+GDP set (6 rows, ab9d001c5d8a/834d675fc7e8/c6803f47d674/e2bbfd112771/
+6b02ffb04b9a market-agrees, fe954ed9f325 excluded as a pre-registered
+process error) also settled this tick — **every row was market-agrees;
+none crossed the >0.10 outside-view boundary, so the veto never fired and
+the print contributes ZERO rows to this counterfactual ledger.** This
+contradicts the Aug 17 fork pre-registration's framing of Canada GDP as
+automatically "a fourth event" — a settled mechanical-econ print with no
+disagreement is not a veto-boundary test at all, it's simply an instance
+where the self-model and the market agreed. The two UMich veto rows added
+above ARE a new independent mechanical-econ-Gaussian veto event (net
+−2.00u, 0/2 on this print) but were never named in the original Aug 17
+fork queue (only PCE, BoK, and Canada GDP were). Net effect: the fork
+still has exactly 3 named-and-fired events (Japan GDP, PCE, BoK, net
++2.92u, 3/3 dBrier) plus one unplanned fourth (UMich, net −2.00u, 0/1
+dBrier this print) — the deep retro due DEEP-2026-08-28/29 must decide
+with this corrected picture, not the "Canada GDP adds a fourth event"
+assumption baked into the original registration. Not acting on the fork
+here per the standing rule (hourly cycles extend the table, do not decide
+it).
 
 **The Yes/No asymmetry discussion RETRO-20260826-0528 flagged for this
 deep retro, resolved: the asymmetry is a CLASS effect wearing a side
