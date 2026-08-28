@@ -2889,3 +2889,18 @@ closer to the outcome than the market's mid did (dBrier favorable on both
 or on net), that's the evidence needed to consider betting the next instance
 of this method; if it loses like every other maiden self-model, fold it into
 the same standing discipline as weather-Gaussian without a second thought.
+
+**GRADED 2026-08-28 21:30Z (RETRO-20260828-2130): bar NOT met, stays
+forecast-only.** Both totals legs settled Over. Lille/PSG O/U3.5: model
+Under-lean was wrong, dBrier +0.113. Bayern/Stuttgart O/U4.5: model
+Over-lean was right, dBrier -0.111. Net +0.002 — a wash, not the
+"favorable on both or on net" the pre-registration required, so no bets;
+but unlike weather-Gaussian's maiden voyage the method matched the market
+rather than underperforming it, and its three at-market legs reproduced PM
+pricing within 0.01-0.03. Treat as market-level accuracy with no proven
+edge. Continue `unvalidated-method` forecasts on instances where the model
+diverges >= 0.04 from mid; re-grade at n>=6 settled before considering a
+bet. Tally direction-of-miss per instance (model-high vs model-low vs hit)
+to catch the known independent-Poisson bias (ignoring goal correlation
+tends to thin the tails): current tally — Lille/PSG model-LOW (actual
+total exceeded model lean), Bayern/Stuttgart HIT (leaned Over, Over hit).
