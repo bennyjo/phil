@@ -1295,3 +1295,43 @@ Proposals:
    `Bash(git push:*)` was removed: the runner owns the push now.
 3. **Collision guard** left as-is, per the proposal's own read that one
    instance does not justify a lock. Still open if it recurs.
+
+## 2026-08-28 — deep-retro status pass (recovered session)
+
+Read every proposal above. No open hourly-agent proposals required a
+status decision this pass: the 2026-08-28 ~07:15Z push/ref-plumbing item
+was actioned by the operator (2026-08-29, loop.sh owns the push, plumbing
+allowlisted) — acknowledged, nothing to add; the collision-guard sub-item
+stays open on its own recurrence condition. All older items carry their
+existing statuses.
+
+New, from DEEP-2026-08-28:
+
+1. **Operator ask — .gitignore entries for cycle working files.** FULL
+   cycles have been committing per-run scratch at repo root:
+   `scan-stderr.txt`, `scan.stderr`, `screen-prepare.json`,
+   `screen.stderr`, `subagent-template.txt` (see 0d5d51a, 0ac4b09,
+   ca570d1). Deleted from the tree in the DEEP-2026-08-28 commit, but
+   they will recur on the next FULL cycle unless ignored. Ask: add to
+   .gitignore (operator-owned): `scan-stderr.txt`, `scan.stderr`,
+   `screen-prepare.json`, `screen_prepare.json`, `screen.stderr`,
+   `subagent-template.txt`, `reports/` — or, better, a `work/` prefix
+   convention the cycle procedure can be pointed at later.
+
+2. **Informational — blend re-open condition tracking.** score.py
+   blend[disagreement]: w_opt 0.622, delta −0.0058, n=70. The operator's
+   2026-08-25 re-open bar is n≥100 with w_opt≤0.9: the weight condition
+   now clears with room, the n condition is 70/100. No ask yet; if the
+   slice reaches n≥100 with w_opt still ≤0.9, that firing is the
+   operator-visible re-raise the 08-25 note pre-authorized.
+
+3. **Informational — mechanical-econ carve-out enacted** (agent-owned
+   change, flagged here for operator visibility per the DEEP-2026-08-17
+   pre-registration): playbook §Mechanical-econ carve-out, band
+   0.10–0.20, named-reachable-benchmark gate, one bet per print,
+   pre-registered kill switch (4 events / 6 bets, net≤0 or dBrier
+   non-majority → full revert). Evidence and the UMich exclusion
+   reasoning in DEEP-2026-08-28.md.
+
+**Status:** informational (open operator asks after this pass: the
+.gitignore entries, item 1)

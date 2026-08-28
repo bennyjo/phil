@@ -197,6 +197,20 @@ book before claiming an info edge). Ledger grading of `c6f16acc55d9`
 itself still happens at settlement (Sep 1; a labeled trailer by Aug 31
 would flip it, market says ~7%).
 
+**Sharpened DEEP-2026-08-28 — the rule binds BETS, not just claims:**
+for ANY bet on a book with liquidity >= $10k, the ledger rationale MUST
+quote the decisive resolution clause(s) verbatim, whatever the edge
+class or rationale shape. Evidence: `bbe450e04eb9` (Lake America No
+@0.668, $58.8k book) was placed hours after this rule landed with a
+sound mechanical-timeline thesis but WITHOUT quoting the market text —
+which contains a dual-label clause ("both 'Lake America' and 'Lake
+Ontario'" = YES) and a credible-reporting alternative source, both of
+which fatten the Yes tail the est-0.96 never priced. The bet stands
+(the 4-day GNIS timeline still favors No decisively) but the estimate
+was overconfident by exactly the unread-clause tail — the recurring
+z≈−3 signature. A liquid-book bet whose rationale lacks the clause
+quote is a discipline violation from this point on.
+
 NOT an edge class — **resolver-interpretation reads** (graded
 DEEP-2026-08-01): "I checked the exact resolution source and it says X"
 where the reading requires a judgment call (UI toggle, table choice, which
@@ -2221,6 +2235,57 @@ majority condition is currently MET. Tomorrow's deep retro makes the call
 with Canada GDP in hand; firing it a day early on the strongest print in
 the sample (BoK, hours old) is exactly the hot-streak overreaction the
 pre-registration exists to prevent.
+
+**FORK DECIDED — DEEP-2026-08-28.** Corrected inputs at decision time:
+Canada GDP contributed ZERO fork events (no veto fired — every row
+market-agrees, per the Aug-28 bookkeeping correction above), and UMich
+fired as an unplanned fourth event at −2.00u, agent behind on dBrier
+(0/2 rows). Tally: including UMich 4 events net +0.92u dBrier 3/4;
+excluding it 3 events +2.92u 3/3. The pre-registered condition (≥3
+events, net counterfactual > 0, dBrier majority) is met on BOTH
+readings, so the carve-out fires as registered. UMich shapes the gate
+rather than blocking the decision: its Gaussian was self-built off the
+prelim with a property-2 failure recorded at forecast time (no reachable
+variance benchmark) — a self-model in econ clothing, exactly what the
+registered candidate shape ("named external survey benchmark") already
+excluded. See §Mechanical-econ carve-out below for the enacted rule and
+its kill switch.
+
+## Mechanical-econ carve-out (enacted DEEP-2026-08-28, first loosening of the outside-view veto)
+
+A candidate may bet a >0.10 disagreement with the market — which the
+outside-view veto otherwise forbids — only when ALL of the following
+hold:
+
+1. **Mechanical official print:** the market resolves off a scheduled
+   official release (statistics agency, central bank) with a numeric,
+   interpretation-free criterion. No behavioral self-models (Musk,
+   box-office, social-post counts, weather-Gaussian), no
+   prelim-anchored guesses, regardless of claimed edge.
+2. **Named, reachable external benchmark, quoted at research time:**
+   the estimate is a distribution around a published consensus/survey
+   number or an official prior series with a validated revision/variance
+   history, and the rationale QUOTES the benchmark (source + number)
+   before the print. A self-built Gaussian, or one whose variance input
+   was unreachable (a recorded property-2 failure), does NOT qualify —
+   this is the UMich lesson (0/2, −2.00u): property-2 failure at
+   forecast time predicts veto-was-right at settlement.
+3. **Band 0.10–0.20 only.** Disagreement above 0.20 stays vetoed
+   outright — the counterfactual ledger's worst losses all live there.
+4. **Standard floors unchanged** (min_edge, max_spread, flat $5), and
+   at most ONE carve-out bet per print event: pick the single best leg,
+   no sibling ladders (CONN@CHI / ai-leaderboard correlated-exposure
+   lesson).
+
+**Pre-registered kill switch:** after 4 settled carve-out EVENTS or 6
+settled carve-out BETS (whichever comes first), if net realizable P&L
+≤ 0 or the agent is not ahead on dBrier in a majority, the carve-out
+reverts in full and the sub-class folds back into the general veto. Each
+carve-out bet is audited by the next deep retro. Evidence basis at
+enactment: fired-veto counterfactuals Japan GDP +0.85u / PCE +0.04u /
+BoK +2.03u (all agent-ahead) vs UMich −2.00u (excluded by gate 2); the
+margin is one bad print wide, which is why the kill switch is sized this
+small.
 
 **BoK watch-item grading notes (pre-registered asks (a) and (b)):**
 (a) live-CLOB-convergence-ahead-of-search — YES, reusable, but as a VETO
