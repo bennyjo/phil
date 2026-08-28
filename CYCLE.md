@@ -164,8 +164,10 @@ Every invocation runs as one of three ticks:
      the market title), `tool` and `priority_mech` set, `max_payment`
      20000 (0.02 USDC), and a `request_id` you invent, so a retry can
      never pay twice.
-   - At most 3 requests per full cycle. Trying different tools or mechs
-     across cycles to compare them is encouraged, within that cap.
+   - At most one request per candidate you researched to a concrete
+     estimate this cycle. There is no fixed per-cycle total: a cycle that
+     researches five candidates may send five requests. Trying different
+     tools or mechs across cycles to compare them is encouraged.
    - Record the comparison in the step-5b forecast `--note` (and in a
      bet's rationale) as `own:<pre-mech p> mech:<tool>=<p_yes>`, so retros
      can grade the mech against you and against the market.
