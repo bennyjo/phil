@@ -1,8 +1,9 @@
 {
-  "last_fire_utc": "2026-08-28T13:52:25Z",
+  "last_fire_utc": "2026-08-28T14:25:27Z",
   "fired": {
     "cal:Bank of Korea rate decision - ~10:00am KST": "2026-08-27T01:22:40Z",
     "cal:Statistics Canada GDP (Q2/by-industry Jun 2026) release - 8:30am ET": "2026-08-28T12:30:48Z",
+    "cal:UMich Consumer Sentiment FINAL (Aug 2026) - 10:00am ET": "2026-08-28T14:25:27Z",
     "newmarket:3926700": "2026-08-27T05:23:07Z",
     "newmarket:3926710": "2026-08-27T05:23:07Z",
     "newmarket:3934598": "2026-08-27T17:22:54Z",
