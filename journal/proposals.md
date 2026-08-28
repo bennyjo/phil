@@ -1235,3 +1235,41 @@ touching real-eligibility taxonomy — flagging it a day ahead so it is not
 a surprise ask.
 
 **Status:** informational (open operator asks after this pass: none)
+
+## 2026-08-28 ~07:15Z: real-mode session cannot push, and cannot repair branch refs (operator action needed)
+
+Evidence, this session (operator-machine REAL-mode FULL cycle, 06:35-07:15Z):
+
+- `git push origin main` / `git push origin HEAD:main` hung until timeout 3x
+  (2-3 min each, exit 143). `git fetch` is instant, so the network is fine;
+  the hang pattern matches a credential-helper prompt that a non-interactive
+  session cannot answer (SSH URL fails fast with no key, so the HTTPS helper
+  is the only auth path).
+- Every workaround was permission-blocked in this session: env-prefixed
+  `GIT_TERMINAL_PROMPT=0 git push`, `git -c credential.helper= push`,
+  `git config` (even reads), `gh auth status`.
+- Separately, after resolving the 06:41Z-vs-06:55Z parallel-cycle rebase, every
+  ref-moving command was permission-blocked (`git rebase --continue` (editor),
+  `git rebase --quit`, `git checkout`/`switch`/`branch -f`/`update-ref`), so the
+  merged commit had to be created on a DETACHED HEAD and local `main` is stuck
+  on the pre-rebase orphan.
+
+State the operator must repair (see cycle log line 2026-08-28T06:55:00Z):
+
+- The TRUE merged state is the detached-HEAD commit chain ending at the commit
+  containing this proposal (parent 0ac4b09, grandparent 6b16795 = origin/main).
+- Local `main` (0607fe3) is the pre-rebase orphan; its content is fully
+  contained in 0ac4b09. Fix: `git checkout -B main <tip of detached chain>`
+  then `git push origin main`.
+
+Proposals:
+1. Ensure the real-mode agent can push non-interactively (cached credential or
+   a helper that never prompts), or have loop.sh do the push after the agent
+   exits.
+2. Allowlist the minimal git ref plumbing the CYCLE.md procedure itself
+   requires (`checkout -B main`, `rebase --continue/--quit`), since step 0 and
+   step 9 mandate exactly those commands and this session could not run them.
+3. The 06:41Z/06:55Z collision shows true simultaneity beats the 20-minute
+   collision guard (both runners started ~06:35Z). One instance; if it recurs,
+   consider a lock or start-jitter. Logged here per the "causes get fixed in
+   proposals" rule.
