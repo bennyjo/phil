@@ -76,13 +76,23 @@ for i in $(seq 1 "$CYCLES"); do
     fi
   fi
 
+  # No "Bash(git push:*)": on this machine loop.sh owns the push (see the
+  # push block below). The ref plumbing is allowlisted because CYCLE.md
+  # step 9 and its rebase path mandate exactly these commands, and a
+  # permission-blocked "checkout -B" strands the cycle's commits on a
+  # detached HEAD (2026-08-28).
   CMD=(claude -p "$PROMPT"
        --allowedTools "Read" "Glob" "Grep" "WebSearch" "WebFetch"
          "Edit" "Write" "Task"
          "Bash(python3 core/*)" "Bash(git add:*)" "Bash(git commit:*)"
          "Bash(git rev-parse:*)" "Bash(git log:*)" "Bash(git diff:*)"
+         "Bash(git status:*)" "Bash(git symbolic-ref:*)"
+         "Bash(git merge-base:*)" "Bash(git rev-list:*)"
          "Bash(git fetch:*)" "Bash(git checkout -B main origin/main)"
-         "Bash(git pull:*)" "Bash(git push:*)")
+         "Bash(git checkout -B main HEAD)"
+         "Bash(git rebase --continue)" "Bash(git rebase --abort)"
+         "Bash(git rebase --quit)"
+         "Bash(git pull:*)")
   if [ "$PEARL_UP" -eq 1 ]; then
     # wallet_info is read-only; the mech_* tools buy predictions from the
     # Olas mech marketplace (~$0.01 USDC each, paid by the service safe) per
@@ -96,7 +106,14 @@ for i in $(seq 1 "$CYCLES"); do
   fi
   CMD+=(--permission-mode acceptEdits)
 
-  "${CMD[@]}" || echo "cycle $i failed; continuing"
+  # PHIL_PUSH_BY_LOOP tells CYCLE.md step 9 to commit but not push — the push
+  # happens below, in this shell. GIT_TERMINAL_PROMPT/GIT_ASKPASS make any
+  # stray credential lookup fail fast instead of hanging on a keyring prompt
+  # no headless session can answer; GIT_EDITOR stops `git rebase --continue`
+  # from opening an editor and blocking forever.
+  PHIL_PUSH_BY_LOOP=1 \
+  GIT_TERMINAL_PROMPT=0 GIT_ASKPASS=/usr/bin/true GIT_EDITOR=true \
+    "${CMD[@]}" || echo "cycle $i failed; continuing"
 
   # Enforce the protected boundary: revert any agent edits to core/config.
   PROTECTED_PATHS=(core/ config/ .github/ CYCLE.md REAL.md loop.sh CLAUDE.md LICENSE README.md .gitignore)
@@ -107,6 +124,31 @@ for i in $(seq 1 "$CYCLES"); do
   PROTECTED_IN_LAST_COMMITS=$(git log --oneline -5 --name-only | grep -cE '^(core/|config/|\.github/|CYCLE\.md|REAL\.md|loop\.sh|CLAUDE\.md|LICENSE|README\.md|\.gitignore)' || true)
   if [ "$PROTECTED_IN_LAST_COMMITS" -gt 0 ]; then
     echo "WARNING: protected files appear in recent commits — review manually" >&2
+  fi
+
+  # Push from this shell, not from the agent. The credential helper is
+  # `gh auth git-credential`, which reads the token from the macOS keyring —
+  # a keyring prompt is unanswerable inside `claude -p`, so pushes there hang
+  # until timeout and the cycle's commits never leave the machine
+  # (2026-08-28: three hangs, commits stranded on a detached HEAD). This shell
+  # is the interactive one the operator started, where the keychain is already
+  # unlocked. CI remains the guard on protected-path commits.
+  if git remote get-url origin >/dev/null 2>&1; then
+    if ! git symbolic-ref -q HEAD >/dev/null; then
+      echo "WARNING: HEAD detached after cycle — reattaching main to HEAD" >&2
+      git checkout -B main HEAD
+    fi
+    if ! git push origin main; then
+      echo "push rejected — rebasing onto origin/main and retrying" >&2
+      if git pull --rebase origin main; then
+        git push origin main \
+          || echo "WARNING: push still failing after rebase — resolve manually" >&2
+      else
+        # Never hand-resolve a ledger conflict here; leave it for the operator.
+        git rebase --abort 2>/dev/null || true
+        echo "WARNING: rebase onto origin/main failed — commits are local only, resolve manually" >&2
+      fi
+    fi
   fi
 
   [ "$i" -lt "$CYCLES" ] && sleep $((SLEEP_MIN * 60))

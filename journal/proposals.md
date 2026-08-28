@@ -1273,3 +1273,25 @@ Proposals:
    collision guard (both runners started ~06:35Z). One instance; if it recurs,
    consider a lock or start-jitter. Logged here per the "causes get fixed in
    proposals" rule.
+
+**Status:** actioned (operator, 2026-08-29)
+
+1. **Push moved off the agent.** `loop.sh` now pushes after the cycle exits,
+   from the operator's interactive shell where the keychain is already
+   unlocked. Root cause confirmed: the credential helper is
+   `!gh auth git-credential`, which reads the token from the macOS keyring;
+   a keyring prompt cannot be answered inside `claude -p`, so the push hung
+   while `fetch` (no credential needed on a public repo) stayed instant.
+   `CYCLE.md` step 9 now stops before the push when `PHIL_PUSH_BY_LOOP` is
+   set, so an unpushed commit on this machine is expected rather than a
+   discrepancy to diagnose. Cloud runs are unchanged and still push
+   themselves.
+2. **Ref plumbing allowlisted.** `loop.sh` adds `git checkout -B main HEAD`,
+   `git rebase --continue/--abort/--quit`, and the read-only
+   `status`/`symbolic-ref`/`merge-base`/`rev-list` probes. The agent also
+   runs with `GIT_EDITOR=true` so `rebase --continue` cannot block on an
+   editor, and `GIT_TERMINAL_PROMPT=0` + `GIT_ASKPASS=/usr/bin/true` so any
+   stray credential lookup fails fast instead of hanging.
+   `Bash(git push:*)` was removed: the runner owns the push now.
+3. **Collision guard** left as-is, per the proposal's own read that one
+   instance does not justify a lock. Still open if it recurs.

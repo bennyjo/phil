@@ -212,7 +212,17 @@ Every invocation runs as one of three ticks:
    `git symbolic-ref -q HEAD` prints nothing, HEAD is detached — reattach
    with `git checkout -B main HEAD` (from a detached HEAD, `git push origin
    main` pushes the stale branch ref and reports success while your commits
-   never leave the container). Then `git push origin main`.
+   never leave the container).
+
+   **If the environment variable `PHIL_PUSH_BY_LOOP` is set, stop step 9
+   here.** You are running on the operator's machine, where the git
+   credential lives in the OS keyring and a push from this session hangs on
+   a prompt you cannot answer. `loop.sh` pushes for you after you exit. Do
+   the detached-HEAD reattach above (the runner needs `main` pointing at
+   your work), then log the cycle as normal — an unpushed commit is expected
+   here, not a discrepancy to diagnose.
+
+   Otherwise, `git push origin main`.
    If rejected, `git pull --rebase origin main` and push again. If the rebase
    conflicts on `journal/ledger.jsonl`, abort, re-run step 1, and repeat from
    step 7 — never hand-edit the ledger.
