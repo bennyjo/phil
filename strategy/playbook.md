@@ -2277,6 +2277,19 @@ hold:
    no sibling ladders (CONN@CHI / ai-leaderboard correlated-exposure
    lesson).
 
+**Gate-2 variance clause (DEEP-2026-08-29):** the variance input is part
+of the benchmark, not a free parameter. A distribution whose mean is a
+quoted consensus but whose dispersion is an unsourced round number is
+half a self-model — the NFP bracket set (release 2026-09-05, first live
+carve-out candidate) records in its own watch item that the edge SIGN
+flipped on the 70k-vs-90k std choice for several legs, and UMich (0/2,
+−2.00u) is what an unbenchmarked spread does at settlement. A carve-out
+bet therefore requires the rationale to quote a source for dispersion
+too (e.g., trailing realized consensus-miss spread computed from named
+release/consensus history), quoted at research time like the mean.
+No sourced dispersion → the row stays forecast-only regardless of
+apparent edge. This narrows gate 2; it loosens nothing.
+
 **Pre-registered kill switch:** after 4 settled carve-out EVENTS or 6
 settled carve-out BETS (whichever comes first), if net realizable P&L
 ≤ 0 or the agent is not ahead on dBrier in a majority, the carve-out

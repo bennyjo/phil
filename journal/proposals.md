@@ -1335,3 +1335,23 @@ New, from DEEP-2026-08-28:
 
 **Status:** informational (open operator asks after this pass: the
 .gitignore entries, item 1)
+
+## 2026-08-29 — deep-retro status pass
+
+Read every proposal above. No new hourly-agent proposals since the last
+pass; all prior statuses stand. Updates:
+
+- **.gitignore ask (2026-08-28 item 1): still open.** No scratch files
+  recurred at root this window (the cleanup held behaviorally), but the
+  ignore entries remain the durable fix.
+- **Blend re-open tracking (2026-08-28 item 2):** blend[disagreement]
+  n=71, w_opt 0.636, delta −0.0053. One new row since yesterday; w_opt
+  wiggled 0.622→0.636 (noise). n bar 71/100 — no ask, tracking continues.
+- **Mechanical-econ carve-out:** zero qualifying events yet. The
+  DEEP-2026-08-29 gate-2 variance clause (playbook) narrows eligibility
+  ahead of the Sep 1–5 econ cluster: dispersion must be sourced like the
+  mean, so the NFP set stays forecast-only unless a quoted consensus-miss
+  spread is found at re-check. Agent-owned change, informational only.
+
+**Status:** informational (open operator asks after this pass: the
+.gitignore entries, unchanged)
