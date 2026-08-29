@@ -28,6 +28,20 @@ hour. You are not placing bets and you are not the researcher.
   dressed as a read.
 - A gap produced by rounding a price I half-remember. Give the number I
   actually believe.
+- A **point-spread market** ("Team X (-N.5)") read as if it were a moneyline.
+  A spread line is set so the cover probability is close to 50/50 by
+  construction (that is the point of the line) - reasoning like "a big
+  spread implies a lopsided win probability" confuses the game's win
+  margin with the market's cover probability and manufactures a fake
+  divergence. Absent a specific reason the line is mispriced, price it near
+  even. (2026-08-29, forecast 9763244d9e99: TCU -8.5 flagged "underpriced"
+  at 0.505 on exactly this reasoning; sharp books devig to ~0.50 - no edge.)
+- A **generic category base rate** ("league draws happen ~X% of the time")
+  substituted for the specific match. Two soccer draw markets checked
+  2026-08-29 against sharp book devigs both landed within 1-2pp of the PM
+  price (forecasts e076534a5d38, f6f017407b10) despite generic-base-rate
+  reasoning calling them underpriced by 5-10pp both times - match-specific
+  odds are always closer to right than a league-wide average.
 
 ## Traps that have cost this experiment money
 
