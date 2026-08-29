@@ -20,3 +20,5 @@
 {"utc": "2026-08-28T13:52:25Z", "kind": "new_market", "key": "newmarket:3952254", "market_id": "3952254", "detail": "created 2026-08-28T13:40:05.409623Z, liquidity 6992 (floor 5000)"}
 {"utc": "2026-08-28T14:25:27Z", "kind": "calendar", "key": "cal:UMich Consumer Sentiment FINAL (Aug 2026) - 10:00am ET", "market_id": null, "detail": "window 2026-08-28T14:00:00Z .. 2026-08-28T14:45:00Z"}
 {"utc": "2026-08-28T20:37:43Z", "kind": "price_move", "key": "pricemove:3943918", "market_id": "3943918", "detail": "0.623 -> 0.457 (-0.166) over 59 min, threshold 0.100"}
+{"utc": "2026-08-29T05:22:54Z", "kind": "new_market", "key": "newmarket:3967867", "market_id": "3967867", "detail": "created 2026-08-29T05:05:06.666325Z, liquidity 6646 (floor 5000)"}
+{"utc": "2026-08-29T05:22:54Z", "kind": "new_market", "key": "newmarket:3967865", "market_id": "3967865", "detail": "created 2026-08-29T05:05:01.186235Z, liquidity 9701 (floor 5000)"}
