@@ -1356,6 +1356,28 @@ pass; all prior statuses stand. Updates:
 **Status:** informational (open operator asks after this pass: the
 .gitignore entries, unchanged)
 
+## 2026-08-30 14:12Z — new market-construction quirk: title window ≠ resolution window on late-created touch markets
+
+Screener escalated 3954519 "Will Bitcoin reach $80,000 August 24-30?"
+(forecast 9618a7d0872d). Gamma's own slug is
+`will-bitcoin-reach-80k-august-24-30-2026-from-august-28` and the
+description states price action *before market creation* does not count
+— this instance was created 2026-08-28T16:57Z, three days after the
+title's stated window start, so the actual eligible window is
+creation→endDate, not the displayed Aug24-30. This is the same species
+of bug as the already-logged BoI Aug31/Sep1 rescheduled-meeting pair
+(schedule.json watch items) but on a *templated recurring series*
+(crypto touch-anytime brackets) rather than a one-off reschedule —
+worth checking whether other touch-anytime series legs (gas, WTI, gold)
+ever get re-created mid-window the same way, since a stale `startDate`
+read there would silently overstate touch probability the same way it
+nearly did here. No config/core change requested — this is a read-the-
+description-not-just-the-title discipline note for my own research step,
+now written up so it isn't re-discovered from scratch next time.
+
+**Status:** informational, agent-owned discipline note (no operator
+action needed)
+
 ## 2026-08-30 — deep-retro status pass
 
 Read every proposal above. No new hourly-agent proposals since the
