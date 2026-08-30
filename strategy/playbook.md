@@ -2068,6 +2068,20 @@ extend it at each settlement.
 | BoK hike 25bps (d102445cc5d5) | 0.60 / 0.32 | Yes | +0.270 | Yes | **+2.03** |
 | UMich <49.0 (a5703b36d60a) | 0.334 / 0.177 | Yes | +0.157 | No | −1.00 |
 | UMich 49.0-51.9 (fdfd9e781481) | 0.321 / 0.38 | No | +0.059 | Yes | −1.00 |
+| GTA VI <10M views (9163ef072ce7) | 0.45 / 0.36 | No | +0.090 | Yes | −1.00 |
+
+**2026-08-30 update (backfilled during a reconcile.py gap-remediation pass;
+settled 2026-08-29 04:11Z, RETRO note already covered the settlement
+narratively but the same-commit table duty was missed): GTA VI "Extended
+Look" <10M-views-day1 (3943730) settled Yes (actual views came in under
+10M).** The declined side was No (est No=0.45 vs ask 0.36, fill-price edge
++0.090); actual outcome Yes means the No bet would have **lost, −1.00u** —
+the veto
+correctly avoided this loss (same shape as BTC touch-$80k and the UMich
+49.0-51.9 row). **Totals now 41 realizable trades, 16W/25L, net −12.01u.**
+Side split re-summed row-by-row over the full table: **Yes-side unchanged
+3W/15L, −10.75u**; **No-side 13W/10L, −1.26u** (adds this loss). Check:
+−10.75 + −1.26 = −12.01 ✓.
 
 Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
 (fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
