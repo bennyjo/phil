@@ -224,20 +224,27 @@ liquid book reverts to the veto exactly like a self-model. Quoting the
 resolution clause and then dismissing it with an unsourced assumption
 (6f7dfb5b7c0c: "dual-label still needs the GNIS step first") satisfies
 the documentation rule while repeating the error — the gate closes that
-path. Evidence, all settled: >0.10-claimed-edge bets 0W/5L −$25 brier
-+0.4587 (7e753de88823, 0bf9fe3785c6, b21e42c123a1, 84ec821167d5,
-d6d71ab454dc); info-race 2W/4L split exactly on fact-finality (wins
-1e8dec1078ba, 2dc417ed68f6 both final/mechanical; all four losses
-provisional/interpretive); fact-final 1W/0L +$31.23 (5fbf676cfd7f).
-Corroborating marks at enactment (grade at settlement Sep 1–4 and
-re-affirm or reconsider this gate then): c6f16acc55d9 0.017 vs 0.36
-entry, bbe450e04eb9 0.001 vs 0.668, 6f7dfb5b7c0c 0.001 vs 0.38 — every
-pre-final large-edge liquid-book thesis ever bet is settled-lost or
-marked-dead. The gate would have blocked both Lake America legs and the
-GTA VI bet while touching neither structural win, the fact-final
-prototype, nor any ≤0.10 bet. The mechanical-econ carve-out is
-unaffected (its band is 0.10–0.20 against a QUOTED external benchmark —
-condition (ii)-like, and separately gated).
+path. Evidence, all settled: >0.10-claimed-edge bets now 0W/7L −$35
+(7e753de88823, 0bf9fe3785c6, b21e42c123a1, 84ec821167d5, d6d71ab454dc,
+bbe450e04eb9, 6f7dfb5b7c0c — the last two the Lake America pair,
+edge 0.292/0.44, settled LOST 2026-08-30 06:14Z); info-race 2W/4L split
+exactly on fact-finality (wins 1e8dec1078ba, 2dc417ed68f6 both
+final/mechanical; all four losses provisional/interpretive) — the Lake
+pair is counted separately above pending a consistent recount of the
+narrative info-race tally; fact-final 1W/0L +$31.23 (5fbf676cfd7f).
+**Reaffirmed at settlement (2026-08-30 06:14Z):** both Lake America legs
+settled LOST — bbe450e04eb9 (Aug31, No @0.668, est 0.96) and 6f7dfb5b7c0c
+(Sep4, No @0.38, est 0.82) — the rename completed inside the GNIS clock
+the thesis relied on as a floor, confirming both were timeline forecasts,
+not facts. Combined with the still-open GTA VI mark (0.017 vs 0.36
+entry, awaiting its Sep 1 stamp), the gate's founding evidence set is now
+2 settled-lost + 1 still-marked-dead out of 3, 0 reconsideration
+triggers: every pre-final large-edge liquid-book thesis ever bet remains
+settled-lost or marked-dead. The gate stands unchanged. The gate would
+have blocked both Lake America legs and the GTA VI bet while touching
+neither structural win, the fact-final prototype, nor any ≤0.10 bet. The
+mechanical-econ carve-out is unaffected (its band is 0.10–0.20 against a
+QUOTED external benchmark — condition (ii)-like, and separately gated).
 
 NOT an edge class — **resolver-interpretation reads** (graded
 DEEP-2026-08-01): "I checked the exact resolution source and it says X"
