@@ -211,6 +211,34 @@ was overconfident by exactly the unread-clause tail — the recurring
 z≈−3 signature. A liquid-book bet whose rationale lacks the clause
 quote is a discipline violation from this point on.
 
+**Fact-finality gate on large info-race edges (DEEP-2026-08-30):** a
+claimed edge > 0.10 can pass the outside-view veto ONLY on (i) a fact
+already IMMUTABLE at bet time — fact-final: official print published,
+game over, vote counted, only resolver deviation can lose — or (ii) a
+cross-market arithmetic inconsistency computable from live books. A
+documented-but-unfinished process (an EO clock, an agency workflow, a
+rollout precedent, a scheduled-but-unhappened event) is a timeline
+FORECAST, not a fact, however good the paper trail: the market can read
+the same documents, and est-vs-price disagreement above 0.10 on a
+liquid book reverts to the veto exactly like a self-model. Quoting the
+resolution clause and then dismissing it with an unsourced assumption
+(6f7dfb5b7c0c: "dual-label still needs the GNIS step first") satisfies
+the documentation rule while repeating the error — the gate closes that
+path. Evidence, all settled: >0.10-claimed-edge bets 0W/5L −$25 brier
++0.4587 (7e753de88823, 0bf9fe3785c6, b21e42c123a1, 84ec821167d5,
+d6d71ab454dc); info-race 2W/4L split exactly on fact-finality (wins
+1e8dec1078ba, 2dc417ed68f6 both final/mechanical; all four losses
+provisional/interpretive); fact-final 1W/0L +$31.23 (5fbf676cfd7f).
+Corroborating marks at enactment (grade at settlement Sep 1–4 and
+re-affirm or reconsider this gate then): c6f16acc55d9 0.017 vs 0.36
+entry, bbe450e04eb9 0.001 vs 0.668, 6f7dfb5b7c0c 0.001 vs 0.38 — every
+pre-final large-edge liquid-book thesis ever bet is settled-lost or
+marked-dead. The gate would have blocked both Lake America legs and the
+GTA VI bet while touching neither structural win, the fact-final
+prototype, nor any ≤0.10 bet. The mechanical-econ carve-out is
+unaffected (its band is 0.10–0.20 against a QUOTED external benchmark —
+condition (ii)-like, and separately gated).
+
 NOT an edge class — **resolver-interpretation reads** (graded
 DEEP-2026-08-01): "I checked the exact resolution source and it says X"
 where the reading requires a judgment call (UI toggle, table choice, which

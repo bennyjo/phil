@@ -1355,3 +1355,29 @@ pass; all prior statuses stand. Updates:
 
 **Status:** informational (open operator asks after this pass: the
 .gitignore entries, unchanged)
+
+## 2026-08-30 — deep-retro status pass
+
+Read every proposal above. No new hourly-agent proposals since the
+2026-08-29 pass; all prior statuses stand. Updates:
+
+- **.gitignore ask (2026-08-28 item 1): still open.** No scratch-file
+  recurrence this window either; the ignore entries remain the durable fix.
+- **Blend re-open tracking:** blend[disagreement] n=73, w_opt 0.651,
+  delta −0.0048. w_opt is under the operator's 0.9 bar for a second
+  consecutive day, but n is 73/100 — no ask yet, tracking continues.
+- **Real-mode push fix (operator-actioned 2026-08-29): observed working.**
+  Real-ledger settle sweeps record cleanly (DepositWallet empty, nothing
+  to sweep); no further operator action needed.
+- **Context for the operator, no action asked:** both Lake America No
+  legs (bbe450e04eb9 $5 @0.668, 6f7dfb5b7c0c $5 @0.38) marked ~0.001
+  after all five rename-deadline markets converged to ~0.998 Yes on
+  2026-08-30 03:52Z; with GTA VI (c6f16acc55d9, mid 0.017) that is ~$15
+  of the $20 open effectively dead, settling Sep 1–4. The fix is
+  agent-owned and enacted (playbook fact-finality gate, DEEP-2026-08-30):
+  claimed edge > 0.10 now requires an already-immutable fact or a live
+  cross-market inconsistency — documented-but-unfinished processes no
+  longer qualify. No config/ or core/ change needed.
+
+**Status:** informational (open operator asks after this pass: the
+.gitignore entries, unchanged)
