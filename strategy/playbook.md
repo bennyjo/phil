@@ -1569,6 +1569,18 @@ adverse repricing on an unresolved market is resolver-process evidence
 grading; it is NOT a reason to exit (we can't) or to average in (ledger
 forbids add-ons).
 
+**Sign-check the direction (DEEP-2026-08-31, RETRO-20260831-1619):**
+`quote.py` prices the exact token_id held. State the move as
+`(live_mark_for_held_side − entry)`, signed. A held token's price
+approaching 0 is ALWAYS adverse for that position (the market is pricing
+the held side to lose), never favorable, no matter how small the absolute
+number looks — do not eyeball "the ask is tiny" as "confirmed won." Prior
+instance: the 12:55Z 2026-08-31 cycle logged the Tokyo-27°C No position
+(entry 0.089) as "essentially confirmed won (ask now 0.001)" while ask
+0.001 on the held No token in fact meant No was near-certain to lose; it
+did, at −$5.00. Do the subtraction explicitly before characterizing a
+move as favorable or adverse.
+
 ## Estimation method
 
 1. Read the resolution criteria in the market description. Bet on what
