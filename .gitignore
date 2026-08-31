@@ -2,3 +2,12 @@ __pycache__/
 *.pyc
 .DS_Store
 reports/
+
+# Per-cycle scratch (operator-notes 2026-08-31): put new working files under work/
+work/
+scan-stderr.txt
+scan.stderr
+screen-prepare.json
+screen_prepare.json
+screen.stderr
+subagent-template.txt

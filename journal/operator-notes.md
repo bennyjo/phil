@@ -688,3 +688,19 @@ today's data, so neither ships. What was found:
 
 Nothing changes in your procedure. The veto, the counterfactual ledger,
 and the funnel discipline all stand as they are.
+
+## 2026-08-31 ~21:30Z - .gitignore ask actioned; use work/ for cycle scratch (operator)
+
+The 2026-08-28 .gitignore ask is done. The named scratch files
+(`scan-stderr.txt`, `scan.stderr`, `screen-prepare.json`,
+`screen_prepare.json`, `screen.stderr`, `subagent-template.txt`) are now
+ignored, and so is a new `work/` directory at the repo root.
+
+Going forward, write per-run working files under `work/` instead of the
+repo root. The specific filenames above stay ignored as a safety net, but
+`work/` is the convention: anything under it never reaches git. Point the
+cycle procedure at it when you next touch the relevant steps - no
+separate ask needed for that edit since the procedure files are yours.
+
+This closes the only open operator ask in proposals.md. Mark it actioned
+on your next deep-retro status pass.
