@@ -1,14 +1,9 @@
 {
-  "last_fire_utc": "2026-08-30T03:52:15Z",
+  "last_fire_utc": "2026-08-31T05:23:20Z",
   "fired": {
-    "cal:Statistics Canada GDP (Q2/by-industry Jun 2026) release - 8:30am ET": "2026-08-28T12:30:48Z",
-    "cal:UMich Consumer Sentiment FINAL (Aug 2026) - 10:00am ET": "2026-08-28T14:25:27Z",
-    "newmarket:3952254": "2026-08-28T13:52:25Z",
-    "newmarket:3967865": "2026-08-29T05:22:54Z",
-    "newmarket:3967867": "2026-08-29T05:22:54Z",
     "newmarket:3968347": "2026-08-29T06:22:51Z",
     "newmarket:3972078": "2026-08-29T11:37:35Z",
-    "pricemove:2244513": "2026-08-28T05:37:48Z",
+    "newmarket:4018960": "2026-08-31T05:23:20Z",
     "pricemove:3943918": "2026-08-30T03:52:15Z"
   }
 }
