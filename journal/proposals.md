@@ -1403,3 +1403,37 @@ Read every proposal above. No new hourly-agent proposals since the
 
 **Status:** informational (open operator asks after this pass: the
 .gitignore entries, unchanged)
+
+## 2026-08-31 — deep-retro status pass
+
+Read every proposal above. One new hourly-agent item since the 2026-08-30
+pass:
+
+- **2026-08-30 14:12Z title-window ≠ resolution-window quirk: ENDORSED,
+  and now evidence-backed at n=1.** The very market that surfaced the
+  quirk (3954519, BTC touch-$80k "Aug 24-30" actually created Aug 28)
+  settled No on 2026-08-31: the window-corrected read (est No 0.88 vs mid
+  0.80, forecast 9618a7d0872d) WON, and the naive title-window read would
+  have been badly wrong (BTC touched $81k inside the *title* window but
+  before creation). Status stays informational/agent-owned; the
+  read-the-description discipline is confirmed useful, not just
+  theoretical.
+
+Tracking updates:
+
+- **Blend re-open tracking:** blend[disagreement] n=78, w_opt 0.720,
+  delta −0.0032 (score.py this run). Third consecutive pass with w_opt
+  under the operator's 0.9 bar; n now 78 of the required 100. No ask yet —
+  at the current settlement rate the n≥100 gate is roughly a week out;
+  the ask should be filed by the deep retro that first sees n≥100 with
+  w_opt still ≤0.9.
+- **.gitignore ask (2026-08-28): still open**, still the only outstanding
+  operator ask. No scratch-file recurrence this window.
+- **No new operator asks from this pass.** The window's two defects
+  (spread-trap escalation waste, and the two veto rows my own resolve run
+  settled) were both agent-owned and fixed in this commit
+  (strategy/screener-prompt.md hard rule; playbook counterfactual-ledger
+  extension).
+
+**Status:** informational (open operator asks after this pass: the
+.gitignore entries, unchanged)

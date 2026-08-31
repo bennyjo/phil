@@ -2118,6 +2118,34 @@ Side split re-summed row-by-row over the full table: **Yes-side unchanged
 3W/15L, −10.75u**; **No-side 13W/10L, −1.26u** (adds this loss). Check:
 −10.75 + −1.26 = −12.01 ✓.
 
+**2026-08-31 update (DEEP-2026-08-31; both rows settled 04:41Z by the
+deep-retro's own resolve.py run, graded same-commit per the DEEP-2026-08-23
+rule): two touch-anytime veto rows.** BTC touch-$82k Aug24-30
+(cbbeb134c438): model side Yes (est 0.45 vs mid 0.26), fill ask 0.27,
+realizable edge +0.180, resolved No — **−1.00u** (another self-modeled
+touch-anytime Yes-side counterfactual loss; guessed-vol input, one of the
+three pre-registered touch-family gate rows). BTC touch-$80k
+created-Aug28-window market (9618a7d0872d): model side No (est No 0.88 vs
+mid 0.80), fill ask 0.82, realizable edge +0.060 — sub-0.10, declined on
+the pending touch-family gate rather than the numeric boundary, but the
+recorded label is outside-view-veto so it is on-ledger, same treatment as
+the sub-boundary WI Hong No rows — resolved No, **+0.22u** win. That row
+also grades the title-window≠resolution-window discipline note
+(proposals.md 2026-08-30 14:12Z) a first win at n=1: the window-quirk
+read was the whole edge. **Totals now 43 realizable trades, 17W/26L, net
+−12.79u.** Side split: **Yes-side 3W/16L −11.75u; No-side 14W/10L
+−1.04u.** Check: −11.75 + −1.04 = −12.79 ✓. Touch-family gate tally after
+these: ETH dip-2400 measured-vol WON (est above market, right; RETRO-
+20260831-0017), BTC-82k guessed-vol LOST (est above market, wrong), BTC
+dip-75000 measured-vol still open (settles Sep 1 04:00Z) — mixed 1-1, so
+the pre-registered "market wins all three → fix the vol input" branch
+cannot fire; final grade lands with leg 3. Mech-vs-own-vs-market on
+cbbeb134c438 (pre-registered on the schedule.json watch item): outcome No
+→ market brier 0.0676 < mech v4 0.1024 < own 0.2025 — mech beat own,
+nobody beat the market; own stayed 0.19 high even after two independent
+~0.3 signals (mech 0.32, market 0.26) — anchoring on the self-model
+after outside signals agree is the residual error shape here.
+
 Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
 (fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
 both settled this tick too, but both carry claimed edges ≤0.10 under a

@@ -28,14 +28,26 @@ hour. You are not placing bets and you are not the researcher.
   dressed as a read.
 - A gap produced by rounding a price I half-remember. Give the number I
   actually believe.
-- A **point-spread market** ("Team X (-N.5)") read as if it were a moneyline.
-  A spread line is set so the cover probability is close to 50/50 by
-  construction (that is the point of the line) - reasoning like "a big
-  spread implies a lopsided win probability" confuses the game's win
-  margin with the market's cover probability and manufactures a fake
-  divergence. Absent a specific reason the line is mispriced, price it near
-  even. (2026-08-29, forecast 9763244d9e99: TCU -8.5 flagged "underpriced"
-  at 0.505 on exactly this reasoning; sharp books devig to ~0.50 - no edge.)
+- **HARD RULE — line-constructed and exotic-derivative markets.** If the
+  title is a bookmaker-style construction — "Spread: …", "Team X (-N.5)",
+  "O/U N.5", "Exact Score: …", "… leading at halftime?" — output
+  divergence 0.0 and confidence `low` UNLESS you can name a concrete,
+  market-specific fact (a named injury, lineup news, venue change) the
+  line-setter plausibly missed. General team-strength reasoning never
+  counts: the line exists precisely to absorb it. A spread line is set so
+  the cover probability is close to 50/50 by construction; "a big spread
+  implies a lopsided win probability" confuses the game's win margin with
+  the cover probability and manufactures a fake divergence. Exact-score
+  and halftime-state markets are thin derivatives priced off the same
+  book. (2026-08-29, forecast 9763244d9e99: TCU -8.5 flagged "underpriced"
+  at 0.505 on exactly this reasoning; sharp books devig to ~0.50 - no
+  edge. Made a hard rule by DEEP-2026-08-31 because the advisory version
+  did not work: of the 100 screened rows since 2026-08-30 with recorded
+  divergence ≥0.10, 65 were these shapes — including "high"-confidence
+  spread flags like Aberdeen -1.5 at 0.41 — and they burned 8-11 of 15
+  escalation slots in every FULL cycle that day (journal/screener.jsonl,
+  journal/cycles.log) with zero surviving research, since PM alt-lines
+  can't yet be mapped to book lines at all.)
 - A **generic category base rate** ("league draws happen ~X% of the time")
   substituted for the specific match. Two soccer draw markets checked
   2026-08-29 against sharp book devigs both landed within 1-2pp of the PM
