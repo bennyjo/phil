@@ -2523,6 +2523,21 @@ correctly by dropping the redundant less-evidenced row; no coordination
 rule until it recurs — the existing cycle-start collision guard stays as
 is.
 
+**Gate-2 supporting evidence, Bank of Israel Aug/Sept decision
+(RETRO-20260901-1617):** two labels for the same rescheduled meeting
+(Aug-dated pair 631d616bf794/64c89e162ea1, Sept-dated pair
+4a5f7889b9de/a989d14ba8ff) both settled the same way — BoI cut, not held —
+against a qualitative-only "most forecasters expect a hold" read with no
+numeric survey found, on both my estimate (0.20/0.15 for cut) and the
+market's price (0.24/0.12). Both forecasts correctly stayed in the
+ordinary no-edge path (never eligible for the carve-out — gate 2 requires
+a quoted numeric consensus, not a qualitative one) and risked no capital.
+First concrete instance of a qualitative-only central-bank consensus
+missing the actual decision: n=1 real event, no rule change, but it
+validates gate 2's numeric-survey requirement rather than arguing for
+loosening it — a case exactly like this is what gate 2 exists to keep out
+of the carve-out.
+
 **2026-08-21 update (18:11Z settlement): the Aug14-21 Musk weekly set's
 two >0.10-disagreement legs both settled, both LOST.** 240-259
 (cd3af116ed2a, No side, bid 0.252 vs est 0.16) lost to the actual count
