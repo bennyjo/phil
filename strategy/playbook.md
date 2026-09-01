@@ -2223,6 +2223,41 @@ existing Yes/No asymmetry flagged since 2026-08-26/27 for a future deep
 retro; not decided here (hourly cycles extend the table, they don't rule
 on it).
 
+**2026-09-01 update (RETRO-20260901-1350; 8 rows, AAA gas-price
+touch-anytime set, all settled this tick).** All 8 legs (event 769509,
+first recorded 2026-08-17 as `outside-view-veto`, self-model + uniform
+large disagreement, 0 bets) resolved No — the national-average price
+never touched any of the 8 thresholds. Model favored No on every leg
+(est 0.01-0.035 vs live book 0.05-0.19); a clean directional sweep,
+though highly correlated (one price path drove all 8 legs, not 8
+independent draws) and still resting on the unvalidated 4-weekly-point
+sigma the original note flagged. Fill reference = best_bid_at_record (ask
+where no bid was posted); CF profit = 1/(1−ref) − 1 on the No side.
+
+| Row | est vs ref | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Gas $3.90 Low (e2cbca37fe88) | 0.035 / 0.18 | No | +0.145 | No | **+0.22** |
+| Gas $3.70 Low (9dffc25cddd9) | 0.01 / 0.04 | No | +0.030 | No | **+0.04** |
+| Gas $3.50 Low (cca60b062716) | 0.01 / 0.01 | No | +0.000 | No | **+0.01** |
+| Gas $3.25 Low (e45e186476b0) | 0.01 / 0.12* | No | +0.110 | No | **+0.14** |
+| Gas $3.00 Low (38c726c1c695) | 0.01 / 0.01 | No | +0.000 | No | **+0.01** |
+| Gas $4.25 High (d59e9243dfb4) | 0.019 / 0.09 | No | +0.071 | No | **+0.10** |
+| Gas $4.50 High (59f65e95ed5e) | 0.01 / 0.10 | No | +0.090 | No | **+0.11** |
+| Gas $4.75 High (9140e7f850f4) | 0.01 / 0.16* | No | +0.150 | No | **+0.19** |
+
+\* no bid posted at record time; ask used as the conservative reference.
+
+**Totals now 60 realizable trades, 31W/29L, net −10.62u.** Side split
+re-summed row-by-row: **Yes-side unchanged 3W/17L, −12.75u**; **No-side
+28W/12L, +2.13u** (adds this batch's +0.82u). Check: −12.75 + 2.13 =
+−10.62 ✓. Second touch-family family (after WTI/Gold's 3/3
+vetoed-would-have-won, RETRO-20260901-0025) where the self-model's
+*direction* beat the market despite an unvalidated sigma — flagged for
+the next deep retro's cross-family self-model review, not a policy
+change at this n (correlated legs, still no sourced daily-price series).
+No ranking/veto-boundary edit; AAA gas-price touch-anytime stays
+outside-view-veto/forecast-only.
+
 **Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
 21:35Z, all 3 legs settled):** leg 3 BTC dip-$75k (753366c2ea8e,
 measured-vol, est 0.38 vs mid 0.315) LOST — final record ETH dip-2400
