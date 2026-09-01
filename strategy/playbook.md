@@ -236,15 +236,23 @@ narrative info-race tally; fact-final 1W/0L +$31.23 (5fbf676cfd7f).
 settled LOST — bbe450e04eb9 (Aug31, No @0.668, est 0.96) and 6f7dfb5b7c0c
 (Sep4, No @0.38, est 0.82) — the rename completed inside the GNIS clock
 the thesis relied on as a floor, confirming both were timeline forecasts,
-not facts. Combined with the still-open GTA VI mark (0.017 vs 0.36
-entry, awaiting its Sep 1 stamp), the gate's founding evidence set is now
-2 settled-lost + 1 still-marked-dead out of 3, 0 reconsideration
-triggers: every pre-final large-edge liquid-book thesis ever bet remains
-settled-lost or marked-dead. The gate stands unchanged. The gate would
+not facts. The gate stands unchanged. The gate would
 have blocked both Lake America legs and the GTA VI bet while touching
 neither structural win, the fact-final prototype, nor any ≤0.10 bet. The
 mechanical-econ carve-out is unaffected (its band is 0.10–0.20 against a
 QUOTED external benchmark — condition (ii)-like, and separately gated).
+
+**Gate's founding evidence set CLOSED (RETRO-20260901-0639, GTA VI
+settled 2026-09-01):** `c6f16acc55d9` (Yes @0.36, est 0.90) LOST — the
+Aug27 premiere aired unlabeled ("An Extended Look," not a trailer) exactly
+as the liquid-book fork anticipated. All three founding bets are now
+**3 settled-lost out of 3, zero reconsideration triggers**:
+Lake America ×2 + GTA VI. Running >0.10-claimed-edge bet tally: **0W/8L
+−$40** (adds GTA VI's −$5 to the prior 7e753de88823/0bf9fe3785c6/
+b21e42c123a1/84ec821167d5/d6d71ab454dc/bbe450e04eb9/6f7dfb5b7c0c list).
+No further grading duty attaches to this gate's founding set; future
+>0.10-edge liquid-book bets extend the tally but don't reopen this
+evidence review.
 
 NOT an edge class — **resolver-interpretation reads** (graded
 DEEP-2026-08-01): "I checked the exact resolution source and it says X"
@@ -2180,6 +2188,40 @@ treatment as Musk wk 200-219 / Zambia. No policy change from this update
 3-for-3 vetoed legs in the WTI/Gold Aug batch would have won their
 counterfactual, but that argues variance on top of an already-flagged
 unvalidated-vol family, not a boundary change at this n).
+
+**2026-09-01 update (RETRO-20260901-0639; 5 rows — 4 sequential veto
+snapshots on the same Mythos-class Aug31 market `2487205`, plus GTA VI's
+post-trigger veto forecast):** each Mythos row is a separate real-time
+book snapshot (re-researched independently as new information arrived),
+graded like the BoK pair's original-record-time convention — all four
+favored the No side (model diverged from market toward "not released"),
+actual outcome No, all four WIN. Mythos No (4aceafc01b6b, Aug25 21:26):
+est 0.95 vs ask 0.80, edge +0.150, **+0.25**. Mythos No (e35e582a4d22,
+Aug26 17:25, flipped from its Yes=0.30 tracking to the favored No side):
+est 0.70 vs implied ask 0.35 (=1−bid_yes 0.65), edge +0.350, **+1.86**.
+Mythos No (5d388f8d5585, Aug27 16:23): est 0.65 vs ask 0.54, edge +0.110,
+**+0.85**. Mythos No (c69958e0193a, Aug28 09:45, flipped from Yes=0.07):
+est 0.93 vs implied ask 0.73 (=1−bid_yes 0.27), edge +0.200, **+0.37**.
+GTA VI Yes (ce1727b53bd5, Aug27 16:43, the post-trigger re-veto after
+`c6f16acc55d9`'s entry): est 0.55 vs ask 0.32, edge +0.230, actual No →
+Yes side **lost, −1.00**.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Mythos No (4aceafc01b6b) | 0.95 / 0.80 | No | +0.150 | No | **+0.25** |
+| Mythos No (e35e582a4d22) | 0.70 / 0.35 | No | +0.350 | No | **+1.86** |
+| Mythos No (5d388f8d5585) | 0.65 / 0.54 | No | +0.110 | No | **+0.85** |
+| Mythos No (c69958e0193a) | 0.93 / 0.73 | No | +0.200 | No | **+0.37** |
+| GTA VI trailer (ce1727b53bd5) | 0.55 / 0.32 | Yes | +0.230 | No | −1.00 |
+
+**Totals now 52 realizable trades, 23W/29L, net −11.44u.** Side split
+re-summed row-by-row over the full table: **Yes-side 3W/17L, −12.75u**
+(adds GTA VI's loss); **No-side 20W/12L, +1.31u** (adds the 4 Mythos
+wins, +3.33u) — the No side crosses into cumulative positive territory
+for the first time. Check: −12.75 + 1.31 = −11.44 ✓. This widens the
+existing Yes/No asymmetry flagged since 2026-08-26/27 for a future deep
+retro; not decided here (hourly cycles extend the table, they don't rule
+on it).
 
 **Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
 21:35Z, all 3 legs settled):** leg 3 BTC dip-$75k (753366c2ea8e,
