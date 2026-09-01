@@ -1677,6 +1677,22 @@ move as favorable or adverse.
      `8e67cf4882bc` (entry note said "one book 4.5" while betting against
      -4.5; Sky covered) and `1436bb727464` (aggregator "consensus 188-189"
      vs PM 185.5; Under hit).
+   - **Same-day-deadline WebSearch timing (2026-09-01, the Mythos-class
+     "by-date" family).** A "no confirmed announcement yet" WebSearch read
+     on a market resolving "by end of day X," with an active credible
+     rumor of an imminent event, is weak evidence for No while day X
+     hasn't fully elapsed — it can just mean the event hasn't happened
+     YET, or has happened but hasn't reached my search index yet, not that
+     it won't happen today. Evidence: 3 of 5 outside-view-veto forecasts on
+     the Mythos-release-by-date family (`720781176db9`/`237402dd3f1e` est
+     No 0.80/0.94, `f9a6e09224dd` est No 0.88) were checked hours before
+     Anthropic's official Sep1 announcement, all LOST (counterfactual
+     ledger below) — the announcement landed later that SAME calendar day.
+     No capital was risked (fact-finality gate vetoes rumor-based edges
+     regardless), so this cost nothing, but the estimate itself was
+     overconfident on "No" for the wrong reason. For a same-day deadline
+     with a live imminent-event rumor, re-check close to the actual cutoff
+     before finalizing a low P(Yes) — one morning search isn't enough.
 4. Only bet when |my estimate − fill price| ≥ the min edge for the edge
    class (`min_edge` for structural, `min_edge_book_devig` for book-devig
    arbitration) AND I can name the specific reason the market is wrong.
@@ -2257,6 +2273,54 @@ the next deep retro's cross-family self-model review, not a policy
 change at this n (correlated legs, still no sourced daily-price series).
 No ranking/veto-boundary edit; AAA gas-price touch-anytime stays
 outside-view-veto/forecast-only.
+
+**2026-09-01 update (LIGHT tick 22:xxZ; 5 rows, the Mythos-class
+"by-date" nested-deadline family, all settled this tick after the
+official Anthropic announcement of Claude Mythos 5.1 / Fable 5.1
+propagated on-chain).** Same underlying fact as the 4-row Mythos-No
+batch already in this table (RETRO-20260901-0639, all 4 WON), but these
+are the LATER snapshots — checked Aug29 through the actual release day —
+and this time the model favored No on every leg and **all 5 LOST**: the
+release the rumor pointed at actually happened Sep1, hours after the
+last WebSearch check on several of these legs came back "no confirmed
+announcement." Not 5 independent confirmations — one correlated signal
+(same underlying release, five deadline windows) — but a clean reversal
+of the earlier batch's direction as the true event got closer.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Mythos by-Sep9 No (1f20cadb2b53) | 0.85 / 0.27 | No | +0.580 | Yes | −1.00 |
+| Mythos by-Sep1 No (720781176db9) | 0.20 / 0.68 | No | +0.480 | Yes | −1.00 |
+| Mythos by-Sep1 No (237402dd3f1e) | 0.06 / 0.31 | No | +0.250 | Yes | −1.00 |
+| Mythos exact-Sep1 No (4c648c2e6afb) | 0.03 / 0.29 | No | +0.260 | Yes | −1.00 |
+| Mythos by-Sep2 No (f9a6e09224dd) | 0.12 / 0.55 | No | +0.430 | Yes | −1.00 |
+
+(720781176db9 and 237402dd3f1e are sequential re-checks of the SAME
+by-Sep1 market, same convention as the earlier Mythos No sequence —
+both count as separate row-time snapshots, per the existing table
+practice.) **Totals now 65 realizable trades, 31W/34L, net −15.62u.**
+Side split re-summed row-by-row over the full table: **Yes-side
+unchanged 3W/17L, −12.75u**; **No-side 28W/17L, −2.87u** (adds this
+batch's 0W/5L, −5.00u — the No side's first net-negative turn since the
+AAA gas batch pushed it positive). Check: −12.75 + −2.87 = −15.62 ✓.
+Full Mythos-rumor-family lifetime tally (9 rows, both batches): 4W/5L,
+net +3.33−5.00 = **−1.67u** — betting real money against this rumor
+would have lost money over the family's full life, reinforcing (not
+contradicting) the fact-finality gate: zero capital was ever actually
+risked on any of these 9 rows, exactly because "unconfirmed rumor" stays
+vetoed regardless of the model's confidence, and the model's confidence
+here would have been wrong more often than right by the end. No
+veto-boundary change — this is the gate working as designed, not a
+reason to loosen it. Concrete estimation lesson, encoded below in
+§Estimation method (same-day-deadline WebSearch-timing sub-bullet): a
+single WebSearch check earlier in the day on a "by end-of-date-X"
+deadline market, with an active rumor of an imminent event, is weak
+evidence for No if the deadline hasn't fully elapsed — three of these
+five legs were checked hours before the actual announcement landed
+later the SAME day, and "no confirmation as of this morning's search"
+was read as informative when it was mostly a search-timing artifact.
+Re-check same-day deadlines close to the actual cutoff before
+finalizing a rumor-based No, don't rely on one AM check.
 
 **Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
 21:35Z, all 3 legs settled):** leg 3 BTC dip-$75k (753366c2ea8e,
