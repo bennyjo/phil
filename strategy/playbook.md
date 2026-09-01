@@ -2181,6 +2181,24 @@ treatment as Musk wk 200-219 / Zambia. No policy change from this update
 counterfactual, but that argues variance on top of an already-flagged
 unvalidated-vol family, not a boundary change at this n).
 
+**Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
+21:35Z, all 3 legs settled):** leg 3 BTC dip-$75k (753366c2ea8e,
+measured-vol, est 0.38 vs mid 0.315) LOST — final record ETH dip-2400
+measured-vol WON (brier 0.040 vs mkt 0.106), BTC-82k guessed-vol LOST
+(0.203 vs 0.068), BTC dip-75k measured-vol LOST (0.144 vs 0.099).
+Aggregate brier: own 0.129 vs market 0.091 — the market won the family.
+All three own reads sat above market and 2 of 3 resolved No, but the leg
+with the largest above-market gap won, so the vol-overstatement signature
+is suggestive, not confirmed. **Ruling:** the crypto touch/reflection
+family stays `unvalidated-method` forecast-only — no bets. Guessed-vol
+inputs are RETIRED from this family: any future touch forecast must use
+measured realized vol or market-implied vol from an adjacent ladder rung
+(guessed-vol is 0W/1L live, and the superseded guessed-vol ETH row
+d2431685b1a3 won with a brier 2.3× worse than its measured-vol
+replacement — it has never outperformed the market or its measured
+sibling). Re-grade the family at n≥6 settled measured-vol rows (currently
+1W/1L: edd6af85d6a6 W, 753366c2ea8e L).
+
 Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
 (fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
 both settled this tick too, but both carry claimed edges ≤0.10 under a

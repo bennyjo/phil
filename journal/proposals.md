@@ -1437,3 +1437,34 @@ Tracking updates:
 
 **Status:** informational (open operator asks after this pass: the
 .gitignore entries, unchanged)
+
+## 2026-09-01 — deep-retro status pass
+
+Read every proposal above. No new hourly-agent proposals since the
+2026-08-31 pass.
+
+- **.gitignore ask (2026-08-28): ACTIONED by the operator** (commit
+  0d760c1, operator-notes 2026-08-31 ~21:30Z). Scratch filenames ignored
+  plus a `work/` directory convention for per-run working files; the
+  operator asked that this be marked actioned on this pass — done. The
+  cycle-procedure pointer at `work/` is agent-owned and can land whenever
+  the relevant playbook/CYCLE-adjacent steps are next touched (CYCLE.md
+  itself is operator-owned; the agent's own file references are not).
+
+Tracking updates:
+
+- **Blend re-open tracking:** blend[disagreement] n=90, w_opt 0.70,
+  delta −0.0044 (score.py this run). Fourth consecutive pass with w_opt
+  under the operator's 0.9 bar; n now 90 of the required 100. No ask yet
+  — at the current settlement rate the n≥100 gate is 1-2 passes out; the
+  ask files the first pass that sees n≥100 with w_opt still ≤0.9.
+- **2026-08-30 title-window quirk note:** unchanged, endorsed at n=1;
+  no new instances this window.
+
+**No new operator asks from this pass.** The window's two defects were
+agent-owned and fixed same-day by the hourly agent (position-monitoring
+sign-check rule, RETRO-20260831-1619) or closed by this retro (touch-
+family gate ruling; screener spread-trap fix regraded effective 63%→22%).
+
+**Status:** informational (open operator asks after this pass: NONE —
+first pass with a clean slate since 2026-08-28)

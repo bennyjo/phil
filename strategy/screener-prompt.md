@@ -47,7 +47,11 @@ hour. You are not placing bets and you are not the researcher.
   spread flags like Aberdeen -1.5 at 0.41 — and they burned 8-11 of 15
   escalation slots in every FULL cycle that day (journal/screener.jsonl,
   journal/cycles.log) with zero surviving research, since PM alt-lines
-  can't yet be mapped to book lines at all.)
+  can't yet be mapped to book lines at all.) (REGRADED EFFECTIVE
+  DEEP-2026-09-01, pre-registered: post-fix spread-shape share of
+  div≥0.10 rows fell 63% → 22%, all residual spread rows at confidence
+  `low`, zero spread-trap rows reached research per funnel.jsonl. Rule
+  stays.)
 - A **generic category base rate** ("league draws happen ~X% of the time")
   substituted for the specific match. Two soccer draw markets checked
   2026-08-29 against sharp book devigs both landed within 1-2pp of the PM
