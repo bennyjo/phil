@@ -2158,6 +2158,29 @@ nobody beat the market; own stayed 0.19 high even after two independent
 ~0.3 signals (mech 0.32, market 0.26) — anchoring on the self-model
 after outside signals agree is the residual error shape here.
 
+**2026-09-01 update (RETRO-20260901-0025; two rows from this cycle, one
+backfilled compliance-gap row from the prior cycle):** Alphabet
+3rd-largest-by-market-cap (6317c8ab11b1, settled 2026-08-31T22:15:15Z by
+the previous cycle — flagged by `reconcile.py` as a same-commit-duty miss,
+fixed here): est 0.62 / mkt 0.942, side No, edge +0.319, resolved Yes
+(Alphabet was 3rd) — **−1.00u**. WTI HIGH $95 (fbc6aff9c7f4, settled this
+cycle): est 0.048 / mkt 0.20, side No, edge +0.142, resolved No (didn't
+touch) — **+0.23u**. WTI HIGH $90 (5ae6bf97d6a9, settled this cycle): est
+0.211 / mkt 0.45, side No, edge +0.229, resolved No (didn't touch) —
+**+0.79u**. Alibaba best-Chinese-model (a467140e14e7, settled this cycle):
+est 0.78 / mkt 0.944, side No, edge +0.163, resolved Yes (Alibaba was #1)
+— **−1.00u**. **Totals now 47 realizable trades, 19W/28L, net −13.77u.**
+Side split re-summed row-by-row: **Yes-side unchanged 3W/16L, −11.75u**;
+**No-side 16W/12L, −2.02u** (adds 2W/2L, net −0.98u this update). Check:
+−11.75 + −2.02 = −13.77 ✓. Gold HIGH $4700's revised read (52650469b8d8,
+category-bar, nominal edge 0.086 — under the 0.10 numeric boundary) is
+excluded from this table per the sub-boundary taxonomy below, same
+treatment as Musk wk 200-219 / Zambia. No policy change from this update
+(RETRO-20260901-0025 grades the pre-registered touch-family test in full —
+3-for-3 vetoed legs in the WTI/Gold Aug batch would have won their
+counterfactual, but that argues variance on top of an already-flagged
+unvalidated-vol family, not a boundary change at this n).
+
 Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
 (fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
 both settled this tick too, but both carry claimed edges ≤0.10 under a
