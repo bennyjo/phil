@@ -680,6 +680,28 @@ guard.
    estimate formed must be scored), and the cycle log must name the slip,
    as 22:21Z did.
 
+**Home-anchored spread mismatch (TRIGGERED 2026-09-02 09:56Z, `newmarket:4117420`):**
+PM always creates its primary MLB spread market keyed to the HOME team at
+-1.5 (`mlb-<away>-<home>-...-spread-home-1pt5`), regardless of which side
+sportsbooks actually favor. `core/odds.py odds <sport> --markets spreads`
+only returns the near-pick'em line — whichever side the market treats as
+favorite — not both directions; `alternate_spreads` 422s (not on this
+plan's tier). When the home team is NOT the moneyline favorite (this
+game: PHI@ARI, devigged moneyline had Phillies 0.508/ARI 0.492, so
+sportsbooks quoted Phillies -1.5 / ARI +1.5, never ARI -1.5), the clean
+feed cannot benchmark PM's home-anchored market at all — splitting a
+team's total win probability into "wins by 1" vs "wins by ≥2" needs a
+run-differential model this playbook already vetoes as a self-built
+Gaussian (see outside-view veto). The direct, benchmarkable match is
+always the SIBLING "Spread: `<favorite>` (-1.5)" market
+(`strategy/tools/siblings.py <id>` finds it in one call) — that sibling
+re-confirmed clean-feed-null as usual here (4112867 priced 0.395 vs
+devigged sportsbook 0.402). Rule: on a newmarket trigger for a PM
+home-anchored MLB/WNBA spread, check the moneyline devig first; if home
+isn't the favorite, log `benchmark-unreachable` immediately rather than
+spending a devig call on the wrong-side market — the favorite-side
+sibling is where the real (usually null) signal lives.
+
 **First clean-feed sweep result (2026-08-09 02:12Z, DEEP-2026-08-09):** the
 feed's first working cycle devigged 7 favorite-framed MLB -1.5 spreads and 2
 WNBA markets (2+2 credits, 9 books deep): max nominal edge **0.018** at the
