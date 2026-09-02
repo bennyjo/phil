@@ -2323,6 +2323,51 @@ was read as informative when it was mostly a search-timing artifact.
 Re-check same-day deadlines close to the actual cutoff before
 finalizing a rumor-based No, don't rely on one AM check.
 
+**2026-09-02 update (00:15Z FULL cycle: box-office Aug31 gross-threshold
+pair CLOSED, pre-registered 2026-08-22, watch item in schedule.json).**
+The Odyssey/Spider-Man BND domestic-gross family settled: Odyssey missed
+$570M (d48834ed8f41), Spider-Man BND missed $900M but landed in
+[800M,900M) — the sibling bracket for that exact range (e9f9221a3afb)
+WON as a forecast. Four `outside-view-veto` rows from this family enter
+the counterfactual ledger:
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Odyssey ≥570m (d48834ed8f41) | 0.08 / 0.14 | No | +0.057 | No | **+0.16** |
+| Spider-Man ≥900m (1f552d2c510f, Aug22 check) | 0.25 / 0.336 | No | +0.085 | No | **+0.50** |
+| Spider-Man ≥900m (1e889dd4dd33, Aug25 update) | 0.15 / 0.092 | Yes | +0.058 | No | −1.00 |
+| Spider-Man <900m (9f40def4f61c) | 0.85 / 0.915 | No | +0.060 | Yes | −1.00 |
+
+(e9f9221a3afb, the 800-900m bracket itself, was a genuine market-agrees
+no-edge read — 0.90 vs ask 0.86 — not a veto row, so it doesn't enter
+this table.) Net this batch: **−1.34u** (2W/2L). **Totals now 69
+realizable trades, 33W/36L, net −16.96u.** Side split re-summed: **Yes-side
+3W/18L, −13.75u** (adds this batch's 0W/1L, −1.00u); **No-side 30W/18L,
+−3.21u** (adds this batch's 2W/1L, +0.66u−1.00u=−0.34u). Check: −13.75 +
+−3.21 = −16.96 ✓.
+
+Grading the two things schedule.json's watch item asked for: (1) **the
+veto boundary** — this batch's ledger P&L is net negative (−1.34u), so
+the veto continues to look correct on net even though two of the four
+counterfactual sides won; no change to the standing box-office
+self-model veto. (2) **the trend-extrapolation method itself** — on
+*directional* accuracy it was clean: all four legs' Aug22-25 point
+projections (Odyssey ~544M, Spider-Man ~875-897M) correctly bracketed
+where the film actually landed (Odyssey short of 570M, Spider-Man inside
+[800M,900M)). But the two Aug25-update legs (1e889dd4dd33, 9f40def4f61c)
+lost as counterfactual trades anyway, because by Aug25 the market itself
+had already converged to 91-92%/90-92% confidence in the correct
+bracket — the model's residual disagreement with an already-converged
+market was noise, not edge, even though the model's own point estimate
+was directionally fine. Lesson for this family: a trend-extrapolation
+edge claim late in the window, against a market that has already priced
+in the same trend data, deserves more skepticism than the same claim
+made earlier — the method's forecasting skill and its counterfactual
+tradeability are not the same thing once the market catches up. No
+playbook rule change; this reinforces (not contradicts) routing box-office
+self-models through the veto regardless of claimed edge. Item closed, no
+further grading duty.
+
 **Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
 21:35Z, all 3 legs settled):** leg 3 BTC dip-$75k (753366c2ea8e,
 measured-vol, est 0.38 vs mid 0.315) LOST — final record ETH dip-2400
