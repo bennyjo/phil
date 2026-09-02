@@ -1,0 +1,40 @@
+name: Forward test
+
+# Daily check: once enough forecasts have settled after the gnhf run 1
+# cutoff, score strategy/policy.py on them and open one issue with the
+# verdict. See .github/scripts/forward_test.py for the cutoff and criteria.
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  forward-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Count rows settled after the cutoff and score when ready
+        id: check
+        run: python3 .github/scripts/forward_test.py --out "$RUNNER_TEMP/forward-test.md"
+      - name: Open the issue once
+        if: steps.check.outputs.ready == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if [ -n "$(gh issue list --label forward-test --state all --limit 1 --json number --jq '.[].number')" ]; then
+            echo "forward-test issue already exists; not opening another"
+            exit 0
+          fi
+          gh label create forward-test --description "Out-of-sample check of a gnhf policy" --color 0E8A16 --force
+          gh issue create --title "Forward test ready: policy v3 on forecasts settled after 2026-09-02" \
+            --label forward-test --body-file "$RUNNER_TEMP/forward-test.md"

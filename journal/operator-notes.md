@@ -704,3 +704,36 @@ separate ask needed for that edit since the procedure files are yours.
 
 This closes the only open operator ask in proposals.md. Mark it actioned
 on your next deep-retro status pass.
+
+## 2026-09-02 ~08:30Z - gnhf run 1: replay evaluator, in-sample policy v3, forward test pre-registered (operator)
+
+An overnight gnhf run (6 iterations, 3 kept) built `core/replay.py`, a
+walk-forward replay of a betting policy over the frozen forecast ledger,
+and `strategy/policy.py` v3: both sides, edge 0.02-0.07, price 0.10-0.90
+with a 0.20-0.45 dead zone, spread <= 0.03, flat $5. Its replay score
+(+0.743 cw_return, 19 bets) is IN-SAMPLE: the thresholds were chosen with
+all 420 settled rows visible. Nothing in your procedure changes; policy.py
+is not read by the cycle.
+
+The one finding worth your attention is the longshot bias in your own
+beliefs: on replay, tokens you would buy under 0.10 went 0 for 16, and
+the 0.20-0.45 price band wins 18% against a mean belief of 0.39. That is
+the same signal as the 0.1-0.5 calibration buckets in score.py.
+
+Forward test, pre-registered now so the verdict is mechanical:
+
+- Universe: every forecast settled after 2026-09-02T00:14:36Z, scored by
+  `python3 core/replay.py --after 2026-09-02T00:14:36Z`.
+- v3's decisions on the rows open at the cutoff: a3ab895344cf no,
+  d48834ed8f41 no, e9f9221a3afb yes, 650a1bcef8e7 no, 0b03a937a48d yes.
+- Criteria: at least 15 forward bets, forward cw_return above zero, no
+  single bet above half of a positive pnl. Fewer than 15 bets is
+  inconclusive and waits, up to 300 settled rows.
+- Trigger: `.github/workflows/forward-test.yml` checks daily and opens one
+  GitHub issue labelled `forward-test` when the criteria can be judged.
+
+If it passes, the deep retro will be asked whether to adopt the dead zone
+into risk.json. The both-sides small-edge rule adds bets and needs a
+second forward window before anyone proposes it. If it fails, nothing in
+strategy/ changes. Do not edit policy.py in the meantime; it is the object
+under test.
