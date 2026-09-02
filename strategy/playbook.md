@@ -2462,6 +2462,38 @@ instead of chasing the narrative (once the book itself converged past
 a confident narrative read to market-agrees as the book firms is what
 kept most of this family off the losing side of the ledger.
 
+**2026-09-02 update (RETRO-20260902-1814, FULL cycle; 4 rows, Gemini
+Flash 3.8+ leak/rumor family fully settled).** All four sequential
+outside-view-veto snapshots on "next Gemini Flash release by/on Sep2"
+settled: the model WAS released, so every No-side veto lost as a
+counterfactual trade. Same rumor-convergence shape as the Mythos family
+(DEEP-2026-09-01, 22:xxZ) — unofficial leaks (codename "skimaki"/Jetski)
+converged on the correct date well before official confirmation, and the
+market priced that correctly while the fact-finality gate correctly
+declined to bet against it:
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Gemini Flash by-Sep2 No (4a680e8bca1e, initial check) | 0.13 / 0.655 | No | +0.53 | Yes | −1.00 |
+| Gemini Flash by-Sep2 No (a554a9f53079, re-check) | 0.50 / 0.675 | No | +0.19 | Yes | −1.00 |
+| Gemini Flash by-Sep2 No (8f8fa61af2a2, re-check) | 0.58 / 0.79 | No | +0.22 | Yes | −1.00 |
+| Gemini Flash on-Sep2 No (655167550ada, sibling) | 0.58 / 0.775 | No | +0.21 | Yes | −1.00 |
+
+Net this batch: **−4.00u** (0W/4L). **Totals now 75 realizable trades,
+33W/42L, net −22.96u.** Side split re-summed: **Yes-side unchanged 3W/19L,
+−14.75u**; **No-side 30W/23L, −8.21u** (adds this batch's 0W/4L, −4.00u).
+Check: −14.75 + −8.21 = −22.96 ✓. Est climbed 0.13→0.50→0.58→0.58 as
+corroborating leaks piled up (correctly applying the Mythos-episode
+same-day-deadline lesson — later checks, not one AM read), but even the
+final 0.58 stayed well below the market's 0.775-0.79, and the market was
+right. Reinforces, does not contradict, the standing gate: zero capital
+was ever at risk on any of these four rows, exactly because "unconfirmed
+leak, however convergent" stays vetoed regardless of claimed edge. The
+two same-cycle crypto-touch settlements (BTC $77.5k, ETH $2400, both WON)
+carried ~0 realizable edge at record time (est essentially at the book)
+and are not counterfactual trades — no ledger duty, no touch-family n
+change.
+
 **Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
 21:35Z, all 3 legs settled):** leg 3 BTC dip-$75k (753366c2ea8e,
 measured-vol, est 0.38 vs mid 0.315) LOST — final record ETH dip-2400
