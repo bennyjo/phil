@@ -2494,6 +2494,33 @@ carried ~0 realizable edge at record time (est essentially at the book)
 and are not counterfactual trades — no ledger duty, no touch-family n
 change.
 
+**2026-09-02 update (compliance-gap backfill, DEEP-2026-09-02 22:xxZ
+reconcile.py FAIL remediation, same-commit per the Coverage weld rule;
+2 rows, both crypto-brackets touch-anytime, settled earlier but missed
+by this table until now).** ETH $2600-in-August touch (`9f1fedaa0386`,
+settled 2026-09-01T04:40:58Z): self-modeled GBM barrier-touch est
+P(Yes)=0.48 vs mkt mid 0.6855, model favors No (No prob 0.52) vs No ask
+0.326 (=1−best_bid 0.674), edge +0.194; actual result No (didn't touch)
+— model's No side **WINS**, fill ask 0.326, **+2.07u**. BTC
+above-$76k-on-Sep2 (`d16f83d68630`, settled 2026-09-02T16:23:22Z):
+guessed-vol lognormal est P(Yes)=0.838 vs mkt mid 0.945, model favors No
+(No prob 0.162) vs No ask 0.06 (=1−best_bid 0.94), edge +0.102; actual
+result Yes (stayed above) — model's No side **LOSES**, **−1.00u**.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| ETH $2600 Aug touch (9f1fedaa0386) | 0.52 / 0.326 | No | +0.194 | No | **+2.07** |
+| BTC >$76k Sep2 (d16f83d68630) | 0.162 / 0.06 | No | +0.102 | Yes | −1.00 |
+
+Net this batch: **+1.07u** (1W/1L). **Totals now 77 realizable trades,
+34W/43L, net −21.89u.** Side split re-summed row-by-row: **Yes-side
+unchanged 3W/19L, −14.75u**; **No-side 31W/24L, −7.14u** (adds this
+batch's 1W/1L, +2.07u−1.00u=+1.07u). Check: −14.75 + −7.14 = −21.89 ✓.
+Both rows are guessed/self-modeled-vol touch-family members already
+covered by the CLOSED ruling below (unvalidated-method, forecast-only
+regardless of edge) — no policy change, this batch only closes a
+same-commit-duty gap flagged by `reconcile.py`.
+
 **Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
 21:35Z, all 3 legs settled):** leg 3 BTC dip-$75k (753366c2ea8e,
 measured-vol, est 0.38 vs mid 0.315) LOST — final record ETH dip-2400
