@@ -2368,6 +2368,34 @@ playbook rule change; this reinforces (not contradicts) routing box-office
 self-models through the veto regardless of claimed edge. Item closed, no
 further grading duty.
 
+**2026-09-02 update (RETRO-20260902-0212, LIGHT tick; 2 rows, first
+settled instances of the transfer-window narrative/negotiation-speculation
+sub-shape — soccer-transfer / news-transfer category, no mechanical
+benchmark available for "will X join/stay" questions).** Enzo Fernandez
+stay-at-Chelsea (`dc81cc744a86`, est P(stay)=0.60 vs ask 0.312, Yes side)
+resolved No (he left, to Man City) — the public "Enzo is a Chelsea player"
+narrative signal read wrong underneath a quietly-progressing deal, **lost,
+−1.00u**. Enzo Fernandez join-Man-City (`e481c796f8d1`, Aug27 19:22Z
+snapshot, est No=0.25 vs ask 0.17, No side) resolved Yes (he joined) —
+called before the story firmed, **lost, −1.00u**.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Enzo stay-Chelsea (dc81cc744a86) | 0.60 / 0.312 | Yes | +0.288 | No | −1.00 |
+| Enzo join-ManCity (e481c796f8d1) | 0.25 / 0.17 | No | +0.080 | Yes | −1.00 |
+
+Net this batch: **−2.00u** (0W/2L). **Totals now 71 realizable trades,
+33W/38L, net −18.96u.** Side split re-summed: **Yes-side 3W/19L, −14.75u**
+(adds this batch's Chelsea loss); **No-side 30W/19L, −4.21u** (adds this
+batch's Man City loss). Check: −14.75 + −4.21 = −18.96 ✓. n=2, 0W/2L —
+consistent with (not yet a distinct named instance of) the standing
+outside-view-veto discipline; too small to write a dedicated rule. Worth
+noting: the 4 later join-Man-City snapshots that went market-agrees
+instead of chasing the narrative (once the book itself converged past
+~0.85 with real depth) all landed on the winning side — downgrading from
+a confident narrative read to market-agrees as the book firms is what
+kept most of this family off the losing side of the ledger.
+
 **Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
 21:35Z, all 3 legs settled):** leg 3 BTC dip-$75k (753366c2ea8e,
 measured-vol, est 0.38 vs mid 0.315) LOST — final record ETH dip-2400
