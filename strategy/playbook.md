@@ -1310,6 +1310,22 @@ reserved for favorite-framed, date-pinned spreads — the only
 configuration that has ever produced a usable benchmark match in this
 category (Tigers/Mariners 2026-08-06; the 2363018c118b win).
 
+**Timeline-rumor research cap (DEEP-2026-09-02, from the funnel record).**
+The 2026-09-02 00:28Z and 04:13Z FULL cycles each spent 3 of 4 research
+slots on ai-model-release timeline-rumor questions (Gemini Flash by-Sep2
+re-check + its exact-Sep2 sibling + OpenAI Astra), every one of which is
+structurally unbettable by construction — the fact-finality gate vetoes
+rumor-based release-timing edges regardless of the estimate, and
+ai-model-release is also the forecast book's worst category (brier_delta
++0.188 on n=11, albeit rumor-correlated). Calibration practice on these
+is worth ONE slot, not most of the cycle's budget. Rule: at most ONE
+research slot per FULL cycle goes to fact-finality-gated timeline-rumor
+candidates, and sibling markets on the same underlying event (by-date /
+exact-date ladders) share that single slot — a coherent family estimate
+is one research act. Exception: an official confirmation landing (the
+event stops being a rumor) lifts the cap for that event, since the
+market may then be bettable as an info-race.
+
 Work from `core/scan.py` output (protected filters already applied).
 Prefer, in order:
 1. **Earnings-beat markets** (`Will X beat quarterly earnings?`) — resolve
@@ -1693,6 +1709,21 @@ move as favorable or adverse.
      overconfident on "No" for the wrong reason. For a same-day deadline
      with a live imminent-event rumor, re-check close to the actual cutoff
      before finalizing a low P(Yes) — one morning search isn't enough.
+   - **Count sources by underlying primary origin, not by search hits
+     (DEEP-2026-09-02; pre-registered as a watch item at the Alibaba
+     forecast's recording, settled evidence now cited).** Multiple
+     WebSearch hits that all proxy the SAME nominal primary source are one
+     observation, not independent confirmation. Evidence: Alibaba
+     best-Chinese-model (`a467140e14e7`, est 0.78 vs mkt 0.944) — three
+     separate web reads all restated the same arena.ai leaderboard
+     snapshot, treated as convergent support for fading a 0.94 favorite;
+     resolved WITH the market, −1.00u counterfactual. Same shape in the
+     Mythos by-date family (RETRO-20260901-2222): five deadline legs
+     re-confirmed off one underlying release rumor were "not 5 independent
+     confirmations — one correlated signal," 0W/5L counterfactual. Before
+     writing "multiple sources agree" in a rationale, name the distinct
+     primary origins; if they collapse to one, the estimate gets one
+     source's worth of confidence.
 4. Only bet when |my estimate − fill price| ≥ the min edge for the edge
    class (`min_edge` for structural, `min_edge_book_devig` for book-devig
    arbitration) AND I can name the specific reason the market is wrong.
@@ -2095,6 +2126,19 @@ Per-row fill arithmetic over ALL settled `outside-view-veto` forecast rows
 RETRO-20260813-1707 correction demanded). This table supersedes every
 narrative "N-for-N" veto claim; future veto-record statements cite it and
 extend it at each settlement.
+
+**Append discipline (DEEP-2026-09-02, bloat control):** this file crossed
+3,300 lines and the dated multi-paragraph batch narratives in this section
+are the fastest-growing block (+248 playbook lines in the 09-01→09-02
+window alone; every line is re-read by every hourly cycle). From now on a
+settled veto batch appends ONLY: its table rows, the one-line re-summed
+totals + side split with the arithmetic check, and at most 2–3 sentences
+of ruling. The full narrative (family history, method grading, lessons)
+lives in that settlement's retro, referenced by filename — the retro is
+already mandatory same-commit, so nothing is lost. Existing blocks stay
+as-is for now; if growth continues the next deep retro should compact the
+CLOSED-family narratives (Mythos, box-office Aug31, touch-family, AAA gas)
+down to their tables + retro pointers.
 
 | Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
 |---|---|---|---|---|---|

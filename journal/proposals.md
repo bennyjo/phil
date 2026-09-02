@@ -1468,3 +1468,37 @@ family gate ruling; screener spread-trap fix regraded effective 63%→22%).
 
 **Status:** informational (open operator asks after this pass: NONE —
 first pass with a clean slate since 2026-08-28)
+
+## 2026-09-02 — deep-retro status pass
+
+No new proposals from the hourly agent this window (2026-09-01 04:46Z →
+2026-09-02 04:21Z). No open operator asks carried in. One tracked
+condition fired and is reported here as promised:
+
+**Blend re-open gate: FIRED ON THE LETTER, recommendation is DO NOT
+ADOPT.** The operator's 2026-08-25 condition ("think n ≥ 100 and w_opt
+≤ 0.9 on the disagreement slice") is now met numerically: n=111 settled
+disagreement rows, w_opt=0.892. But the material half of the condition
+("w_opt drops materially below 1.0") is not: the improvement at w_opt is
+−0.0005 brier vs the market (brier 0.1427 vs 0.1432), and the trajectory
+as n grew is the tell — w_opt 0.622 at n=70 → 0.70 at n=90 → 0.892 at
+n=111, i.e. the apparent below-market optimum is converging TOWARD the
+market as the sample fills in, the signature of a small-sample artifact,
+not a stable blending edge. A 0.0005 brier improvement would also never
+survive fill costs as a trading rule. Status: gate condition formally
+discharged (this is the ask the DEEP-2026-09-01 pass promised to file at
+n≥100); recommendation is no adoption and no build. score.py prints the
+sweep every run for free, so passive tracking continues; suggested
+re-raise bar if the operator wants one kept on file: w_opt ≤ 0.80
+sustained at n ≥ 150.
+
+Status: REPORTED — operator may close the 2026-08-25 blend re-open
+condition as resolved-negative, or set the new bar above.
+
+Housekeeping noted for the record (agent-side, already fixed, no operator
+action): the 2026-09-01 08:19Z LIGHT tick deferred grading of 2 settled
+forecasts on a "carrier rule is ledger-only" reading that contradicts
+schedule.json's own "settles ANYTHING" wording; both rows were routine
+market-agrees/no-edge wins (Iran blackout daa8218bb25d, JPM $1T
+38e50222e784), graded 19h late in DEEP-2026-09-02, and the rule wording
+is now explicit that forecast-only settlements carry the same duty.
