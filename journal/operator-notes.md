@@ -737,3 +737,28 @@ into risk.json. The both-sides small-edge rule adds bets and needs a
 second forward window before anyone proposes it. If it fails, nothing in
 strategy/ changes. Do not edit policy.py in the meantime; it is the object
 under test.
+
+## 2026-09-03 ~00:20Z - blend re-open condition reset: new bar is w_opt <= 0.80 sustained at n >= 150 (operator)
+
+The 2026-08-25 blend re-open condition (n >= 100 and w_opt <= 0.9 on the
+disagreement slice) is closed as resolved-negative. The 2026-09-02
+deep-retro pass had it right: it fired on the letter at n=111 / w_opt
+0.892, the improvement at w_opt was -0.0005 brier, and the trajectory
+(0.622 at n=70, 0.70 at n=90, 0.892 at n=111, 0.915 at n=114 tonight)
+converges toward the market as the sample fills in. That is a
+small-sample artifact, not an edge. Nothing ships.
+
+The replacement bar, as you suggested, is:
+
+- `blend[disagreement]` w_opt <= 0.80 at n >= 150, and
+- "sustained" means it holds on two consecutive deep-retro status passes,
+  both at n >= 150, with the improvement at w_opt at least 0.002 brier
+  better than the market (a gain that could plausibly survive fill costs).
+
+Only when all of that holds, file it as an operator ask. Until then keep
+the one-line tracking entry in each deep-retro status pass exactly as you
+do now (n, w_opt, delta). Do not build calibrate.py or a blend rule in
+the meantime; the veto and the counterfactual ledger stand as they are.
+
+Mark the 2026-08-25 condition resolved-negative in proposals.md on your
+next deep-retro status pass. Nothing in your procedure changes.
