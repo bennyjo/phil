@@ -39,7 +39,15 @@ Reported on the held-out set:
               over the rows the policy bet on (negative = the beliefs the
               policy chose to act on beat the market).
 
-Usage: python3 core/replay.py [--policy PATH] [--folds K] [--json] [--bets]
+Forward test (--after TS): instead of folds, score the policy on every row
+whose outcome was still unknown at TS (settled_ts > TS), fitting on the
+rows settled by then. Rows recorded before TS but settled after it count:
+nobody could have tuned on their outcome. This is the only true
+out-of-sample score for a policy whose thresholds were chosen by reading
+the ledger.
+
+Usage: python3 core/replay.py [--policy PATH] [--folds K] [--after TS]
+                              [--json] [--bets]
 """
 import argparse
 import datetime as dt
@@ -176,6 +184,44 @@ def summarize(bets):
     }
 
 
+def score_rows(policy, rows, state):
+    """Apply the policy to each row and return the filled bets."""
+    bets = []
+    for r in rows:
+        filled = fill(r, policy.decide(visible(r), state))
+        if not filled:
+            continue
+        price, stake, pnl = filled
+        won = 1 if r["status"] == "won" else 0
+        bets.append({
+            "id": r["id"], "stake": stake, "pnl": pnl, "price": price,
+            "est_prob": r["est_prob"],
+            "market_prob": market_prob(r),
+            "won": won, "won_bet": 1 if pnl > 0 else 0,
+            "side": "yes" if price == r["best_ask_at_record"] else "no",
+            "category": r.get("category"), "question": r["question"][:60],
+            "settled_ts": r.get("settled_ts"),
+        })
+    return bets
+
+
+def forward(policy, rows, after):
+    """Score rows whose outcome was unknown at `after` (settled_ts > after)."""
+    try:
+        _parse_ts(after)
+    except ValueError:
+        sys.exit(f"--after expects a UTC timestamp like 2026-09-02T00:14:36Z, got {after!r}")
+    train = [r for r in rows if (r.get("settled_ts") or "") <= after]
+    test = [r for r in rows if (r.get("settled_ts") or "") > after]
+    fit = getattr(policy, "fit", None)
+    state = fit([history_row(r) for r in train]) if fit else None
+    bets = score_rows(policy, test, state)
+    agg = summarize(bets)
+    agg["n_rows"] = len(test)
+    return {"cutoff": after, "train_rows": len(train), "held_out": agg,
+            "n_rows_total": len(rows), "bets": bets}
+
+
 def replay(policy, rows, folds):
     if folds < 2:
         sys.exit("--folds must be >= 2")
@@ -186,21 +232,7 @@ def replay(policy, rows, folds):
     for k in range(1, len(chunks)):
         train = [history_row(r) for c in chunks[:k] for r in c]
         state = fit(train) if fit else None
-        bets = []
-        for r in chunks[k]:
-            filled = fill(r, policy.decide(visible(r), state))
-            if not filled:
-                continue
-            price, stake, pnl = filled
-            won = 1 if r["status"] == "won" else 0
-            bets.append({
-                "id": r["id"], "stake": stake, "pnl": pnl, "price": price,
-                "est_prob": r["est_prob"],
-                "market_prob": market_prob(r),
-                "won": won, "won_bet": 1 if pnl > 0 else 0,
-                "side": "yes" if price == r["best_ask_at_record"] else "no",
-                "category": r.get("category"), "question": r["question"][:60],
-            })
+        bets = score_rows(policy, chunks[k], state)
         s = summarize(bets)
         s.update({"fold": k, "n_rows": len(chunks[k]),
                   "from": chunks[k][0]["ts"][:10], "to": chunks[k][-1]["ts"][:10]})
@@ -216,11 +248,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--policy", default=str(DEFAULT_POLICY))
     ap.add_argument("--folds", type=int, default=5)
+    ap.add_argument("--after", metavar="TS",
+                    help="forward test: score only rows settled after this UTC "
+                         "timestamp (e.g. 2026-09-02T00:14:36Z); no folds")
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--bets", action="store_true", help="list every held-out bet")
     a = ap.parse_args()
     rows = load_rows()
-    report = replay(load_policy(a.policy), rows, a.folds)
+    policy = load_policy(a.policy)
+    report = forward(policy, rows, a.after) if a.after else replay(policy, rows, a.folds)
     if a.json:
         print(json.dumps(report, indent=1))
         return
@@ -228,6 +264,14 @@ def main():
         for b in report["bets"]:
             print(f"  {b['id']} {b['side']:>3} px={b['price']:.3f} est={b['est_prob']:.3f} "
                   f"stake={b['stake']:.2f} pnl={b['pnl']:+7.2f} {b['category']:<24} {b['question']}")
+    if a.after:
+        h = report["held_out"]
+        bd = "-" if h["brier_delta"] is None else f"{h['brier_delta']:+.4f}"
+        print(f"forward test: {h['n_rows']} rows settled after {a.after} "
+              f"(policy fitted on {report['train_rows']} rows settled by then)")
+        print(f"score (forward cw_return): {h['cw_return']:+.4f}   pnl {h['pnl']:+.2f}   "
+              f"brier_delta {bd}   bets {h['n_bets']}/{h['n_rows']}")
+        return
     print(f"replay: {report['n_rows_total']} settled forecasts, {a.folds} walk-forward folds "
           f"(fold 0 = {report['train_only_rows']} rows, train only)")
     hdr = f"{'fold':>4} {'dates':<23} {'rows':>4} {'bets':>4} {'staked':>7} {'pnl':>8} {'roi':>7} {'cw_ret':>7} {'dBrier':>8}"
