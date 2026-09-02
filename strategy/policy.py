@@ -39,7 +39,11 @@ Rules (v3, 2026-09-02):
      above 0.5, $2 below) is the most robust sizing without the Bank of
      Israel rows (+0.168 / +0.143) but costs 0.14 of headline cw_return.
 
-Replay (5 folds, 420 settled rows, 336 held out): cw_return +0.743,
+Replay scores below are IN-SAMPLE. Every threshold was chosen with all
+420 settled rows visible and the policy has no fit() step, so the
+walk-forward split holds nothing out from the rule selection. The first
+out-of-sample evidence is the forecasts still open on 2026-09-02.
+Replay (5 folds, 420 settled rows, 336 in scored folds): cw_return +0.743,
 pnl +121.68 on 19 bets, brier_delta -0.0248. 10 folds: +0.624.
 Without the Bank of Israel rows: +0.388 (5 folds) / +0.287 (10 folds),
 the first version that is clearly positive on that check.
