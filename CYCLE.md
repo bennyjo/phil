@@ -145,38 +145,77 @@ Every invocation runs as one of three ticks:
    across all cycles. If it reports the key missing or the budget exhausted,
    log that and skip; never scrape around it.
 5a. **Mech second opinion** (only when the `mcp__pearl-connect__mech_*`
-   tools are present in this session — operator-machine runs with the Pearl
+   tools are present in this session - operator-machine runs with the Pearl
    Connect signer up; cloud cycles skip this step entirely): for candidates
-   you researched to a concrete estimate, you may buy an independent
-   prediction from the Olas mech marketplace (~$0.01 USDC per request, paid
-   from the service safe). The point is comparison: over time, learn which
-   mech tools are informative and say so in retros.
+   you researched to a concrete estimate, buy an independent prediction from
+   the Olas mech marketplace (~$0.01 USDC per request, paid from the service
+   safe). The point is comparison: over time, learn which mech tools are
+   informative and say so in retros.
    - Form your OWN estimate first, before requesting. The mech's answer is
      evidence like any other: if it honestly moves your belief, your
-     recorded est-prob moves — but always note your pre-mech estimate.
+     recorded est-prob moves - but always note your pre-mech estimate.
+   - **Current test focus (operator, 2026-09-03):** the three Polygon
+     predict mechs run mech-predict v0.21.29 and newly serve
+     `superforcaster-market-aware` next to `superforcaster-polymarket-v4`.
+     Exercise the new tool deliberately:
+     - Mechs (all price 10000 = 0.01 USDC, all report `offchain_capable:
+       false`, so pass `legacy_on_chain=true` - verified end to end
+       2026-09-03): service 21 `0x76a9a29441c7acd072b03e63911f0e177de56ab7`,
+       service 44 `0xe7f818513a48d74c99b8bde153bee0b70dbb300b`, service 25
+       `0x45f25db135e83d7a010b05ffc1202f8473e3ae7d`. Rotate `priority_mech`
+       across the three from one candidate to the next so every mech gets
+       exercised; note in retros if one mech behaves differently.
+     - Primary request per candidate: `superforcaster-market-aware`. For
+       at least one candidate per cycle also send the same prompt to
+       `superforcaster-polymarket-v4` on the same mech (a paired
+       comparison). That is the one case where a candidate may get two
+       requests.
+     - Prompt: one precise resolution question (criteria, resolution
+       source, deadline in UTC - never just the market title), the market
+       question itself as a single sentence ending in `?`, and no other
+       `?` sentences. Do NOT put the market price in the prompt: the tool
+       reads market context only from a `request_context` field that
+       `mech_request` cannot send, so it runs blind here
+       (`market_prob_seen` is null) and its `p_independent` stays a true
+       price-free estimate to compare against yours and the mid.
+     - Read the whole delivery: the `result` JSON (`p_yes`, `p_no`,
+       `confidence`, `info_utility`, `researchability` 0..1,
+       `research_class` R / REVIEW / NR-*, `research_reason`,
+       `evidence_quality`, `market_prob_seen`, `p_independent`) and
+       `metadata.params` (`parse_tier` template/clause/raw,
+       `scan_truncated`, `null_reason` when p_yes is null, `model`). A null
+       `p_yes` with a `null_reason` is a designed outcome (unsearchable
+       question), not a failure - record it as such.
+     - Log EVERY request, including failures, right after it returns:
+       `python3 core/mechlog.py record --market-id <id> --mech <address> \
+         --tool <tool> --request-id <your id> --own-p <pre-mech p> \
+         --market-p <mid> --result-json '<result string>' \
+         --params-json '<metadata.params as JSON>' \
+         --latency-ms <execution_latency_ms> [--error "..."]`
+       (`journal/mech-requests.jsonl`; retros grade it).
+     - Things worth calling out in the cycle summary and retros: the mech's
+       `research_class`/`researchability` versus your own read of whether
+       the question is mechanical or interpretive; `parse_tier` other than
+       `clause` (the search query was not the market question);
+       `scan_truncated` true; `p_independent` differing from `p_yes` (it
+       should not while the tool is blind); errors or timeouts; and how
+       market-aware compares with v4, you, and the market at settlement.
    - `mech_tools()` lists live mechs; call it again with
      `priority_mech=<address>` for a mech's tool names and price
-     (`max_delivery_rate`, base units of its payment asset). The
-     high-volume Polygon mechs serve `superforcaster-polymarket-v4`
-     (returns structured `{"p_yes": ...}`) among other tools.
-   - Call `mech_request` with the market's resolution question stated
-     precisely (criteria, resolution source, deadline in UTC — never just
-     the market title), `tool` and `priority_mech` set, `max_payment`
-     20000 (0.02 USDC), and a `request_id` you invent, so a retry can
-     never pay twice.
-   - At most one request per candidate you researched to a concrete
-     estimate this cycle. There is no fixed per-cycle total: a cycle that
-     researches five candidates may send five requests. Trying different
-     tools or mechs across cycles to compare them is encouraged.
+     (`max_delivery_rate`, base units of its payment asset).
+   - Call `mech_request` with `tool`, `priority_mech`, `legacy_on_chain`
+     set as above, `max_payment` 20000 (0.02 USDC), and a `request_id` you
+     invent, so a retry can never pay twice.
    - Record the comparison in the step-5b forecast `--note` (and in a
-     bet's rationale) as `own:<pre-mech p> mech:<tool>=<p_yes>`, so retros
-     can grade the mech against you and against the market.
+     bet's rationale) as `own:<pre-mech p> mech:<tool>=<p_yes>
+     r=<researchability> cls=<research_class>`, so retros can grade the
+     mech against you and against the market.
    - No mech failure is ever blocking: insufficient funds, a guardrail
-     refusal, a timeout, an unreachable mech — log one line and proceed
-     without the second opinion. On timeout you may poll each id in
-     `pending_request_ids` once with `mech_result`; do not wait beyond
-     that, and never re-send a request whose outcome you don't know
-     without its original `request_id`.
+     refusal, a timeout, an unreachable mech - log one line (and a
+     `mechlog.py record --error`) and proceed without the second opinion.
+     On timeout you may poll each id in `pending_request_ids` once with
+     `mech_result`; do not wait beyond that, and never re-send a request
+     whose outcome you don't know without its original `request_id`.
 5b. **Forecast**: for EVERY candidate you researched to a concrete (market,
    outcome, probability) — including no-edge and market-agrees skips:
    `python3 core/forecast.py record --market-id <id> --outcome "<name>" \
