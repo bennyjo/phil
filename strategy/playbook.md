@@ -2535,6 +2535,20 @@ covered by the CLOSED ruling below (unvalidated-method, forecast-only
 regardless of edge) — no policy change, this batch only closes a
 same-commit-duty gap flagged by `reconcile.py`.
 
+**2026-09-03 update (LIGHT tick settlement, retro RETRO-20260903-0633):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Astra by-Sep2 (2daa083970d8) | 0.10 / 0.185 | No | +0.028 | No | **+0.15** |
+
+Net this batch: **+0.15u** (1W/0L). **Totals now 78 realizable trades,
+35W/43L, net −21.74u.** Side split re-summed row-by-row: **Yes-side
+unchanged 3W/19L, −14.75u**; **No-side 32W/24L, −6.99u** (adds this
+batch's 1W/0L, +0.15u). Check: −14.75 + −6.99 = −21.74 ✓. Smallest edge
+yet added to this table (0.028, under min_edge 0.04) — the veto's own
+timeline-rumor read was correct, but n=1 at this edge size is not
+evidence for lowering any floor.
+
 **Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
 21:35Z, all 3 legs settled):** leg 3 BTC dip-$75k (753366c2ea8e,
 measured-vol, est 0.38 vs mid 0.315) LOST — final record ETH dip-2400
