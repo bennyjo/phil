@@ -2549,6 +2549,27 @@ yet added to this table (0.028, under min_edge 0.04) — the veto's own
 timeline-rumor read was correct, but n=1 at this edge size is not
 evidence for lowering any floor.
 
+**2026-09-03 update (FULL cycle 17:20Z, retro RETRO-20260903-1720; 3
+same-day weather-Gaussian rows):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Singapore 32C Sep3 (e48e803b2103) | 0.233 / 0.07 | Yes | +0.143 | No | −1.00 |
+| Shanghai 32C Sep3 (3cf21078d1a0) | 0.049 / 0.355 | No | +0.271 | No | **+0.47** |
+| Singapore 33C Sep3 (32d046d6981c) | 0.323 / 0.845 | No | +0.497 | Yes | −1.00 |
+
+Net this batch: **−1.53u** (1W/2L). **Totals now 81 realizable trades,
+36W/45L, net −23.27u.** Side split re-summed row-by-row: **Yes-side
+3W/20L, −15.75u** (adds −1.00u); **No-side 33W/25L, −7.52u** (adds
++0.47u−1.00u=−0.53u). Check: −15.75 + −7.52 = −23.27 ✓. Weather-Gaussian
+class now 2W/3L, −1.74u. Ruling: the two losses were recorded at 10:22 and
+12:18 local time on the resolution day with the next-day sd=1.2C applied
+to a half-observed day (the 33C bucket was the point forecast's own mean;
+the market had it at 0.845, the model 0.323). **Same-day weather rows must
+condition on the observed partial-day max (open-meteo hourly, `past_days=1`,
+or `current`) with sd 0.6C after local noon; if that fetch fails, no
+forecast at all.** Next-day rows keep sd=1.2C. Category stays no-bet.
+
 **Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
 21:35Z, all 3 legs settled):** leg 3 BTC dip-$75k (753366c2ea8e,
 measured-vol, est 0.38 vs mid 0.315) LOST — final record ETH dip-2400
