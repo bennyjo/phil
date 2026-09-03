@@ -2570,6 +2570,24 @@ condition on the observed partial-day max (open-meteo hourly, `past_days=1`,
 or `current`) with sd 0.6C after local noon; if that fetch fails, no
 forecast at all.** Next-day rows keep sd=1.2C. Category stays no-bet.
 
+**2026-09-03 update (LIGHT tick 22:04Z, retro RETRO-20260903-2204; 2
+next-day weather-Gaussian rows, one event):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Ankara 30C Sep3 (aac6d9fc2b4a) | 0.287 / 0.565 | No | +0.273 | Yes | −1.00 |
+| Ankara 31C Sep3 (428600857382) | 0.140 / 0.375 | No | +0.220 | No | **+0.56** |
+
+Net this batch: **−0.44u** (1W/1L). **Totals now 83 realizable trades,
+37W/46L, net −23.71u.** Side split re-summed row-by-row: **Yes-side
+unchanged 3W/20L, −15.75u**; **No-side 34W/26L, −7.96u** (adds −0.44u).
+Check: −15.75 + −7.96 = −23.71 ✓. Weather-Gaussian class now 3W/4L,
+−2.18u; next-day sub-class 2W/2L. Ruling: recorded 05:22 local (pre-dawn),
+so functionally next-day and untouched by the same-day rule above. The
+market put 0.94 on two adjacent buckets (implied sd ≈0.55C vs the model's
+1.2C) and was right; at about six settled next-day rows, test the
+open-meteo ensemble spread per city against the fixed sd. No change now.
+
 **Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
 21:35Z, all 3 legs settled):** leg 3 BTC dip-$75k (753366c2ea8e,
 measured-vol, est 0.38 vs mid 0.315) LOST — final record ETH dip-2400
