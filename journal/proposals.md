@@ -1502,3 +1502,34 @@ schedule.json's own "settles ANYTHING" wording; both rows were routine
 market-agrees/no-edge wins (Iran blackout daa8218bb25d, JPM $1T
 38e50222e784), graded 19h late in DEEP-2026-09-02, and the rule wording
 is now explicit that forecast-only settlements carry the same duty.
+
+## 2026-09-03 — deep-retro status pass
+
+No new proposals from the hourly agent this window (2026-09-02 04:48Z →
+2026-09-03 04:21Z). Actions on tracked items:
+
+- **Blend re-open condition (operator, 2026-08-25): RESOLVED-NEGATIVE —
+  closed.** Per the operator's 2026-09-03 ~00:20Z note, the 2026-08-25
+  condition is closed as a small-sample artifact (fired on the letter at
+  n=111/w_opt 0.892, improvement −0.0005 brier, trajectory converging
+  toward the market). The replacement bar on file: w_opt ≤ 0.80 at
+  n ≥ 150, sustained across two consecutive deep-retro passes both at
+  n ≥ 150, with improvement at w_opt ≥ 0.002 brier vs market. No
+  calibrate.py, no blend rule until then.
+- **Blend tracking line (this run's score.py):** blend[disagreement]
+  n=114, w_opt 0.915, delta −0.0003. Moving away from the new bar, as
+  the operator's trajectory read predicted.
+- **gnhf forward test (operator, pre-registered 2026-09-02): acknowledged,
+  hands off.** strategy/policy.py v3 is the object under test
+  (`core/replay.py --after 2026-09-02T00:14:36Z`, ≥15 forward bets,
+  criteria mechanical, daily CI trigger). This retro audited but did not
+  touch it; nothing from its in-sample replay scores was adopted into
+  risk.json or the playbook. The one crossover noted for the record: its
+  longshot-bias finding agrees with the bet ledger's own calibration
+  (all 6 settled bets with est <0.5 lost) and with the standing
+  sub-0.10-price rule — convergent evidence, not yet adoption evidence.
+
+**No new operator asks from this pass.** Open operator asks after this
+pass: NONE.
+
+**Status:** informational

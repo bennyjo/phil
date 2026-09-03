@@ -461,6 +461,20 @@ exist. A paraphrase ("reconcile passed") does not count — paraphrases
 are how the count fabrications survived; the literal token is proof the
 command ran.
 
+**Weld wording closed to triggered ticks (DEEP-2026-09-03).** Every
+weld statement above says "FULL cycle", and triggered ticks read that
+literally: the 2026-09-02 22:23Z cycle's reconcile run FAILed with 8
+gaps, five of them forecasts recorded by the 12:32Z/16:25Z/16:39Z
+triggered ticks and the 18:22Z cycle with no funnel line (remediated
+same-commit, 36cc4da, per the weld). The duty follows the forecast, not
+the tick type: **ANY tick that records a forecast — FULL, LIGHT, or
+triggered (`newmarket:`/`pricemove:`) — appends its funnel line in the
+same commit, runs reconcile.py, and quotes the literal OK token in its
+cycle log line.** A triggered tick that researches one market writes a
+one-entry funnel line; "triggered ticks are not FULL cycles" is not a
+reading of this rule, it is the seventh instance of the same defect
+class (see the six above).
+
 **Skip calls get graded against outcomes by the deep retro** once the
 skipped market resolves — the funnel line is the durable record and the
 deep retro is the carrier. (First pass DEEP-2026-08-06: CRCL/OXY
