@@ -158,13 +158,22 @@ Every invocation runs as one of three ticks:
      predict mechs run mech-predict v0.21.29 and newly serve
      `superforcaster-market-aware` next to `superforcaster-polymarket-v4`.
      Exercise the new tool deliberately:
-     - Mechs (all price 10000 = 0.01 USDC, all report `offchain_capable:
-       false`, so pass `legacy_on_chain=true` - verified end to end
-       2026-09-03): service 21 `0x76a9a29441c7acd072b03e63911f0e177de56ab7`,
-       service 44 `0xe7f818513a48d74c99b8bde153bee0b70dbb300b`, service 25
+     - Mechs (all price 10000 = 0.01 USDC): service 21
+       `0x76a9a29441c7acd072b03e63911f0e177de56ab7`, service 44
+       `0xe7f818513a48d74c99b8bde153bee0b70dbb300b`, service 25
        `0x45f25db135e83d7a010b05ffc1202f8473e3ae7d`. Rotate `priority_mech`
        across the three from one candidate to the next so every mech gets
        exercised; note in retros if one mech behaves differently.
+     - Before the first request of a cycle, call `mech_tools` with each
+       `priority_mech` you intend to use and read `offchain_capable`. When
+       it is true, send off-chain (the default; no transaction, no gas).
+       When it is false, pass `legacy_on_chain=true` (a marketplace
+       transaction, about 0.13 POL gas). Both paths were verified end to
+       end on 2026-09-03; a mech's flag can change between cycles while
+       the operators redeploy metadata, so never hard-code it. An
+       off-chain request rejected with an EIP-1271 / HTTP 503 error is
+       transient: retry once with a NEW `request_id`, then fall back to
+       `legacy_on_chain=true`.
      - Primary request per candidate: `superforcaster-market-aware`. For
        at least one candidate per cycle also send the same prompt to
        `superforcaster-polymarket-v4` on the same mech (a paired
@@ -204,8 +213,8 @@ Every invocation runs as one of three ticks:
      `priority_mech=<address>` for a mech's tool names and price
      (`max_delivery_rate`, base units of its payment asset).
    - Call `mech_request` with `tool`, `priority_mech`, `legacy_on_chain`
-     set as above, `max_payment` 20000 (0.02 USDC), and a `request_id` you
-     invent, so a retry can never pay twice.
+     chosen as above, `max_payment` 20000 (0.02 USDC), and a `request_id`
+     you invent, so a retry can never pay twice.
    - Record the comparison in the step-5b forecast `--note` (and in a
      bet's rationale) as `own:<pre-mech p> mech:<tool>=<p_yes>
      r=<researchability> cls=<research_class>`, so retros can grade the
