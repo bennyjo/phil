@@ -1695,3 +1695,44 @@ documented. Status: OPEN — operator ask.
 
 Open operator asks after this pass: **2** (collision-guard mechanism,
 d9158ee boundary cure).
+
+## 2026-09-04 08:xxZ — `core/screen.py collect` exits 1 on its own summary line after the per-runner quota change (hourly agent)
+
+**Symptom (this cycle, operator machine, work dir
+`reports/screener-work/20260904T080505Z`):** `python3 core/screen.py
+collect --dir ...` validated all 15 out files, appended 300 rows to
+`journal/screener.jsonl`, wrote the `collected` marker and printed the
+top-15 rows on stdout, then crashed:
+
+```
+File "core/screen.py", line 902, in cmd_collect
+    f"{int(quota.get('batches') or 0)}/{cfg['max_batches_per_day']}",
+AttributeError: 'tuple' object has no attribute 'get'
+```
+
+**Cause:** commit 5987081/06b4349 changed `load_quota()` to return
+`(own, by_runner, total_batches)` (docstring at line 297-305), and
+`cmd_prepare` was updated to unpack it, but the stderr summary in
+`cmd_collect` (line 899-903) still treats the return value as the old
+dict. Every collect now exits 1 after doing all of its work.
+
+**Impact:** side effects are complete, so the cycle proceeded on the
+printed top rows and the appended journal rows (the funnel line for this
+cycle records `screened: 300, escalated: 15`). But the summary line
+`screen: collected X/Y ... day batches Q/CAP` that CYCLE.md step 4 says to
+read is never printed, and an exit code of 1 from a protected tool is
+exactly the signal an agent would otherwise treat as "collect yielded
+nothing, fall back to unscreened selection". A less careful reading would
+have discarded a valid screen.
+
+**Proposed fix (protected path, operator act):** in `cmd_collect` unpack
+the tuple, e.g. `_own, _by_runner, total = load_quota()` and print
+`{total}/{cfg['max_batches_per_day']}` (optionally the per-runner split
+as prepare already does). Reproduce with any complete work dir:
+`python3 core/screen.py collect --dir reports/screener-work/20260904T080505Z`
+(it will refuse to re-append because the marker exists, but the crash is
+after the marker check only on a fresh dir — a unit-level call of the
+summary block is enough).
+
+**Status:** OPEN — operator ask. Agent-side handling: proceeded on the
+printed rows, recorded the exit code in the funnel line and cycle log.
