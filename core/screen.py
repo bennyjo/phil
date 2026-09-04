@@ -896,10 +896,10 @@ def cmd_collect(args):
     if n_err:
         print(f"screen: {n_err} market(s) came back malformed (see screen_error "
               f"in journal/screener.jsonl)", file=sys.stderr)
-    quota = load_quota()
+    _own, by_runner, used = load_quota()
     print(f"screen: collected {len(ranked)}/{expected} markets from {n_batches} "
           f"batches, escalated {len(escalated)}, day batches "
-          f"{int(quota.get('batches') or 0)}/{cfg['max_batches_per_day']}",
+          f"{used}/{cfg['max_batches_per_day']} (by runner {by_runner})",
           file=sys.stderr)
     return 0
 
