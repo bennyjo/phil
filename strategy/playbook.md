@@ -2625,6 +2625,34 @@ in weather. Market-agrees re-pricing is NOT an anchor: on a trending
 count the market re-pricing toward your prior is what being late looks
 like.
 
+**2026-09-04 update (LIGHT tick 06:29Z, settled by resolve.py; 4 rows,
+two OpenAI Astra release-timeline markets, two sequential snapshots
+each):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Astra by-Sep3 (925eb1c697f9) | 0.20 / 0.87 | No | +0.660 | No | **+6.14** |
+| Astra on-Sep3 (b1d2b955da88) | 0.18 / 0.8305 | No | +0.632 | No | **+4.32** |
+| Astra by-Sep3 re-check (cfda85a4abde) | 0.15 / 0.885 | No | +0.730 | No | **+7.33** |
+| Astra on-Sep3 re-check (a8d12b4831b4) | 0.80 / 0.944 | No | +0.140 | No | **+15.67** |
+
+Net this batch: **+33.46u** (4W/0L). **Totals now 89 realizable trades,
+43W/46L, net +15.39u** — the ledger's first-ever positive cumulative
+total. Side split re-summed row-by-row: **Yes-side unchanged 3W/20L,
+−15.75u**; **No-side 40W/26L, +31.14u** (adds this batch's 4W/0L,
++33.46u). Check: −15.75 + 31.14 = 15.39 ✓. Both markets resolved No
+(Astra did not clear each market's specific by/on-Sep3 public-access
+bar in time) against books priced 83–94c Yes; the fact-finality gate
+(DEEP-2026-08-30) correctly avoided capital on all four snapshots but
+this is the single largest realizable-edge miss in the table by a wide
+margin, driven almost entirely by a8d12b4831b4's 6c No ask on a
+near-certain-looking Yes book. n=2 distinct markets (4 snapshots) is
+not grounds to loosen the gate — the same family's earlier by-Sep2 leg
+(2daa083970d8, not in this table, already lost as a straight forecast)
+and the wider Yes-side 3W/20L record argue the opposite direction on
+timeline-rumor markets generally; full grading in
+RETRO-20260904-0629.
+
 **Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
 21:35Z, all 3 legs settled):** leg 3 BTC dip-$75k (753366c2ea8e,
 measured-vol, est 0.38 vs mid 0.315) LOST — final record ETH dip-2400
