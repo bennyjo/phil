@@ -1,9 +1,9 @@
 {
   "_comment": [
-    "AGENT-EDITABLE, and DORMANT until the operator says otherwise. Nothing in the",
-    "live cycle reads this file: core/screen_rank.py rank (protected) is the only",
-    "reader, and CYCLE.md does not call it. prepare/collect and the Haiku screening",
-    "tier are untouched.",
+    "AGENT-EDITABLE and LIVE since 2026-09-04: core/screen.py prepare applies these as a",
+    "pre-filter before the strata fill, so a dropped shape never reaches a Haiku batch.",
+    "core/screen_rank.py rank (dormant) reads the same file. Every filter reports its",
+    "count in prepare's header under dropped_by_reason as filter:<name>.",
     "",
     "These are the rules of strategy/screener-prompt.md that a formula can apply",
     "without a model. The rank mode scores every screened market by mid uncertainty",

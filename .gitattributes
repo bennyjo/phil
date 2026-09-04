@@ -1,0 +1,10 @@
+# Append-only journals: two runners (cloud routine, operator loop.sh) cycle on
+# the same hours and both append. A union merge keeps both sides' rows instead
+# of stopping the push. Files whose rows are UPDATED in place (ledger.jsonl,
+# real-ledger.jsonl, forecasts.jsonl) and files that carry state (schedule,
+# quota) are deliberately NOT here: a conflict there has to fail loudly.
+journal/cycles.log merge=union
+journal/screener.jsonl merge=union
+journal/mech-requests.jsonl merge=union
+journal/watch-triggers.jsonl merge=union
+strategy/funnel.jsonl merge=union
