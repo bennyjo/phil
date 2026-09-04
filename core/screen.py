@@ -64,13 +64,32 @@ Output: prepare prints a JSON header (work_dir, batches, screened_pool,
         appends one row per market to journal/screener.jsonl, and summarises
         on stderr.
 
-Quota: the day's cost is counted in BATCHES, not dollars, in
-journal/screener-quota.json - committed, so subagent load is public and
-survives container churn. `prepare` reserves the batches it writes before any
-subagent runs, so a cycle that crashes mid-fan-out still consumed its
-reservation; over-counting is the safe direction. Once the day's batches reach
-`max_batches_per_day` this exits 0 with an empty stdout: an exhausted quota
-must degrade the cycle, never kill it.
+Pre-filter (operator, 2026-09-04, from gnhf run 3's journal/screener-rank-
+decision.md): before the strata see anything, `prepare` drops the shapes in
+`strategy/screener-filters.json` - the title regexes for line-constructed and
+sub-daily crypto markets, mids of exactly 0.500, and non-binary outcome sets.
+These are the rules of screener-prompt.md that a model is not needed for, and
+the Haiku tier's worst habit (a lazy 0.50/0.50 answer that manufactures the
+largest divergence on the markets the price is surest about) landed three
+quarters of the time on exactly these shapes. The filter file is the agent's
+to tune; a broken file degrades to no title filters and says so on stderr.
+Every filter reports its count in the header's dropped_by_reason as
+`filter:<name>`, so the footprint of each rule stays public.
+
+Quota: the day's cost is counted in BATCHES, not dollars, under
+journal/screener-quota/<runner>.json - one file per runner, committed, so
+subagent load is public and survives container churn. Two runners (the cloud
+routine and the operator machine's loop.sh) cycle on the same hours, and a
+single shared counter was a read-modify-write race that lost updates on every
+interleaved push (2026-09-04). Each runner writes only its own file and the
+cap applies to the SUM across today's files, so the day's usage merges
+without conflict. The runner name is $PHIL_RUNNER, else "operator" when
+loop.sh's PHIL_PUSH_BY_LOOP is set, else "cloud". `prepare` reserves the
+batches it writes before any subagent runs, so a cycle that crashes
+mid-fan-out still consumed its reservation; over-counting is the safe
+direction. Once the day's batches reach `max_batches_per_day` this exits 0
+with an empty stdout: an exhausted quota must degrade the cycle, never kill
+it.
 
 The agent may call this freely but may not edit it; if the strata, the row
 schema or the quota guard are wrong, that is a journal/proposals.md entry.
@@ -79,7 +98,9 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import os
 import pathlib
+import re
 import subprocess
 import sys
 import time
@@ -88,9 +109,16 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 PROTECTED = json.loads((ROOT / "config" / "protected.json").read_text())
 PROMPT_FILE = ROOT / "strategy" / "screener-prompt.md"
 STRATA_FILE = ROOT / "strategy" / "screener-strata.json"
+FILTERS_FILE = ROOT / "strategy" / "screener-filters.json"
 LOG_FILE = ROOT / "journal" / "screener.jsonl"
-QUOTA_FILE = ROOT / "journal" / "screener-quota.json"
+QUOTA_DIR = ROOT / "journal" / "screener-quota"
 WORK_ROOT = ROOT / "reports" / "screener-work"
+
+# Deterministic pre-filter defaults; strategy/screener-filters.json overrides
+# them within these types. See load_filters.
+FILTER_DEFAULTS = {"exclude_mids_exactly_half": True, "min_outcomes": 2,
+                   "max_outcomes": 2}
+HALF_EPS = 1e-9
 
 SCREENER_DEFAULTS = {"batch_size": 20, "top_n": 15, "max_batches_per_day": 150,
                      "max_pool_after_strata": 400}
@@ -253,21 +281,143 @@ def blob_rev(path):
         return "unknown"
 
 
-def load_quota():
-    if QUOTA_FILE.is_file():
-        try:
-            q = json.loads(QUOTA_FILE.read_text())
-            if q.get("day") == today():
-                return q
-        except json.JSONDecodeError as e:
-            print(f"screen: journal/screener-quota.json unreadable ({e}); "
-                  f"treating today as unused", file=sys.stderr)
+def runner_id():
+    """Which runner this is, for the per-runner quota file. See the docstring."""
+    name = (os.environ.get("PHIL_RUNNER") or "").strip()
+    if not name:
+        name = "operator" if os.environ.get("PHIL_PUSH_BY_LOOP") else "cloud"
+    return re.sub(r"[^A-Za-z0-9_.-]", "_", name)[:40]
+
+
+def _empty_quota():
     return {"day": today(), "batches": 0, "markets_screened": 0,
             "last_prepare_utc": None}
 
 
-def save_quota(q):
-    QUOTA_FILE.write_text(json.dumps(q, indent=2) + "\n")
+def load_quota():
+    """Today's usage across every runner file.
+
+    Returns (own, by_runner, total_batches): `own` is this runner's record for
+    today (fresh if absent or stale), `by_runner` maps runner -> today's
+    batches for every file under journal/screener-quota/, and total_batches is
+    their sum, which is what the cap applies to. A file from another day or
+    an unreadable file counts as zero for today, loudly.
+    """
+    me = runner_id()
+    own, by_runner = _empty_quota(), {}
+    if QUOTA_DIR.is_dir():
+        for path in sorted(QUOTA_DIR.glob("*.json")):
+            try:
+                q = json.loads(path.read_text())
+                batches = int(q.get("batches") or 0) if q.get("day") == today() else 0
+            except (json.JSONDecodeError, TypeError, ValueError) as e:
+                print(f"screen: {path.relative_to(ROOT)} unreadable ({e}); "
+                      f"counting it as zero for today", file=sys.stderr)
+                continue
+            by_runner[path.stem] = batches
+            if path.stem == me and q.get("day") == today():
+                own = q
+    return own, by_runner, sum(by_runner.values())
+
+
+def save_quota(own):
+    QUOTA_DIR.mkdir(parents=True, exist_ok=True)
+    (QUOTA_DIR / f"{runner_id()}.json").write_text(json.dumps(own, indent=2) + "\n")
+
+
+def load_filters():
+    """Agent-tuned deterministic pre-filters. Never raises; degrades loudly.
+
+    Returns (compiled, spec) where compiled is [(name, regex)] and spec is the
+    validated scalar settings. Same discipline as strata_sizes: a broken tuning
+    file costs list quality, it never stops the screen.
+    """
+    spec = dict(FILTER_DEFAULTS)
+    try:
+        raw = json.loads(FILTERS_FILE.read_text())
+        if not isinstance(raw, dict):
+            raise ValueError(f"top level is {type(raw).__name__}, not an object")
+    except Exception as e:  # noqa: BLE001 - any failure falls back, loudly
+        print(f"screen: strategy/screener-filters.json unusable "
+              f"({type(e).__name__}: {e}); screening with NO title filters - "
+              f"expect line-constructed markets back in the pool",
+              file=sys.stderr)
+        return [], spec
+    got = raw.get("exclude_mids_exactly_half")
+    if isinstance(got, bool):
+        spec["exclude_mids_exactly_half"] = got
+    elif got is not None:
+        print(f"screen: screener-filters.json exclude_mids_exactly_half = "
+              f"{got!r} is not true or false; keeping "
+              f"{spec['exclude_mids_exactly_half']}", file=sys.stderr)
+    for key in ("min_outcomes", "max_outcomes"):
+        got = raw.get(key)
+        if isinstance(got, int) and not isinstance(got, bool) and got >= 2:
+            spec[key] = got
+        elif got is not None:
+            print(f"screen: screener-filters.json {key} = {got!r} is not an "
+                  f"integer >= 2; keeping {spec[key]}", file=sys.stderr)
+    compiled = []
+    pats = raw.get("exclude_title_patterns")
+    if pats is None:
+        pats = []
+    if not isinstance(pats, list):
+        print(f"screen: screener-filters.json exclude_title_patterns is "
+              f"{type(pats).__name__}, not a list; no title filters applied",
+              file=sys.stderr)
+        pats = []
+    for i, item in enumerate(pats):
+        if not isinstance(item, dict):
+            print(f"screen: exclude_title_patterns[{i}] is not an object; "
+                  f"skipped", file=sys.stderr)
+            continue
+        name = str(item.get("name") or f"pattern_{i}")
+        pattern = item.get("pattern")
+        if not isinstance(pattern, str) or not pattern:
+            print(f"screen: exclude_title_patterns[{i}] ({name}) has no "
+                  f"pattern string; skipped", file=sys.stderr)
+            continue
+        try:
+            compiled.append((name, re.compile(pattern, re.IGNORECASE)))
+        except re.error as e:
+            print(f"screen: exclude_title_patterns[{i}] ({name}) does not "
+                  f"compile ({e}); skipped - the other filters still apply",
+                  file=sys.stderr)
+    return compiled, spec
+
+
+def filters_fired(candidate, mids, compiled, spec):
+    """Names of every deterministic filter that fires on this market."""
+    fired = []
+    question = str(candidate.get("question") or "")
+    for name, rx in compiled:
+        if rx.search(question):
+            fired.append(name)
+    n_out = len(mids)
+    if n_out < spec["min_outcomes"] or n_out > spec["max_outcomes"]:
+        fired.append("non_binary_outcomes")
+    if spec["exclude_mids_exactly_half"] and mids \
+            and all(abs(v - 0.5) <= HALF_EPS for v in mids.values()):
+        fired.append("mids_exactly_half")
+    return fired
+
+
+def prefilter(candidates, compiled, spec):
+    """Drop the shapes no model is needed for. Returns (kept, dropped_by_filter).
+
+    A market that trips several filters is dropped once and counted under
+    each, so the per-filter footprints stay comparable with the journal
+    measurements in screener-filters.json.
+    """
+    kept, by_filter = [], {}
+    for c in candidates:
+        fired = filters_fired(c, mids_of(c), compiled, spec)
+        if not fired:
+            kept.append(c)
+            continue
+        for name in fired:
+            by_filter[name] = by_filter.get(name, 0) + 1
+    return kept, by_filter
 
 
 def read_candidates(path):
@@ -479,23 +629,35 @@ def cmd_prepare(args):
               file=sys.stderr)
         return 0
 
-    quota = load_quota()
-    used = int(quota.get("batches") or 0)
+    quota, by_runner, used = load_quota()
     cap = cfg["max_batches_per_day"]
     if used >= cap:
         print(f"screen: daily screener batch quota exhausted ({used} / {cap} "
-              f"batches, UTC day {quota['day']}) - screening skipped, no "
-              f"subagents to spawn. Research unscreened candidates as before "
-              f"and log 'screener quota exhausted'; do not work around.",
-              file=sys.stderr)
+              f"batches, UTC day {quota['day']}, by runner {by_runner}) - "
+              f"screening skipped, no subagents to spawn. Research unscreened "
+              f"candidates as before and log 'screener quota exhausted'; do "
+              f"not work around.", file=sys.stderr)
+        return 0
+
+    n_in = len(candidates)
+    compiled, spec = load_filters()
+    filters_rev = blob_rev(FILTERS_FILE) if FILTERS_FILE.is_file() else None
+    candidates, by_filter = prefilter(candidates, compiled, spec)
+    if not candidates:
+        print("screen: the pre-filter left no candidates to screen "
+              f"({by_filter}); nothing to do", file=sys.stderr)
         return 0
 
     sizes = strata_sizes()
     now = utcnow()
     pool, lane_of, counts, dropped = stratify(
         candidates, sizes, cfg["max_pool_after_strata"], now, stamp(now))
+    for name, n in sorted(by_filter.items()):
+        dropped[f"filter:{name}"] = n
     if n_bad:
         dropped["unparseable_input_line"] = n_bad
+    filters = {"file": str(FILTERS_FILE.relative_to(ROOT)), "rev": filters_rev,
+               "loaded": [n for n, _ in compiled], "dropped_by_filter": by_filter}
 
     batches = chunk(pool, cfg["batch_size"])
     if len(batches) > cap - used:
@@ -518,9 +680,11 @@ def cmd_prepare(args):
                   "batches": [{"nn": f"{i:02d}", "batch_file": f"batch-{i:02d}.json",
                                "out_file": f"out-{i:02d}.json", "markets": len(b)}
                               for i, b in enumerate(batches, 1)],
-                  "screened_pool": len(pool), "candidates_in": len(candidates),
+                  "screened_pool": len(pool), "candidates_in": n_in,
                   "strata": counts, "dropped_by_reason": dropped,
-                  "day_batches_used": used, "max_batches_per_day": cap,
+                  "filters": filters,
+                  "day_batches_used": used, "day_batches_by_runner": by_runner,
+                  "runner": runner_id(), "max_batches_per_day": cap,
                   "prompt_rev": prompt_rev,
                   "subagent_prompt_template": template}
         print(json.dumps(header, indent=2))
@@ -538,19 +702,22 @@ def cmd_prepare(args):
 
     # Reserve before any subagent runs: a cycle that dies mid-fan-out has still
     # spent the reservation. Over-counting is the safe direction.
-    quota["batches"] = used + len(batches)
+    quota["batches"] = int(quota.get("batches") or 0) + len(batches)
     quota["markets_screened"] = int(quota.get("markets_screened") or 0) + len(pool)
     quota["last_prepare_utc"] = iso(now)
     save_quota(quota)
+    by_runner[runner_id()] = quota["batches"]
+    day_used = used + len(batches)
 
     header = {"work_dir": rel_dir, "batch_count": len(written), "batches": written,
-              "screened_pool": len(pool), "candidates_in": len(candidates),
-              "strata": counts, "dropped_by_reason": dropped,
-              "day_batches_used": quota["batches"], "max_batches_per_day": cap,
+              "screened_pool": len(pool), "candidates_in": n_in,
+              "strata": counts, "dropped_by_reason": dropped, "filters": filters,
+              "day_batches_used": day_used, "day_batches_by_runner": by_runner,
+              "runner": runner_id(), "max_batches_per_day": cap,
               "prompt_rev": prompt_rev, "subagent_prompt_template": template}
     print(json.dumps(header, indent=2))
     print(f"screen: prepared {len(pool)} markets in {len(written)} batches under "
-          f"{rel_dir}; day batches {quota['batches']}/{cap}. Spawn one Task "
+          f"{rel_dir}; day batches {day_used}/{cap} ({by_runner}). Spawn one Task "
           f"subagent per batch with subagent_prompt_template, then run: "
           f"python3 core/screen.py collect --dir {rel_dir}", file=sys.stderr)
     return 0

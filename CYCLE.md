@@ -115,7 +115,9 @@ Every invocation runs as one of three ticks:
    - Read `prepare`'s JSON header on stdout: `work_dir`, `batches` (one entry
      per batch file), `screened_pool`, `dropped_by_reason`, and
      `subagent_prompt_template`. `strategy/screener-strata.json` tunes which
-     markets reach the pool; `dropped_by_reason` says what the strata cut.
+     markets reach the pool and `strategy/screener-filters.json` drops the
+     shapes no model is needed for (line-constructed markets, sub-daily crypto,
+     placeholder 0.500 mids); `dropped_by_reason` says what each cut.
    - Spawn ONE Task subagent PER BATCH FILE, all in parallel in a single
      message (model `haiku` when the Task tool lets me choose it, otherwise the
      default). Give each subagent exactly `subagent_prompt_template` with the

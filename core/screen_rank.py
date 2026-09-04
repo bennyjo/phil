@@ -50,9 +50,16 @@ mistaken for a screen row:
 It never writes journal/forecasts.jsonl and it never places, sizes or vetoes
 anything - same two prohibitions as core/screen.py.
 
-It does not touch journal/screener-quota.json either. The quota counts
-subagent batches and this spawns none; a rank cycle costs zero batches, which
-is most of the point.
+It does not touch journal/screener-quota/ either. The quota counts subagent
+batches and this spawns none; a rank cycle costs zero batches, which is most
+of the point.
+
+Since 2026-09-04 the filters in strategy/screener-filters.json are LIVE as a
+pre-filter in core/screen.py prepare (load_filters, filters_fired and
+prefilter live there and this module reuses them). The ranking itself stays
+dormant: gnhf run 3's decision memo kept the Haiku tier and took only the
+filters, because the formula's own escalation list is 13 to 14 of 15 sports
+and esports coin flips.
 
 Usage:
   python3 core/scan.py --hours 336 --limit 800 | python3 core/screen_rank.py rank
@@ -67,14 +74,12 @@ Output: prints the top-N rows by rank_score as JSON lines on stdout, appends
 import argparse
 import json
 import pathlib
-import re
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import screen  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-FILTERS_FILE = ROOT / "strategy" / "screener-filters.json"
 
 # The formula, named in the row's `model` field so the journal says what
 # produced it. Bump the suffix if the score changes; the blob hash in
@@ -88,73 +93,6 @@ RANK_ERROR = ("no model answer: screen_rank formula mode. divergence is "
 # Used when strategy/screener-filters.json is missing or malformed. Deliberately
 # empty of title patterns: a formula that silently invents its own exclusions is
 # worse than one that escalates a spread market and is seen to.
-FILTER_DEFAULTS = {"exclude_mids_exactly_half": True, "min_outcomes": 2,
-                   "max_outcomes": 2}
-
-HALF_EPS = 1e-9
-
-
-def load_filters():
-    """Agent-tuned deterministic filters. Never raises; degrades loudly.
-
-    Returns (compiled, spec) where compiled is [(name, regex)] and spec is the
-    validated scalar settings. Same discipline as screen.strata_sizes: a broken
-    tuning file costs coverage quality, it never stops the rank.
-    """
-    spec = dict(FILTER_DEFAULTS)
-    try:
-        raw = json.loads(FILTERS_FILE.read_text())
-        if not isinstance(raw, dict):
-            raise ValueError(f"top level is {type(raw).__name__}, not an object")
-    except Exception as e:  # noqa: BLE001 - any failure falls back, loudly
-        print(f"screen_rank: strategy/screener-filters.json unusable "
-              f"({type(e).__name__}: {e}); ranking with NO title filters - "
-              f"expect line-constructed markets to take the head of the list",
-              file=sys.stderr)
-        return [], spec
-    got = raw.get("exclude_mids_exactly_half")
-    if isinstance(got, bool):
-        spec["exclude_mids_exactly_half"] = got
-    elif got is not None:
-        print(f"screen_rank: screener-filters.json exclude_mids_exactly_half = "
-              f"{got!r} is not true or false; keeping "
-              f"{spec['exclude_mids_exactly_half']}", file=sys.stderr)
-    for key in ("min_outcomes", "max_outcomes"):
-        got = raw.get(key)
-        if isinstance(got, int) and not isinstance(got, bool) and got >= 2:
-            spec[key] = got
-        elif got is not None:
-            print(f"screen_rank: screener-filters.json {key} = {got!r} is not an "
-                  f"integer >= 2; keeping {spec[key]}", file=sys.stderr)
-    compiled = []
-    pats = raw.get("exclude_title_patterns")
-    if pats is None:
-        pats = []
-    if not isinstance(pats, list):
-        print(f"screen_rank: screener-filters.json exclude_title_patterns is "
-              f"{type(pats).__name__}, not a list; no title filters applied",
-              file=sys.stderr)
-        pats = []
-    for i, item in enumerate(pats):
-        if not isinstance(item, dict):
-            print(f"screen_rank: exclude_title_patterns[{i}] is not an object; "
-                  f"skipped", file=sys.stderr)
-            continue
-        name = str(item.get("name") or f"pattern_{i}")
-        pattern = item.get("pattern")
-        if not isinstance(pattern, str) or not pattern:
-            print(f"screen_rank: exclude_title_patterns[{i}] ({name}) has no "
-                  f"pattern string; skipped", file=sys.stderr)
-            continue
-        try:
-            compiled.append((name, re.compile(pattern, re.IGNORECASE)))
-        except re.error as e:
-            print(f"screen_rank: exclude_title_patterns[{i}] ({name}) does not "
-                  f"compile ({e}); skipped - the other filters still apply",
-                  file=sys.stderr)
-    return compiled, spec
-
-
 def rank_score(mids):
     """2p(1-p) on the recorded mids, or None if the mids are unusable.
 
@@ -175,22 +113,6 @@ def rank_score(mids):
     return round(2.0 * p * (1.0 - p), 6)
 
 
-def filters_fired(candidate, mids, compiled, spec):
-    """Names of every deterministic filter that fires on this market."""
-    fired = []
-    question = str(candidate.get("question") or "")
-    for name, rx in compiled:
-        if rx.search(question):
-            fired.append(name)
-    n_out = len(mids)
-    if n_out < spec["min_outcomes"] or n_out > spec["max_outcomes"]:
-        fired.append("non_binary_outcomes")
-    if spec["exclude_mids_exactly_half"] and mids \
-            and all(abs(v - 0.5) <= HALF_EPS for v in mids.values()):
-        fired.append("mids_exactly_half")
-    return fired
-
-
 def rank_rows(pool, lane_of, ts, prompt_rev, batch_id, compiled, spec):
     """One journal row per screened market, in core/screen.py's row schema."""
     rows = []
@@ -201,7 +123,7 @@ def rank_rows(pool, lane_of, ts, prompt_rev, batch_id, compiled, spec):
         # probs IS the mids: the formula's estimate for a market is its price.
         row["probs"] = dict(mids) if mids else None
         row["rank_score"] = rank_score(mids)
-        row["filtered_by"] = filters_fired(c, mids, compiled, spec)
+        row["filtered_by"] = screen.filters_fired(c, mids, compiled, spec)
         row["stratum"] = lane_of.get(str(c.get("market_id")))
         row["reason"] = (f"mid uncertainty {row['rank_score']}"
                          if row["rank_score"] is not None else "no usable mids")
@@ -247,11 +169,11 @@ def cmd_rank(args):
               file=sys.stderr)
         return 0
 
-    compiled, spec = load_filters()
+    compiled, spec = screen.load_filters()
     ts = screen.iso(now)
     # prompt_rev is the blob hash of the RULE FILE this run read, not of
     # screener-prompt.md: that brief is a model instruction and no model ran.
-    prompt_rev = screen.blob_rev(FILTERS_FILE)
+    prompt_rev = screen.blob_rev(screen.FILTERS_FILE)
     batch_id = f"rank-{screen.stamp(now)}"
     rows = rank_rows(pool, lane_of, ts, prompt_rev, batch_id, compiled, spec)
     escalated = escalate(rows, cfg["top_n"])
@@ -265,7 +187,7 @@ def cmd_rank(args):
 
     header = {"mode": "rank", "model": MODEL_LABEL, "ts": ts,
               "batch_id": batch_id, "prompt_rev": prompt_rev,
-              "filters_file": str(FILTERS_FILE.relative_to(ROOT)),
+              "filters_file": str(screen.FILTERS_FILE.relative_to(ROOT)),
               "filters_loaded": [n for n, _ in compiled],
               "screened_pool": len(rows), "candidates_in": len(candidates),
               "strata": screen.recount_selected(pool, lane_of, counts),

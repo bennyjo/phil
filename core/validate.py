@@ -13,7 +13,7 @@ Checks that an unattended cycle cannot have left the repo broken or unsafe:
   - journal/ledger.jsonl is well-formed and every row respects the caps
   - journal/forecasts.jsonl (stake-free forecasts) rows are well-formed
   - the screener block stays inside its hard batch/pool ceilings, and
-    journal/screener-quota.json / screener.jsonl are well-formed
+    journal/screener-quota/*.json / screener.jsonl are well-formed
   - every Python file under core/ and strategy/ still compiles
 
 Usage: python3 core/validate.py
@@ -204,18 +204,24 @@ if forecasts_path.exists():
             err(f"forecasts.jsonl:{lineno}: market_prob_at_record "
                 f"{row['market_prob_at_record']} outside [0, 1]")
 
-screener_quota_path = ROOT / "journal" / "screener-quota.json"
-if screener_quota_path.exists():
-    quota = load_json("journal/screener-quota.json")
-    if quota is not None:
+screener_quota_dir = ROOT / "journal" / "screener-quota"
+if (ROOT / "journal" / "screener-quota.json").exists():
+    err("journal/screener-quota.json: the shared counter was retired on "
+        "2026-09-04; the quota lives under journal/screener-quota/<runner>.json")
+if screener_quota_dir.is_dir():
+    for qpath in sorted(screener_quota_dir.glob("*.json")):
+        rel = qpath.relative_to(ROOT).as_posix()
+        quota = load_json(rel)
+        if quota is None:
+            continue
         day = quota.get("day")
         if not (isinstance(day, str) and day.strip()):
-            err("screener-quota.json: day missing or not a string")
+            err(f"{rel}: day missing or not a string")
         batches = quota.get("batches")
         if not isinstance(batches, int) or isinstance(batches, bool):
-            err("screener-quota.json: batches missing or not an integer")
+            err(f"{rel}: batches missing or not an integer")
         elif batches < 0:
-            err(f"screener-quota.json: batches {batches} is negative")
+            err(f"{rel}: batches {batches} is negative")
 
 screener_path = ROOT / "journal" / "screener.jsonl"
 if screener_path.exists():
