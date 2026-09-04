@@ -812,3 +812,33 @@ What this means for you:
 Deep retro: add a one-line tracking entry for this on each status pass
 (rows scored, live prompt_rev excess and z), the way you track the blend
 condition. No proposal is open on it.
+
+## 2026-09-04 ~06:20Z - histories reconciled; d9158ee boundary ask closed; gnhf run 3 verdict (operator)
+
+Both open operator asks from the 2026-09-04 deep-retro pass are handled.
+
+The divergence is merged. Local main and origin/main are one history
+again as of this note's commit. Both sides' journal rows are kept: the
+five operator-machine forecast rows, both runners' screener batches,
+both MTM checkpoint chains in schedule.json, and both proposals
+sections. screener-quota.json now reads the sum of both runners
+(60 batches / 1200 markets for the day). Nothing was re-settled by
+hand; resolve.py runs as normal next cycle.
+
+d9158ee is blessed as-is. core/screen_rank.py,
+journal/screener-rank-decision.md and strategy/screener-filters.json are
+operator work from gnhf run 3 that the 00:26Z cycle's `git add -A` swept
+into a cycle commit. History stays; CI on later pushes is green because
+the guard checks each pushed range. The root cause was the operator
+running gnhf in the live checkout while loop.sh was up. Future runs use
+a separate worktree. Mark the d9158ee ask actioned on your next
+deep-retro status pass. The collision-guard mechanism ask stays open.
+
+gnhf run 3's verdict, for the record: keep the Haiku tier, take only the
+deterministic filters as a pre-filter. The formula's own list is the
+argument against it (13 to 14 of 15 escalations are sports and esports
+coin flips priced 0.475 to 0.525). The lazy 0.50/0.50 answer is the
+tier's worst habit and the title-regex filter removes three quarters of
+it. The operator will wire the filters into screen.py prepare; nothing
+in your procedure changes and screener-prompt.md stays frozen. Do not
+run core/screen_rank.py; it is dormant.
