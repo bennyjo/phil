@@ -1534,6 +1534,74 @@ pass: NONE.
 
 **Status:** informational
 
+## 2026-09-04 00:40Z — collision-guard gap: two concurrent FULL cycles both bet the same leg
+
+**Structural finding, not a request to work around a protected rule.**
+Two FULL cycles ran essentially simultaneously starting ~00:16-00:26Z: a
+cloud cycle (this one) and an operator-machine real-mode cycle. Both
+started from the same tip (`e3d2cb7`, an `operator:` commit, not a
+`cycle:`/`cycle(triggered):` commit), so CYCLE.md step 0's collision
+guard — which only checks whether the tip is a recent cycle commit — did
+not fire for either. Both independently scanned, screened, researched
+the August 2026 NFP bracket set via the mechanical-econ carve-out
+(different sourcing details, same conclusion), and placed a $5 bet on
+the identical leg (market 3403942, "add 0-50k", No side, ~$0.67 entry).
+The operator-machine cycle's push (via `loop.sh`) landed on origin/main
+first; this cycle's `git push` was rejected, and the follow-up
+`git pull --rebase` hit a genuine conflict on `journal/ledger.jsonl`
+(two distinct valid rows for the same market+outcome) — aborted per
+CYCLE.md step 9's explicit rule rather than hand-resolved. This cycle
+reset to the already-pushed state and declined to place a second bet on
+the same leg (see the `declined` entry in `strategy/funnel.jsonl` for
+this cycle, `2026-09-04T00:16:34Z`).
+
+No capital-safety issue: two $5 bets on the same leg would have summed
+to exactly `max_stake_per_event_usd` (10.0), not over it, and the second
+bet was never actually placed. The real cost was research/compute
+duplication (two independent 15-batch haiku screening runs, two
+independent NFP research passes) and a `journal/screener-quota.json`
+lost-update race (both cycles read the day's usage as 0 and wrote 15;
+corrected by hand this cycle to 30/600 to reflect both runs — the
+formula itself is fine, the race is in reading-then-writing without a
+lock, same shape as the ledger collision).
+
+**What I'm flagging, not fixing:** the collision guard's definition of
+"another runner just cycled" (tip is a `cycle:`/`cycle(triggered):`
+commit < 20min old) misses the case where the tip is a non-cycle commit
+(an `operator:` commit here) but another FULL cycle is *concurrently in
+flight* from that same tip. A guard keyed only on the committed tip
+can't see a concurrent uncommitted run by construction — this may need
+something outside what a single agent invocation can enforce (a lock
+file, a shorter polling/backoff window, or accepting occasional
+duplicate bets as a bounded cost given the $10/event cap already bounds
+the downside). Leaving the mechanism design to the operator; recording
+the evidence per CYCLE.md's "a structural oddity in my inputs is a
+proposal, not a shrug."
+
+**Status:** ENDORSED (DEEP-2026-09-04) — see the 2026-09-04 deep-retro
+status pass below for the remedy sketch; operator decision pending.
+`core/screen_rank.py`, `journal/screener-rank-decision.md`
+and `strategy/screener-filters.json` also landed in the operator-machine
+cycle's commit (`d9158ee`, message prefix `cycle:` not `operator:`) --
+these read as operator-authored (the file's own docstring says "PROTECTED
+CORE" and references `journal/operator-notes.md`), most likely picked up
+by that cycle's `git add -A` from files staged in the working directory
+rather than written by the agent. Not reverted (reverting real operator
+work would be its own mistake) and not this cycle's call to make either
+way -- flagged for visibility since it crossed the boundary-guard's
+commit-prefix convention.
+
+**CI confirmation (00:41Z):** `core/ci.py` now reports `d9158ee` failing
+the `Agent/operator boundary` check, confirming the cause diagnosed
+above (core/screen_rank.py etc. landing in a non-`operator:`-prefixed
+commit). Per CYCLE.md step 0c, the cause lives in a protected path
+(`core/`), so the required action is documenting it here rather than
+attempting a fix — already done above before this confirmation arrived.
+No agent-side fix applies: the boundary guard is protected-path CI, and
+correcting it (re-committing those files under an `operator:` prefix, or
+`loop.sh`'s revert-on-protected-change logic) is the operator's/loop.sh's
+move, not mine to make.
+
 ## 2026-09-04 — operator-machine and cloud histories have diverged for three ticks; loop.sh cannot push
 
 **Symptom (hourly agent, 01:29Z, 02:33Z, 03:53Z ticks on the operator
@@ -1580,3 +1648,50 @@ and `ledger.jsonl` are core-written; hand-merging them is forbidden.
 **Status:** OPEN operator ask. Until reconciled, every operator-machine
 cycle's work (including RETRO-20260904-0340's counterfactual-table
 extension and four forecast rows) exists only locally.
+
+## 2026-09-04 — deep-retro status pass
+
+Audit window 2026-09-03 04:30Z → 2026-09-04 04:30Z. Full analysis in
+journal/retros/DEEP-2026-09-04.md.
+
+**Collision-guard gap (hourly agent, 2026-09-04 00:40Z): ENDORSED.**
+The finding is correct and well-evidenced: a tip-commit-based guard
+cannot see a concurrent in-flight run by construction, and the same
+read-modify-write race independently hit journal/ledger.jsonl (push
+conflict) and journal/screener-quota.json (lost update, 15 vs 30).
+The agent's handling was exemplary — declined the duplicate bet,
+aborted the conflicted rebase per rule, hand-corrected the quota with
+an audit note. Remedy sketch, both halves operator-owned (loop.sh /
+core/): (1) a lock file or lease pushed as a lightweight ref at cycle
+start, honored by both runners; or (2) accept duplicate bets as a
+bounded cost (the $10/event protected cap held here by exactly $0) and
+fix only the quota race, which unlike the ledger has no conflict
+detection at all. Recommend at minimum half (2): the quota race is
+silent and cumulative; the ledger race at least fails loudly at push.
+Status: OPEN — operator ask.
+
+**NEW operator ask — cure the d9158ee boundary breach.** Commit
+d9158ee (`cycle:` prefix) carries core/screen_rank.py,
+journal/screener-rank-decision.md and strategy/screener-filters.json —
+operator gnhf-run-3 artifacts swept from the working tree by the
+cycle's `git add -A`. CI's boundary guard correctly fails it, and every
+subsequent push inherits a red history check until it is blessed or
+re-attributed. Only the operator can cure this (re-commit under
+`operator:`, amend the guard's allowlist for that sha, or whatever
+loop.sh's revert logic prescribes); no agent-side fix is legal. The
+agent-side halves are done: files audited (screener-filters.json is
+dormant, nothing live reads it), nothing reverted, provenance
+documented. Status: OPEN — operator ask.
+
+**Tracked conditions (one-liners, per standing instructions):**
+- Blend: blend[disagreement] n=122, w_opt=0.837, delta −0.0012 — bar
+  (≤0.80 at n≥150, delta ≥0.002, sustained ×2) not met, drifting away.
+- Screener replay: 18,047 rows scored; live rev f7ddad12 excess
+  +0.0033, z +2.1 — unchanged from operator's gnhf run 2 note;
+  screener-prompt.md untouched per freeze.
+- gnhf policy v3 forward test: 34 forward rows, 3 bets, pnl +2.71,
+  brier_delta −0.0114 — under the ≥15-bet bar, insufficient data,
+  hands off.
+
+Open operator asks after this pass: **2** (collision-guard mechanism,
+d9158ee boundary cure).

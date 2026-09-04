@@ -2588,23 +2588,76 @@ market put 0.94 on two adjacent buckets (implied sd ≈0.55C vs the model's
 1.2C) and was right; at about six settled next-day rows, test the
 open-meteo ensemble spread per city against the fixed sd. No change now.
 
-**2026-09-04 update (FULL cycle 03:40Z, retro RETRO-20260904-0340; 1
-video-views row, `countable-metric` sub-class):**
+**2026-09-04 update (FULL cycle 04:13Z, retro RETRO-20260904-0413; 2 rows,
+GTA VI Extended Look <20M-views week-1 market, two of its four sequential
+snapshots):**
 
 | Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
 |---|---|---|---|---|---|
-| GTA VI Extended Look <20M wk1 (e398cebab2e6) [countable-metric] | 0.30 / 0.82 | No | +0.510 | No | **+4.26** |
+| GTA VI <20M wk1 (b5c5c134d7cb) | 0.55 / 0.60 | No | +0.030 | No | **+1.38** |
+| GTA VI <20M wk1 (e398cebab2e6) | 0.30 / 0.82 | No | +0.510 | No | **+4.26** |
 
-Net this batch: **+4.26u** (1W/0L). **Totals now 84 realizable trades,
-38W/46L, net −19.45u.** Side split re-summed row-by-row: **Yes-side
-unchanged 3W/20L, −15.75u**; **No-side 35W/26L, −3.70u** (adds +4.26u).
-Check: −15.75 + −3.70 = −19.45 ✓. Ruling: largest single counterfactual
-win in the table; the read had a dated primary count (about 17M at day
-5-6) and a runway calculation, not a narrative. Pre-registered sub-class
+Net this batch: **+5.64u** (2W/0L). **Totals now 85 realizable trades,
+39W/46L, net −18.07u.** Side split re-summed row-by-row: **Yes-side
+unchanged 3W/20L, −15.75u**; **No-side 36W/26L, −2.32u** (adds this
+batch's 2W/0L, +5.64u). Check: −15.75 + −2.32 = −18.07 ✓. Both wins are
+late, well-anchored trend-extrapolation reads on a market with an actual
+climbing view count (own family narrative in the retro), the mirror image
+of the two other sequential snapshots on this same market that guessed
+without a dated figure and both lost as forecasts — the veto still
+correctly avoided capital risk on a narrative/trend-extrapolation class
+that is net-negative lifetime even after these two wins.
+
+**Operator-machine 03:40Z cycle (RETRO-20260904-0340), merged by the operator 2026-09-04 after the two runners diverged:** its e398cebab2e6 row is the same row as in the 04:13Z table above and is counted once in the totals. It pre-registered sub-class
 `countable-metric` (any veto row whose note cites a dated primary count on
 a live countable metric: views, downloads, followers, on-chain counts):
 now 1W/0L, +4.26u; grade for a carve-out at n≥3 settled rows, veto
 unchanged until then. Rows without a dated count stay narrative class.
+
+**Cumulative-count anchor rule (DEEP-2026-09-04, from the four settled
+snapshots above plus b3fbd3c3eef7/944d8e5fc4d0):** a forecast on a
+cumulative-count market (views, downloads, signatures, cumulative sales)
+requires a DATED count plus an observed per-day pace, exactly as same-day
+weather rows require the observed partial-day max. The settled split is
+stark: the two snapshots with no dated figure scored brier 0.3025
+(b5c5c134d7cb, "coin-flip with a fig-leaf of numbers") and 0.7225
+(b3fbd3c3eef7, est 0.85 on <20M while the count was climbing through
+17M — it followed the market's re-pricing and called it confirmation);
+the one snapshot with a dated anchor (~17M at day 5-6, ~3.4M/day) scored
+0.09 (e398cebab2e6). If no dated count is findable, record NO forecast
+(skip reason `no-anchor`) rather than a number — an unanchored estimate
+here contaminates calibration stats the same way a half-observed day did
+in weather. Market-agrees re-pricing is NOT an anchor: on a trending
+count the market re-pricing toward your prior is what being late looks
+like.
+
+**2026-09-04 update (LIGHT tick 06:29Z, settled by resolve.py; 4 rows,
+two OpenAI Astra release-timeline markets, two sequential snapshots
+each):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Astra by-Sep3 (925eb1c697f9) | 0.20 / 0.87 | No | +0.660 | No | **+6.14** |
+| Astra on-Sep3 (b1d2b955da88) | 0.18 / 0.8305 | No | +0.632 | No | **+4.32** |
+| Astra by-Sep3 re-check (cfda85a4abde) | 0.15 / 0.885 | No | +0.730 | No | **+7.33** |
+| Astra on-Sep3 re-check (a8d12b4831b4) | 0.80 / 0.944 | No | +0.140 | No | **+15.67** |
+
+Net this batch: **+33.46u** (4W/0L). **Totals now 89 realizable trades,
+43W/46L, net +15.39u** — the ledger's first-ever positive cumulative
+total. Side split re-summed row-by-row: **Yes-side unchanged 3W/20L,
+−15.75u**; **No-side 40W/26L, +31.14u** (adds this batch's 4W/0L,
++33.46u). Check: −15.75 + 31.14 = 15.39 ✓. Both markets resolved No
+(Astra did not clear each market's specific by/on-Sep3 public-access
+bar in time) against books priced 83–94c Yes; the fact-finality gate
+(DEEP-2026-08-30) correctly avoided capital on all four snapshots but
+this is the single largest realizable-edge miss in the table by a wide
+margin, driven almost entirely by a8d12b4831b4's 6c No ask on a
+near-certain-looking Yes book. n=2 distinct markets (4 snapshots) is
+not grounds to loosen the gate — the same family's earlier by-Sep2 leg
+(2daa083970d8, not in this table, already lost as a straight forecast)
+and the wider Yes-side 3W/20L record argue the opposite direction on
+timeline-rumor markets generally; full grading in
+RETRO-20260904-0629.
 
 **Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
 21:35Z, all 3 legs settled):** leg 3 BTC dip-$75k (753366c2ea8e,
