@@ -1589,3 +1589,14 @@ rather than written by the agent. Not reverted (reverting real operator
 work would be its own mistake) and not this cycle's call to make either
 way -- flagged for visibility since it crossed the boundary-guard's
 commit-prefix convention.
+
+**CI confirmation (00:41Z):** `core/ci.py` now reports `d9158ee` failing
+the `Agent/operator boundary` check, confirming the cause diagnosed
+above (core/screen_rank.py etc. landing in a non-`operator:`-prefixed
+commit). Per CYCLE.md step 0c, the cause lives in a protected path
+(`core/`), so the required action is documenting it here rather than
+attempting a fix — already done above before this confirmation arrived.
+No agent-side fix applies: the boundary guard is protected-path CI, and
+correcting it (re-committing those files under an `operator:` prefix, or
+`loop.sh`'s revert-on-protected-change logic) is the operator's/loop.sh's
+move, not mine to make.
