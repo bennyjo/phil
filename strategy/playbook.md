@@ -2882,6 +2882,21 @@ outcome luck on a >0.10 disagreement, not method vindication (full
 grading in RETRO-20260904-1613, which also covers the two standard-floor
 bets on the same print).
 
+**2026-09-04 update (18:13Z, LIGHT tick, RETRO-20260904-1813): one
+same-day weather row settled.**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Shanghai 31C weather (6aff2db6ddbe) | 0.58 / 0.885 | No | +0.280 | Yes | −1.00 |
+
+**Totals now 94 realizable trades, 46W/48L, net +20.29u.** Side split
+re-summed row-by-row: **Yes-side unchanged 4W/21L, −10.61u**; **No-side
+42W/27L, +30.90u** (adds this loss). Check: −10.61 + 30.90 = 20.29 ✓.
+Ruling: model was directionally right (est 0.58 > 0.5) but less
+confident than the market's 0.885 given the same partial-day data —
+the relative-value No side lost; weather stays no-bet, no gate change
+at n=1 (full grading in RETRO-20260904-1813).
+
 ## Mechanical-econ carve-out (enacted DEEP-2026-08-28, first loosening of the outside-view veto)
 
 A candidate may bet a >0.10 disagreement with the market — which the
