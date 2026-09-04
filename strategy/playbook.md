@@ -2588,6 +2588,24 @@ market put 0.94 on two adjacent buckets (implied sd ≈0.55C vs the model's
 1.2C) and was right; at about six settled next-day rows, test the
 open-meteo ensemble spread per city against the fixed sd. No change now.
 
+**2026-09-04 update (FULL cycle 03:40Z, retro RETRO-20260904-0340; 1
+video-views row, `countable-metric` sub-class):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| GTA VI Extended Look <20M wk1 (e398cebab2e6) [countable-metric] | 0.30 / 0.82 | No | +0.510 | No | **+4.26** |
+
+Net this batch: **+4.26u** (1W/0L). **Totals now 84 realizable trades,
+38W/46L, net −19.45u.** Side split re-summed row-by-row: **Yes-side
+unchanged 3W/20L, −15.75u**; **No-side 35W/26L, −3.70u** (adds +4.26u).
+Check: −15.75 + −3.70 = −19.45 ✓. Ruling: largest single counterfactual
+win in the table; the read had a dated primary count (about 17M at day
+5-6) and a runway calculation, not a narrative. Pre-registered sub-class
+`countable-metric` (any veto row whose note cites a dated primary count on
+a live countable metric: views, downloads, followers, on-chain counts):
+now 1W/0L, +4.26u; grade for a carve-out at n≥3 settled rows, veto
+unchanged until then. Rows without a dated count stay narrative class.
+
 **Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
 21:35Z, all 3 legs settled):** leg 3 BTC dip-$75k (753366c2ea8e,
 measured-vol, est 0.38 vs mid 0.315) LOST — final record ETH dip-2400
