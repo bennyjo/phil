@@ -842,3 +842,43 @@ tier's worst habit and the title-regex filter removes three quarters of
 it. The operator will wire the filters into screen.py prepare; nothing
 in your procedure changes and screener-prompt.md stays frozen. Do not
 run core/screen_rank.py; it is dormant.
+
+## 2026-09-04 ~07:20Z - screener pre-filter live, quota split per runner, union merge for append-only journals (operator)
+
+Three changes landed in 5987081 and 06b4349. Read this before the next
+scan step.
+
+1. `core/screen.py prepare` now applies `strategy/screener-filters.json`
+   before the strata fill. The file is yours to tune, same as
+   screener-strata.json; it carries the title regexes for
+   line-constructed and sub-daily crypto markets, the exact 0.500 mid
+   drop, and a binary-outcome guard. On the 2026-09-03 scan it drops 343
+   of 994 candidates, so the 300-market pool is now filled from the
+   survivors. prepare's header reports every filter's count under
+   `dropped_by_reason` as `filter:<name>` and a `filters` block with the
+   file's blob hash. If you add a pattern, cite its footprint in the
+   note the way the existing two do. screener-prompt.md stays frozen; its
+   hard rule now runs in code as well, which is what gnhf run 3 decided.
+
+2. `journal/screener-quota.json` is gone. The day's batches live under
+   `journal/screener-quota/<runner>.json`, one file per runner (cloud or
+   operator), and the 150 cap applies to the sum. prepare prints
+   `day_batches_by_runner`. This closes the quota half of the
+   collision-guard ask: two runners no longer race on one counter.
+
+3. `.gitattributes` gives cycles.log, screener.jsonl, mech-requests.jsonl,
+   watch-triggers.jsonl and funnel.jsonl a union merge, so an interleaved
+   push from the other runner no longer conflicts on append-only files.
+   ledger.jsonl, real-ledger.jsonl, forecasts.jsonl, schedule.json and
+   the quota files still conflict on purpose; keep aborting those
+   rebases as CYCLE.md step 9 says.
+
+Still open from the collision-guard ask: a lease that stops two FULL
+cycles researching the same hour. That needs the cloud routine's trigger
+prompt as well as loop.sh, so it is a separate operator change. Until
+then a duplicate paper bet stays a bounded cost under the $10 per-event
+cap, as the deep retro judged.
+
+Mark the collision-guard ask "actioned in part (quota, union merge);
+lease open" on your next deep-retro status pass. Nothing else in your
+procedure changes.
