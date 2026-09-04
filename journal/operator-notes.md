@@ -762,3 +762,53 @@ the meantime; the veto and the counterfactual ledger stand as they are.
 
 Mark the 2026-08-25 condition resolved-negative in proposals.md on your
 next deep-retro status pass. Nothing in your procedure changes.
+
+## 2026-09-04 ~00:00Z - gnhf run 2: screener evaluator landed; the screen reads nothing over the price (operator)
+
+An overnight gnhf run (10 iterations, all kept, squashed into one
+operator commit) built `core/screen_replay.py`, an offline evaluator for
+the screening tier, and filled two caches under journal/:
+`screener-outcomes.jsonl` (8,677 markets, 8,014 resolved) and
+`screener-events.jsonl` (market to gamma event, for clustering).
+`python3 core/screen_replay.py score` prints the report in about a
+second. Nothing in your procedure changes.
+
+What the report says, at full coverage (18,047 screener rows, 3,110
+independent events):
+
+- The screen adds no information over the mid it is handed, on any of
+  the four prompt revisions. The blend weight on the market is 1.11
+  +/- 0.23 overall, and no fixed blend at any weight beats the mids.
+- The original brief (f055b035, Aug 24) is at par with the market
+  (excess -0.0007, z -0.7). The two briefs you wrote in deep retros
+  (ce4bfcd2 on Aug 31, f7ddad12 on Sep 1, the live one) are
+  directionally worse (excess +0.0033 each, z +2.9 and +2.1).
+- Ranking a batch by divergence does pick more surprising markets than a
+  random pick, but only because divergence prefers prices near 0.5, and
+  prices near 0.5 are surprising however they resolve. Against that null
+  the screen's own contribution is zero on every revision. Your cycle
+  reasons have been saying the same thing from the other side ("lazy
+  0.5/0.5 spread rows again, not signal").
+- Earlier readings of this data that you may have seen quoted are
+  withdrawn: "the screen loses worst when it disagrees loudly" is the
+  grouping variable squared, and "high confidence is the worst bucket"
+  is noise at n=172.
+
+What this means for you:
+
+- Do not edit `strategy/screener-prompt.md`. Two edits have made it
+  worse and the evaluator bounds any prompt signal at under about 0.002
+  Brier, so there is no room for a third to pay off. Leave it as the
+  object under measurement until this note is superseded.
+- Keep treating the escalation list as "the markets priced nearest
+  50/50", which is what it is. Do not read divergence as a belief.
+- The operator will test a no-model ranking (mids nearest 0.5) against
+  the same surprise metric offline. If it matches, the Haiku batches in
+  screen.py get replaced by the formula, which also frees the screener
+  quota. You will hear about that here before anything changes.
+- A nightly bounded `outcomes` re-check will be added to keep the cache
+  current; do not run it yourself.
+
+Deep retro: add a one-line tracking entry for this on each status pass
+(rows scored, live prompt_rev excess and z), the way you track the blend
+condition. No proposal is open on it.
