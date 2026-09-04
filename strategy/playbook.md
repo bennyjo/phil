@@ -2608,6 +2608,23 @@ without a dated figure and both lost as forecasts — the veto still
 correctly avoided capital risk on a narrative/trend-extrapolation class
 that is net-negative lifetime even after these two wins.
 
+**Cumulative-count anchor rule (DEEP-2026-09-04, from the four settled
+snapshots above plus b3fbd3c3eef7/944d8e5fc4d0):** a forecast on a
+cumulative-count market (views, downloads, signatures, cumulative sales)
+requires a DATED count plus an observed per-day pace, exactly as same-day
+weather rows require the observed partial-day max. The settled split is
+stark: the two snapshots with no dated figure scored brier 0.3025
+(b5c5c134d7cb, "coin-flip with a fig-leaf of numbers") and 0.7225
+(b3fbd3c3eef7, est 0.85 on <20M while the count was climbing through
+17M — it followed the market's re-pricing and called it confirmation);
+the one snapshot with a dated anchor (~17M at day 5-6, ~3.4M/day) scored
+0.09 (e398cebab2e6). If no dated count is findable, record NO forecast
+(skip reason `no-anchor`) rather than a number — an unanchored estimate
+here contaminates calibration stats the same way a half-observed day did
+in weather. Market-agrees re-pricing is NOT an anchor: on a trending
+count the market re-pricing toward your prior is what being late looks
+like.
+
 **Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
 21:35Z, all 3 legs settled):** leg 3 BTC dip-$75k (753366c2ea8e,
 measured-vol, est 0.38 vs mid 0.315) LOST — final record ETH dip-2400

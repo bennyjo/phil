@@ -1578,8 +1578,9 @@ the downside). Leaving the mechanism design to the operator; recording
 the evidence per CYCLE.md's "a structural oddity in my inputs is a
 proposal, not a shrug."
 
-**Status:** informational, no action requested beyond the operator's
-awareness. `core/screen_rank.py`, `journal/screener-rank-decision.md`
+**Status:** ENDORSED (DEEP-2026-09-04) — see the 2026-09-04 deep-retro
+status pass below for the remedy sketch; operator decision pending.
+`core/screen_rank.py`, `journal/screener-rank-decision.md`
 and `strategy/screener-filters.json` also landed in the operator-machine
 cycle's commit (`d9158ee`, message prefix `cycle:` not `operator:`) --
 these read as operator-authored (the file's own docstring says "PROTECTED
@@ -1600,3 +1601,50 @@ No agent-side fix applies: the boundary guard is protected-path CI, and
 correcting it (re-committing those files under an `operator:` prefix, or
 `loop.sh`'s revert-on-protected-change logic) is the operator's/loop.sh's
 move, not mine to make.
+
+## 2026-09-04 — deep-retro status pass
+
+Audit window 2026-09-03 04:30Z → 2026-09-04 04:30Z. Full analysis in
+journal/retros/DEEP-2026-09-04.md.
+
+**Collision-guard gap (hourly agent, 2026-09-04 00:40Z): ENDORSED.**
+The finding is correct and well-evidenced: a tip-commit-based guard
+cannot see a concurrent in-flight run by construction, and the same
+read-modify-write race independently hit journal/ledger.jsonl (push
+conflict) and journal/screener-quota.json (lost update, 15 vs 30).
+The agent's handling was exemplary — declined the duplicate bet,
+aborted the conflicted rebase per rule, hand-corrected the quota with
+an audit note. Remedy sketch, both halves operator-owned (loop.sh /
+core/): (1) a lock file or lease pushed as a lightweight ref at cycle
+start, honored by both runners; or (2) accept duplicate bets as a
+bounded cost (the $10/event protected cap held here by exactly $0) and
+fix only the quota race, which unlike the ledger has no conflict
+detection at all. Recommend at minimum half (2): the quota race is
+silent and cumulative; the ledger race at least fails loudly at push.
+Status: OPEN — operator ask.
+
+**NEW operator ask — cure the d9158ee boundary breach.** Commit
+d9158ee (`cycle:` prefix) carries core/screen_rank.py,
+journal/screener-rank-decision.md and strategy/screener-filters.json —
+operator gnhf-run-3 artifacts swept from the working tree by the
+cycle's `git add -A`. CI's boundary guard correctly fails it, and every
+subsequent push inherits a red history check until it is blessed or
+re-attributed. Only the operator can cure this (re-commit under
+`operator:`, amend the guard's allowlist for that sha, or whatever
+loop.sh's revert logic prescribes); no agent-side fix is legal. The
+agent-side halves are done: files audited (screener-filters.json is
+dormant, nothing live reads it), nothing reverted, provenance
+documented. Status: OPEN — operator ask.
+
+**Tracked conditions (one-liners, per standing instructions):**
+- Blend: blend[disagreement] n=122, w_opt=0.837, delta −0.0012 — bar
+  (≤0.80 at n≥150, delta ≥0.002, sustained ×2) not met, drifting away.
+- Screener replay: 18,047 rows scored; live rev f7ddad12 excess
+  +0.0033, z +2.1 — unchanged from operator's gnhf run 2 note;
+  screener-prompt.md untouched per freeze.
+- gnhf policy v3 forward test: 34 forward rows, 3 bets, pnl +2.71,
+  brier_delta −0.0114 — under the ≥15-bet bar, insufficient data,
+  hands off.
+
+Open operator asks after this pass: **2** (collision-guard mechanism,
+d9158ee boundary cure).
