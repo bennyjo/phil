@@ -1533,3 +1533,59 @@ No new proposals from the hourly agent this window (2026-09-02 04:48Z →
 pass: NONE.
 
 **Status:** informational
+
+## 2026-09-04 00:40Z — collision-guard gap: two concurrent FULL cycles both bet the same leg
+
+**Structural finding, not a request to work around a protected rule.**
+Two FULL cycles ran essentially simultaneously starting ~00:16-00:26Z: a
+cloud cycle (this one) and an operator-machine real-mode cycle. Both
+started from the same tip (`e3d2cb7`, an `operator:` commit, not a
+`cycle:`/`cycle(triggered):` commit), so CYCLE.md step 0's collision
+guard — which only checks whether the tip is a recent cycle commit — did
+not fire for either. Both independently scanned, screened, researched
+the August 2026 NFP bracket set via the mechanical-econ carve-out
+(different sourcing details, same conclusion), and placed a $5 bet on
+the identical leg (market 3403942, "add 0-50k", No side, ~$0.67 entry).
+The operator-machine cycle's push (via `loop.sh`) landed on origin/main
+first; this cycle's `git push` was rejected, and the follow-up
+`git pull --rebase` hit a genuine conflict on `journal/ledger.jsonl`
+(two distinct valid rows for the same market+outcome) — aborted per
+CYCLE.md step 9's explicit rule rather than hand-resolved. This cycle
+reset to the already-pushed state and declined to place a second bet on
+the same leg (see the `declined` entry in `strategy/funnel.jsonl` for
+this cycle, `2026-09-04T00:16:34Z`).
+
+No capital-safety issue: two $5 bets on the same leg would have summed
+to exactly `max_stake_per_event_usd` (10.0), not over it, and the second
+bet was never actually placed. The real cost was research/compute
+duplication (two independent 15-batch haiku screening runs, two
+independent NFP research passes) and a `journal/screener-quota.json`
+lost-update race (both cycles read the day's usage as 0 and wrote 15;
+corrected by hand this cycle to 30/600 to reflect both runs — the
+formula itself is fine, the race is in reading-then-writing without a
+lock, same shape as the ledger collision).
+
+**What I'm flagging, not fixing:** the collision guard's definition of
+"another runner just cycled" (tip is a `cycle:`/`cycle(triggered):`
+commit < 20min old) misses the case where the tip is a non-cycle commit
+(an `operator:` commit here) but another FULL cycle is *concurrently in
+flight* from that same tip. A guard keyed only on the committed tip
+can't see a concurrent uncommitted run by construction — this may need
+something outside what a single agent invocation can enforce (a lock
+file, a shorter polling/backoff window, or accepting occasional
+duplicate bets as a bounded cost given the $10/event cap already bounds
+the downside). Leaving the mechanism design to the operator; recording
+the evidence per CYCLE.md's "a structural oddity in my inputs is a
+proposal, not a shrug."
+
+**Status:** informational, no action requested beyond the operator's
+awareness. `core/screen_rank.py`, `journal/screener-rank-decision.md`
+and `strategy/screener-filters.json` also landed in the operator-machine
+cycle's commit (`d9158ee`, message prefix `cycle:` not `operator:`) --
+these read as operator-authored (the file's own docstring says "PROTECTED
+CORE" and references `journal/operator-notes.md`), most likely picked up
+by that cycle's `git add -A` from files staged in the working directory
+rather than written by the agent. Not reverted (reverting real operator
+work would be its own mistake) and not this cycle's call to make either
+way -- flagged for visibility since it crossed the boundary-guard's
+commit-prefix convention.
