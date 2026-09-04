@@ -287,13 +287,52 @@ stamp, which is the same behavior `prepare` has.
 
 The write path was exercised against a scratch log rather than
 `journal/screener.jsonl`, which this run was not permitted to touch: 300 rows
-written, 0 errors against `core/validate.py`'s screener contract, 0 rows graded
-by `screen_replay.select`, and 0 rows rankable by `core/screen.py collect`.
+written, 0 rows graded by `screen_replay.select`, and 0 rows rankable by
+`core/screen.py collect`.
+
+### The three checks that matter for switching it on
+
+Running `core/validate.py` on the repo proves nothing about rank rows while the
+real journal has none in it, so the checks below were run against a scratch copy
+of the repo under `/tmp` holding the real 22,500-row `journal/screener.jsonl`.
+
+**The real validator, not a transcription of it.** 300 rank rows appended to the
+copy take `journal/screener.jsonl` from 22,500 to 22,800 rows, and
+`python3 core/validate.py` in that tree still exits 0 with its all-sane line. The first pass of this
+work re-implemented the validator's screener contract by hand in the test, which
+can drift from the validator; this runs the file itself.
+
+**The Haiku tables do not move.** `screen_replay.py score --json` on the mixed
+journal against the same command on the real one: of 74 leaf statistics, 4
+differ, and all 4 count rows seen rather than rows scored. `screener_rows`
+22,500 to 22,800, `markets_in_log` 9,556 to 9,588, `skipped.open` 2,616 to
+2,719, `filtered.outcome_not_cached` 1,528 to 1,725. The two skip counts absorb
+exactly 300 rows between them. `scored` stays at 180 and every calibration,
+`brier_delta`, market-weight and escalation number is unchanged.
+
+**The guard works on a resolved market, which is the case that will occur.**
+`select()` checks `screen_error` only after it checks that the market resolved,
+so the "0 of 300 graded" result above is not evidence: those markets are all
+still open, and any row at all would have been skipped. Remapping the same 300
+rank rows onto market IDs that ARE resolved in the outcome cache gives 0 scored
+and 300 skipped as `screen_error`. The positive control, the same rows with
+`screen_error` stripped and a divergence set, grades 300 of 300, so the test has
+teeth. `work/it3_resolved_guard.py` is the script.
+
+`prompt_rev` on every row is `1bbccb6a`, which is `git rev-parse
+HEAD:strategy/screener-filters.json`, so a rank row names the exact committed
+rule file it was produced under.
 
 The escalated 15 all scored between 0.49875 and 0.49995, meaning mids between
 0.475 and 0.525. Fourteen were sports or esports matchups and one was an ETF
-price threshold. That list is the decision in one screen: a formula that ranks by
-2p(1-p) hands the researcher an hour of coin flips.
+price threshold. A second draw of the same scan, run `rank-20260904T003013Z`
+after `stratify` reseeded its random tail, escalated 13 sports or esports
+matchups out of 15: six lower-league soccer team-win markets, five Dota and
+Counter-Strike map or series winners, two baseball inning props, plus two
+weekly stock-price thresholds and one Moscow daily-temperature market. The
+composition is stable across draws even though the individual markets are not.
+That list is the decision in one screen: a formula that ranks by 2p(1-p) hands
+the researcher an hour of coin flips.
 
 ## How to switch it on
 
@@ -306,3 +345,37 @@ price threshold. That list is the decision in one screen: a formula that ranks b
    screener batch quota then goes unused.
 4. Either way, record the switch in `journal/operator-notes.md` so the
    `prompt_rev` break in `journal/screener.jsonl` is explained.
+
+## Landing note: core/screen_rank.py landed in the wrong commit
+
+`core/screen_rank.py` reached `origin/main` inside an agent commit, and CI run
+`33821785236` is red on it:
+
+```
+agent commit d9158ee ('cycle: 2026-09-04-0026 placed 1 settled 0')
+touches operator-owned paths:
+    core/screen_rank.py
+```
+
+The overnight run left the file untracked in the working tree, as intended, for
+the operator to commit with an `operator:` prefix. The live hourly loop reached
+its own commit step first and swept it in.
+
+The cause is a hole in `loop.sh`'s protected-boundary revert, not in the CI
+guard. That revert is `git diff --quiet HEAD -- core/ config/ ...`, and
+`git diff` against `HEAD` cannot see an untracked file, verified on a scratch
+repo. So a *new* file under `core/` passes the check, and the cycle's own
+`git add` then commits it. `.github/scripts/boundary.sh` did its job and caught
+it after the push. Two consequences worth knowing:
+
+- The red run cannot be repaired without rewriting pushed history. Later pushes
+  go green on their own, because the guard only reads the commits in the pushed
+  range. Deciding whether to rewrite is the operator's call.
+- Now that `core/screen_rank.py` is tracked, the same revert *does* cover it. A
+  future agent that edits this file will have the edit silently reverted between
+  cycles, with only a `WARNING: agent touched protected files` on stderr.
+
+`journal/screener.jsonl` was never written by this work. The 300 screener rows in
+that same commit are the live Haiku tier's own 00:16 collect run, `model` =
+`subagent:haiku`. The real journal still holds 0 rows with
+`model` = `formula:mid-uncertainty-2p1p-v1`.
