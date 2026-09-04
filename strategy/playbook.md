@@ -1745,6 +1745,24 @@ move as favorable or adverse.
      overconfident on "No" for the wrong reason. For a same-day deadline
      with a live imminent-event rumor, re-check close to the actual cutoff
      before finalizing a low P(Yes) — one morning search isn't enough.
+   - **Quote the live bid/ask inside the rationale itself, not a number
+     carried over from earlier the same cycle (2026-09-04, Astra by-date
+     family, RETRO-20260904-2215).** Three outside-view-veto rows
+     recorded in one research pass (`99d1545b2ec7`/`7adc67fe86cc`/
+     `b249eb7256a0`, by-Sep4/5/6) wrote rationales claiming mkt Yes
+     ~0.14/0.315/0.36 and edges of 0.06–0.135, "under/near the 0.10
+     gate" — but the `best_bid_at_record`/`best_ask_at_record` fields
+     `forecast.py` actually stamped on those SAME calls read
+     0.862/0.864, 0.68/0.69, 0.63/0.65: the market had already repriced
+     to 64–86% Yes by the time these were recorded, a same-day move the
+     rationale never reflected. Graded against the true recorded book
+     the edges were 0.36–0.78, not marginal, and the market was right
+     (all three resolved Yes). Before finalizing any veto/no-edge
+     rationale, write the exact bid/ask about to be passed to
+     `forecast.py`/`ledger.py` into the note itself; if it has moved
+     sharply since the last check on the same market this cycle, that
+     move IS the signal to re-search before recording a number, not
+     noise to write past.
    - **Count sources by underlying primary origin, not by search hits
      (DEEP-2026-09-02; pre-registered as a watch item at the Alibaba
      forecast's recording, settled evidence now cited).** Multiple
@@ -2896,6 +2914,33 @@ Ruling: model was directionally right (est 0.58 > 0.5) but less
 confident than the market's 0.885 given the same partial-day data —
 the relative-value No side lost; weather stays no-bet, no gate change
 at n=1 (full grading in RETRO-20260904-1813).
+
+**2026-09-04 update (22:11Z, LIGHT tick, RETRO-20260904-2215): five
+Astra by-date rows settled, all No-side, all LOST — the family's first
+losses ever (previously 5W/0L, by-Sep2 + the by/on-Sep3 batch above).**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Astra by-Sep4 (99d1545b2ec7) | 0.08 / 0.863 | No | +0.783 | Yes | −1.00 |
+| Astra by-Sep5 (7adc67fe86cc) | 0.18 / 0.685 | No | +0.505 | Yes | −1.00 |
+| Astra by-Sep6 (b249eb7256a0) | 0.28 / 0.64 | No | +0.360 | Yes | −1.00 |
+| Astra by-Sep7 (d179339fe4c0) | 0.35 / 0.525 | No | +0.175 | Yes | −1.00 |
+| Astra by-Sep15 (037ae430d6f3) | 0.80 / 0.885 | No | +0.085 | Yes | −1.00 |
+
+Net this batch: **−5.00u** (0W/5L). **Totals now 99 realizable trades,
+46W/53L, net +15.29u.** Side split re-summed row-by-row: **Yes-side
+unchanged 4W/21L, −10.61u**; **No-side 42W/32L, +25.90u** (adds this
+batch's 0W/5L, −5.00u). Check: −10.61 + 25.90 = 15.29 ✓. Ruling: the
+first three rows' rationale text cited a market price (0.14/0.315/0.36)
+that does NOT match the `best_bid_at_record`/`best_ask_at_record` those
+same forecast.py calls actually stamped (0.863/0.685/0.64) — the live
+book had already repriced 50+ points same-day and the note never
+reflected it; graded against the true recorded book the "modest" declined
+edges were actually 0.36–0.78. The other two rows (by-Sep7, by-Sep15)
+quoted the price correctly and still lost — clean misses, gate worked as
+designed, zero capital risked on any of the five. Full grading and the
+new estimation-method fix (quote the exact bid/ask about to be recorded,
+inside the rationale) in RETRO-20260904-2215.
 
 ## Mechanical-econ carve-out (enacted DEEP-2026-08-28, first loosening of the outside-view veto)
 
