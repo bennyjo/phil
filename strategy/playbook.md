@@ -2859,6 +2859,29 @@ registered candidate shape ("named external survey benchmark") already
 excluded. See §Mechanical-econ carve-out below for the enacted rule and
 its kill switch.
 
+**2026-09-04 update (16:13Z, FULL cycle, RETRO-20260904-1613): four
+Aug23-vintage NFP bracket rows settled (superseded by the Sep4 revision,
+graded on their record-time book per standing convention). Actual print:
+NFP >= 150k jobs added (a large beat).**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| NFP add 0-50k (d2c8054e1df6) | 0.1794 / 0.265 | No | +0.071 | No | **+0.33** |
+| NFP add 50-100k (7800470f6fab) | 0.218 / 0.315 | No | +0.082 | No | **+0.43** |
+| NFP add 100-150k (adc70585857a) | 0.1963 / 0.141 | Yes | +0.055 | No | −1.00 |
+| NFP add >=150k (a8a368a644f4) | 0.2266 / 0.145 | Yes | +0.082 | **Yes** | **+6.14** |
+
+Net this batch: **+5.90u** (3W/1L). **Totals now 93 realizable trades,
+46W/47L, net +21.29u.** Side split re-summed row-by-row: **Yes-side
+4W/21L, −10.61u** (adds 100-150k L, >=150k W); **No-side 42W/26L,
++31.90u** (adds 0-50k W, 50-100k W). Check: −10.61 + 31.90 = 21.29 ✓.
+Ruling: the veto correctly avoided three losing legs, but the >=150k leg
+it also declined would have been the single largest win in this table —
+the batch nets positive only because that leg happened to hit, which is
+outcome luck on a >0.10 disagreement, not method vindication (full
+grading in RETRO-20260904-1613, which also covers the two standard-floor
+bets on the same print).
+
 ## Mechanical-econ carve-out (enacted DEEP-2026-08-28, first loosening of the outside-view veto)
 
 A candidate may bet a >0.10 disagreement with the market — which the
@@ -2897,6 +2920,23 @@ too (e.g., trailing realized consensus-miss spread computed from named
 release/consensus history), quoted at research time like the mean.
 No sourced dispersion → the row stays forecast-only regardless of
 apparent edge. This narrows gate 2; it loosens nothing.
+
+**NFP tail-risk flag (2026-09-04, RETRO-20260904-1613):** the Aug 2026
+NFP print landed >=150k against a cited consensus of ~53-56k — both this
+book's sourced sd=72k model and the market itself gave that outcome only
+~6-7%, and it happened. The standard-floor No bet on 0-50k (84167af841f7)
+won anyway, but for the wrong reason (the model's mean had moved DOWN on
+an ADP miss right before a large beat) — not evidence the sd-sourcing
+method works, more a reminder that a Gaussian with a survey-sourced sd is
+still likely to underweight genuine headline-NFP outliers. Its same-day
+sibling, the UR 4.1% No bet (609c98073a77), lost because its sd=0.12 was
+too WIDE relative to the market's 0.09 on an exact-bracket print — the
+two results point in opposite directions on "is my sourced dispersion too
+narrow or too wide," which at n=2 is not a basis for changing any sd
+input. Flagging only: don't read the NFP win as validating wide sds, and
+don't read the UR loss as validating tight ones, until more of this exact
+shape (sourced-sd self-model, standard floor, headline econ print)
+settles.
 
 **Pre-registered kill switch:** after 4 settled carve-out EVENTS or 6
 settled carve-out BETS (whichever comes first), if net realizable P&L
