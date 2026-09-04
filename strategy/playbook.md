@@ -2588,6 +2588,26 @@ market put 0.94 on two adjacent buckets (implied sd ≈0.55C vs the model's
 1.2C) and was right; at about six settled next-day rows, test the
 open-meteo ensemble spread per city against the fixed sd. No change now.
 
+**2026-09-04 update (FULL cycle 04:13Z, retro RETRO-20260904-0413; 2 rows,
+GTA VI Extended Look <20M-views week-1 market, two of its four sequential
+snapshots):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| GTA VI <20M wk1 (b5c5c134d7cb) | 0.55 / 0.60 | No | +0.030 | No | **+1.38** |
+| GTA VI <20M wk1 (e398cebab2e6) | 0.30 / 0.82 | No | +0.510 | No | **+4.26** |
+
+Net this batch: **+5.64u** (2W/0L). **Totals now 85 realizable trades,
+39W/46L, net −18.07u.** Side split re-summed row-by-row: **Yes-side
+unchanged 3W/20L, −15.75u**; **No-side 36W/26L, −2.32u** (adds this
+batch's 2W/0L, +5.64u). Check: −15.75 + −2.32 = −18.07 ✓. Both wins are
+late, well-anchored trend-extrapolation reads on a market with an actual
+climbing view count (own family narrative in the retro), the mirror image
+of the two other sequential snapshots on this same market that guessed
+without a dated figure and both lost as forecasts — the veto still
+correctly avoided capital risk on a narrative/trend-extrapolation class
+that is net-negative lifetime even after these two wins.
+
 **Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
 21:35Z, all 3 legs settled):** leg 3 BTC dip-$75k (753366c2ea8e,
 measured-vol, est 0.38 vs mid 0.315) LOST — final record ETH dip-2400
