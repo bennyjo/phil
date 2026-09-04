@@ -1,0 +1,49 @@
+{
+  "_comment": [
+    "AGENT-EDITABLE, and DORMANT until the operator says otherwise. Nothing in the",
+    "live cycle reads this file: core/screen_rank.py rank (protected) is the only",
+    "reader, and CYCLE.md does not call it. prepare/collect and the Haiku screening",
+    "tier are untouched.",
+    "",
+    "These are the rules of strategy/screener-prompt.md that a formula can apply",
+    "without a model. The rank mode scores every screened market by mid uncertainty",
+    "2p(1-p) and escalates the top N, so a shape that sits near 0.50 BY CONSTRUCTION",
+    "would take the whole list. That is what these drop. Measured on",
+    "journal/screener.jsonl over 22,333 gradeable rows and 75 collect runs",
+    "(gnhf run 3, 2026-09-04); each note carries its own footprint.",
+    "",
+    "exclude_title_patterns: case-insensitive Python regexes matched against the",
+    "  market question. A pattern that fails to compile is skipped loudly on stderr",
+    "  and the rest still apply - a broken filter must degrade the list, never stop",
+    "  the rank. Adding a pattern is cheap; adding one with no measured footprint is",
+    "  how this file rots. Cite the footprint in the note.",
+    "exclude_mids_exactly_half: drop markets whose recorded mids are all exactly",
+    "  0.500. Those are the arithmetic maximum of 2p(1-p) and would head every list,",
+    "  and they resolve at 0.412 against 0.838 for all screened markets - an exact",
+    "  0.500 on gamma is usually a placeholder price, not an even contest. Median 1",
+    "  such row per collect run, max 14.",
+    "min_outcomes / max_outcomes: 2p(1-p) is a binary formula. Every market screened",
+    "  so far is binary; a non-binary one is dropped rather than scored wrong.",
+    "",
+    "What is NOT here, and why: 'liquid and well-defined', 'a named official print',",
+    "'a stale price', 'thin or exotic', 'a fact I would have to look up' and the four",
+    "traps in screener-prompt.md have no deterministic reading on a screener row, so",
+    "no filter here claims to reproduce them. Dropping the Haiku tier drops those",
+    "judgments outright; that is the cost of the switch, not an oversight."
+  ],
+  "exclude_title_patterns": [
+    {
+      "name": "line_constructed",
+      "pattern": "\\bspread\\b|\\(\\s*[+-]\\s*\\d+(\\.\\d+)?\\s*\\)|\\bo\\s*/\\s*u\\b|\\bover\\s*/\\s*under\\b|\\bexact\\s+score\\b|\\bhalf[- ]?time\\b|\\b1st\\s+half\\b|\\bfirst\\s+half\\b|\\bhandicap\\b",
+      "note": "The HARD RULE of screener-prompt.md. A cover probability is set near 0.50 by construction, so these are exactly what a nearest-0.5 ranking promotes: 0.459 of a bare uncertainty top 15 against a 0.355 pool rate on the live prompt_rev. The Haiku tier holds them to 0.222 by pinning them to divergence 0.0, and it obeys itself on 88-91% of matched rows under the two revisions carrying the rule, so this regex reproduces the rule at that rate. It also reads the operator's own recorded 63% -> 22% as 0.651 -> 0.222."
+    },
+    {
+      "name": "crypto_updown",
+      "pattern": "\\b(bitcoin|btc|ethereum|eth|solana|sol|xrp|dogecoin|doge)\\b.{0,40}\\b(up or down|higher or lower|above|below)\\b|\\bup or down\\b.{0,30}\\b(am|pm|et|utc)\\b",
+      "note": "screener-prompt.md housekeeping: sub-daily crypto up/down markets are banned upstream and should never reach the screen. The ban leaks on 1.5-2.4% of pool rows per revision, so the filter is small but real; the Haiku tier pins 59-66% of them to divergence 0.0 under the two rule-carrying revisions."
+    }
+  ],
+  "exclude_mids_exactly_half": true,
+  "min_outcomes": 2,
+  "max_outcomes": 2
+}
