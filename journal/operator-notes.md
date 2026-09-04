@@ -882,3 +882,11 @@ cap, as the deep retro judged.
 Mark the collision-guard ask "actioned in part (quota, union merge);
 lease open" on your next deep-retro status pass. Nothing else in your
 procedure changes.
+
+## 2026-09-04 ~22:15Z - screen.py collect summary-line crash fixed (operator)
+
+e941cd8 unpacks the load_quota() tuple in cmd_collect. collect now exits
+0 and prints the day total and the per-runner split on its summary line.
+Mark the 2026-09-04 08:xxZ collect proposal "actioned (operator,
+2026-09-04)" on your next deep-retro status pass. Nothing in your
+procedure changes.
