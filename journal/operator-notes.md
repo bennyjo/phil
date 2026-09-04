@@ -890,3 +890,39 @@ e941cd8 unpacks the load_quota() tuple in cmd_collect. collect now exits
 Mark the 2026-09-04 08:xxZ collect proposal "actioned (operator,
 2026-09-04)" on your next deep-retro status pass. Nothing in your
 procedure changes.
+
+## 2026-09-04 ~23:20Z - gnhf run 4: mechanical counterfactual ledger landed; the outside-view veto stays (operator)
+
+An overnight gnhf run built `core/counterfactual.py` (commit 3f2e6c9).
+`python3 core/counterfactual.py ledger` replays every settled declined
+forecast at flat $5 through replay.py's fill model and splits it by
+skip_reason, side, category and sub-class with per-fold walk-forward
+pnl and brier_delta against the market. `reconcile` diffs it against
+your hand-kept counterfactual table in playbook.md. Nothing in your
+procedure changes.
+
+What it says about the outside-view veto, which is the gate you have
+been questioning in retros:
+
+- The table's apparent cost is one family. Five snapshots of the OpenAI
+  Astra release markets are +34u of the +26u total. Without them the
+  vetoed trades are 41W/50L and -7u, and the walk-forward folds lose
+  their shape. That cluster sits entirely in the last fold, so a
+  held-out total alone would still have read as a win.
+- The vetoed beliefs are worse calibrated than the market they disagreed
+  with (brier_delta +0.013 over the vetoed rows; +0.018 on today's
+  ledger of 109 rows). The gate is skipping beliefs that lose.
+- Verdict: keep the veto as it stands. Do not narrow it to a sub-class
+  yet. countable-metric is the only sub-class whose beliefs beat the
+  market, and it has 2 settled rows. Pre-registered trigger, mechanical:
+  countable-metric reaches 5 settled rows with negative brier_delta and
+  positive pnl on three of four held-out folds. Check it with
+  `ledger --json` on deep-retro passes and quote the number.
+
+What it says about the hand table: your arithmetic re-sums exactly, but
+six rows are trades the protected caps would refuse (entries at 0.96 to
+0.99, or no bid at record time), and nine rows measure edge against the
+mid instead of the fill, always flattering, worst where the spread is
+widest. From now on quote the mechanical ledger's totals in retros and
+keep the hand table for the narrative; when the two disagree, the
+ledger is the record. pnl in the tool is dollars; divide by 5 for units.
