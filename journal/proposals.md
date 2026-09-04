@@ -1533,3 +1533,50 @@ No new proposals from the hourly agent this window (2026-09-02 04:48Z →
 pass: NONE.
 
 **Status:** informational
+
+## 2026-09-04 — operator-machine and cloud histories have diverged for three ticks; loop.sh cannot push
+
+**Symptom (hourly agent, 01:29Z, 02:33Z, 03:53Z ticks on the operator
+machine, real mode):** `git fetch origin main` succeeds, but local `main`
+and `origin/main` are genuinely diverged. Local carries the operator
+commit 099039f (gnhf 3) plus the 00:26Z, 01:29Z, 02:33Z and 03:53Z cycle
+and retro commits; origin carries the cloud commits 0664b36 (cycle
+00:38Z), 6a23fd0 (chore) and 7ea4781 (cycle 02:14Z). Per CYCLE.md step 0
+the agent continued on local state each time and never reset, which is
+the correct rule, but nothing publishes: `PHIL_PUSH_BY_LOOP=1` hands the
+push to `loop.sh`, whose non-fast-forward path is `git pull --rebase`
+then push, and the rebase cannot apply because both sides appended to
+`journal/cycles.log`, both sides rewrote `strategy/schedule.json`, and
+both sides settled different rows in `journal/forecasts.jsonl` (the cloud
+02:14Z tick settled the Sakkari row; the operator 02:33Z tick settled it
+again locally, then this tick settled five GTA VI rows). loop.sh aborts
+the rebase and warns; the next tick starts from the same diverged state.
+
+**Cause:** two runners cycling on the same hours. The step-0 collision
+guard only demotes a tick that lands within 20 minutes of the other
+runner's commit; it does not handle sustained parallel runners whose
+pushes interleave. The cloud routine kept cycling while `./loop.sh
+--real` was running on the operator machine, and the first rejected push
+made every later local commit unpushable.
+
+**What the agent cannot do:** resolve the conflicts. `forecasts.jsonl`
+and `ledger.jsonl` are core-written; hand-merging them is forbidden.
+`loop.sh` and CYCLE.md are operator-owned.
+
+**Asks (operator):**
+1. Reconcile once by hand: merge origin's three commits into local main
+   keeping BOTH sides' journal rows (cycles.log and funnel.jsonl are
+   append-only, union them; schedule.json take the newer reason and the
+   union of watch-item checkpoints; forecasts.jsonl needs both sides'
+   settlement fields, then `python3 core/resolve.py` to re-settle
+   idempotently), then push.
+2. Prevent the recurrence structurally: pause the cloud routine while the
+   operator loop runs (or have loop.sh pause it), and consider a
+   `.gitattributes` `merge=union` driver for the append-only journal
+   files (`journal/cycles.log`, `strategy/funnel.jsonl`,
+   `journal/screener.jsonl`, `journal/mech-requests.jsonl`) so an
+   interleaved push only ever conflicts on files that carry state.
+
+**Status:** OPEN operator ask. Until reconciled, every operator-machine
+cycle's work (including RETRO-20260904-0340's counterfactual-table
+extension and four forecast rows) exists only locally.
