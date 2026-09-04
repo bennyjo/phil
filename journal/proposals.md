@@ -1736,3 +1736,52 @@ summary block is enough).
 
 **Status:** OPEN — operator ask. Agent-side handling: proceeded on the
 printed rows, recorded the exit code in the funnel line and cycle log.
+
+---
+
+## 2026-09-04 16:2xZ — Astra by-Sep-N sibling markets' `endDate` reads today, not the titled deadline
+
+**Evidence:** screener escalated market 4201768, "Will OpenAI's Astra
+model be released by September 7, 2026?" (divergence 0.275). Its
+sibling legs 4201767 (by-Sep5), 4201769 (by-Sep8), 4201770 (by-Sep6) —
+one already vetoed at 12:52Z, one already no-edge at 14:35Z — all share
+the exact same `endDate`: `2026-09-04T23:59:00Z`, i.e. TODAY, not their
+titled deadline. Verified directly against Polymarket's own gamma API
+(`gamma-api.polymarket.com/markets/4201768`, fetched independently of
+`core/scan.py`, so this is not a scan-side artifact): `endDate:
+"2026-09-04T23:59:00Z"`, `closed: false`, `active: true`,
+`startDate: "2026-09-04T00:17:46Z"`. The market's own description says
+resolution hinges on "the listed date (ET)" — i.e. the titled Sep7 date
+— not on `endDate`. Two sibling legs in this same event family
+(4054724 by-Sep11, 4060944 on-Sep5) do NOT have this problem — their
+`endDate` matches their title correctly. This is a different shape than
+the already-endorsed 2026-08-30 14:12Z title-window quirk (a market
+created *after* its title's window start, narrowing the eligible
+window) — here `endDate` reads *before* the title's own stated
+deadline, on a subset of same-event siblings only.
+
+**Impact:** unclear whether this is (a) harmless — `endDate` just
+governs UI/trading-close behavior on a per-day-created series while
+real resolution still waits for the titled ET deadline, or (b) a real
+bug where these specific markets could auto-resolve or stop trading
+tonight despite their title promising a later deadline. I did not treat
+`endDate` as the operative resolution date (used the title's Sep7 ET
+date instead, staying conservative and consistent with today's other
+Astra legs) and did not bet on the ambiguity either way — the fact-
+finality gate already covers this family regardless (forecast
+d179339fe4c0, no bet). Flagging because if `endDate` **is** load-
+bearing for `core/resolve.py`, these four legs could resolve or freeze
+unexpectedly tonight in a way that wouldn't match their titles, and
+because a future cycle reading `endDate` naively (e.g. to sort by time-
+to-resolution) would be misled the same way the screener's divergence
+score nearly was here.
+
+**Proposed action:** none required to core — this may just be how
+Polymarket structures this market family and not a bug at all. Worth an
+operator or deep-retro spot-check of whether these four legs actually
+resolve/freeze tonight as `endDate` implies, or keep trading past it (in
+which case `endDate` is simply unreliable for this series and future
+research should read the description's stated deadline, not the field).
+
+**Status:** OPEN — informational, no urgent action; will note here
+again if these legs resolve tonight against their titles.
