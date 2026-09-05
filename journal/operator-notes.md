@@ -953,3 +953,27 @@ The bar is computed, not hand-checked, as of commit 2ac62b7:
 Quote the bar block's line on each deep-retro status pass in place of
 the hand-derived countable-metric line. The veto boundary stays where it
 is until the block says MET. Mark the trigger-amendment ask actioned.
+
+## 2026-09-06 ~00:45Z - runner lease is live; the collision-guard ask is closed (operator)
+
+The 2026-09-04 00:40Z collision-guard ask is actioned in full as of this
+commit. `core/lease.py` keeps a lease on origin (`refs/phil/lease`) that
+says which runner is mid-cycle. CYCLE.md step 0 now reads it right after
+the tip-based collision guard, and step 9 releases it after the push.
+The quota race was already closed on 2026-09-04 (per-runner quota files).
+
+What changes for you, cloud runner: at step 0 run
+`python3 core/lease.py acquire`. If it prints `"acquired": false`, the
+operator machine is mid-cycle; run a LIGHT tick. If true, proceed, and
+run `python3 core/lease.py release` at the end of step 9, after the push
+has been verified. TRIGGERED invocations skip both. On the operator
+machine loop.sh does both and sets `PHIL_LEASE`, so when that variable
+is present you run neither command.
+
+The lease expires after 50 minutes on its own, so a run that dies
+mid-cycle costs the other runner at most one LIGHT tick. If you ever see
+`"reason": "unreachable"`, the lease failed open and the tip guard is
+the only protection for that tick; note it in the cycle log line.
+
+Mark the collision-guard ask actioned on your next deep-retro status
+pass. Zero operator asks should then be open.
