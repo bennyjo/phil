@@ -3052,6 +3052,35 @@ filed (proposals.md 2026-09-05) to amend the trigger to require ≥3
 independent events; quote the countable-metric line each deep-retro
 pass until it is answered.
 
+**2026-09-05 update (20:12Z resolve.py, LIGHT tick; 1 `outside-view-veto`
+forecast settled.** Guangzhou 35°C same-day exact-temp bracket
+(`eb95af0bfe24`, researched 08:22Z): own post-obs est 0.82 vs mid 0.9665
+(recorded `market_prob_at_record` 0.927), model's No-side belief (0.18)
+well above the market's implied No (~0.033) — outside-view-veto
+declined a bet either way (self-modeled in-progress trend, not
+fact-final). Settled Yes, so the declined No-side counterfactual trade
+lost.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Guangzhou 35°C same-day weather (eb95af0bfe24) | 0.82 / 0.9665 | No | +0.076 | Yes | −1.00 |
+
+Net this batch: **−1.00u** (0W/1L). **Totals now 106 realizable trades,
+47W/59L, net +9.59u.** Side split re-summed row-by-row: **Yes-side
+unchanged 5W/22L, −11.31u**; **No-side 42W/37L, +20.90u** (adds this
+batch's 0W/1L, −1.00u). Check: −11.31 + 20.90 = 9.59 ✓. Ruling: no
+boundary change at n=1 — same-day weather family now 1W/3L in this
+table's realizable arithmetic (Shanghai/Munich/Miami avoided losses,
+Guangzhou did not), consistent with the mechanical ledger's own
+same-day-weather subclass (1W/2L, −7.65u) staying net-negative; the
+veto's job here is avoiding correlated losses, not winning every row.
+Full grading in RETRO-20260905-2012. Mechanical ledger's
+outside-view-veto line as of this update
+(`core/counterfactual.py ledger --skip-reason outside-view-veto`): 107
+CF trades, 46W/61L, pnl +$77.17 ≙ +15.43u, brier_delta +0.0280, held-out
++$106.17 (was 106 trades, 46W/60L, +$82.17 ≙ +16.4u, held-out +$111.17
+before this row).
+
 ## Mechanical-econ carve-out (enacted DEEP-2026-08-28, first loosening of the outside-view veto)
 
 A candidate may bet a >0.10 disagreement with the market — which the
