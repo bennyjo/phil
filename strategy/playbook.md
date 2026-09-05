@@ -3810,8 +3810,39 @@ but unlike weather-Gaussian's maiden voyage the method matched the market
 rather than underperforming it, and its three at-market legs reproduced PM
 pricing within 0.01-0.03. Treat as market-level accuracy with no proven
 edge. Continue `unvalidated-method` forecasts on instances where the model
-diverges >= 0.04 from mid; re-grade at n>=6 settled before considering a
-bet. Tally direction-of-miss per instance (model-high vs model-low vs hit)
-to catch the known independent-Poisson bias (ignoring goal correlation
-tends to thin the tails): current tally — Lille/PSG model-LOW (actual
-total exceeded model lean), Bayern/Stuttgart HIT (leaned Over, Over hit).
+diverges >= 0.04 from mid; re-grade at n>=6 **independent matches** settled
+before considering a bet (see the 2026-09-05 correction below — legs, not
+matches, do not count separately). Tally direction-of-miss per instance
+(model-high vs model-low vs hit) to catch the known independent-Poisson
+bias (ignoring goal correlation tends to thin the tails): current tally —
+Lille/PSG model-LOW (actual total exceeded model lean), Bayern/Stuttgart
+HIT (leaned Over, Over hit).
+
+**GRADED 2026-09-05 18:14Z (RETRO-20260905-1814): third match, bar still
+NOT met — and the threshold's unit was wrong.** Nottingham Forest/
+Tottenham (2026-09-05) settled all five derivative legs the model was
+recorded on (O/U 1.5/2.5/3.5/4.5, BTTS), all `unvalidated-method`, in an
+extremely low-scoring match (Under won even at the 1.5 line). Every leg
+beat the market's Brier score (dBrier -0.129/-0.095/-0.052/-0.015/-0.109,
+avg -0.080) because one fitted scoreline model and one realized outcome
+mechanically make every derivative leg of the same match agree in
+direction. That is 5 correlated observations, not 5 independent ones —
+naively summing them with the two 2026-08-28 legs gives a tempting n=7
+total (avg dBrier -0.057, "favorable on net"), but that number is an
+artifact of counting legs instead of matches, and would let one lucky
+match trigger a real-money bet on an effective sample of 3. **The
+re-grade unit is hereby corrected to independent matches, not settled
+legs**: a multi-leg sweep on one match counts as one match toward n>=6,
+using its average leg dBrier as that match's data point. Running tally by
+match: Lille/PSG (1 leg, dBrier +0.113, unfavorable, model-LOW/wrong),
+Bayern/Stuttgart (1 leg, dBrier -0.111, favorable, model-HIGH/right),
+Forest/Spurs (5 legs, avg dBrier -0.080, favorable, model-LOW/right on
+every rung) — **n=3 independent matches, 2 favorable, net favorable**,
+still short of the n>=6 bar. Still forecast-only; no bet. Pattern worth
+watching, not yet actionable: both favorable matches were extreme-scoring
+games (one high, one very low) where the market's correlation-pricing and
+the model's independent-goals simplification diverge most; the one
+unfavorable match (Lille/PSG) was a closer game. If that holds as more
+matches settle, the method may end up selectively useful on
+extreme-divergence instances rather than uniformly — which the existing
+>= 0.04-divergence recording filter already partially selects for.
