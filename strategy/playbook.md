@@ -2942,6 +2942,30 @@ designed, zero capital risked on any of the five. Full grading and the
 new estimation-method fix (quote the exact bid/ask about to be recorded,
 inside the rationale) in RETRO-20260904-2215.
 
+**2026-09-05 update (00:12Z resolve.py, RETRO-20260905-0016; three
+outside-view-veto rows settled, all No-side, all LOST as counterfactual
+trades — three more losses avoided.** GPT-6-by-Sep15 (`44a62d640ae1`, the
+live re-check that supersedes `846f0e23a43a` — only the live row enters,
+per the revised-away convention score.py already applies) and Astra
+on-Sep4 (`17db5ec8f494`) both trace the same rumor/phased-rollout shape
+already dominant in this table; Munich 30C (`355715e4ce82`) is a same-day
+weather-Gaussian row, sibling of the Shanghai 31C loss two updates above.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| GPT-6 by-Sep15 (44a62d640ae1) | 0.46 / 0.87 | No | +0.40 | Yes | −1.00 |
+| Astra on-Sep4 (17db5ec8f494) | 0.92 / 0.852 | No | +0.067 | Yes | −1.00 |
+| Munich 30C weather (355715e4ce82) | 0.28 / 0.565 | No | +0.28 | Yes | −1.00 |
+
+Net this batch: **−3.00u** (0W/3L). **Totals now 102 realizable trades,
+46W/56L, net +12.29u.** Side split re-summed row-by-row: **Yes-side
+unchanged 4W/21L, −10.61u**; **No-side 42W/35L, +22.90u** (adds this
+batch's 0W/3L, −3.00u). Check: −10.61 + 22.90 = 12.29 ✓. Ruling: no
+boundary change at this n — GPT-6/Astra extend the already-dominant
+rumor/phased-rollout No-side pattern, Munich extends the same-day
+weather-Gaussian family (now 2 of its last 2 settlements as avoided
+No-side losses); full grading in RETRO-20260905-0016.
+
 ## Mechanical-econ carve-out (enacted DEEP-2026-08-28, first loosening of the outside-view veto)
 
 A candidate may bet a >0.10 disagreement with the market — which the
