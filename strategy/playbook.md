@@ -3003,6 +3003,42 @@ verdict: the positive CF P&L is one family (Astra snapshots, +34u of
 the total; without it the vetoed trades lose), the vetoed beliefs are
 worse-calibrated than the market (+0.028), the veto stays.
 
+**2026-09-05 update (14:12Z resolve.py, LIGHT tick; two `wide-spread-veto`
+forecasts settled — first wide-spread-veto batch to enter this table
+since the Aug14 correction.** Both rows are the same LCK UBF Gen.G vs
+Hanwha Life Esports Bo5 (decided 3-1, 4 games total), researched and
+vetoed together at 2026-09-02T12:46:38Z. Both legs' directional read was
+correct (Over on O/U3.5, Under on O/U4.5), but the mechanical fill
+arithmetic uses each row's own recorded `best_ask_at_record` (0.77 and
+0.39 respectively), not the book snapshot quoted in the O/U3.5 note
+(ask 0.39, implying an apparent +0.26 edge) — the two don't match, a
+one-off timing/recording gap between the manual spread-check and
+forecast.py's own capture, not yet a pattern (n=1, watch for recurrence
+before proposing anything).
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| GenG-HLE O/U3.5 (bf608b923988) | 0.65 / 0.40 | Yes | −0.120 | Yes | +0.30 |
+| GenG-HLE O/U4.5 (5b76118ad958) | 0.716 / 0.79 | No | −0.106 | Yes | −1.00 |
+
+Net this batch: **−0.70u** (1W/1L). **Totals now 105 realizable trades,
+47W/58L, net +10.59u.** Side split re-summed row-by-row: **Yes-side
+5W/22L, −11.31u** (adds this batch's 1W/0L, +0.30u); **No-side 42W/36L,
++21.90u** (adds this batch's 0W/1L, −1.00u). Check: −11.31 + 21.90 =
+10.59 ✓. Both legs' realizable edge is negative against the recorded ask
+despite the directional read being right on both — the wide-spread
+veto's arithmetic justification (crossing the spread erases the apparent
+edge) holds even on a batch where the underlying model call was correct.
+Ruling: no boundary change at n=2, consistent with the Aug14 correction's
+"get the arithmetic right, not a narrative verdict" instruction. Full
+grading in RETRO-20260905-1412. Mechanical ledger's wide-spread-veto line
+as of this update (`core/counterfactual.py ledger --skip-reason
+wide-spread-veto`): 4 settled declined forecasts, 3 fillable CF trades,
+1 refused, 2W/1L, pnl −$2.82 (staked $15.00), brier_delta −0.0553,
+held-out −$2.83. The outside-view-veto line is unchanged this update:
+106 CF trades, 46W/60L, +$82.17 ≙ +16.4u, brier_delta +0.0280, held-out
++$111.17.
+
 **Countable-metric trigger status (DEEP-2026-09-05): fired on the
 letter, held shut.** The operator's pre-registered narrowing trigger
 (5 settled countable-metric rows, negative brier_delta, positive pnl on
