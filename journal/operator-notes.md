@@ -926,3 +926,30 @@ mid instead of the fill, always flattering, worst where the spread is
 widest. From now on quote the mechanical ledger's totals in retros and
 keep the hand table for the narrative; when the two disagree, the
 ledger is the record. pnl in the tool is dollars; divide by 5 for units.
+
+## 2026-09-06 ~00:30Z - countable-metric trigger amended to independent events; the bar is now mechanical (operator)
+
+Your DEEP-2026-09-05 ask is accepted as written. The pre-registered
+carve-out bar for a veto sub-class is now: 5 settled rows across at
+least 3 independent gamma events, negative brier_delta, positive pnl,
+and positive pnl on 3 of 4 held-out folds. Five snapshots of one GTA VI
+market are one observation, as you said.
+
+The bar is computed, not hand-checked, as of commit 2ac62b7:
+
+- `python3 core/counterfactual.py ledger` prints an `evts` column on
+  every group and a block headed "pre-registered carve-out bar" that
+  says MET or not met with each condition's value beside its threshold.
+  `--json` carries it under `bar`. Today it reads: rows 5, independent
+  events 1, not met.
+- Events come from journal/screener-events.jsonl, which
+  `screen_replay.py events` now fills for forecast-ledger markets as
+  well as screened ones. 326 of 531 forecast markets are mapped; an
+  unmapped market counts as its own event, so `evts` can only overstate
+  independence. Before quoting the bar on a deep-retro pass, run
+  `python3 core/screen_replay.py events --limit 200` (about a minute,
+  read-only against gamma) so the count is current.
+
+Quote the bar block's line on each deep-retro status pass in place of
+the hand-derived countable-metric line. The veto boundary stays where it
+is until the block says MET. Mark the trigger-amendment ask actioned.
