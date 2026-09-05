@@ -1645,9 +1645,9 @@ and `ledger.jsonl` are core-written; hand-merging them is forbidden.
    `journal/screener.jsonl`, `journal/mech-requests.jsonl`) so an
    interleaved push only ever conflicts on files that carry state.
 
-**Status:** OPEN operator ask. Until reconciled, every operator-machine
-cycle's work (including RETRO-20260904-0340's counterfactual-table
-extension and four forecast rows) exists only locally.
+**Status:** ACTIONED (operator, 2026-09-04 ~06:20Z note: histories
+merged in 0339210, both runners' rows kept, quota re-summed). Closed by
+DEEP-2026-09-05.
 
 ## 2026-09-04 — deep-retro status pass
 
@@ -1668,7 +1668,11 @@ bounded cost (the $10/event protected cap held here by exactly $0) and
 fix only the quota race, which unlike the ledger has no conflict
 detection at all. Recommend at minimum half (2): the quota race is
 silent and cumulative; the ledger race at least fails loudly at push.
-Status: OPEN — operator ask.
+Status: ACTIONED IN PART (operator, 5987081/06b4349, 2026-09-04: quota
+split per runner kills the silent counter race; union merge for
+append-only journals). The full-cycle lease half stays OPEN — operator
+ask (needs the cloud trigger prompt as well as loop.sh, per the
+2026-09-04 ~07:20Z note). Marked by DEEP-2026-09-05.
 
 **NEW operator ask — cure the d9158ee boundary breach.** Commit
 d9158ee (`cycle:` prefix) carries core/screen_rank.py,
@@ -1681,7 +1685,10 @@ re-attributed. Only the operator can cure this (re-commit under
 loop.sh's revert logic prescribes); no agent-side fix is legal. The
 agent-side halves are done: files audited (screener-filters.json is
 dormant, nothing live reads it), nothing reverted, provenance
-documented. Status: OPEN — operator ask.
+documented. Status: ACTIONED (operator, 2026-09-04 ~06:20Z note:
+d9158ee blessed as-is, guard checks each pushed range so CI is green;
+root cause — gnhf in the live checkout — fixed by separate worktrees).
+Closed by DEEP-2026-09-05.
 
 **Tracked conditions (one-liners, per standing instructions):**
 - Blend: blend[disagreement] n=122, w_opt=0.837, delta −0.0012 — bar
@@ -1734,8 +1741,9 @@ as prepare already does). Reproduce with any complete work dir:
 after the marker check only on a fresh dir — a unit-level call of the
 summary block is enough).
 
-**Status:** OPEN — operator ask. Agent-side handling: proceeded on the
-printed rows, recorded the exit code in the funnel line and cycle log.
+**Status:** ACTIONED (operator, e941cd8, 2026-09-04 ~22:15Z note;
+confirmed clean by the 2026-09-05 04:20Z cycle's collect). Closed by
+DEEP-2026-09-05.
 
 ---
 
@@ -1783,5 +1791,64 @@ resolve/freeze tonight as `endDate` implies, or keep trading past it (in
 which case `endDate` is simply unreliable for this series and future
 research should read the description's stated deadline, not the field).
 
-**Status:** OPEN — informational, no urgent action; will note here
-again if these legs resolve tonight against their titles.
+**Status:** ENDORSED as informational and CLOSED AS MOOT
+(DEEP-2026-09-05) — the whole family resolved Yes on the actual Sep-4
+Astra release (RETRO-20260904-2215) before the endDate ambiguity could
+bite, so whether `endDate` was load-bearing was never tested. Standing
+lesson kept: for per-day-created release series, `endDate` is
+unreliable — read the description's stated (ET) deadline.
+
+## 2026-09-05 — deep-retro status pass
+
+Audit window 2026-09-04 04:30Z → 2026-09-05 04:30Z. Full analysis in
+journal/retros/DEEP-2026-09-05.md.
+
+Statuses set this pass: histories-diverged ask ACTIONED (operator merge
+0339210); collision-guard ACTIONED IN PART (quota split + union merge;
+lease half stays OPEN); d9158ee boundary cure ACTIONED (blessed as-is);
+screen.py collect crash ACTIONED (e941cd8); Astra endDate quirk
+ENDORSED-informational, CLOSED AS MOOT (family resolved Yes on the real
+release first; lesson kept — read the description deadline, not
+`endDate`, on per-day-created release series).
+
+**NEW operator ask — amend the countable-metric veto-narrowing trigger
+to require independent events.** The pre-registered trigger (operator
+note 2026-09-04 ~23:20Z: "countable-metric reaches 5 settled rows with
+negative brier_delta and positive pnl on three of four held-out folds")
+is now numerically met. `python3 core/counterfactual.py ledger --json`:
+countable-metric n=5, 4W/1L, pnl +$61.68, brier_delta −0.1367,
+fold_pnl [+6.90, +33.46, +5.00, +21.32, −5.00] → 3 of 4 held-out folds
+positive. But all five rows are snapshots of ONE event — the GTA VI
+Extended Look view-count family (`b5c5c134d7cb`, `b3fbd3c3eef7`,
+`944d8e5fc4d0`, `e398cebab2e6` on the <20M market, `e441fa8f0f8a` on
+the 20–22M sibling) — the same one-family/held-out artifact the same
+operator note flagged on the Astra +34u cluster. A held-out-fold split
+cannot see that snapshots of one event are one observation.
+DEEP-2026-09-05 therefore did NOT open the carve-out. Proposed
+replacement bar, mechanical: 5 settled countable-metric rows across
+**≥3 independent events** (distinct gamma events, the clustering
+screen_replay.py already uses), negative brier_delta, positive pnl on
+3 of 4 held-out folds. The trigger is operator-registered, so amending
+it is an operator act; until answered, each deep-retro pass quotes the
+countable-metric line and holds the veto boundary unchanged.
+Status: OPEN — operator ask.
+
+**Tracked conditions (one-liners, per standing instructions):**
+- Blend: blend[disagreement] n=144, w_opt=0.859, delta −0.0009 — bar
+  (≤0.80 at n≥150, delta ≥0.002, sustained ×2) not met; still
+  converging toward the market (0.837@122 → 0.859@144).
+- Screener replay: 18,047 rows scored; live rev f7ddad12 excess
+  +0.0033, exc_z +2.1 — unchanged; screener-prompt.md frozen.
+- gnhf policy v3 forward test: 78 forward rows, 9 bets, cw_return
+  −0.3315, pnl −$5.42, brier_delta +0.0219 — under the ≥15-bet bar,
+  insufficient data, hands off (direction flipped negative vs
+  yesterday's 3-bet +$2.71; noted, not acted on).
+- Counterfactual ledger (the record, per 2026-09-04 ~23:20Z note):
+  outside-view-veto 105 CF trades, 46W/59L, +$87.17, brier_delta
+  +0.0282, held-out +$116.17 — veto stays, per the operator's own
+  gnhf-run-4 verdict.
+
+Open operator asks after this pass: **2** (collision-guard lease;
+countable-metric trigger amendment).
+
+**Status:** informational + one new operator ask above.

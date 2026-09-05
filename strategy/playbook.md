@@ -2966,6 +2966,33 @@ rumor/phased-rollout No-side pattern, Munich extends the same-day
 weather-Gaussian family (now 2 of its last 2 settlements as avoided
 No-side losses); full grading in RETRO-20260905-0016.
 
+**Accounting convention (DEEP-2026-09-05, per operator note 2026-09-04
+~23:20Z): `python3 core/counterfactual.py ledger` is the record; this
+hand table is the narrative.** Every future retro that extends this
+table also quotes the mechanical ledger's outside-view-veto line
+(currently: 105 CF trades, 46W/59L, +$87.17 ≙ +17.4u, brier_delta
++0.0282, held-out +$116.17). The hand table reads +12.29u on 102 trades
+because 8 of its rows are trades the protected caps would refuse
+(entries ≥0.96 or no bid at record) and some older rows grade edge
+against the mid instead of the fill; when the two disagree, the
+mechanical ledger wins. Interpretation stays the operator's gnhf-run-4
+verdict: the positive CF P&L is one family (Astra snapshots, +34u of
+the total; without it the vetoed trades lose), the vetoed beliefs are
+worse-calibrated than the market (+0.028), the veto stays.
+
+**Countable-metric trigger status (DEEP-2026-09-05): fired on the
+letter, held shut.** The operator's pre-registered narrowing trigger
+(5 settled countable-metric rows, negative brier_delta, positive pnl on
+3 of 4 held-out folds) is numerically met (n=5, 4W/1L, +$61.68, dBrier
+−0.1367, folds [+6.90, +33.46, +5.00, +21.32, −5.00]) — but all five
+rows are snapshots of ONE event (the GTA VI Extended Look view-count
+family: `b5c5c134d7cb`, `b3fbd3c3eef7`, `944d8e5fc4d0`, `e398cebab2e6`,
+`e441fa8f0f8a`), the same one-family/held-out artifact the operator
+flagged on Astra. No carve-out opens on a single event. Operator ask
+filed (proposals.md 2026-09-05) to amend the trigger to require ≥3
+independent events; quote the countable-metric line each deep-retro
+pass until it is answered.
+
 ## Mechanical-econ carve-out (enacted DEEP-2026-08-28, first loosening of the outside-view veto)
 
 A candidate may bet a >0.10 disagreement with the market — which the
