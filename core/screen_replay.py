@@ -525,6 +525,11 @@ def window_key(lo, hours):
     return f"{screen.iso(lo)}/{hours}h"
 
 
+def replay_forecasts_path():
+    """journal/forecasts.jsonl, by the same path core/replay.py reads."""
+    return ROOT / "journal" / "forecasts.jsonl"
+
+
 def record_events(events, state):
     """Write a mapping row for every TARGET market in `events`."""
     for e in events:
@@ -618,6 +623,18 @@ def cmd_events(args):
     rows = load_screener_rows()
     targets = {str(r.get("market_id")) for r in rows
                if r.get("market_id") is not None}
+    # The forecast ledger's markets are targets too (operator, 2026-09-06):
+    # core/counterfactual.py clusters its sub-class bar on the gamma event,
+    # and a researched market need not have been screened. Their end dates
+    # come from the forecast row itself, since the outcome cache only holds
+    # screened markets.
+    forecast_end = {}
+    for r in resolve.load_jsonl(replay_forecasts_path()):
+        mid = r.get("market_id")
+        if mid is not None:
+            targets.add(str(mid))
+            if r.get("end_date"):
+                forecast_end.setdefault(str(mid), r["end_date"])
     outcomes = load_outcome_cache()
     mapped, swept = load_event_cache()
     hours = args.window
@@ -626,7 +643,7 @@ def cmd_events(args):
 
     spans, unplaceable = {}, 0
     for mid in sorted(targets - set(mapped)):
-        end = (outcomes.get(mid) or {}).get("end_date")
+        end = (outcomes.get(mid) or {}).get("end_date") or forecast_end.get(mid)
         try:
             ts = _parse_ts(end)
         except (AttributeError, TypeError, ValueError):
@@ -657,7 +674,8 @@ def cmd_events(args):
 
     after, _ = load_event_cache()
     covered = len(targets & set(after))
-    print(f"events: {len(targets)} distinct markets in the screener log; "
+    print(f"events: {len(targets)} distinct markets in the screener log and "
+          f"forecast ledger; "
           f"{len(spans)} end-date spans hold an unmapped one, {len(pending)} "
           f"not yet swept, {done} swept this run")
     print(f"  this run: {state['requests']} requests "

@@ -80,12 +80,22 @@ import re
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-import replay  # noqa: E402  (protected sibling: fill model, caps, parsing)
+import replay
+import screen_replay  # noqa: E402  (protected sibling: fill model, caps, parsing)
 
 ROOT = replay.ROOT
 PLAYBOOK = ROOT / "strategy" / "playbook.md"
 RETRO_DIR = ROOT / "journal" / "retros"
 STAKE_USD = 5.0
+# market -> gamma event, from the cache core/screen_replay.py events fills.
+# Snapshots of one event are one observation; `evts` counts them once.
+EVENT_OF, _ = screen_replay.load_event_cache()
+
+# The pre-registered carve-out bar for a veto sub-class (operator notes
+# 2026-09-04 ~23:20Z, amended 2026-09-06 to require independent events after
+# five GTA VI snapshots met the row count on one event).
+BAR = {"subclass": "countable-metric", "min_rows": 5, "min_events": 3,
+       "min_positive_held_out_folds": 3}
 HAND_STAKE_U = 1.0
 
 # Sub-classes the playbook names, most specific first: a row gets the first
@@ -199,6 +209,8 @@ def build():
         won = 1 if r["status"] == "won" else 0
         row = {
             "id": r["id"], "ts": r["ts"], "category": r.get("category"),
+            "market_id": str(r.get("market_id")),
+            "event": screen_replay.cluster_of(str(r.get("market_id")), EVENT_OF),
             "skip_reason": r.get("skip_reason"), "question": r["question"],
             "note": r.get("note"), "est_prob": r["est_prob"],
             "market_prob": mkt, "token": r.get("outcome"), "won": won,
@@ -252,6 +264,7 @@ def stats(rows, folds):
         brier = round(ba - bm, 4)
     return {
         "n_rows": len(rows), "n_trades": len(traded),
+        "n_events": len({r["event"] for r in rows}),
         "n_refused": len(rows) - len(traded),
         "wins": sum(1 for r in traded if r["bet_won"]),
         "losses": sum(1 for r in traded if not r["bet_won"]),
@@ -272,6 +285,22 @@ def group_by(rows, key, folds):
     return out
 
 
+def bar_report(rep):
+    """Is the pre-registered sub-class carve-out bar met? Mechanical, no judgment."""
+    s = next((g for g in rep["groups"]["subclass"] if g["group"] == BAR["subclass"]), None)
+    if s is None:
+        return {"bar": BAR, "met": False, "n_rows": 0, "n_events": 0,
+                "positive_held_out_folds": 0, "brier_delta": None, "pnl": 0.0}
+    held = [x for x in s["fold_pnl"][1:] if x is not None]
+    pos = sum(1 for x in held if x > 0)
+    met = (s["n_rows"] >= BAR["min_rows"] and s["n_events"] >= BAR["min_events"]
+           and s["brier_delta"] is not None and s["brier_delta"] < 0
+           and s["pnl"] > 0 and pos >= BAR["min_positive_held_out_folds"])
+    return {"bar": BAR, "met": met, "n_rows": s["n_rows"], "n_events": s["n_events"],
+            "positive_held_out_folds": pos, "held_out_folds": len(held),
+            "brier_delta": s["brier_delta"], "pnl": s["pnl"]}
+
+
 def ledger_report(rows, folds):
     groups = {
         "skip_reason": group_by(rows, lambda r: r["skip_reason"] or "(none)", folds),
@@ -280,7 +309,7 @@ def ledger_report(rows, folds):
         "category": group_by(rows, lambda r: r["category"] or "(none)", folds),
         "subclass": group_by(rows, lambda r: r["subclass"] or UNLABELLED, folds),
     }
-    return {
+    rep = {
         "stake_usd": STAKE_USD, "folds": folds,
         "overall": stats(rows, folds),
         "superseded_rows": sum(1 for r in rows if r["superseded"]),
@@ -292,6 +321,8 @@ def ledger_report(rows, folds):
                      for r in rows if r["refused"]],
         "rows": rows,
     }
+    rep["bar"] = bar_report(rep)
+    return rep
 
 
 def _fold_cols(s, folds):
@@ -310,7 +341,7 @@ def print_ledger(rep, folds, show_rows):
     print(f"  overall: {o['wins']}W/{o['losses']}L  pnl {o['pnl']:+.2f}  "
           f"staked {o['staked']:.2f}  brier_delta {o['brier_delta']:+.4f} over {o['n_brier']} rows")
     print()
-    head = (f"{'group':<26} {'rows':>4} {'trd':>4} {'W':>3} {'L':>3} {'pnl':>9} "
+    head = (f"{'group':<26} {'rows':>4} {'evts':>4} {'trd':>4} {'W':>3} {'L':>3} {'pnl':>9} "
             f"{'dBrier':>8} | walk-forward pnl by fold (f0 = replay.py train-only) "
             f"| {'held-out':>9}")
     for name, entries in rep["groups"].items():
@@ -318,10 +349,22 @@ def print_ledger(rep, folds, show_rows):
         print(head)
         for s in entries:
             bd = "       -" if s["brier_delta"] is None else f"{s['brier_delta']:>+8.4f}"
-            print(f"{s['group'][:26]:<26} {s['n_rows']:>4} {s['n_trades']:>4} "
+            print(f"{s['group'][:26]:<26} {s['n_rows']:>4} {s['n_events']:>4} {s['n_trades']:>4} "
                   f"{s['wins']:>3} {s['losses']:>3} {s['pnl']:>+9.2f} {bd} | "
                   f"{_fold_cols(s, folds)} | {s['held_out_pnl']:>+9.2f}")
         print()
+    b = rep["bar"]
+    print(f"-- pre-registered carve-out bar for {b['bar']['subclass']}: "
+          f"{'MET' if b['met'] else 'not met'}")
+    print(f"   rows {b['n_rows']} (need {b['bar']['min_rows']}), independent events "
+          f"{b['n_events']} (need {b['bar']['min_events']}), brier_delta "
+          f"{b['brier_delta']} (need < 0), pnl {b['pnl']:+.2f} (need > 0), positive "
+          f"held-out folds {b['positive_held_out_folds']} of {b.get('held_out_folds', 0)} "
+          f"(need {b['bar']['min_positive_held_out_folds']})")
+    print("   evts counts gamma events via journal/screener-events.jsonl; an unmapped "
+          "market counts as its own event, so evts is an upper bound until "
+          "`screen_replay.py events` has mapped it")
+    print()
     unl = next((s for s in rep["groups"]["subclass"] if s["group"] == UNLABELLED), None)
     if unl:
         print(f"no sub-class label could be attached to {unl['n_rows']} of "

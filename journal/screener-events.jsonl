@@ -9256,3 +9256,202 @@
 {"window": "2026-09-15T18:00:00Z/6h", "swept_ts": "2026-09-03T03:05:01Z"}
 {"window": "2026-09-16T00:00:00Z/6h", "swept_ts": "2026-09-03T03:05:02Z"}
 {"window": "2026-09-16T00:00:00Z/6h", "swept_ts": "2026-09-03T03:05:02Z"}
+{"market_id": "3128308", "event_id": "756277", "event_slug": "lec-caz-nyc-2026-08-09", "checked_ts": "2026-09-05T23:18:25Z"}
+{"market_id": "3128310", "event_id": "756277", "event_slug": "lec-caz-nyc-2026-08-09", "checked_ts": "2026-09-05T23:18:25Z"}
+{"market_id": "3128312", "event_id": "756277", "event_slug": "lec-caz-nyc-2026-08-09", "checked_ts": "2026-09-05T23:18:25Z"}
+{"market_id": "3128318", "event_id": "756278", "event_slug": "lec-phi-nec-2026-08-09", "checked_ts": "2026-09-05T23:18:25Z"}
+{"market_id": "3128320", "event_id": "756278", "event_slug": "lec-phi-nec-2026-08-09", "checked_ts": "2026-09-05T23:18:25Z"}
+{"market_id": "3128322", "event_id": "756278", "event_slug": "lec-phi-nec-2026-08-09", "checked_ts": "2026-09-05T23:18:25Z"}
+{"market_id": "3128335", "event_id": "756280", "event_slug": "lec-chi-san-2026-08-09", "checked_ts": "2026-09-05T23:18:25Z"}
+{"market_id": "3128336", "event_id": "756280", "event_slug": "lec-chi-san-2026-08-09", "checked_ts": "2026-09-05T23:18:25Z"}
+{"market_id": "3128337", "event_id": "756280", "event_slug": "lec-chi-san-2026-08-09", "checked_ts": "2026-09-05T23:18:25Z"}
+{"market_id": "3134069", "event_id": "757468", "event_slug": "wnba-gsv-la-2026-08-09", "checked_ts": "2026-09-05T23:18:25Z"}
+{"market_id": "3422873", "event_id": "757468", "event_slug": "wnba-gsv-la-2026-08-09", "checked_ts": "2026-09-05T23:18:25Z"}
+{"market_id": "3177005", "event_id": "764239", "event_slug": "bra-fla-vit-2026-08-09", "checked_ts": "2026-09-05T23:18:25Z"}
+{"market_id": "3177008", "event_id": "764239", "event_slug": "bra-fla-vit-2026-08-09", "checked_ts": "2026-09-05T23:18:25Z"}
+{"market_id": "3177013", "event_id": "764239", "event_slug": "bra-fla-vit-2026-08-09", "checked_ts": "2026-09-05T23:18:25Z"}
+{"market_id": "3314295", "event_id": "791845", "event_slug": "arg-aaj-rac-2026-08-09", "checked_ts": "2026-09-05T23:18:25Z"}
+{"market_id": "3314296", "event_id": "791845", "event_slug": "arg-aaj-rac-2026-08-09", "checked_ts": "2026-09-05T23:18:25Z"}
+{"market_id": "3314297", "event_id": "791845", "event_slug": "arg-aaj-rac-2026-08-09", "checked_ts": "2026-09-05T23:18:25Z"}
+{"window": "2026-08-09T18:00:00Z/6h", "swept_ts": "2026-09-05T23:18:25Z"}
+{"market_id": "3128338", "event_id": "756281", "event_slug": "lec-aus-pue-2026-08-09", "checked_ts": "2026-09-05T23:18:35Z"}
+{"market_id": "3128339", "event_id": "756281", "event_slug": "lec-aus-pue-2026-08-09", "checked_ts": "2026-09-05T23:18:35Z"}
+{"market_id": "3128340", "event_id": "756281", "event_slug": "lec-aus-pue-2026-08-09", "checked_ts": "2026-09-05T23:18:35Z"}
+{"market_id": "3128341", "event_id": "756282", "event_slug": "lec-sdg-tij-2026-08-09", "checked_ts": "2026-09-05T23:18:35Z"}
+{"market_id": "3128342", "event_id": "756282", "event_slug": "lec-sdg-tij-2026-08-09", "checked_ts": "2026-09-05T23:18:35Z"}
+{"market_id": "3128343", "event_id": "756282", "event_slug": "lec-sdg-tij-2026-08-09", "checked_ts": "2026-09-05T23:18:35Z"}
+{"market_id": "3128344", "event_id": "756283", "event_slug": "lec-ame-por-2026-08-09", "checked_ts": "2026-09-05T23:18:35Z"}
+{"market_id": "3128345", "event_id": "756283", "event_slug": "lec-ame-por-2026-08-09", "checked_ts": "2026-09-05T23:18:35Z"}
+{"market_id": "3128346", "event_id": "756283", "event_slug": "lec-ame-por-2026-08-09", "checked_ts": "2026-09-05T23:18:35Z"}
+{"market_id": "3324752", "event_id": "794106", "event_slug": "lol-fly-tl2-2026-08-09", "checked_ts": "2026-09-05T23:18:35Z"}
+{"window": "2026-08-10T00:00:00Z/6h", "swept_ts": "2026-09-05T23:18:35Z"}
+{"market_id": "3303560", "event_id": "790806", "event_slug": "ethereum-above-on-august-10-2026", "checked_ts": "2026-09-05T23:18:48Z"}
+{"market_id": "3303585", "event_id": "790807", "event_slug": "bitcoin-price-on-august-10-2026", "checked_ts": "2026-09-05T23:18:48Z"}
+{"window": "2026-08-10T12:00:00Z/6h", "swept_ts": "2026-09-05T23:18:48Z"}
+{"market_id": "799419", "event_id": "95905", "event_slug": "minnesota-democratic-senate-primary-winner", "checked_ts": "2026-09-05T23:19:00Z"}
+{"market_id": "799420", "event_id": "95905", "event_slug": "minnesota-democratic-senate-primary-winner", "checked_ts": "2026-09-05T23:19:00Z"}
+{"market_id": "3133940", "event_id": "757403", "event_slug": "qubt-quarterly-earnings-gaap-eps-08-10-2026-neg0pt04", "checked_ts": "2026-09-05T23:19:00Z"}
+{"market_id": "3133941", "event_id": "757404", "event_slug": "plby-quarterly-earnings-gaap-eps-08-10-2026-0", "checked_ts": "2026-09-05T23:19:00Z"}
+{"market_id": "3133944", "event_id": "757407", "event_slug": "hims-quarterly-earnings-gaap-eps-08-10-2026-neg0pt05", "checked_ts": "2026-09-05T23:19:00Z"}
+{"market_id": "3145767", "event_id": "759331", "event_slug": "wnba-tor-atl-2026-08-10", "checked_ts": "2026-09-05T23:19:00Z"}
+{"market_id": "3436290", "event_id": "759331", "event_slug": "wnba-tor-atl-2026-08-10", "checked_ts": "2026-09-05T23:19:00Z"}
+{"market_id": "3472400", "event_id": "759331", "event_slug": "wnba-tor-atl-2026-08-10", "checked_ts": "2026-09-05T23:19:00Z"}
+{"market_id": "3398223", "event_id": "810518", "event_slug": "spx-up-or-down-on-august-10-2026", "checked_ts": "2026-09-05T23:19:00Z"}
+{"market_id": "3398316", "event_id": "810563", "event_slug": "spy-up-or-down-on-august-10-2026", "checked_ts": "2026-09-05T23:19:00Z"}
+{"window": "2026-08-10T18:00:00Z/6h", "swept_ts": "2026-09-05T23:19:00Z"}
+{"market_id": "3145792", "event_id": "759342", "event_slug": "wnba-chi-sea-2026-08-10", "checked_ts": "2026-09-05T23:19:10Z"}
+{"market_id": "3436284", "event_id": "759342", "event_slug": "wnba-chi-sea-2026-08-10", "checked_ts": "2026-09-05T23:19:10Z"}
+{"window": "2026-08-11T00:00:00Z/6h", "swept_ts": "2026-09-05T23:19:10Z"}
+{"market_id": "3253644", "event_id": "779806", "event_slug": "khamenei-of-tweets-august-4-august-11-2026", "checked_ts": "2026-09-05T23:19:23Z"}
+{"market_id": "3253754", "event_id": "779814", "event_slug": "elon-musk-of-tweets-august-4-august-11", "checked_ts": "2026-09-05T23:19:23Z"}
+{"market_id": "3253759", "event_id": "779814", "event_slug": "elon-musk-of-tweets-august-4-august-11", "checked_ts": "2026-09-05T23:19:23Z"}
+{"window": "2026-08-11T12:00:00Z/6h", "swept_ts": "2026-09-05T23:19:23Z"}
+{"market_id": "3045817", "event_id": "735521", "event_slug": "south-carolina-senate-special-republican-primary-first-round-winner-20260721172033648", "checked_ts": "2026-09-05T23:19:37Z"}
+{"market_id": "3045818", "event_id": "735521", "event_slug": "south-carolina-senate-special-republican-primary-first-round-winner-20260721172033648", "checked_ts": "2026-09-05T23:19:37Z"}
+{"market_id": "3045820", "event_id": "735521", "event_slug": "south-carolina-senate-special-republican-primary-first-round-winner-20260721172033648", "checked_ts": "2026-09-05T23:19:37Z"}
+{"market_id": "3194984", "event_id": "766099", "event_slug": "wisconsin-governor-democratic-primary-margin-of-victory-20260727211906203", "checked_ts": "2026-09-05T23:19:37Z"}
+{"market_id": "3194985", "event_id": "766099", "event_slug": "wisconsin-governor-democratic-primary-margin-of-victory-20260727211906203", "checked_ts": "2026-09-05T23:19:37Z"}
+{"market_id": "3194986", "event_id": "766099", "event_slug": "wisconsin-governor-democratic-primary-margin-of-victory-20260727211906203", "checked_ts": "2026-09-05T23:19:37Z"}
+{"market_id": "3194987", "event_id": "766099", "event_slug": "wisconsin-governor-democratic-primary-margin-of-victory-20260727211906203", "checked_ts": "2026-09-05T23:19:37Z"}
+{"market_id": "3194988", "event_id": "766099", "event_slug": "wisconsin-governor-democratic-primary-margin-of-victory-20260727211906203", "checked_ts": "2026-09-05T23:19:37Z"}
+{"market_id": "3194989", "event_id": "766099", "event_slug": "wisconsin-governor-democratic-primary-margin-of-victory-20260727211906203", "checked_ts": "2026-09-05T23:19:37Z"}
+{"market_id": "3194990", "event_id": "766099", "event_slug": "wisconsin-governor-democratic-primary-margin-of-victory-20260727211906203", "checked_ts": "2026-09-05T23:19:37Z"}
+{"market_id": "3194991", "event_id": "766099", "event_slug": "wisconsin-governor-democratic-primary-margin-of-victory-20260727211906203", "checked_ts": "2026-09-05T23:19:37Z"}
+{"market_id": "3214337", "event_id": "770293", "event_slug": "pxlw-quarterly-earnings-nongaap-eps-08-11-2026-neg0pt2", "checked_ts": "2026-09-05T23:19:37Z"}
+{"window": "2026-08-11T18:00:00Z/6h", "swept_ts": "2026-09-05T23:19:37Z"}
+{"market_id": "2810504", "event_id": "670689", "event_slug": "core-cpi-mom-july-2026-20260705181328287", "checked_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "2810505", "event_id": "670689", "event_slug": "core-cpi-mom-july-2026-20260705181328287", "checked_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "2810506", "event_id": "670689", "event_slug": "core-cpi-mom-july-2026-20260705181328287", "checked_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "2810507", "event_id": "670689", "event_slug": "core-cpi-mom-july-2026-20260705181328287", "checked_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "2810508", "event_id": "670689", "event_slug": "core-cpi-mom-july-2026-20260705181328287", "checked_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "2925073", "event_id": "703573", "event_slug": "july-inflation-us-annual-20260714150613267", "checked_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "2925074", "event_id": "703573", "event_slug": "july-inflation-us-annual-20260714150613267", "checked_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "2925075", "event_id": "703573", "event_slug": "july-inflation-us-annual-20260714150613267", "checked_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "2925076", "event_id": "703573", "event_slug": "july-inflation-us-annual-20260714150613267", "checked_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "2925104", "event_id": "703588", "event_slug": "july-inflation-us-monthly-20260714151042665", "checked_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "2925105", "event_id": "703588", "event_slug": "july-inflation-us-monthly-20260714151042665", "checked_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "2925106", "event_id": "703588", "event_slug": "july-inflation-us-monthly-20260714151042665", "checked_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "2925163", "event_id": "703599", "event_slug": "core-cpi-yoy-july-2026-20260714151811920", "checked_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "2925164", "event_id": "703599", "event_slug": "core-cpi-yoy-july-2026-20260714151811920", "checked_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "2925165", "event_id": "703599", "event_slug": "core-cpi-yoy-july-2026-20260714151811920", "checked_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "2925166", "event_id": "703599", "event_slug": "core-cpi-yoy-july-2026-20260714151811920", "checked_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "2925169", "event_id": "703599", "event_slug": "core-cpi-yoy-july-2026-20260714151811920", "checked_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "3196339", "event_id": "766520", "event_slug": "wnba-wsh-las-2026-08-11", "checked_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "3196350", "event_id": "766527", "event_slug": "wnba-phx-la-2026-08-11", "checked_ts": "2026-09-05T23:19:47Z"}
+{"window": "2026-08-12T00:00:00Z/6h", "swept_ts": "2026-09-05T23:19:47Z"}
+{"market_id": "3419337", "event_id": "815628", "event_slug": "clf-eve-new-2026-08-12", "checked_ts": "2026-09-05T23:19:59Z"}
+{"market_id": "3419338", "event_id": "815628", "event_slug": "clf-eve-new-2026-08-12", "checked_ts": "2026-09-05T23:19:59Z"}
+{"market_id": "3419339", "event_id": "815628", "event_slug": "clf-eve-new-2026-08-12", "checked_ts": "2026-09-05T23:19:59Z"}
+{"window": "2026-08-12T12:00:00Z/6h", "swept_ts": "2026-09-05T23:19:59Z"}
+{"market_id": "3074430", "event_id": "741396", "event_slug": "spce-quarterly-earnings-gaap-eps-08-05-2026-neg0pt64", "checked_ts": "2026-09-05T23:20:11Z"}
+{"market_id": "3214336", "event_id": "770294", "event_slug": "csco-quarterly-earnings-nongaap-eps-08-12-2026-1pt17", "checked_ts": "2026-09-05T23:20:11Z"}
+{"market_id": "3228928", "event_id": "773609", "event_slug": "usc-psg-av-2026-08-12", "checked_ts": "2026-09-05T23:20:11Z"}
+{"market_id": "3228929", "event_id": "773609", "event_slug": "usc-psg-av-2026-08-12", "checked_ts": "2026-09-05T23:20:11Z"}
+{"market_id": "3228930", "event_id": "773609", "event_slug": "usc-psg-av-2026-08-12", "checked_ts": "2026-09-05T23:20:11Z"}
+{"window": "2026-08-12T18:00:00Z/6h", "swept_ts": "2026-09-05T23:20:11Z"}
+{"market_id": "2946706", "event_id": "710232", "event_slug": "ppi-yoy-july-2026-20260715201412025", "checked_ts": "2026-09-05T23:20:21Z"}
+{"market_id": "2946707", "event_id": "710232", "event_slug": "ppi-yoy-july-2026-20260715201412025", "checked_ts": "2026-09-05T23:20:21Z"}
+{"market_id": "2946708", "event_id": "710232", "event_slug": "ppi-yoy-july-2026-20260715201412025", "checked_ts": "2026-09-05T23:20:21Z"}
+{"market_id": "2946709", "event_id": "710232", "event_slug": "ppi-yoy-july-2026-20260715201412025", "checked_ts": "2026-09-05T23:20:21Z"}
+{"market_id": "2946710", "event_id": "710232", "event_slug": "ppi-yoy-july-2026-20260715201412025", "checked_ts": "2026-09-05T23:20:21Z"}
+{"market_id": "2946711", "event_id": "710232", "event_slug": "ppi-yoy-july-2026-20260715201412025", "checked_ts": "2026-09-05T23:20:21Z"}
+{"market_id": "2946712", "event_id": "710232", "event_slug": "ppi-yoy-july-2026-20260715201412025", "checked_ts": "2026-09-05T23:20:21Z"}
+{"market_id": "2946713", "event_id": "710232", "event_slug": "ppi-yoy-july-2026-20260715201412025", "checked_ts": "2026-09-05T23:20:21Z"}
+{"market_id": "2946714", "event_id": "710232", "event_slug": "ppi-yoy-july-2026-20260715201412025", "checked_ts": "2026-09-05T23:20:21Z"}
+{"market_id": "2946715", "event_id": "710232", "event_slug": "ppi-yoy-july-2026-20260715201412025", "checked_ts": "2026-09-05T23:20:21Z"}
+{"window": "2026-08-13T00:00:00Z/6h", "swept_ts": "2026-09-05T23:20:21Z"}
+{"market_id": "3245305", "event_id": "778320", "event_slug": "nmax-quarterly-earnings-gaap-eps-08-13-2026-neg0pt03", "checked_ts": "2026-09-05T23:20:29Z"}
+{"market_id": "3347174", "event_id": "798047", "event_slug": "amat-quarterly-earnings-nongaap-eps-08-13-2026-3pt39", "checked_ts": "2026-09-05T23:20:29Z"}
+{"market_id": "2446611", "event_id": "563118", "event_slug": "zambia-presidential-election-winner-20260604205247322", "checked_ts": "2026-09-05T23:20:58Z"}
+{"window": "2026-08-14T00:00:00Z/6h", "swept_ts": "2026-09-05T23:20:58Z"}
+{"market_id": "3324991", "event_id": "794210", "event_slug": "elon-musk-of-tweets-august-7-august-14", "checked_ts": "2026-09-05T23:21:12Z"}
+{"market_id": "3325001", "event_id": "794210", "event_slug": "elon-musk-of-tweets-august-7-august-14", "checked_ts": "2026-09-05T23:21:12Z"}
+{"market_id": "3325011", "event_id": "794210", "event_slug": "elon-musk-of-tweets-august-7-august-14", "checked_ts": "2026-09-05T23:21:12Z"}
+{"market_id": "3325020", "event_id": "794210", "event_slug": "elon-musk-of-tweets-august-7-august-14", "checked_ts": "2026-09-05T23:21:12Z"}
+{"window": "2026-08-14T12:00:00Z/6h", "swept_ts": "2026-09-05T23:21:12Z"}
+{"market_id": "3492557", "event_id": "828515", "event_slug": "elon-musk-of-tweets-august-13-august-15", "checked_ts": "2026-09-05T23:21:33Z"}
+{"market_id": "3492558", "event_id": "828515", "event_slug": "elon-musk-of-tweets-august-13-august-15", "checked_ts": "2026-09-05T23:21:33Z"}
+{"window": "2026-08-15T12:00:00Z/6h", "swept_ts": "2026-09-05T23:21:58Z"}
+{"market_id": "3081659", "event_id": "743465", "event_slug": "osun-state-gubernatorial-election-winner-20260722191218748", "checked_ts": "2026-09-05T23:22:14Z"}
+{"window": "2026-08-15T18:00:00Z/6h", "swept_ts": "2026-09-05T23:22:14Z"}
+{"market_id": "3275573", "event_id": "783582", "event_slug": "ufc-isl-ian1-2026-08-15", "checked_ts": "2026-09-05T23:22:25Z"}
+{"window": "2026-08-16T00:00:00Z/6h", "swept_ts": "2026-09-05T23:22:25Z"}
+{"market_id": "3449517", "event_id": "821500", "event_slug": "ecs-ars-mci-2026-08-16", "checked_ts": "2026-09-05T23:22:44Z"}
+{"window": "2026-08-16T12:00:00Z/6h", "swept_ts": "2026-09-05T23:22:44Z"}
+{"market_id": "2321904", "event_id": "510079", "event_slug": "japan-gdp-growth-in-q2-2026-qoq-annualized", "checked_ts": "2026-09-05T23:22:59Z"}
+{"market_id": "2321905", "event_id": "510079", "event_slug": "japan-gdp-growth-in-q2-2026-qoq-annualized", "checked_ts": "2026-09-05T23:22:59Z"}
+{"market_id": "2853672", "event_id": "682591", "event_slug": "paw-patrol-the-dino-movie-opening-weekend-box-office-20260708164748952", "checked_ts": "2026-09-05T23:22:59Z"}
+{"market_id": "3527602", "event_id": "835836", "event_slug": "the-end-of-oak-street-opening-weekend-box-office-20260811181702926", "checked_ts": "2026-09-05T23:22:59Z"}
+{"market_id": "3527603", "event_id": "835836", "event_slug": "the-end-of-oak-street-opening-weekend-box-office-20260811181702926", "checked_ts": "2026-09-05T23:22:59Z"}
+{"market_id": "3574141", "event_id": "846001", "event_slug": "spider-man-brand-new-day-3rd-weekend-box-office-lower-strikes", "checked_ts": "2026-09-05T23:22:59Z"}
+{"market_id": "3574142", "event_id": "846001", "event_slug": "spider-man-brand-new-day-3rd-weekend-box-office-lower-strikes", "checked_ts": "2026-09-05T23:22:59Z"}
+{"market_id": "3574143", "event_id": "846001", "event_slug": "spider-man-brand-new-day-3rd-weekend-box-office-lower-strikes", "checked_ts": "2026-09-05T23:22:59Z"}
+{"window": "2026-08-16T18:00:00Z/6h", "swept_ts": "2026-09-05T23:22:59Z"}
+{"window": "2026-08-17T00:00:00Z/6h", "swept_ts": "2026-09-05T23:23:09Z"}
+{"market_id": "3565497", "event_id": "844194", "event_slug": "elon-musk-of-tweets-august-15-august-17", "checked_ts": "2026-09-05T23:23:22Z"}
+{"market_id": "3565498", "event_id": "844194", "event_slug": "elon-musk-of-tweets-august-15-august-17", "checked_ts": "2026-09-05T23:23:22Z"}
+{"market_id": "3565499", "event_id": "844194", "event_slug": "elon-musk-of-tweets-august-15-august-17", "checked_ts": "2026-09-05T23:23:22Z"}
+{"window": "2026-08-17T12:00:00Z/6h", "swept_ts": "2026-09-05T23:23:22Z"}
+{"market_id": "3325088", "event_id": "794228", "event_slug": "wnba-dal-gsv-2026-08-17", "checked_ts": "2026-09-05T23:23:33Z"}
+{"market_id": "3620157", "event_id": "794228", "event_slug": "wnba-dal-gsv-2026-08-17", "checked_ts": "2026-09-05T23:23:33Z"}
+{"market_id": "3463412", "event_id": "796069", "event_slug": "mlb-tex-laa-2026-08-10", "checked_ts": "2026-09-05T23:23:33Z"}
+{"market_id": "3472295", "event_id": "796070", "event_slug": "mlb-col-ari-2026-08-10", "checked_ts": "2026-09-05T23:23:33Z"}
+{"market_id": "3468907", "event_id": "796080", "event_slug": "mlb-hou-sf-2026-08-10", "checked_ts": "2026-09-05T23:23:33Z"}
+{"market_id": "3463446", "event_id": "796081", "event_slug": "mlb-kc-lad-2026-08-10", "checked_ts": "2026-09-05T23:23:33Z"}
+{"window": "2026-08-18T00:00:00Z/6h", "swept_ts": "2026-09-05T23:23:33Z"}
+{"market_id": "2420478", "event_id": "552326", "event_slug": "tallahassee-mayoral-election-winner-20260602161603006", "checked_ts": "2026-09-05T23:23:45Z"}
+{"market_id": "2420480", "event_id": "552326", "event_slug": "tallahassee-mayoral-election-winner-20260602161603006", "checked_ts": "2026-09-05T23:23:45Z"}
+{"market_id": "2674154", "event_id": "631083", "event_slug": "stpt-petersburg-mayoral-election-winner-20260624160811880", "checked_ts": "2026-09-05T23:23:45Z"}
+{"market_id": "3347198", "event_id": "798066", "event_slug": "hd-quarterly-earnings-nongaap-eps-08-18-2026-4pt73", "checked_ts": "2026-09-05T23:23:45Z"}
+{"market_id": "3414461", "event_id": "814068", "event_slug": "elon-musk-of-tweets-august-11-august-18", "checked_ts": "2026-09-05T23:23:45Z"}
+{"market_id": "3414473", "event_id": "814068", "event_slug": "elon-musk-of-tweets-august-11-august-18", "checked_ts": "2026-09-05T23:23:45Z"}
+{"market_id": "3414477", "event_id": "814068", "event_slug": "elon-musk-of-tweets-august-11-august-18", "checked_ts": "2026-09-05T23:23:45Z"}
+{"market_id": "3414483", "event_id": "814068", "event_slug": "elon-musk-of-tweets-august-11-august-18", "checked_ts": "2026-09-05T23:23:45Z"}
+{"market_id": "3414489", "event_id": "814068", "event_slug": "elon-musk-of-tweets-august-11-august-18", "checked_ts": "2026-09-05T23:23:45Z"}
+{"window": "2026-08-18T12:00:00Z/6h", "swept_ts": "2026-09-05T23:23:45Z"}
+{"market_id": "3497305", "event_id": "801123", "event_slug": "mlb-pit-mia-2026-08-11", "checked_ts": "2026-09-05T23:23:57Z"}
+{"market_id": "3497323", "event_id": "801125", "event_slug": "mlb-sea-nyy-2026-08-11", "checked_ts": "2026-09-05T23:23:57Z"}
+{"market_id": "3497341", "event_id": "801126", "event_slug": "mlb-bos-tor-2026-08-11", "checked_ts": "2026-09-05T23:23:57Z"}
+{"market_id": "3497376", "event_id": "801128", "event_slug": "mlb-cin-cws-2026-08-11", "checked_ts": "2026-09-05T23:23:57Z"}
+{"market_id": "3497412", "event_id": "801130", "event_slug": "mlb-phi-stl-2026-08-11", "checked_ts": "2026-09-05T23:23:57Z"}
+{"market_id": "3567477", "event_id": "844727", "event_slug": "florida-republican-governor-primary-margin-of-victory-20260812190226838", "checked_ts": "2026-09-05T23:23:57Z"}
+{"market_id": "3567478", "event_id": "844727", "event_slug": "florida-republican-governor-primary-margin-of-victory-20260812190226838", "checked_ts": "2026-09-05T23:23:57Z"}
+{"window": "2026-08-18T18:00:00Z/6h", "swept_ts": "2026-09-05T23:23:57Z"}
+{"market_id": "3352171", "event_id": "799534", "event_slug": "wnba-atl-las-2026-08-18", "checked_ts": "2026-09-05T23:24:07Z"}
+{"market_id": "3497438", "event_id": "801132", "event_slug": "mlb-col-ari-2026-08-11", "checked_ts": "2026-09-05T23:24:07Z"}
+{"market_id": "3497456", "event_id": "801134", "event_slug": "mlb-mil-sd-2026-08-11", "checked_ts": "2026-09-05T23:24:07Z"}
+{"market_id": "3497474", "event_id": "801136", "event_slug": "mlb-kc-lad-2026-08-11", "checked_ts": "2026-09-05T23:24:07Z"}
+{"window": "2026-08-19T00:00:00Z/6h", "swept_ts": "2026-09-05T23:24:07Z"}
+{"market_id": "3523462", "event_id": "805955", "event_slug": "mlb-bal-min-2026-08-12", "checked_ts": "2026-09-05T23:24:19Z"}
+{"market_id": "3380728", "event_id": "806375", "event_slug": "low-quarterly-earnings-gaap-eps-08-19-2026-4pt15", "checked_ts": "2026-09-05T23:24:19Z"}
+{"window": "2026-08-19T12:00:00Z/6h", "swept_ts": "2026-09-05T23:24:19Z"}
+{"market_id": "3374283", "event_id": "804430", "event_slug": "wnba-tor-wsh-2026-08-19", "checked_ts": "2026-09-05T23:24:33Z"}
+{"market_id": "3523477", "event_id": "805958", "event_slug": "mlb-phi-stl-2026-08-12", "checked_ts": "2026-09-05T23:24:33Z"}
+{"market_id": "3523492", "event_id": "805961", "event_slug": "mlb-col-ari-2026-08-12", "checked_ts": "2026-09-05T23:24:33Z"}
+{"market_id": "3523507", "event_id": "805963", "event_slug": "mlb-mil-sd-2026-08-12", "checked_ts": "2026-09-05T23:24:33Z"}
+{"market_id": "3523533", "event_id": "805964", "event_slug": "mlb-cle-det-2026-08-12", "checked_ts": "2026-09-05T23:24:33Z"}
+{"market_id": "3523548", "event_id": "805967", "event_slug": "mlb-sea-nyy-2026-08-12", "checked_ts": "2026-09-05T23:24:33Z"}
+{"market_id": "3523552", "event_id": "805968", "event_slug": "mlb-bos-tor-2026-08-12", "checked_ts": "2026-09-05T23:24:33Z"}
+{"market_id": "3523582", "event_id": "805970", "event_slug": "mlb-cin-cws-2026-08-12", "checked_ts": "2026-09-05T23:24:33Z"}
+{"window": "2026-08-19T18:00:00Z/6h", "swept_ts": "2026-09-05T23:24:33Z"}
+{"market_id": "3374300", "event_id": "804439", "event_slug": "wnba-min-gsv-2026-08-19", "checked_ts": "2026-09-05T23:24:43Z"}
+{"market_id": "3523597", "event_id": "805972", "event_slug": "mlb-kc-lad-2026-08-12", "checked_ts": "2026-09-05T23:24:43Z"}
+{"window": "2026-08-20T00:00:00Z/6h", "swept_ts": "2026-09-05T23:24:43Z"}
+{"market_id": "3380954", "event_id": "806412", "event_slug": "wmt-quarterly-earnings-nongaap-eps-08-20-2026-0pt74", "checked_ts": "2026-09-05T23:24:56Z"}
+{"market_id": "3533624", "event_id": "836931", "event_slug": "atp-zandsch-grieksp-2026-08-13", "checked_ts": "2026-09-05T23:24:56Z"}
+{"market_id": "3533631", "event_id": "836934", "event_slug": "atp-machac-busta-2026-08-13", "checked_ts": "2026-09-05T23:24:56Z"}
+{"market_id": "3533680", "event_id": "836949", "event_slug": "atp-royer-tsitsip-2026-08-13", "checked_ts": "2026-09-05T23:24:56Z"}
+{"market_id": "3632475", "event_id": "859110", "event_slug": "dota2-liquid-ty-2026-08-20", "checked_ts": "2026-09-05T23:24:56Z"}
+{"window": "2026-08-20T12:00:00Z/6h", "swept_ts": "2026-09-05T23:24:56Z"}
+{"market_id": "2663611", "event_id": "628311", "event_slug": "us-iran-60-day-negotiation-period-extended-20260624044855448", "checked_ts": "2026-09-05T23:25:08Z"}
+{"market_id": "2869647", "event_id": "687713", "event_slug": "nfl-lv-hou-2026-08-21", "checked_ts": "2026-09-05T23:25:08Z"}
+{"market_id": "3394232", "event_id": "809279", "event_slug": "wnba-ind-dal-2026-08-20", "checked_ts": "2026-09-05T23:25:08Z"}
+{"market_id": "3395618", "event_id": "809625", "event_slug": "lal-ray-ala-2026-08-20", "checked_ts": "2026-09-05T23:25:08Z"}
+{"market_id": "3395619", "event_id": "809625", "event_slug": "lal-ray-ala-2026-08-20", "checked_ts": "2026-09-05T23:25:08Z"}
+{"market_id": "3395620", "event_id": "809625", "event_slug": "lal-ray-ala-2026-08-20", "checked_ts": "2026-09-05T23:25:08Z"}
+{"market_id": "3632495", "event_id": "859111", "event_slug": "dota2-ngx-flc-2026-08-20", "checked_ts": "2026-09-05T23:25:08Z"}
+{"window": "2026-08-20T18:00:00Z/6h", "swept_ts": "2026-09-05T23:25:08Z"}
+{"window": "2026-08-21T00:00:00Z/6h", "swept_ts": "2026-09-05T23:25:18Z"}
+{"market_id": "3506020", "event_id": "831375", "event_slug": "elon-musk-of-tweets-august-14-august-21", "checked_ts": "2026-09-05T23:25:29Z"}
+{"market_id": "3506025", "event_id": "831375", "event_slug": "elon-musk-of-tweets-august-14-august-21", "checked_ts": "2026-09-05T23:25:29Z"}
+{"market_id": "3506026", "event_id": "831375", "event_slug": "elon-musk-of-tweets-august-14-august-21", "checked_ts": "2026-09-05T23:25:29Z"}
