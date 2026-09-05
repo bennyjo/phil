@@ -2966,12 +2966,35 @@ rumor/phased-rollout No-side pattern, Munich extends the same-day
 weather-Gaussian family (now 2 of its last 2 settlements as avoided
 No-side losses); full grading in RETRO-20260905-0016.
 
+**2026-09-05 update (06:12Z resolve.py, LIGHT tick; one outside-view-veto
+row settled, Yes-side, LOST as a counterfactual trade — one more loss
+avoided.** Miami 92-93°F next-day weather bracket (`0b7b13d60127`): a
+same-day weather-Gaussian row, sibling of the Munich 30C avoided loss two
+updates above, but Yes-side (own est 0.11 above the 0.06 mid, mech
+`superforcaster-market-aware` 0.26 with a leaked-price caveat) rather than
+No-side.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Miami 92-93F weather (0b7b13d60127) | 0.11 / 0.06 | Yes | +0.040 | No | −1.00 |
+
+Net this batch: **−1.00u** (0W/1L). **Totals now 103 realizable trades,
+46W/57L, net +11.29u.** Side split re-summed row-by-row: **Yes-side
+4W/22L, −11.61u** (adds this batch's 0W/1L, −1.00u); **No-side unchanged
+42W/35L, +22.90u**. Check: −11.61 + 22.90 = 11.29 ✓. Ruling: no boundary
+change at n=1 — extends the same-day weather-Gaussian family to 3-for-3
+avoided losses across both sides (Shanghai 31C No-side, Munich 30C
+No-side, Miami 92-93F Yes-side); full grading in
+RETRO-20260905-0612. Mechanical ledger's outside-view-veto line as of
+this update: 106 CF trades, 46W/60L, +$82.17 ≙ +16.4u, brier_delta
++0.0280, held-out +$111.17.
+
 **Accounting convention (DEEP-2026-09-05, per operator note 2026-09-04
 ~23:20Z): `python3 core/counterfactual.py ledger` is the record; this
 hand table is the narrative.** Every future retro that extends this
 table also quotes the mechanical ledger's outside-view-veto line
-(currently: 105 CF trades, 46W/59L, +$87.17 ≙ +17.4u, brier_delta
-+0.0282, held-out +$116.17). The hand table reads +12.29u on 102 trades
+(currently: 106 CF trades, 46W/60L, +$82.17 ≙ +16.4u, brier_delta
++0.0280, held-out +$111.17). The hand table reads +11.29u on 103 trades
 because 8 of its rows are trades the protected caps would refuse
 (entries ≥0.96 or no bid at record) and some older rows grade edge
 against the mid instead of the fill; when the two disagree, the
