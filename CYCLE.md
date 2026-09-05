@@ -71,6 +71,17 @@ Every invocation runs as one of three ticks:
    guard (`core/watch.py` already applied its own suppression before firing),
    with one exception: if the tip is a `cycle(triggered):` commit less than 45
    minutes old naming the same trigger key, demote to LIGHT.
+   Then the **runner lease** (operator, 2026-09-06): the tip guard cannot see
+   a FULL cycle that is still in flight on the other runner, so a lease on
+   origin (`refs/phil/lease`, see `core/lease.py`) says who is mid-cycle. If
+   the environment variable `PHIL_LEASE` is set, loop.sh already handled it:
+   `held-by-other` means run this invocation as a LIGHT tick, `acquired`
+   means proceed, and you never run the lease commands yourself. Otherwise
+   run `python3 core/lease.py acquire`: `"acquired": false` means the other
+   runner holds a fresh lease - run a LIGHT tick; `"acquired": true` means
+   proceed, and release it in step 9 after your push. A TRIGGERED invocation
+   neither takes nor honours the lease. A lease expires on its own after
+   50 minutes, so a run that died mid-cycle cannot block the next one.
 
 0b. **Pace**: read `strategy/schedule.json`. If `next_full_cycle_after` is in
    the future AND at least `min_full_cycles_per_day` full cycles ran in the
@@ -282,3 +293,6 @@ Every invocation runs as one of three ticks:
    as done; diagnose (detached HEAD again? rejected push?) and repeat this
    step until the hashes match or you have written the discrepancy into the
    cycle log line for the operator.
+   Last, if you acquired the runner lease in step 0 (and `PHIL_LEASE` is not
+   set), release it: `python3 core/lease.py release`. Release after the push,
+   never before, so the other runner's next tip check sees your commit.

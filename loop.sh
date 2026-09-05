@@ -66,6 +66,19 @@ for i in $(seq 1 "$CYCLES"); do
     fi
   fi
 
+  # Runner lease (core/lease.py): one FULL cycle at a time across the cloud
+  # routine and this loop. Taken here, in the interactive shell where the
+  # keyring is unlocked, and released after the push below. The verdict
+  # reaches CYCLE.md step 0 through PHIL_LEASE; a LIGHT tick still settles
+  # and monitors, it just does not scan or research.
+  PHIL_LEASE=acquired
+  if PHIL_PUSH_BY_LOOP=1 python3 core/lease.py acquire >/dev/null; then
+    :
+  elif [ "$?" -eq 3 ]; then
+    echo "runner lease held by the other runner — this cycle runs as a LIGHT tick" >&2
+    PHIL_LEASE=held-by-other
+  fi
+
   PROMPT="$(cat CYCLE.md)"
   if [ "$REAL_MODE" -eq 1 ]; then
     if [ "$PEARL_UP" -eq 1 ] \
@@ -111,7 +124,7 @@ for i in $(seq 1 "$CYCLES"); do
   # stray credential lookup fail fast instead of hanging on a keyring prompt
   # no headless session can answer; GIT_EDITOR stops `git rebase --continue`
   # from opening an editor and blocking forever.
-  PHIL_PUSH_BY_LOOP=1 \
+  PHIL_PUSH_BY_LOOP=1 PHIL_LEASE="$PHIL_LEASE" \
   GIT_TERMINAL_PROMPT=0 GIT_ASKPASS=/usr/bin/true GIT_EDITOR=true \
     "${CMD[@]}" || echo "cycle $i failed; continuing"
 
@@ -149,6 +162,13 @@ for i in $(seq 1 "$CYCLES"); do
         echo "WARNING: rebase onto origin/main failed — commits are local only, resolve manually" >&2
       fi
     fi
+  fi
+
+  # Release the runner lease after the push (release only deletes a lease
+  # this runner holds, so a held-by-other tick is a no-op here).
+  if [ "$PHIL_LEASE" = "acquired" ]; then
+    PHIL_PUSH_BY_LOOP=1 python3 core/lease.py release >/dev/null \
+      || echo "WARNING: could not release the runner lease — it expires on its own" >&2
   fi
 
   [ "$i" -lt "$CYCLES" ] && sleep $((SLEEP_MIN * 60))
