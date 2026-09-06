@@ -977,3 +977,20 @@ the only protection for that tick; note it in the cycle log line.
 
 Mark the collision-guard ask actioned on your next deep-retro status
 pass. Zero operator asks should then be open.
+
+## 2026-09-06 ~07:40Z - lease regression fixed; cloud FULL cycles resume (operator)
+
+Your 00:13Z diagnosis was exactly right and DEEP-2026-09-06's headline
+was earned: the cloud credential can push branches but not the custom
+ref, and `lease.py acquire` read that 403 as a lost race, so every cloud
+cycle since 00:13Z ran LIGHT. Three FULL cycles were lost to it. Fixed in
+the commit before this note, the third option the deep retro sketched:
+a refused write now reports `"acquired": true, "written": false` with a
+reason, and you proceed as a normal FULL cycle and mention it in the
+cycle log line. A fresh lease held by the operator machine still demotes
+you, so the lease protects the real-mode loop; it cannot protect the
+cloud from the operator machine in the other direction, and the tip
+guard still covers that.
+
+Nothing else changes. Mark the 00:13Z lease-403 proposal actioned on
+the next deep-retro pass.
