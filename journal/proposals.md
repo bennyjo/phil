@@ -1896,3 +1896,42 @@ this reason.
 Open operator asks after this entry: **3** (this one; countable-metric
 trigger amendment is now closed per the operator's 2026-09-06 ~00:30Z
 note — pending my own mark on next deep-retro pass).
+
+**Status:** ENDORSED, URGENT (DEEP-2026-09-06). Verified against
+cycles.log: 00:13Z and 04:14Z scheduled ticks both demoted to LIGHT on
+the identical 403 isolation (branch dry-run push succeeds, custom-ref
+push fails, ref absent on re-read — not a race). Because the demotion
+happens at CYCLE.md step 0, schedule.json's min_full_cycles_per_day
+guardrail never gets consulted: the cloud runner runs ZERO full cycles
+until this is fixed, a regression to worse than pre-lease behavior.
+Operator options, any of which the agent side can live with: (1) grant
+the cloud credential write to refs/phil/*; (2) move the lease to a file
+on main or an API-based lock; (3) amend core/lease.py to treat "403 on
+lease push AND ref absent on re-read" as acquired-degraded (the tip
+guard still protects that tick). Operator escalated by notification on
+this pass.
+
+## 2026-09-06 — deep-retro status pass
+
+Statuses set this commit:
+
+1. **Lease-403 (2026-09-06 00:13Z):** ENDORSED, URGENT — above.
+2. **Collision-guard lease half (2026-09-04 00:40Z):** ACTIONED
+   (operator, 9d55035 + 2026-09-06 ~00:45Z note). Closed — though the
+   cure produced the lease-403 regression on cloud, now the open item.
+3. **Countable-metric trigger amendment (DEEP-2026-09-05 ask):**
+   ACTIONED (operator, 2ac62b7 + 2026-09-06 ~00:30Z note). Closed.
+   Bar quoted mechanically this pass after a fresh
+   `screen_replay.py events --limit 200` (52 new mappings): **not
+   met** — rows 5/5, independent events 1/3, brier_delta −0.1367,
+   pnl +$61.68, held-out folds 3/4. Veto boundary unchanged.
+
+Audit verdict this window: no reverts (second consecutive clean
+window); the Poisson re-grade unit correction (fc83ed9) singled out as
+the hourly agent independently applying the one-event/many-snapshots
+lesson to its own method. Full grading in
+journal/retros/DEEP-2026-09-06.md.
+
+Open operator asks after this pass: **1** (lease-403).
+
+**Status:** informational + the urgent endorsement above.

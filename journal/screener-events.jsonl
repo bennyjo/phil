@@ -9455,3 +9455,63 @@
 {"market_id": "3506020", "event_id": "831375", "event_slug": "elon-musk-of-tweets-august-14-august-21", "checked_ts": "2026-09-05T23:25:29Z"}
 {"market_id": "3506025", "event_id": "831375", "event_slug": "elon-musk-of-tweets-august-14-august-21", "checked_ts": "2026-09-05T23:25:29Z"}
 {"market_id": "3506026", "event_id": "831375", "event_slug": "elon-musk-of-tweets-august-14-august-21", "checked_ts": "2026-09-05T23:25:29Z"}
+{"market_id": "3506020", "event_id": "831375", "event_slug": "elon-musk-of-tweets-august-14-august-21", "checked_ts": "2026-09-06T04:43:22Z"}
+{"market_id": "3506025", "event_id": "831375", "event_slug": "elon-musk-of-tweets-august-14-august-21", "checked_ts": "2026-09-06T04:43:22Z"}
+{"market_id": "3506026", "event_id": "831375", "event_slug": "elon-musk-of-tweets-august-14-august-21", "checked_ts": "2026-09-06T04:43:22Z"}
+{"window": "2026-08-21T12:00:00Z/6h", "swept_ts": "2026-09-06T04:43:22Z"}
+{"market_id": "3414490", "event_id": "814080", "event_slug": "epl-ars-cov-2026-08-21", "checked_ts": "2026-09-06T04:43:34Z"}
+{"market_id": "3414498", "event_id": "814080", "event_slug": "epl-ars-cov-2026-08-21", "checked_ts": "2026-09-06T04:43:34Z"}
+{"market_id": "3415383", "event_id": "814298", "event_slug": "epl-ars-cov-2026-08-21-more-markets", "checked_ts": "2026-09-06T04:43:34Z"}
+{"market_id": "3747883", "event_id": "881560", "event_slug": "dota2-ty-ngx-2026-08-21", "checked_ts": "2026-09-06T04:43:34Z"}
+{"window": "2026-08-21T18:00:00Z/6h", "swept_ts": "2026-09-06T04:43:34Z"}
+{"market_id": "3434986", "event_id": "818967", "event_slug": "epl-hul-mun-2026-08-22", "checked_ts": "2026-09-06T04:43:47Z"}
+{"market_id": "3434994", "event_id": "818967", "event_slug": "epl-hul-mun-2026-08-22", "checked_ts": "2026-09-06T04:43:47Z"}
+{"market_id": "3764957", "event_id": "886470", "event_slug": "dota2-ngx-boombo-2026-08-22", "checked_ts": "2026-09-06T04:43:47Z"}
+{"window": "2026-08-22T06:00:00Z/6h", "swept_ts": "2026-09-06T04:43:47Z"}
+{"market_id": "3435015", "event_id": "818977", "event_slug": "epl-ips-sun-2026-08-22", "checked_ts": "2026-09-06T04:44:08Z"}
+{"market_id": "3435019", "event_id": "818977", "event_slug": "epl-ips-sun-2026-08-22", "checked_ts": "2026-09-06T04:44:08Z"}
+{"market_id": "3435023", "event_id": "818977", "event_slug": "epl-ips-sun-2026-08-22", "checked_ts": "2026-09-06T04:44:08Z"}
+{"market_id": "3435037", "event_id": "818984", "event_slug": "epl-eve-cry-2026-08-22", "checked_ts": "2026-09-06T04:44:08Z"}
+{"market_id": "3435042", "event_id": "818984", "event_slug": "epl-eve-cry-2026-08-22", "checked_ts": "2026-09-06T04:44:08Z"}
+{"market_id": "3435064", "event_id": "818992", "event_slug": "epl-not-lee-2026-08-22", "checked_ts": "2026-09-06T04:44:08Z"}
+{"market_id": "3435066", "event_id": "818992", "event_slug": "epl-not-lee-2026-08-22", "checked_ts": "2026-09-06T04:44:08Z"}
+{"market_id": "3435069", "event_id": "818992", "event_slug": "epl-not-lee-2026-08-22", "checked_ts": "2026-09-06T04:44:08Z"}
+{"market_id": "3435083", "event_id": "818999", "event_slug": "epl-bre-tot-2026-08-22", "checked_ts": "2026-09-06T04:44:08Z"}
+{"market_id": "3435084", "event_id": "818999", "event_slug": "epl-bre-tot-2026-08-22", "checked_ts": "2026-09-06T04:44:08Z"}
+{"market_id": "3435086", "event_id": "818999", "event_slug": "epl-bre-tot-2026-08-22", "checked_ts": "2026-09-06T04:44:08Z"}
+{"market_id": "3437175", "event_id": "819349", "event_slug": "epl-bre-tot-2026-08-22-more-markets", "checked_ts": "2026-09-06T04:44:08Z"}
+{"market_id": "3437372", "event_id": "819353", "event_slug": "epl-not-lee-2026-08-22-more-markets", "checked_ts": "2026-09-06T04:44:08Z"}
+{"market_id": "3437575", "event_id": "819358", "event_slug": "epl-eve-cry-2026-08-22-more-markets", "checked_ts": "2026-09-06T04:44:08Z"}
+{"market_id": "3437777", "event_id": "819359", "event_slug": "epl-ips-sun-2026-08-22-more-markets", "checked_ts": "2026-09-06T04:44:08Z"}
+{"market_id": "3573174", "event_id": "845786", "event_slug": "wta-townsen-rybakin-2026-08-15", "checked_ts": "2026-09-06T04:44:08Z"}
+{"market_id": "3764983", "event_id": "886471", "event_slug": "dota2-vsn2-ty-2026-08-22", "checked_ts": "2026-09-06T04:44:50Z"}
+{"window": "2026-08-22T12:00:00Z/6h", "swept_ts": "2026-09-06T04:45:00Z"}
+{"market_id": "3435030", "event_id": "818983", "event_slug": "fl1-tou-lyo-2026-08-22", "checked_ts": "2026-09-06T04:45:15Z"}
+{"market_id": "3435034", "event_id": "818983", "event_slug": "fl1-tou-lyo-2026-08-22", "checked_ts": "2026-09-06T04:45:15Z"}
+{"market_id": "3435080", "event_id": "818998", "event_slug": "wnba-ind-nyl-2026-08-22", "checked_ts": "2026-09-06T04:45:15Z"}
+{"window": "2026-08-22T18:00:00Z/6h", "swept_ts": "2026-09-06T04:45:15Z"}
+{"market_id": "3435111", "event_id": "819010", "event_slug": "wnba-conn-la-2026-08-22", "checked_ts": "2026-09-06T04:45:24Z"}
+{"market_id": "3435139", "event_id": "819015", "event_slug": "wnba-atl-phx-2026-08-22", "checked_ts": "2026-09-06T04:45:24Z"}
+{"window": "2026-08-23T00:00:00Z/6h", "swept_ts": "2026-09-06T04:45:24Z"}
+{"market_id": "3779514", "event_id": "890242", "event_slug": "dota2-ty-ts8-2026-08-22", "checked_ts": "2026-09-06T04:45:36Z"}
+{"market_id": "3779548", "event_id": "890242", "event_slug": "dota2-ty-ts8-2026-08-22", "checked_ts": "2026-09-06T04:45:36Z"}
+{"window": "2026-08-23T06:00:00Z/6h", "swept_ts": "2026-09-06T04:45:36Z"}
+{"market_id": "3474252", "event_id": "825552", "event_slug": "epl-mac-bou-2026-08-23", "checked_ts": "2026-09-06T04:45:53Z"}
+{"market_id": "3474256", "event_id": "825552", "event_slug": "epl-mac-bou-2026-08-23", "checked_ts": "2026-09-06T04:45:53Z"}
+{"market_id": "3474262", "event_id": "825552", "event_slug": "epl-mac-bou-2026-08-23", "checked_ts": "2026-09-06T04:45:53Z"}
+{"market_id": "3474282", "event_id": "825561", "event_slug": "epl-bri-ast-2026-08-23", "checked_ts": "2026-09-06T04:45:53Z"}
+{"market_id": "3474285", "event_id": "825561", "event_slug": "epl-bri-ast-2026-08-23", "checked_ts": "2026-09-06T04:45:53Z"}
+{"market_id": "3474288", "event_id": "825561", "event_slug": "epl-bri-ast-2026-08-23", "checked_ts": "2026-09-06T04:45:53Z"}
+{"market_id": "3474305", "event_id": "825567", "event_slug": "epl-new-liv-2026-08-23", "checked_ts": "2026-09-06T04:45:53Z"}
+{"market_id": "3474310", "event_id": "825567", "event_slug": "epl-new-liv-2026-08-23", "checked_ts": "2026-09-06T04:45:53Z"}
+{"market_id": "3474314", "event_id": "825567", "event_slug": "epl-new-liv-2026-08-23", "checked_ts": "2026-09-06T04:45:53Z"}
+{"market_id": "3475759", "event_id": "825837", "event_slug": "epl-new-liv-2026-08-23-more-markets", "checked_ts": "2026-09-06T04:45:53Z"}
+{"market_id": "3475955", "event_id": "825845", "event_slug": "epl-mac-bou-2026-08-23-more-markets", "checked_ts": "2026-09-06T04:45:53Z"}
+{"market_id": "3598453", "event_id": "852045", "event_slug": "atp-nakashi-kovacev-2026-08-16", "checked_ts": "2026-09-06T04:45:53Z"}
+{"window": "2026-08-23T12:00:00Z/6h", "swept_ts": "2026-09-06T04:45:53Z"}
+{"market_id": "2915350", "event_id": "700875", "event_slug": "kazakhstan-kurultai-election-2nd-place-20260713225045611", "checked_ts": "2026-09-06T04:46:05Z"}
+{"market_id": "2915351", "event_id": "700875", "event_slug": "kazakhstan-kurultai-election-2nd-place-20260713225045611", "checked_ts": "2026-09-06T04:46:05Z"}
+{"market_id": "3474321", "event_id": "825569", "event_slug": "wnba-sea-dal-2026-08-23", "checked_ts": "2026-09-06T04:46:05Z"}
+{"market_id": "3474329", "event_id": "825572", "event_slug": "wnba-ind-chi-2026-08-23", "checked_ts": "2026-09-06T04:46:05Z"}
+{"market_id": "3474347", "event_id": "825579", "event_slug": "wnba-wsh-por-2026-08-23", "checked_ts": "2026-09-06T04:46:05Z"}
+{"market_id": "3474370", "event_id": "825583", "event_slug": "wnba-las-tor-2026-08-23", "checked_ts": "2026-09-06T04:46:05Z"}
