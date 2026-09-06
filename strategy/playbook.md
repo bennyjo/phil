@@ -3081,6 +3081,28 @@ CF trades, 46W/61L, pnl +$77.17 ≙ +15.43u, brier_delta +0.0280, held-out
 +$106.17 (was 106 trades, 46W/60L, +$82.17 ≙ +16.4u, held-out +$111.17
 before this row).
 
+**BACKFILL 2026-09-06 16:12Z (found by `strategy/tools/reconcile.py` on the
+16:12Z cycle): Munich 25°C same-day exact-temp weather row missing from
+this hand table.** Settled 2026-09-06T00:12:47Z (originally researched/vetoed
+2026-09-05 08:22Z, `bc29b9874a48`); should have been appended alongside the
+Guangzhou row above but was dropped.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Munich 25°C same-day weather (bc29b9874a48) | 0.26 / 0.23 | Yes | +0.01 | No | −1.00 |
+
+Model (0.26) leaned Yes slightly more than the market mid (0.23); the
+realizable counterfactual enters Yes at the 0.25 ask (edge +0.01,
+essentially at-market — this was never a real disagreement, just noise
+around a near-consensus number). Outcome was No, so the tiny counterfactual
+Yes-side edge lost, −1.00u. Per the 2026-09-06 ~00:30Z operator note, this
+file's hand totals are narrative only — the mechanical ledger is the
+record. Current mechanical outside-view-veto line
+(`core/counterfactual.py ledger --skip-reason outside-view-veto`, includes
+this row): 116 settled declined forecasts, 108 fillable CF trades, 46W/62L,
+pnl +$72.17 ≙ +14.43u, brier_delta +0.0279, held-out +$106.18. No ruling
+change (edge was ~0, not a real disagreement to grade).
+
 ## Mechanical-econ carve-out (enacted DEEP-2026-08-28, first loosening of the outside-view veto)
 
 A candidate may bet a >0.10 disagreement with the market — which the
