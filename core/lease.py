@@ -36,10 +36,13 @@ Usage:
   python3 core/lease.py check                # never writes; prints JSON
   python3 core/lease.py acquire [--ttl S]    # exit 0 acquired, 3 held by other
   python3 core/lease.py release              # exit 0 released or not ours
-Every subcommand prints one JSON object. No origin remote, or a fetch that
-fails, reports "acquired": true with "reason": "no remote" - the lease
-cannot protect a runner that cannot reach origin, and it must never block
-one either. Nothing here touches journal/ or strategy/.
+Every subcommand prints one JSON object. No origin remote, a fetch that
+fails, or a push that origin refuses (the cloud credential returns HTTP 403
+on custom refs, 2026-09-06) all report "acquired": true with "written":
+false and a "reason" - the lease cannot protect a runner that cannot reach
+or write origin, and it must never block one either. A runner that can
+only read still honours a lease the other runner wrote. Nothing here
+touches journal/ or strategy/.
 """
 import argparse
 import datetime as dt
@@ -150,18 +153,29 @@ def cmd_acquire(args):
     pushed = git("push", "--quiet", f"--force-with-lease={expect}", "origin",
                  f"{commit}:{LEASE_REF}", check=False)
     if pushed.returncode != 0:
-        # Someone took it between our read and our push. Report what is
-        # there now; the caller treats this exactly like a fresh foreign lease.
+        # Two different failures land here and they get opposite verdicts.
+        # Re-read the remote: if the lease is now held fresh by the other
+        # runner, we lost the race and yield. If it is still absent (or
+        # unchanged), the push itself was refused - on 2026-09-06 the cloud
+        # credential returned HTTP 403 on every push to refs/phil/lease while
+        # branch pushes worked, and treating that as "lost the race" demoted
+        # every cloud cycle to LIGHT. A lease this runner cannot write cannot
+        # protect anyone, so that case fails OPEN: proceed, say so.
+        err = (pushed.stderr.strip().splitlines() or ["push rejected"])[-1]
         try:
             sha2, payload2 = read_remote()
             d2 = describe(sha2, payload2, me)
         except RuntimeError:
-            d2 = {}
-        d2.update(acquired=False, me=me, reason="lost the race: " +
-                  (pushed.stderr.strip().splitlines() or ["push rejected"])[-1])
-        return out(d2, 3)
-    return out({"acquired": True, "me": me, "sha": commit, "started": payload["started"],
-                "ttl_s": args.ttl, "replaced": d["runner"] if d["held"] else None})
+            d2 = describe(None, None, me)
+        if d2["held"] and d2["fresh"] and not d2["mine"] and d2["sha"] != sha:
+            d2.update(acquired=False, me=me, reason=f"lost the race: {err}")
+            return out(d2, 3)
+        d2.update(acquired=True, me=me, written=False,
+                  reason=f"push refused, lease not written, proceeding unprotected: {err}")
+        return out(d2)
+    return out({"acquired": True, "written": True, "me": me, "sha": commit,
+                "started": payload["started"], "ttl_s": args.ttl,
+                "replaced": d["runner"] if d["held"] else None})
 
 
 def cmd_release(args):

@@ -79,7 +79,10 @@ Every invocation runs as one of three ticks:
    means proceed, and you never run the lease commands yourself. Otherwise
    run `python3 core/lease.py acquire`: `"acquired": false` means the other
    runner holds a fresh lease - run a LIGHT tick; `"acquired": true` means
-   proceed, and release it in step 9 after your push. A TRIGGERED invocation
+   proceed, and release it in step 9 after your push. `"written": false`
+   with `"acquired": true` means origin refused the write (the cloud
+   credential cannot push custom refs) - proceed as a normal FULL cycle
+   and mention it in the cycle log line; never demote on it. A TRIGGERED invocation
    neither takes nor honours the lease. A lease expires on its own after
    50 minutes, so a run that died mid-cycle cannot block the next one.
 
