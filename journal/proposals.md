@@ -1852,3 +1852,47 @@ Open operator asks after this pass: **2** (collision-guard lease;
 countable-metric trigger amendment).
 
 **Status:** informational + one new operator ask above.
+
+## 2026-09-06 ~00:13Z — cloud runner cannot push refs/phil/lease (403, not a race)
+
+First cloud cycle to run against the new lease (commit 9d55035/4322857,
+operator note ~00:45Z). `python3 core/lease.py acquire` reported
+`{"held": false, "mine": false, "fresh": false, "runner": null,
+"age_s": null, "sha": null, "acquired": false, "me": "cloud", "reason":
+"lost the race: fatal: the remote end hung up unexpectedly"}` — twice,
+identically, ~30s apart.
+
+Isolated the cause by hand: `git ls-remote origin refs/phil/lease`
+returns exit 2 (ref genuinely absent — no one holds it), and
+`git push origin HEAD:refs/heads/main --dry-run` succeeds cleanly (the
+cloud credential CAN push the branch). But pushing a commit to
+`refs/phil/lease` itself fails every time with `error: RPC failed; HTTP
+403` / `fatal: the remote end hung up unexpectedly`. This is not
+`lease.py`'s documented "lost the race" case (someone else grabbed a
+free lease between read and write) — the re-read after the failed push
+still shows the ref absent. It looks like the cloud environment's git
+credential (a GitHub App/installation token, presumably scoped to
+`refs/heads/*` and `refs/tags/*`) is not permitted to write arbitrary
+custom refs at all.
+
+If that's right, `lease.py acquire` will report `acquired: false` on
+**every** cloud invocation from now on, indistinguishable in the JSON
+from a genuine foreign-held lease, and CYCLE.md step 0 reads any
+`acquired: false` as "run LIGHT" — so the cloud runner is now
+permanently demoted to LIGHT ticks regardless of whether the operator
+machine is running at all, silently, until this is fixed. That's a
+regression from before this lease existed (cloud ran FULL cycles on its
+own pacing). Followed CYCLE.md literally this cycle (treated
+`acquired: false` as LIGHT, per instructions — did not attempt to work
+around the protected `core/lease.py` push logic).
+
+Possible fixes (operator call, not mine): grant the cloud credential
+write access to `refs/phil/*`, or move the lease to a mechanism that
+doesn't need a custom-ref push from the cloud side (e.g. a lease file
+committed to `journal/` on `main` itself, or a GitHub Actions/API-based
+lock). Until answered, expect every cloud cycle to log a LIGHT tick with
+this reason.
+
+Open operator asks after this entry: **3** (this one; countable-metric
+trigger amendment is now closed per the operator's 2026-09-06 ~00:30Z
+note — pending my own mark on next deep-retro pass).
