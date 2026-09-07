@@ -3157,6 +3157,41 @@ market's 0.815 (implied sd ≈ 0.35 after noon) read the afternoon peak
 better. Test the after-noon sd (0.6 vs ~0.35) once the same-day subclass
 reaches ~6 settled rows. Full grading in RETRO-20260907-1241.
 
+**2026-09-07 16:13Z update (LIGHT tick, operator machine; resolve.py
+settled 1 ledger bet and 3 forecasts, 2 `outside-view-veto`).** SPD ≥9%
+Sachsen-Anhalt (`3df069438d36`, researched 2026-09-04 03:53Z): own est
+0.22 from a poll-mean 8.1 / sd 1.3 Gaussian vs mid 0.083 (ask 0.088);
+claimed Yes edge 0.13 over the boundary, veto fired. Official result SPD
+9.3%, settled Yes: the declined Yes trade would have returned +$51.82 on
+$5, the largest single CF win in this table. Tokyo 22°C same-day low
+(`ff7e0fda3407`, researched 2026-09-07 04:27Z): own est No 0.17 vs No ask
+0.10, wide-spread + weather veto; settled Yes (22°C on the JST-day
+reading), declined No trade lost.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| SPD ≥9% Sachsen-Anhalt vote-share Gaussian (3df069438d36) | 0.22 / 0.083 | Yes | +0.132 | Yes | +10.36 |
+| Tokyo 22°C same-day weather (ff7e0fda3407) | 0.17 / 0.06 (No side) | No | +0.07 | Yes | −1.00 |
+
+Mechanical ledger after these rows (`core/counterfactual.py ledger
+--skip-reason outside-view-veto`): 120 settled declined forecasts, 112
+fillable CF trades, 48W/64L, pnl +$115.48 ≙ +23.10u, brier_delta +0.0271,
+held-out +$149.49; weather inside it 16 rows, 4W/12L, −$49.41;
+politics-general inside it 2 rows, 1W/1L, +$46.82. Ruling: no boundary
+change. The SPD win is one event (it shares the poll set, the election
+and the direction of the poll miss with the settled Grüne ≥7% BET
+`66131e6b8f76`, est 0.18 @0.111, WON +$40.05, where the result 8.9% sat
+~2.5 sd above the 5.9 poll mean). Both rows say the same thing: my
+self-chosen sd (1.2–1.3) for sub-10% parties in this Landtag election was
+too tight and the miss was upward, toward the threshold-clearing side.
+Pre-registered, not enacted (n=1 event): at the next German state
+election, grade the small-party vote-share Gaussian rows against a wider,
+upward-skewed error before the category is allowed a >0.10 disagreement.
+The Tokyo row is the same-day weather subclass doing what the standing
+no-bet says (same-day subclass 2W/4L after this row, was 2W/3L after
+Wellington; ruling unchanged).
+Full grading in RETRO-20260907-1613.
+
 ## Mechanical-econ carve-out (enacted DEEP-2026-08-28, first loosening of the outside-view veto)
 
 A candidate may bet a >0.10 disagreement with the market — which the
