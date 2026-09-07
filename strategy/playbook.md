@@ -3134,6 +3134,36 @@ elsewhere in the family; own estimate (0.80) also beat the blind mech
 second opinion (superforcaster-market-aware, 0.28) on this row, worth
 tracking if the pattern repeats. Full grading in RETRO-20260907-0414.
 
+**2026-09-07 12:38Z update (LIGHT tick, cloud; resolve.py settled 2
+forecasts, 1 `outside-view-veto`).** Wellington 10°C same-day
+highest-temp bracket (`b838efbe4ade`, researched 2026-09-07 02:20Z): own
+post-obs est P(10.0)=0.4522 (open-meteo hourly max 9.5°C, same-day
+sd=0.6) vs mid ~0.7985 (bid 0.769/ask 0.861 at record) — model's implied
+No belief (0.548) well above the market's implied No (~0.139-0.231),
+vetoed as a same-day weather self-model disagreement. Settled Yes, so
+the declined No-side counterfactual trade lost.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Wellington 10°C same-day weather (b838efbe4ade) | 0.4522 / 0.7985 | No | +0.317 | Yes | −1.00 |
+
+Net this batch: **−1.00u** (0W/1L). Current mechanical ledger's
+outside-view-veto line (`core/counterfactual.py ledger --skip-reason
+outside-view-veto`, includes this row): 118 settled declined forecasts,
+110 fillable CF trades, 47W/63L, pnl +$68.66 ≙ +13.73u, brier_delta
++0.0293, held-out +$102.67 (was 117 rows, 109 trades, 47W/62L,
++$73.66 ≙ +14.73u, brier_delta +0.0273, held-out +$107.67 before this
+row). Ruling: no boundary change at n=1 — the mechanical ledger's own
+same-day weather subclass is now 5 rows, 1W/4L, −17.65 (was 4 rows,
+1W/3L, −12.65): this row is a fourth avoided loss (Shanghai, Munich,
+Miami, and now Wellington all had their declined side lose), against
+Guangzhou as the one case where the veto missed a win. A fixed-sd
+same-day point-forecast Gaussian is still net-negative on this exact
+bracket shape (4 of 5 declined trades would have lost), consistent with
+keeping the veto rather than loosening it — this row reinforces the
+standing read, it does not reverse it. Full grading in
+RETRO-20260907-1238.
+
 ## Mechanical-econ carve-out (enacted DEEP-2026-08-28, first loosening of the outside-view veto)
 
 A candidate may bet a >0.10 disagreement with the market — which the
