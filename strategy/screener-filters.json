@@ -41,6 +41,11 @@
       "name": "crypto_updown",
       "pattern": "\\b(bitcoin|btc|ethereum|eth|solana|sol|xrp|dogecoin|doge)\\b.{0,40}\\b(up or down|higher or lower|above|below)\\b|\\bup or down\\b.{0,30}\\b(am|pm|et|utc)\\b",
       "note": "screener-prompt.md housekeeping: sub-daily crypto up/down markets are banned upstream and should never reach the screen. The ban leaks on 1.5-2.4% of pool rows per revision, so the filter is small but real; the Haiku tier pins 59-66% of them to divergence 0.0 under the two rule-carrying revisions."
+    },
+    {
+      "name": "weather_temperature",
+      "pattern": "\\b(highest|lowest)\\s+temperature\\s+in\\b",
+      "note": "Added 2026-09-07 07:5xZ (FULL cycle, operator machine). Daily-temperature bracket markets are a standing no-bet category (playbook: weather self-model; settled weather forecasts n=27 brier_delta +0.0477, market better) and the Haiku tier cannot judge them without a forecast feed it is forbidden to fetch. Footprint measured on journal/screener.jsonl over 98 collect runs: weather is 11.6% of screened rows (3401/29400) but 18.0% of top-15 escalations (264/1470), and on 2026-09-07 07:48Z it was 11 of 15 escalations, 8 of them 0.5/0.5 'no weather forecast data available' placeholders. Graded against journal/screener-outcomes.jsonl: ESCALATED weather rows score Haiku brier 0.3547 vs mid 0.3034 (delta +0.0514, n=140) -- the escalations are noise that crowds out rows the researcher can act on; all weather rows delta +0.0043 (n=1817). The exploration finding that weather benchmarks (open-meteo/METAR) ARE reachable is unaffected: weather stays researchable on demand via discovery/watch items, it just no longer claims screener escalation slots."
     }
   ],
   "exclude_mids_exactly_half": true,

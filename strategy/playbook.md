@@ -3922,3 +3922,29 @@ unfavorable match (Lille/PSG) was a closer game. If that holds as more
 matches settle, the method may end up selectively useful on
 extreme-divergence instances rather than uniformly — which the existing
 >= 0.04-divergence recording filter already partially selects for.
+
+## Mech second opinions: request sequencing and what the pair showed (2026-09-07 08:0xZ)
+
+Two settled instances now show the same off-chain failure shape:
+2026-09-04 03:50Z (a v4 request sent concurrently with a market-aware
+request to the SAME mech, service 25) and 2026-09-07 07:58Z (a v4 request
+to service 44 sent concurrently with a market-aware request to a
+DIFFERENT mech, service 21). Both were rejected `HTTP 401 wire nonce
+below sender's next expected slot`, and both delivered on a sequential
+retry with a new `request_id`. The nonce is on the SENDER (the service
+safe), not on the mech, so the CYCLE.md 5a rotation across mechs does not
+make requests independent. Rule: send off-chain mech requests strictly one
+at a time, waiting for each delivery before the next; never batch them in
+one tool-call block. A rejected request is still logged with
+`mechlog.py record --error` (both instances are), and the retry keeps the
+paired-comparison count honest (one candidate, two tools, sequential).
+
+First blind paired comparison on an interpretive news question
+(Russia-Ukraine in-person meeting by Sep 15, market 3741669, mid 0.185):
+market-aware 0.06 (research_class R, researchability 0.85) vs v4 0.28 vs
+own 0.18. The two tools straddle both me and the market by 0.22 on the
+same prompt and the same serper results, which is a wider spread than any
+econ pair so far (BoR hold: market-aware 0.68 vs own 0.75 vs mid 0.685).
+Nothing to act on yet; grade both against the Sep 15 outcome and keep
+noting whether the market-aware/v4 gap is systematically larger on
+interpretive (news) questions than on mechanical prints.
