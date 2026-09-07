@@ -2172,6 +2172,12 @@ Elections WITH credible
 numeric polling (Afrobarometer/Ipsos-class, or an Economist/YouGov
 tracker) are outside the bar and go through the normal estimation path;
 the WI lesson (market-agrees is no safe harbor) still applies there.
+Settled record of that carve-out (RETRO-20260907-1006): n=2 instances,
+both correct. Kazakh Auyl/Respublica (Aug 23, three converging polls,
+market-agrees, 2W/0L) and Sachsen-Anhalt AfD majority (Sep 6, dawum
+tracker + politpro seat model, bet WON, brier_delta -0.0315; see §First
+bet in 13 days for the seat-model family ruling). The carve-out stands
+as written; two instances do not widen it.
 
 ## Outside-view veto: settled counterfactual ledger (DEEP-2026-08-15)
 
@@ -3732,6 +3738,34 @@ legislated at n=0:
    instead. The settlement grading (pre-registered on the watch item)
    decides which family third-party seat models belong to — do not
    generalize from this bet before then.
+
+**Settled 2026-09-07 10:06Z (RETRO-20260907-1006): No, WON +$2.58,
+brier_delta -0.0315; the three same-market forecasts (0.71/0.83/0.86 vs
+mids 0.655/0.80/0.795) all beat the mid.** Official result AfD 43.8% and
+39/83 seats (needed 42); Grüne 8.9%, SPD 9.3%, Linke 8.6%, BSW 5.3% all
+cleared 5%, FDP 2.6% did not. Answers to the two pre-registered questions:
+
+1. Horizon: neither wrong-at-entry nor stale. The politpro projection was
+   41 seats at entry and 39 on Sep 2; the final count was 39. Drift over
+   the 13 days was favorable throughout (never near the -0.10 call-out).
+   Still no max-horizon rule at n=1; the MV CDU bracket (`23e40bbbccc5`,
+   13 days) is the next instance.
+2. Family ruling: a third-party poll-aggregation seat model is
+   **mechanical**, not behavioral. Numeric inputs through a deterministic
+   seat-allocation rule, no self-chosen sd. Adopting its 0.29 without
+   blending toward the market's 0.345 was correct: the market moved
+   through the estimate (Yes 0.345 -> 0.185 by Aug 29 -> ~0.005 at
+   settlement). The structural reason it was right: AfD beat every poll
+   (43.8% vs the 38-43% range) and still fell short, because the small
+   parties clearing 5% left only ~6.8% of votes wasted, so a majority
+   needed ~46.6%. A vote-share Gaussian on AfD's own polling would have
+   erred toward Yes; only a threshold-aware seat allocation gets the sign
+   right. Caveats that keep this n=1: single source, a 0.05-edge favorite
+   bet, and the Grüne poll miss (+3.0 pts) shows the model's inputs can be
+   badly wrong even when its structure is right (a symmetric Grüne miss
+   under 5% would have given AfD ~42-43 seats). Validated on structure,
+   not precision. Do not raise the politics-general stake or loosen the
+   category bar on this row.
 
 ## Funnel pool_total: prose rule escalated to a mechanical check
 (DEEP-2026-08-24)
