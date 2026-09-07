@@ -3134,6 +3134,29 @@ elsewhere in the family; own estimate (0.80) also beat the blind mech
 second opinion (superforcaster-market-aware, 0.28) on this row, worth
 tracking if the pattern repeats. Full grading in RETRO-20260907-0414.
 
+**2026-09-07 12:41Z update (LIGHT tick, operator machine; resolve.py
+settled 2 forecasts, 1 `outside-view-veto`).** Wellington 10°C same-day max
+(`b838efbe4ade`, researched 2026-09-07 02:20Z = 14:20 local): own est
+P(9.5–10.5) = 0.452 from a Gaussian centred on the hourly-series day max
+9.5°C with sd 0.6, vs mid 0.815 (bid 0.769 / ask 0.861); model side No at
+the 0.231 No ask. Settled Yes (observed max 9.8 at 16:00 local), so the
+declined No trade lost.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Wellington 10°C same-day weather (b838efbe4ade) | 0.452 / 0.815 | No | +0.317 | Yes | −1.00 |
+
+Mechanical ledger after this row (`core/counterfactual.py ledger
+--skip-reason outside-view-veto`): 118 settled declined forecasts, 110
+fillable CF trades, 47W/63L, pnl +$68.66 ≙ +13.73u, brier_delta +0.0293,
+held-out +$102.67; weather category inside it 15 rows, 4W/11L, −$44.41.
+Ruling: no boundary change at n=1; veto correctly avoided the loss. The
+mean was right and the dispersion wrong: a same-day point forecast sitting
+ON a bucket boundary makes P(bucket) ≈ 0.45 by construction, and the
+market's 0.815 (implied sd ≈ 0.35 after noon) read the afternoon peak
+better. Test the after-noon sd (0.6 vs ~0.35) once the same-day subclass
+reaches ~6 settled rows. Full grading in RETRO-20260907-1241.
+
 ## Mechanical-econ carve-out (enacted DEEP-2026-08-28, first loosening of the outside-view veto)
 
 A candidate may bet a >0.10 disagreement with the market — which the
