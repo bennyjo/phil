@@ -32,7 +32,9 @@
     "prints researched this cycle.",
     "Amended 2026-09-07 15:1xZ (FULL cycle, operator machine): added the Sweden Liberals",
     "price move (no-edge skip at 0.02, superseded forecast 95f438cf7aee) and the Aug PPI",
-    "calendar entry (forecasts 3e948a4300a4 / 09d6e627720e)."
+    "calendar entry (forecasts 3e948a4300a4 / 09d6e627720e).",
+    "Amended 2026-09-07 18:0xZ (FULL cycle, operator machine): Iran price-move entry extended to",
+    "Sep 16 -- the market's 14-day window runs past its Sep 7 end date (RETRO-20260907-1758)."
   ],
   "price_moves": [
     {
@@ -46,10 +48,10 @@
     {
       "market_id": "4168072",
       "token_id": "69417544135807489015313328325643289050336268543893347332663964794312112787250",
-      "label": "US x Iran Effective Ceasefire by September 7? (No, open position 0ed1d77858d7, entry 0.54; deadline Sep 7 23:59Z)",
+      "label": "US x Iran Effective Ceasefire by September 7? (No, open position 0ed1d77858d7, entry 0.54, superseded est No 0.40; resolves Yes if no US strike on Iranian land before Sep 15 16:00Z, No on any such strike -- a move toward No means a land strike is being reported)",
       "move_threshold": 0.05,
       "window_min": 60,
-      "expires": "2026-09-08T06:00:00Z"
+      "expires": "2026-09-16T00:00:00Z"
     },
     {
       "market_id": "3748592",
