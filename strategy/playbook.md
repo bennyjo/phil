@@ -3164,6 +3164,36 @@ keeping the veto rather than loosening it — this row reinforces the
 standing read, it does not reverse it. Full grading in
 RETRO-20260907-1238.
 
+**2026-09-07 16:14Z update (LIGHT tick, cloud; resolve.py settled 2
+`outside-view-veto` forecasts, siblings of the AfD/Grüne Sachsen-Anhalt
+settlements).** SPD ≥9% (`3df069438d36`): est 0.22 vs ask 0.088 at
+record, Yes-side edge ~0.13. Official SPD 9.3% → Yes — declined trade
+**WINS**, +$51.82 (+10.36u), a veto miss. Tokyo lowest-temp 22°C Sep7
+(`ff7e0fda3407`, same-day weather subclass): est P(No)=0.17 vs ask 0.10,
+No-side edge 0.07. Official low was 22°C → Yes — declined trade
+**LOSES**, −$5.00 (−1.00u), a correct decline.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| SPD ≥9% Sachsen-Anhalt (3df069438d36) | 0.22 / 0.088 | Yes | +0.132 | Yes | **+10.36** |
+| Tokyo 22°C Sep7 (ff7e0fda3407) | 0.17 / 0.10 | No | +0.070 | Yes | −1.00 |
+
+Net this batch: **+9.36u, 1W/1L** ($51.82 − $5.00 = $46.82 dollars).
+Current mechanical ledger (`core/counterfactual.py ledger --skip-reason
+outside-view-veto`, includes both rows): 120 settled declined forecasts,
+112 fillable CF trades, 48W/64L, pnl +$115.48 ≙ +23.10u, brier_delta
++0.0271, held-out +$149.49 (was 118 rows, 110 trades, 47W/63L,
++$68.66 ≙ +13.73u, brier_delta +0.0293, held-out +$102.67 before these
+two rows). Side split: yes 34 rows/34 trd/9W-25L/+$20.82; no 86
+rows/78 trd/39W-39L/+$94.66. Ruling: no boundary change at n=1 on
+either row — the SPD miss is a real cost but sits inside the standing
+read that yes-side vetoes are the worse-performing class (9W/25L at
+~26% win rate vs no-side's 39W/39L at 50%); occasional large yes-side
+misses like this one are the expected cost of holding that boundary, not
+new evidence to loosen it. The Tokyo row extends the same-day-weather
+subclass's run of correct declines. Full grading in
+RETRO-20260907-1614.
+
 ## Mechanical-econ carve-out (enacted DEEP-2026-08-28, first loosening of the outside-view veto)
 
 A candidate may bet a >0.10 disagreement with the market — which the
@@ -3796,6 +3826,18 @@ cleared 5%, FDP 2.6% did not. Answers to the two pre-registered questions:
    under 5% would have given AfD ~42-43 seats). Validated on structure,
    not precision. Do not raise the politics-general stake or loosen the
    category bar on this row.
+
+**Grüne ≥7% bet (`66131e6b8f76`) settled 2026-09-07 16:14Z: Yes, WON
++$40.05, brier_delta −0.1179 (agent beat market).** Est 0.18 vs entry
+0.111; official result 8.9% confirms the same Grüne poll-mean miss
+flagged above (poll mean ~5.9%, actual 8.9%, +3.0pt/~2.5sd under the
+sd=1.2 model) — the bet won on direction only, not calibration: the
+market was priced even further from the eventual outcome (0.111) than
+the already-too-low estimate (0.18). Second data point (after this
+section's own note) that sd=1.2 is too tight for a small party near the
+5% threshold in this election; still n=1 on the bet itself, no risk.json
+change — watch for recurrence on other small-party-near-threshold
+brackets. Full grading in RETRO-20260907-1614.
 
 ## Funnel pool_total: prose rule escalated to a mechanical check
 (DEEP-2026-08-24)
