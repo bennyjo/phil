@@ -3839,6 +3839,19 @@ section's own note) that sd=1.2 is too tight for a small party near the
 change — watch for recurrence on other small-party-near-threshold
 brackets. Full grading in RETRO-20260907-1614.
 
+**Third same-election data point, SPD 7-9% forecast (`1d316aebfe91`)
+settled 2026-09-07 18:12Z, No (no-edge skip, no bet):** est 0.56 vs
+market 0.61, poll mean ~8.1% (sd=1.3), official SPD result 9.3% — again
+above the poll mean, same direction as AfD (43.8% vs 38-43% range) and
+Grüne (8.9% vs 5.9% mean) above. All three parties in this one election
+missed poll-mean-low. Still one correlated election, not independent
+confirmation of a general "DE state-poll dispersion is too tight/biased
+low" prior — no sd change yet, but three-for-three same-direction misses
+in a single election is worth a specific watch: if the next
+small-party/near-threshold DE state election shows the same pattern,
+that is the point to consider a directional (not just wider) dispersion
+adjustment rather than a purely symmetric sd widening.
+
 ## Funnel pool_total: prose rule escalated to a mechanical check
 (DEEP-2026-08-24)
 
