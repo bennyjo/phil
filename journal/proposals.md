@@ -2025,3 +2025,11 @@ Grüne settlement was double-graded the same way: local `bfe4a1c retro:`
 rebase conflicts on the same three files again. Nothing in the data
 disagrees; the duplicate work is the cost. Continuing on local state
 per step 0; loop.sh pushes.
+
+**Update 2026-09-07 19:0xZ (operator-machine LIGHT tick):** still
+diverged, now local ahead 8 / origin ahead 6. Third duplicate grading:
+the SPD 7-9pct no-edge row `1d316aebfe91` was retro'd on both sides
+(local `a7795e4` 17:58Z, cloud `00e38f5` 18:13Z). Every settlement since
+12:41Z has now been graded twice, and the unpushed local side carries the
+Iran clause-misread supersede (`1063bcaec323`) and its playbook rule that
+the cloud runner cannot see. Continuing on local state per step 0.
