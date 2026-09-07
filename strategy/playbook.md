@@ -254,6 +254,34 @@ No further grading duty attaches to this gate's founding set; future
 >0.10-edge liquid-book bets extend the tally but don't reopen this
 evidence review.
 
+**Clause-to-outcome mapping (2026-09-07 17:58Z, `0ed1d77858d7` open,
+enacted outcome-independent):** condition (i) is satisfied only when the
+immutable fact MAPS to the outcome under the clause as written, and the
+map has to be shown, not asserted. Required in the rationale of any bet
+whose thesis is "fact plus calendar" or "fact plus rule": (a) the
+concrete sequence of events by which the OTHER side resolves, and (b)
+why the clause's own timing closes that sequence. The market's end date
+is not the resolution horizon unless the clause says so; windows,
+clocks and grace periods defined in the description govern. Evidence:
+the Iran ceasefire No bet (est 0.93 @0.54, claimed edge 0.39, class
+info-race) quoted the operative sentence ("resolves Yes if any such
+period is completed where the most recent qualifying military action
+occurred on or before the specified end date") and read it as "the
+window must close by the end date." It means the reverse: the last
+strike must fall on or before the end date, and the 14-day window may
+complete after it (through 12:00 ET Sep 15 from the Sep 1 strike). The
+Yes path was open the whole time, the market priced it (0.54 No at
+entry, 0.42 No on deadline day), and eight checkpoints re-confirmed the
+fact without re-reading the clause. Superseded to No 0.40, no edge
+(`1063bcaec323`). Same family as the Lake America dual-label miss: the
+DEEP-2026-08-30 quote rule was satisfied and the error survived it.
+This paragraph closes that path: a quoted clause with no (a)/(b) mapping
+is a documentation violation, and a fact that needs a window to run
+past the end date to be decisive is a timeline forecast under the gate,
+not a fact. Grading duty: when `0ed1d77858d7` settles, the info-race
+tally gets a note that this row was a clause-mapping error, not a
+fact-quality error (RETRO-20260907-1758 §2).
+
 NOT an edge class — **resolver-interpretation reads** (graded
 DEEP-2026-08-01): "I checked the exact resolution source and it says X"
 where the reading requires a judgment call (UI toggle, table choice, which
@@ -3194,6 +3222,23 @@ new evidence to loosen it. The Tokyo row extends the same-day-weather
 subclass's run of correct declines. Full grading in
 RETRO-20260907-1614.
 
+[MERGE NOTE, operator reconcile 2026-09-07 ~21:00Z: the operator-machine
+loop graded the same three rows (Wellington, SPD >=9%, Tokyo) in parallel
+between 12:41Z and 20:08Z and its push was rejected; origin's table rows
+above are canonical and its duplicate rows are not carried. Two distinct
+rulings from the operator-machine retros (RETRO-20260907-1241, -1613) are
+carried here as pre-registered, not enacted: (a) Wellington -- the mean was
+right and the dispersion wrong; a same-day point forecast sitting ON a
+bucket boundary makes P(bucket) ~0.45 by construction, and the market's
+0.815 (implied sd ~0.35 after noon) read the afternoon peak better; test
+the after-noon sd (0.6 vs ~0.35) once the same-day subclass reaches ~6
+settled rows. (b) SPD >=9% and the Gruene >=7% bet WON are one event: the
+self-chosen sd (1.2-1.3) for sub-10% parties in this Landtag election was
+too tight and the miss was upward; at the next German state election,
+grade the small-party vote-share Gaussian rows against a wider,
+upward-skewed error before the category is allowed a >0.10 disagreement.]
+
+
 ## Mechanical-econ carve-out (enacted DEEP-2026-08-28, first loosening of the outside-view veto)
 
 A candidate may bet a >0.10 disagreement with the market — which the
@@ -4121,3 +4166,37 @@ before the Sep 11 print turns this into the carve-out's first live
 candidate; without it the rows grade the market's tighter sd against my
 wider one for free (UR 609c98073a77 said tighter, NFP 84167af841f7 said
 wider, n=2).
+
+**Third market-aware contamination shape: the stale-year trap, now
+inside the tool (2026-09-07 15:0xZ, FULL cycle, operator machine;
+`journal/mech-requests.jsonl` rows phil-20260907-1512-ppi-ma-21 and
+the four Liberals rows).** On "Will PPI YoY be 5.1% or more in August?"
+(market 3566688, mid 0.705; own 0.67 from the FRED-level base-effect
+chain with consensus MoM +0.4) service 21's market-aware delivered
+p_yes 0.07, confidence 0.85, `research_class R`, researchability 0.95,
+`parse_tier clause`. Its serper background led with a 10 Sep 2025
+LinkedIn post ("PPI edged down -0.1% in August ... 2.6% year-over-year")
+and a Jul 2025 post, and the tool priced August 2026 off them although the
+same background carried the BLS July 2026 release (4.7%). That is the
+playbook's search-result stale-year trap (four instances on the
+unemployment-rate item) reproduced by the mech's own retrieval, and it is
+a different failure from the two already recorded (Polymarket-page price
+leak; NR-numeric miss of a reachable benchmark). Retro rule: when a
+market-aware `p_yes` sits far from both me and the market on a scheduled
+print, read `source_content.serper_response.organic[].date` before
+crediting it - a same-month prior-year date in the top results explains
+the number and the delivery is graded as contaminated, not as a
+disagreement. Same-cycle pair evidence on an interpretive question (Sweden
+Liberals win seats, 3561916, mid 0.575, own 0.55): market-aware 0.62 with
+page content (it read the Novus 4.3 poll, and the Polymarket event page's
+"trader consensus 57.5%" leaked in again), v4 0.22 on snippets alone (a
+Reuters snippet "captured only 3 percent"), pair spread 0.40 - the widest
+yet, wider than the Russia-Ukraine 0.22 above. The gap is retrieval depth,
+not judgment: grade both against Sep 13. Operational: service 25 was down
+for off-chain both tries (`eip1271 isValidSignature call timed out`,
+`mapNonces read failed`, both 503) and its `legacy_on_chain` delivery
+returned the literal `Invalid response` (paid, no JSON) - a third
+delivery outcome to log as an error; and a second parallel off-chain send
+(two requests to service 44 in one tool block) reproduced the 401 nonce
+rejection exactly as the rule above predicts, so the sequential-send rule
+stands on 3/3 instances.

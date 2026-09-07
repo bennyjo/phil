@@ -29,7 +29,12 @@
     "Rewritten 2026-09-07 11:3xZ (FULL cycle, operator machine): pruned the four expired",
     "entries (AfD majority price move, GTA VI trailer, ISM Aug PMI, Brazil Q2 GDP) and added",
     "the open positions plus the two price-only skips from this cycle and the four scheduled",
-    "prints researched this cycle."
+    "prints researched this cycle.",
+    "Amended 2026-09-07 15:1xZ (FULL cycle, operator machine): added the Sweden Liberals",
+    "price move (no-edge skip at 0.02, superseded forecast 95f438cf7aee) and the Aug PPI",
+    "calendar entry (forecasts 3e948a4300a4 / 09d6e627720e).",
+    "Amended 2026-09-07 18:0xZ (FULL cycle, operator machine): Iran price-move entry extended to",
+    "Sep 16 -- the market's 14-day window runs past its Sep 7 end date (RETRO-20260907-1758)."
   ],
   "price_moves": [
     {
@@ -43,10 +48,10 @@
     {
       "market_id": "4168072",
       "token_id": "69417544135807489015313328325643289050336268543893347332663964794312112787250",
-      "label": "US x Iran Effective Ceasefire by September 7? (No, open position 0ed1d77858d7, entry 0.54; deadline Sep 7 23:59Z)",
+      "label": "US x Iran Effective Ceasefire by September 7? (No, open position 0ed1d77858d7, entry 0.54, superseded est No 0.40; resolves Yes if no US strike on Iranian land before Sep 15 16:00Z, No on any such strike -- a move toward No means a land strike is being reported)",
       "move_threshold": 0.05,
       "window_min": 60,
-      "expires": "2026-09-08T06:00:00Z"
+      "expires": "2026-09-16T00:00:00Z"
     },
     {
       "market_id": "3748592",
@@ -79,6 +84,14 @@
       "move_threshold": 0.05,
       "window_min": 60,
       "expires": "2026-09-11T14:00:00Z"
+    },
+    {
+      "market_id": "3561916",
+      "token_id": "8198474575022344752511692459785490408590205557749020258510265116504208182302",
+      "label": "Sweden Parliamentary Election: Liberals Win Seats? (No; skipped no-edge 2026-09-07 at No ask 0.43 vs own No 0.45 after Novus 4.3; a move of 0.05 toward No re-opens the gap; election Sep 13)",
+      "move_threshold": 0.05,
+      "window_min": 60,
+      "expires": "2026-09-13T06:00:00Z"
     }
   ],
   "new_market": {
@@ -90,6 +103,11 @@
     {
       "label": "China August 2026 CPI (NBS, 01:30 UTC) - event 'August Inflation China - Annual', markets 3499774-3499778; forecasts 7bacc91ddf91 (>=0.9 est 0.38, wide-spread-veto) / 19cf14c87979 (0.7-0.8 est 0.33, outside-view-veto) / 9f93fff3d795; grade the contradictory-consensus read (TE 0.7 vs investing.com and Lundgreen 0.9) and the base-effect anchor against the print",
       "fire_at": "2026-09-09T01:30:00Z",
+      "window_min": 45
+    },
+    {
+      "label": "US August 2026 PPI (BLS, 08:30 ET) - final demand 12-month NSA bracket set, event 'PPI YoY - August 2026' (markets 3566679-3566688); forecasts 3e948a4300a4 (>=5.1 est 0.67 vs 0.705, no-edge) / 09d6e627720e (5.0 est 0.067); grade the base-effect chain (4.88 + 1.05 x MoM, consensus +0.4 -> 5.3) and the sd choice (own 0.53 vs market-implied ~0.45), plus the service-21 market-aware stale-year miss (0.07)",
+      "fire_at": "2026-09-10T12:30:00Z",
       "window_min": 45
     },
     {

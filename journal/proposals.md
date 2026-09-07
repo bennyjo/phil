@@ -1975,3 +1975,73 @@ agent catching its own dropped table row mechanically.
 Open operator asks after this pass: **0**.
 
 **Status:** informational — no new asks.
+
+## 2026-09-07 13:51Z — simultaneous-start collision the tip guard cannot see (diverged histories)
+
+**Symptom:** local `main` is `ahead 2, behind 1` of `origin/main` at the
+start of the 13:46Z operator-machine tick. The cloud runner committed
+`18b2c4f cycle: 20260907-1241` (12:41:13Z log line, pushed 12:41:35Z) and
+the operator machine committed `eb517ec retro:` + `043686e cycle:
+20260907-1241` (12:41:00Z log line). Both were LIGHT ticks; both saw the
+same tip (`be527bf`, ~56-61 min old) and cleared the 20-minute collision
+guard, because they started within ~15 seconds of each other and neither
+commit existed yet when the other checked. The lease cannot help here:
+LIGHT ticks do not take it, and the cloud runner's lease write is refused
+anyway (`written: false`).
+
+**Cost:** both ticks settled the same two forecasts (AfD 38-41
+`9036c73ddeef`, Wellington 10C `b838efbe4ade`), both wrote a retro
+(`RETRO-20260907-1238.md` cloud, `RETRO-20260907-1241.md` local) and both
+extended the playbook counterfactual table. The two edits agree on every
+number (118 rows / 110 fillable / 47W/63L / +$68.66 / held-out +$102.67),
+so nothing is wrong in the data, but the same hunk was rewritten twice, so
+`git pull --rebase` conflicts on `strategy/playbook.md` and
+`journal/cycles.log` (and likely `journal/forecasts.jsonl`, both runners
+appended settlement rows for the same forecasts). loop.sh's rebase-and-retry
+therefore failed after the 12:41Z tick and every later local commit stacks
+on the unpushed side. The 13:46Z tick (this one) continues on local state
+per step 0 and does not touch the divergence.
+
+**Proposed fix (operator, protected paths):**
+1. Resolve now by hand: keep either retro (they grade identically), keep
+   one playbook hunk, union the two cycles.log lines, and de-duplicate the
+   forecast settlement rows if both sides appended them.
+2. Make the guard robust to simultaneous starts: after committing, before
+   pushing, re-fetch and if a `cycle:` commit for the same UTC minute (or
+   within N minutes) landed on origin in the meantime, drop the local
+   cycle commit rather than rebase it (a LIGHT tick has nothing that the
+   other runner's tick did not already do). Alternatively offset the two
+   runners' schedules so their minute-of-hour can never coincide; the
+   cloud routine fires at a drifting minute (08:16, 10:14, 12:41), so a
+   fixed offset on the local loop is not enough on its own.
+
+**Status:** open operator ask.
+
+**Update 2026-09-07 17:5xZ (operator-machine FULL cycle):** still
+diverged, now local ahead 6 / origin ahead 4 (merge-base `be527bf`). The
+Grüne settlement was double-graded the same way: local `bfe4a1c retro:`
+(16:13Z) and cloud `7c8763d retro:` (16:19Z) both graded
+`66131e6b8f76` and both extended the counterfactual table, so the next
+rebase conflicts on the same three files again. Nothing in the data
+disagrees; the duplicate work is the cost. Continuing on local state
+per step 0; loop.sh pushes.
+
+**Update 2026-09-07 19:0xZ (operator-machine LIGHT tick):** still
+diverged, now local ahead 8 / origin ahead 6. Third duplicate grading:
+the SPD 7-9pct no-edge row `1d316aebfe91` was retro'd on both sides
+(local `a7795e4` 17:58Z, cloud `00e38f5` 18:13Z). Every settlement since
+12:41Z has now been graded twice, and the unpushed local side carries the
+Iran clause-misread supersede (`1063bcaec323`) and its playbook rule that
+the cloud runner cannot see. Continuing on local state per step 0.
+
+**Update 2026-09-07 20:0xZ (operator-machine LIGHT tick):** still
+diverged, now local ahead 9 / origin ahead 6 (merge-base `be527bf`).
+No new cloud commit since `e3b82b7` (18:19Z), so no fourth duplicate
+grading this hour; the 19:06Z local cycle commit `66751dc` is the only
+addition to the unpushed side. Nothing settled on either side since. The
+gap is now a full afternoon of operator-machine work (3 retros, the Iran
+supersede and playbook rule, 6 cycle lines) that the cloud runner cannot
+see, and each cloud tick that grades a settlement first makes the manual
+merge one hunk longer. Continuing on local state per step 0; loop.sh
+pushes and will keep failing the rebase until the operator merges by
+hand.
