@@ -3982,3 +3982,57 @@ econ pair so far (BoR hold: market-aware 0.68 vs own 0.75 vs mid 0.685).
 Nothing to act on yet; grade both against the Sep 15 outcome and keep
 noting whether the market-aware/v4 gap is systematically larger on
 interpretive (news) questions than on mechanical prints.
+
+**Sequential sends are not enough (2026-09-07 11:2xZ, FULL cycle,
+operator machine).** Third and fourth nonce instances, this time with
+requests sent strictly one at a time: the first off-chain request of the
+cycle (service 25, market-aware, FOMC hike) was rejected with `on-chain
+mapNonces read failed (HTTP 503)`; the retry with a new `request_id`
+delivered; the NEXT request on the same mech (v4, the paired comparison)
+was then rejected twice in a row with `wire nonce below sender's next
+expected slot (HTTP 401)`, and `legacy_on_chain=true` delivered at the
+first attempt (tx 0x1bf161fc..., ~0.13 POL). Later off-chain requests to
+services 21 and 44 delivered normally, so the slot desync was scoped to
+the mech that had just served a request after the 503, not to the whole
+cycle. Rule amendment: after ONE nonce (401) rejection on a sequential
+send, go straight to `legacy_on_chain=true` for that request; a second
+off-chain retry has now failed 1/1 and costs a minute. Keep the first
+retry-with-new-id for the 503 shape, which is what actually recovered.
+
+**Second market-aware price-leak instance, and it is the mechanical
+kind.** On the FOMC hike question (market 2252245, mid 0.485, FedWatch
+~0.56 on Sep 4, Kalshi 0.505) the tool's serper query is the market
+question itself, which pulled `polymarket.com/event/fed-decision-in-
+september` reading "25 bps decrease at 100%" (an older event, already
+resolved) plus the July FOMC minutes; it delivered p_yes 0.02 with
+`market_prob_seen` null and confidence 0.95, while v4 on the same
+sources gave 0.22. First instance was the NFP jobs event
+(RETRO-20260904). On Polymarket-titled scheduled decisions the
+"blind" estimate is not blind, it is anchored on whatever Polymarket
+page Google ranks, which can be a stale sibling event. Until the tool
+filters polymarket.com out of its sources, treat market-aware outputs on
+questions whose wording matches a Polymarket title as contaminated in
+retros (compare v4 and the market instead), and say so in the cycle
+summary each time it recurs. The CPI bracket request (service 21)
+showed the opposite failure: `research_class NR-numeric`, researchability
+0.10, p_yes 0.12 on the 0.4% bucket, having missed the Cleveland Fed
+nowcast (0.36) that is exactly the reachable benchmark for that shape.
+
+**Cleveland Fed nowcast is reachable from the operator runner
+(2026-09-07 11:1xZ).** `clevelandfed.org/indicators-and-data/inflation-
+nowcasting` fetched cleanly (updated 09/04: Aug CPI MoM 0.36, core MoM
+0.20, YoY 3.38, core YoY 2.38) after every cloud attempt in August was
+EGRESS_BLOCKED. That supplies a quoted MEAN for the whole CPI cluster,
+and it centred where both PM and Kalshi already sat, so the only
+disagreement is dispersion (PM/Kalshi imply sd ~0.07 on the headline
+MoM bucket; my model used 0.11). The sd is still unsourced at research
+time: the Knotek-Zaman RMSE tables live in PDFs (wp2406 unreadable via
+WebFetch, EC 2023-06 PDF 404, the HTML commentary reports only
+quarterly SAAR comparisons), so the 0.4% No leg (claimed edge 0.14 at
+ask 0.52) stayed an outside-view-veto row (5a6d5321c25a) under gate 2,
+as did the core 0.2% No leg (79e72c3002c3). A cloud or operator cycle
+that extracts a published monthly-RMSE figure for the headline nowcast
+before the Sep 11 print turns this into the carve-out's first live
+candidate; without it the rows grade the market's tighter sd against my
+wider one for free (UR 609c98073a77 said tighter, NFP 84167af841f7 said
+wider, n=2).

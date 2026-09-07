@@ -24,24 +24,61 @@
     "",
     "PRUNE: an entry past its expires (and a calendar entry past its window) is skipped and",
     "listed in the verdict's expired array. Delete those in the next cycle - a stale watch",
-    "list is a watch list I have stopped reading."
+    "list is a watch list I have stopped reading.",
+    "",
+    "Rewritten 2026-09-07 11:3xZ (FULL cycle, operator machine): pruned the four expired",
+    "entries (AfD majority price move, GTA VI trailer, ISM Aug PMI, Brazil Q2 GDP) and added",
+    "the open positions plus the two price-only skips from this cycle and the four scheduled",
+    "prints researched this cycle."
   ],
   "price_moves": [
     {
-      "market_id": "2244513",
-      "token_id": "58936947587466153732065958358005311102302329218132355113763210144958383670811",
-      "label": "Will AfD win an absolute majority of seats in Sachsen-Anhalt? (No, open position de95e5168de3, entry 0.66)",
+      "market_id": "1193094",
+      "token_id": "49952287244614575734723913757649087902024339238007187585607375183859292977482",
+      "label": "Will Magdalena Andersson be the next Prime Minister of Sweden? (No, open position e746d7e1ba99, entry 0.21; election Sep 13)",
       "move_threshold": 0.05,
       "window_min": 60,
-      "expires": "2026-09-06T00:00:00Z"
+      "expires": "2026-09-14T00:00:00Z"
     },
     {
-      "market_id": "2732505",
-      "token_id": "46385861612869030000228048005089520231567995423356571308494589747914443897549",
-      "label": "Another GTA VI trailer released by August 31? (Yes, open position c6f16acc55d9, entry 0.36 -- premiere reported Aug 27; a drop = market pricing labeling/cancellation risk, a jump toward 1.0 = release happened, check sibling GTA markets for lag)",
-      "move_threshold": 0.1,
+      "market_id": "4168072",
+      "token_id": "69417544135807489015313328325643289050336268543893347332663964794312112787250",
+      "label": "US x Iran Effective Ceasefire by September 7? (No, open position 0ed1d77858d7, entry 0.54; deadline Sep 7 23:59Z)",
+      "move_threshold": 0.05,
       "window_min": 60,
-      "expires": "2026-09-01T04:00:00Z"
+      "expires": "2026-09-08T06:00:00Z"
+    },
+    {
+      "market_id": "3748592",
+      "token_id": "21785292107581402359788738310101564722940089518133858678134395612535216449548",
+      "label": "Mecklenburg-Vorpommern CDU vote share 11-14pct? (Yes, open position 23e40bbbccc5, entry 0.09; election Sep 20)",
+      "move_threshold": 0.05,
+      "window_min": 60,
+      "expires": "2026-09-21T00:00:00Z"
+    },
+    {
+      "market_id": "2661523",
+      "token_id": "101226646659160481931269342739035989075280131990130572924718801665839150667247",
+      "label": "Will the Bank of Russia make no change to the key rate after the September meeting? (Yes, open position cd8b25268fe1, entry 0.70; decision Sep 11 10:30Z)",
+      "move_threshold": 0.05,
+      "window_min": 60,
+      "expires": "2026-09-12T00:00:00Z"
+    },
+    {
+      "market_id": "2252245",
+      "token_id": "63842529068710005716169325380315470359047749786610778647370693404952498013178",
+      "label": "Will the Fed increase interest rates by 25 bps after the September 2026 meeting? (Yes; skipped no-edge 2026-09-07 at ask 0.49 vs own 0.52, FedWatch ~0.56; a move toward 0.40 re-opens the cross-market gap)",
+      "move_threshold": 0.05,
+      "window_min": 60,
+      "expires": "2026-09-16T20:00:00Z"
+    },
+    {
+      "market_id": "3539667",
+      "token_id": "59533291979005451027301161253701619382906657645157548326972285410455577606339",
+      "label": "Will monthly inflation increase by 0.4% in August? (No; vetoed 2026-09-07 at No ask 0.52 vs own 0.66 on an unsourced sd; print Sep 11 12:30Z)",
+      "move_threshold": 0.05,
+      "window_min": 60,
+      "expires": "2026-09-11T14:00:00Z"
     }
   ],
   "new_market": {
@@ -51,13 +88,23 @@
   },
   "calendar": [
     {
-      "label": "ISM Manufacturing PMI (Aug 2026) release - 10:00am ET (forecast 700dfea982ec, 55.0-55.9 bracket, est 0.28 vs ask 0.26, no-edge)",
-      "fire_at": "2026-09-01T14:00:00Z",
+      "label": "China August 2026 CPI (NBS, 01:30 UTC) - event 'August Inflation China - Annual', markets 3499774-3499778; forecasts 7bacc91ddf91 (>=0.9 est 0.38, wide-spread-veto) / 19cf14c87979 (0.7-0.8 est 0.33, outside-view-veto) / 9f93fff3d795; grade the contradictory-consensus read (TE 0.7 vs investing.com and Lundgreen 0.9) and the base-effect anchor against the print",
+      "fire_at": "2026-09-09T01:30:00Z",
       "window_min": 45
     },
     {
-      "label": "Brazil Q2 2026 GDP QoQ (IBGE PIB, official quarterly print) release - Sep 1, exact time unconfirmed (WebSearch found date only, defaulting to prior-quarter's ~12:00 UTC slot); markets 2428141/2428142/2428143 bracket 0.0-0.8%; one non-official proxy (FGV/IBRE monthly series) suggested ~0.3% QoQ but is a different methodology, not a standalone sharp benchmark -- verify official IBGE release time and look for a real consensus (Reuters poll, analyst median) when this fires",
-      "fire_at": "2026-09-01T12:00:00Z",
+      "label": "Bank of Russia key-rate decision (13:30 MSK) - open position cd8b25268fe1 no-change Yes @0.70 (est 0.75), sibling cut forecast d8d34757ae8e; grade per the schedule.json watch item (RBC n=30 poll vs PM mid vs mech 0.68)",
+      "fire_at": "2026-09-11T10:30:00Z",
+      "window_min": 45
+    },
+    {
+      "label": "US August 2026 CPI (BLS, 08:30 ET) - headline MoM/YoY, core MoM/YoY bracket sets (events of 3539666/3539673/3539688/3539696); 11 forecasts recorded 2026-09-07 off the Cleveland Fed nowcast (0.36/3.38/0.20/2.38 as of 09/04); grade the dispersion thesis (market implied sd ~0.07 vs own 0.11) on the 0.4 No veto row 5a6d5321c25a and the core 0.2 No veto row 79e72c3002c3",
+      "fire_at": "2026-09-11T12:30:00Z",
+      "window_min": 45
+    },
+    {
+      "label": "FOMC September 2026 decision (statement 14:00 ET) - hike/hold pair 2252245/2252244, forecasts ead3094ccd48 (hike est 0.52) / a47f9db6f4b9; grade FedWatch (0.56 on Sep 4) vs Kalshi (0.505) vs PM (0.485) vs own, and the two mech reads (market-aware 0.02 price-leak, v4 0.22)",
+      "fire_at": "2026-09-16T18:00:00Z",
       "window_min": 45
     }
   ]
