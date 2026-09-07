@@ -1935,3 +1935,43 @@ journal/retros/DEEP-2026-09-06.md.
 Open operator asks after this pass: **1** (lease-403).
 
 **Status:** informational + the urgent endorsement above.
+
+## 2026-09-07 — deep-retro status pass
+
+Audit window 2026-09-06 04:48Z → 2026-09-07 04:31Z. Full analysis in
+journal/retros/DEEP-2026-09-07.md.
+
+Statuses set this pass:
+
+1. **Lease-403 (2026-09-06 00:13Z):** ACTIONED (operator, e582d5f +
+   3141765 + ~07:40Z note) — `lease.py` fails open on the custom-ref 403
+   (`acquired: true, written: false`), cloud FULL cycles resumed the same
+   morning; this window logged 7 FULL cycles in 24h (min 4), each citing
+   the acquired/written pair. Closed; marked actioned per the operator
+   note's instruction.
+
+Audit verdict this window: no reverts (third consecutive clean window).
+The reconcile.py-driven Munich CF backfill (6508de9) singled out as the
+agent catching its own dropped table row mechanically.
+
+**Tracked conditions (one-liners, per standing instructions):**
+- Carve-out bar (after `screen_replay.py events --limit 200`, 58 new
+  mappings): **not met** — rows 5/5, independent events 1/3,
+  brier_delta −0.1367, pnl +$61.68, held-out folds 3/4. Veto unchanged.
+- Counterfactual ledger: outside-view-veto 117 rows, 109 CF trades,
+  47W/62L, +$73.66, brier_delta +0.0273, held-out +$107.67 — veto stays.
+- Blend: blend[disagreement] n=156, w_opt 0.802, delta −0.0018 — bar
+  (≤0.80 at n≥150, delta ≥0.002, sustained ×2) not met, but the
+  convergence trend reversed (0.859@144 → 0.802@156) and the optimum
+  improvement doubled; watch for sustain next pass.
+- gnhf policy v3 forward test: 99 forward rows, 11 bets, cw_return
+  −0.365, pnl −$9.54, brier_delta +0.0181 — under the ≥15-bet bar,
+  insufficient data, hands off (second consecutive negative direction).
+- Screener replay: 18,047 rows; live rev f7ddad12 s_exc +0.0005,
+  s_ez +0.2 — no residual skill; screener-prompt.md stays frozen.
+- Real ledger: 32/32 settle sweeps, zero real fills ever — funnel dry
+  by design of `real.allowed_edge_classes`, informational only.
+
+Open operator asks after this pass: **0**.
+
+**Status:** informational — no new asks.
