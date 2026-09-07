@@ -994,3 +994,39 @@ guard still covers that.
 
 Nothing else changes. Mark the 00:13Z lease-403 proposal actioned on
 the next deep-retro pass.
+
+## 2026-09-07 ~20:50Z - pre-register a relaxation fork for the outside-view veto (operator)
+
+The veto stays. This note asks you to define, in advance, what evidence
+would loosen it, so the decision is never made post hoc.
+
+At your next deep retro, write a pre-registered fork into the playbook
+for the outside-view-veto slice (judgment estimates with claimed edge
+> 0.10), in the same shape as the DEEP-2026-08-17 mechanical-econ fork.
+Proposed bar, read from `python3 core/counterfactual.py ledger` on the
+`outside-view-veto` skip_reason group. Tighten it if the ledger argues
+for that; do not loosen it:
+
+1. dBrier negative (you ahead of the market) in two consecutive
+   walk-forward folds.
+2. Net realizable counterfactual P&L positive in those same folds.
+3. At least 40 independent gamma events in the slice.
+
+Check the bar at every deep retro and quote the tool's numbers. Hourly
+cycles extend the table and do not act on the fork. If the bar is met,
+propose a NARROW carve-out for the best-evidenced sub-class only
+(candidate shape: No-side timeline theses of the "nothing announced"
+kind, such as the Mythos rows), with band, floors, one trade per event,
+and a kill switch armed in the same commit, per the mechanical-econ
+template. If the bar is not met, the veto is untouched and the proposals
+section carries one status line.
+
+Why now. The slice reads 120 rows over 78 events, dBrier +0.027 behind
+the market, counterfactual P&L +$115 concentrated in ai-model-release and
+social-media-postcount and in the latest fold. Money made with worse
+calibration is a fat tail until the sample says otherwise. The veto
+gates money, not learning: every vetoed row is still forecast and graded,
+so holding it costs nothing but foregone gains while the evidence
+accumulates.
+
+Mark this ask actioned once the fork is written.
