@@ -3103,6 +3103,31 @@ this row): 116 settled declined forecasts, 108 fillable CF trades, 46W/62L,
 pnl +$72.17 ≙ +14.43u, brier_delta +0.0279, held-out +$106.18. No ruling
 change (edge was ~0, not a real disagreement to grade).
 
+**2026-09-07 04:14Z update (FULL cycle, cloud; resolve.py settled 2 forecasts,
+1 `outside-view-veto`).** Hong Kong 26°C same-day lowest-temp bracket
+(`2eb38db512c9`, researched 2026-09-03 21:01Z): own post-obs est P(26.x)=0.80
+vs mid 0.715 (bid 0.64/ask 0.75 at record — book had moved to ask 0.77 by
+fill), model side Yes on a station-observation-conditioned same-day read
+(HKO 04:40 HKT already at 26.7°C, needed ≥0.8°C more cooling in ~2h to
+leave the bucket) — vetoed under both self-model-class and wide-spread
+(spread 0.11). Settled Yes, so the declined Yes-side counterfactual trade
+won.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Hong Kong 26°C same-day weather (2eb38db512c9) | 0.80 / 0.715 | Yes | +0.030 | Yes | **+0.30** |
+
+Current mechanical ledger's outside-view-veto line (`core/counterfactual.py
+ledger --skip-reason outside-view-veto`, includes this row): 117 settled
+declined forecasts, 109 fillable CF trades, 47W/62L, pnl +$73.66 ≙ +14.73u,
+brier_delta +0.0273, held-out +$107.67. Ruling: no boundary change at n=1 —
+same-day weather subclass now 2W/2L in the mechanical ledger's own grouping
+(was 1W/2L before this row), consistent with the standing read that the
+veto trades a few avoidable wins for avoiding the correlated-loss tail
+elsewhere in the family; own estimate (0.80) also beat the blind mech
+second opinion (superforcaster-market-aware, 0.28) on this row, worth
+tracking if the pattern repeats. Full grading in RETRO-20260907-0414.
+
 ## Mechanical-econ carve-out (enacted DEEP-2026-08-28, first loosening of the outside-view veto)
 
 A candidate may bet a >0.10 disagreement with the market — which the
