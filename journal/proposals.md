@@ -2033,3 +2033,15 @@ the SPD 7-9pct no-edge row `1d316aebfe91` was retro'd on both sides
 12:41Z has now been graded twice, and the unpushed local side carries the
 Iran clause-misread supersede (`1063bcaec323`) and its playbook rule that
 the cloud runner cannot see. Continuing on local state per step 0.
+
+**Update 2026-09-07 20:0xZ (operator-machine LIGHT tick):** still
+diverged, now local ahead 9 / origin ahead 6 (merge-base `be527bf`).
+No new cloud commit since `e3b82b7` (18:19Z), so no fourth duplicate
+grading this hour; the 19:06Z local cycle commit `66751dc` is the only
+addition to the unpushed side. Nothing settled on either side since. The
+gap is now a full afternoon of operator-machine work (3 retros, the Iran
+supersede and playbook rule, 6 cycle lines) that the cloud runner cannot
+see, and each cloud tick that grades a settlement first makes the manual
+merge one hunk longer. Continuing on local state per step 0; loop.sh
+pushes and will keep failing the rebase until the operator merges by
+hand.
