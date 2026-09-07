@@ -254,6 +254,34 @@ No further grading duty attaches to this gate's founding set; future
 >0.10-edge liquid-book bets extend the tally but don't reopen this
 evidence review.
 
+**Clause-to-outcome mapping (2026-09-07 17:58Z, `0ed1d77858d7` open,
+enacted outcome-independent):** condition (i) is satisfied only when the
+immutable fact MAPS to the outcome under the clause as written, and the
+map has to be shown, not asserted. Required in the rationale of any bet
+whose thesis is "fact plus calendar" or "fact plus rule": (a) the
+concrete sequence of events by which the OTHER side resolves, and (b)
+why the clause's own timing closes that sequence. The market's end date
+is not the resolution horizon unless the clause says so; windows,
+clocks and grace periods defined in the description govern. Evidence:
+the Iran ceasefire No bet (est 0.93 @0.54, claimed edge 0.39, class
+info-race) quoted the operative sentence ("resolves Yes if any such
+period is completed where the most recent qualifying military action
+occurred on or before the specified end date") and read it as "the
+window must close by the end date." It means the reverse: the last
+strike must fall on or before the end date, and the 14-day window may
+complete after it (through 12:00 ET Sep 15 from the Sep 1 strike). The
+Yes path was open the whole time, the market priced it (0.54 No at
+entry, 0.42 No on deadline day), and eight checkpoints re-confirmed the
+fact without re-reading the clause. Superseded to No 0.40, no edge
+(`1063bcaec323`). Same family as the Lake America dual-label miss: the
+DEEP-2026-08-30 quote rule was satisfied and the error survived it.
+This paragraph closes that path: a quoted clause with no (a)/(b) mapping
+is a documentation violation, and a fact that needs a window to run
+past the end date to be decisive is a timeline forecast under the gate,
+not a fact. Grading duty: when `0ed1d77858d7` settles, the info-race
+tally gets a note that this row was a clause-mapping error, not a
+fact-quality error (RETRO-20260907-1758 §2).
+
 NOT an edge class — **resolver-interpretation reads** (graded
 DEEP-2026-08-01): "I checked the exact resolution source and it says X"
 where the reading requires a judgment call (UI toggle, table choice, which

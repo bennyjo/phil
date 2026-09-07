@@ -2016,3 +2016,12 @@ per step 0 and does not touch the divergence.
    fixed offset on the local loop is not enough on its own.
 
 **Status:** open operator ask.
+
+**Update 2026-09-07 17:5xZ (operator-machine FULL cycle):** still
+diverged, now local ahead 6 / origin ahead 4 (merge-base `be527bf`). The
+Grüne settlement was double-graded the same way: local `bfe4a1c retro:`
+(16:13Z) and cloud `7c8763d retro:` (16:19Z) both graded
+`66131e6b8f76` and both extended the counterfactual table, so the next
+rebase conflicts on the same three files again. Nothing in the data
+disagrees; the duplicate work is the cost. Continuing on local state
+per step 0; loop.sh pushes.
