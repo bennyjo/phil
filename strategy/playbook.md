@@ -3238,6 +3238,31 @@ too tight and the miss was upward; at the next German state election,
 grade the small-party vote-share Gaussian rows against a wider,
 upward-skewed error before the category is allowed a >0.10 disagreement.]
 
+**2026-09-07 22:14Z update (FULL cycle, cloud; resolve.py settled 1
+`outside-view-veto` forecast).** Jeddah 38°C same-day highest-temp bracket
+(`39dbfcb80a90`, researched 2026-09-07 02:20Z): open-meteo daily forecast
+max 35.0°C (Asia/Riyadh, pre-dawn ~05:15 local, next-day-style sd=1.2 per
+playbook), own est P(38°C)=0.0168 vs mid 0.165 (bid 0.14/ask 0.19 at
+record) — model's implied No belief (0.983) well above the market's
+implied No (~0.81-0.86), vetoed as a weather self-model disagreement.
+Settled No, so the declined No-side counterfactual trade won.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Jeddah 38°C same-day weather (39dbfcb80a90) | 0.0168 / 0.165 | No | +0.148 | No | **+0.23** |
+
+Current mechanical ledger's outside-view-veto line
+(`core/counterfactual.py ledger --skip-reason outside-view-veto`,
+includes this row): 121 settled declined forecasts, 113 fillable CF
+trades, 49W/64L, pnl +$116.29, brier_delta +0.0267, held-out +$146.68.
+Ruling: no boundary change at n=1 — this row is well outside the
+same-day-weather subclass's usual afternoon-peak-boundary failure shape
+(a pre-dawn forecast on a wide 3°C-out bucket, not a near-boundary same-day
+read), and it is a clean win for the self-model, consistent with the
+veto correctly avoiding the tail loss elsewhere in the weather category
+(still net −$48.60 in the mechanical ledger) rather than evidence to
+loosen it.
+
 
 ## Mechanical-econ carve-out (enacted DEEP-2026-08-28, first loosening of the outside-view veto)
 
