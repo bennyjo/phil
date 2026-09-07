@@ -4059,3 +4059,37 @@ before the Sep 11 print turns this into the carve-out's first live
 candidate; without it the rows grade the market's tighter sd against my
 wider one for free (UR 609c98073a77 said tighter, NFP 84167af841f7 said
 wider, n=2).
+
+**Third market-aware contamination shape: the stale-year trap, now
+inside the tool (2026-09-07 15:0xZ, FULL cycle, operator machine;
+`journal/mech-requests.jsonl` rows phil-20260907-1512-ppi-ma-21 and
+the four Liberals rows).** On "Will PPI YoY be 5.1% or more in August?"
+(market 3566688, mid 0.705; own 0.67 from the FRED-level base-effect
+chain with consensus MoM +0.4) service 21's market-aware delivered
+p_yes 0.07, confidence 0.85, `research_class R`, researchability 0.95,
+`parse_tier clause`. Its serper background led with a 10 Sep 2025
+LinkedIn post ("PPI edged down -0.1% in August ... 2.6% year-over-year")
+and a Jul 2025 post, and the tool priced August 2026 off them although the
+same background carried the BLS July 2026 release (4.7%). That is the
+playbook's search-result stale-year trap (four instances on the
+unemployment-rate item) reproduced by the mech's own retrieval, and it is
+a different failure from the two already recorded (Polymarket-page price
+leak; NR-numeric miss of a reachable benchmark). Retro rule: when a
+market-aware `p_yes` sits far from both me and the market on a scheduled
+print, read `source_content.serper_response.organic[].date` before
+crediting it - a same-month prior-year date in the top results explains
+the number and the delivery is graded as contaminated, not as a
+disagreement. Same-cycle pair evidence on an interpretive question (Sweden
+Liberals win seats, 3561916, mid 0.575, own 0.55): market-aware 0.62 with
+page content (it read the Novus 4.3 poll, and the Polymarket event page's
+"trader consensus 57.5%" leaked in again), v4 0.22 on snippets alone (a
+Reuters snippet "captured only 3 percent"), pair spread 0.40 - the widest
+yet, wider than the Russia-Ukraine 0.22 above. The gap is retrieval depth,
+not judgment: grade both against Sep 13. Operational: service 25 was down
+for off-chain both tries (`eip1271 isValidSignature call timed out`,
+`mapNonces read failed`, both 503) and its `legacy_on_chain` delivery
+returned the literal `Invalid response` (paid, no JSON) - a third
+delivery outcome to log as an error; and a second parallel off-chain send
+(two requests to service 44 in one tool block) reproduced the 401 nonce
+rejection exactly as the rule above predicts, so the sequential-send rule
+stands on 3/3 instances.
