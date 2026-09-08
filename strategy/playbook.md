@@ -407,6 +407,42 @@ estimate-bearing labels. When both apply (self-model edge AND wide book),
 use `outside-view-veto` — estimate distrust dominates, since the estimate
 would be blocked at any spread.
 
+**Taxonomy extension (RETRO-20260908-1612): `no-edge` vs
+`wide-spread-veto`.** The DEEP-2026-08-14 rule above ruled on
+`outside-view-veto` vs `wide-spread-veto` and never said what `no-edge`
+may not be used for, so the third leg leaked. Rule: **`no-edge` means the
+EDGE ITSELF failed to clear the floor.** If the edge cleared the floor
+and only `max_spread` blocked the bet, the label is `wide-spread-veto` -
+even when the ask-side edge looks marginal, and even when the wide book
+is what made the nominal edge look small in the first place. Same
+forecast-row requirement as the other estimate-bearing labels.
+
+Evidence, and the erratum it forces. Forecast `96065826ed50`
+(2026-09-08 08:22Z, Go Ahead Eagles resumed-match win, est 0.91 vs mid
+0.7555, ask 0.869, spread 0.227) was recorded `no-edge` while its own
+note read "nominal ask-edge 0.041 clears min_edge (0.04) but the spread
+(0.227) is far over max_spread (0.06) ... no bet, spread veto binds."
+It settled LOST at dBrier **+0.2573**. `forecasts.jsonl` is core-written
+and cannot be corrected in place, so **reclassify this row by hand
+before reading either slice**:
+
+- `no-edge` (n=307, printed +0.0009, aggregate ≈ +0.276) carries
+  +0.2573 of its total in this ONE row. Drop it and the remaining 306
+  rows sum to ~+0.02, a mean on the order of +0.0001 - flat. Robust to
+  the printed rounding (remaining mean lands in +0.00001..+0.0001
+  either way). The clean-feed-null instrument has no drift; it has one
+  mislabelled row.
+- `wide-spread-veto` (n=4, −0.0553, "agent better on every row" per
+  DEEP-2026-08-20) becomes n=5 at ≈ **+0.0072** - neutral, not
+  uniformly agent-better. This row is the spread rule's first settled
+  instance of the veto SAVING money rather than costing it, and the
+  mislabel is what hid it.
+
+One label averaging two mechanisms with opposite settled signs corrupts
+both instruments - the same argument DEEP-2026-08-14 made, recurring a
+month later at ~5x the per-row magnitude. That is why this is a rule and
+not a note.
+
 **Taxonomy addition (DEEP-2026-08-25): `census-consistent`.** A sibling-
 census or cross-market consistency check that finds no signal (ladder
 monotonic, 1X2 sum ≈ 1, no arb) and forms NO independent probability
