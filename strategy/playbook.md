@@ -3263,6 +3263,75 @@ veto correctly avoiding the tail loss elsewhere in the weather category
 (still net −$48.60 in the mechanical ledger) rather than evidence to
 loosen it.
 
+**2026-09-08 deep retro (resolve.py this pass settled 1
+`outside-view-veto` forecast).** Toronto 25°C same-day highest-temp
+(`291e9630e91e`, recorded 2026-09-07 00:23Z, next-day-style): open-meteo
+point forecast max 25.4°C, N(25.4, 1.2) gives P(25°C)=0.307 vs market
+0.57, disagreement 0.26, vetoed under the weather-category moratorium.
+Official high was 25°C → Yes. The declined No-side CF trade (No @0.44,
+claimed edge 0.253) **LOSES** −$5.00 (−1.00u): a correct decline, and a
+clean self-model miss — the point forecast was right (25.4 rounds into
+the bucket) and the sd=1.2 dispersion pushed 0.69 of the mass out of a
+bucket the market read at 0.57.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Toronto 25°C Sep7 (291e9630e91e) | 0.307 / 0.57 | No | +0.253 | Yes | −5.00 |
+
+Current mechanical ledger's outside-view-veto line
+(`core/counterfactual.py ledger --skip-reason outside-view-veto`, after
+`screen_replay.py events --limit 200`, includes this row): 122 settled
+declined forecasts, 114 fillable CF trades, 49W/65L, pnl +$111.29,
+brier_delta +0.0289, held-out +$141.68. Ruling: no boundary change —
+this is the second "mean right, dispersion wrong" weather row (after
+Wellington, RETRO-20260907-1241's pre-registered sd question): the
+Gaussian's sd, not its center, produced the disagreement, and the market
+priced the same point forecast with a tighter sd and won. It counts
+toward the pre-registered Wellington sd test (re-examine the weather sd
+once the same-day subclass reaches ~6 settled rows — this row is
+next-day-style, so it informs but does not trigger that test). Within
+the veto slice, weather now reads 18 rows, 5W/13L, CF −$53.60, dBrier
++0.0836: the veto's single best category.
+
+## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
+
+The veto on judgment estimates with claimed edge > 0.10 stays. This fork
+defines IN ADVANCE the only evidence that loosens it, so the decision is
+never made post hoc. Read the numbers from
+`python3 core/counterfactual.py ledger --skip-reason outside-view-veto`
+(run `python3 core/screen_replay.py events --limit 200` first so `evts`
+is current). ALL THREE must hold:
+
+1. **brier_delta negative (model ahead of the market) in the two MOST
+   RECENT consecutive walk-forward folds.** Tightened from the operator
+   note's "two consecutive folds" to the two most recent, and the ledger
+   argues for the tightening: today's folds f3/f4 carry the slice's best
+   CF pnl (+$1.56 / +$91.94) with its WORST calibration (per-fold dBrier
+   +0.0488 / +0.0200) — an old good patch must not unlock a carve-out
+   while the newest money is being made with worse-than-market beliefs.
+   The tool prints fold_pnl but not per-fold dBrier (operator proposal
+   filed 2026-09-08 to add it); until then, compute it read-only: sort
+   the slice's `--json` rows by ts, split into `folds` equal contiguous
+   slices, and average (est−outcome)² − (market−outcome)² per fold.
+2. **Net CF pnl positive in those same two folds** (the tool's fold_pnl
+   columns, mechanical today).
+3. **At least 40 independent gamma events in the slice** (the tool's
+   `evts` column).
+
+Status 2026-09-08: **NOT MET.** (1) fails — per-fold dBrier ≈ f0 +0.011,
+f1 −0.000, f2 −0.009, f3 +0.049, f4 +0.020 (recipe above; the tool's
+own fold boundaries may shift these slightly): the two most recent folds
+are both positive. (2) holds on f3/f4 (+$1.56/+$91.94). (3) holds: 80
+events ≥ 40. Money without calibration — the fork stays shut.
+
+If the bar is ever MET: do not loosen the veto wholesale. Propose a
+NARROW carve-out for the best-evidenced sub-class only (current
+candidate shape: No-side timeline theses of the "nothing announced"
+kind), with a disagreement band, standard floors, one trade per event,
+and a kill switch armed in the same commit, per the mechanical-econ
+template below. Hourly cycles extend the table and never act on this
+fork; only a deep retro may propose the carve-out.
+
 
 ## Mechanical-econ carve-out (enacted DEEP-2026-08-28, first loosening of the outside-view veto)
 

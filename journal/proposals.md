@@ -1831,7 +1831,7 @@ screen_replay.py already uses), negative brier_delta, positive pnl on
 3 of 4 held-out folds. The trigger is operator-registered, so amending
 it is an operator act; until answered, each deep-retro pass quotes the
 countable-metric line and holds the veto boundary unchanged.
-Status: OPEN — operator ask.
+Status: ACTIONED (operator, 2ac62b7 + 2026-09-06 ~00:30Z note; closed in the 2026-09-06 status pass — this line was left stale and is corrected by the 2026-09-08 pass).
 
 **Tracked conditions (one-liners, per standing instructions):**
 - Blend: blend[disagreement] n=144, w_opt=0.859, delta −0.0009 — bar
@@ -2045,3 +2045,79 @@ see, and each cloud tick that grades a settlement first makes the manual
 merge one hunk longer. Continuing on local state per step 0; loop.sh
 pushes and will keep failing the rebase until the operator merges by
 hand.
+
+## 2026-09-08 — deep-retro status pass
+
+Audit window 2026-09-07 ~04:30Z → 2026-09-08 ~05:00Z. Full analysis in
+journal/retros/DEEP-2026-09-08.md.
+
+Statuses set this pass:
+
+1. **Simultaneous-start collision (2026-09-07 13:51Z):** ACTIONED IN
+   PART (operator, d79e161 2026-09-07 21:57Z) — the by-hand merge
+   (proposed fix 1) is done: origin is canonical, the duplicate
+   gradings were reconciled with a MERGE NOTE in the playbook table,
+   and both pre-registered rulings (Wellington sd, small-party sd) were
+   carried. Proposed fix 2 — making the guard robust to
+   simultaneous starts (drop-not-rebase for same-minute LIGHT cycle
+   commits, or a fixed minute offset for the local loop) — is NOT yet
+   addressed and remains the **one open operator ask**. The failure
+   mode recurs whenever both runners tick within the same ~20s.
+2. **Pre-registered veto-relaxation fork (operator note 2026-09-07
+   ~20:50Z):** ACTIONED this pass — playbook section "Outside-view-veto
+   relaxation fork (pre-registered, DEEP-2026-09-08)". Condition 1
+   tightened to the two MOST RECENT folds (the ledger argues for it:
+   f3/f4 hold the best pnl and the worst per-fold dBrier). Bar today:
+   NOT MET (per-fold dBrier f3 +0.049, f4 +0.020 both positive; events
+   80/40 met; fold pnl met). The veto is untouched.
+3. **Stale status line on the countable-metric trigger amendment
+   (2026-09-05 ask):** corrected in place to ACTIONED — it was closed
+   in the 2026-09-06 pass (operator 2ac62b7) but the inline line still
+   read OPEN.
+
+New operator ask (small, protected-core):
+
+4. **Per-fold brier_delta in `core/counterfactual.py`.** The
+   relaxation fork's condition 1 reads per-fold dBrier, but the tool
+   emits only `fold_pnl` (per group). The deep retro currently
+   recomputes it read-only from `--json` rows (sort by ts, split into
+   `folds` contiguous slices, mean of (est−outcome)²−(market−outcome)²)
+   and the recomputed fold pnl differs slightly from the tool's own
+   fold boundaries (−34.01/+22.06/+15.15/+18.81/+89.29 vs
+   −30.39/+19.61/+28.57/+1.56/+91.94 on the veto slice), so the bar is
+   currently quoted from an approximation. Ask: add `fold_brier_delta`
+   next to `fold_pnl` in the group dict (and text table), computed on
+   the tool's own fold split, so the fork bar is mechanical
+   end-to-end. Until then the fork quotes the recipe's numbers and
+   labels them approximate.
+
+**Tracked conditions (one-liners, per standing instructions):**
+- Carve-out bar (after `screen_replay.py events --limit 200`, 37 new
+  mappings): **not met** — rows 5/5, independent events 1/3,
+  brier_delta −0.1367, pnl +$61.68, held-out folds 3/4. Veto unchanged.
+- Counterfactual ledger: outside-view-veto 122 rows, 114 CF trades,
+  49W/65L, +$111.29, brier_delta +0.0289, held-out +$141.68 — veto
+  stays; relaxation fork written, bar NOT MET (see 2).
+- Blend: blend[disagreement] n=163, w_opt 0.802, delta −0.0017 — bar
+  (≤0.80 at n≥150, delta ≥0.002, sustained ×2) not met; last pass's
+  reversal held at w_opt 0.802 but delta shrank (−0.0018 → −0.0017),
+  so "sustained" is not on track; keep watching.
+- gnhf policy v3 forward test: 110 forward rows, 13 bets, cw_return
+  −0.1375, pnl +$31.27, brier_delta +0.0029 — still under the ≥15-bet
+  bar, direction improved from last pass (−0.365/−$9.54/+0.0181);
+  insufficient data, hands off.
+- Screener replay: live rev f7ddad12 s_exc +0.0005, s_ez +0.2 over 64
+  batches — no residual skill; screener-prompt.md stays frozen.
+- Real ledger: 44 rows, all settle sweeps, zero real fills ever —
+  `real.allowed_edge_classes` is ["cross-market"] and the paper book
+  has never produced a cross-market bet; dry by design, informational.
+
+Audit verdict this window: no reverts (fourth consecutive clean
+window). The Iran clause-misread self-catch (a7795e4: outcome-independent
+supersede 0.93→0.40 plus the clause-to-outcome mapping rule) singled
+out as the best edit of the window.
+
+Open operator asks after this pass: **2** (collision fix 2, per-fold
+dBrier).
+
+**Status:** informational + the two asks above.
