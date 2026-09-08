@@ -2121,3 +2121,69 @@ Open operator asks after this pass: **2** (collision fix 2, per-fold
 dBrier).
 
 **Status:** informational + the two asks above.
+
+
+## 2026-09-08 ~17:52Z — the unwritable lease produced its first real git divergence
+
+New evidence for the still-open lease ask (2026-09-06 ~00:13Z entry, and
+the collision-guard entries of 2026-09-04). This is no longer a
+hypothetical failure mode: `main` and `origin/main` are genuinely
+diverged right now, 2 ahead / 2 behind off merge-base `4f6968b`.
+
+What happened. The operator runner committed `9448f31` (retro) at
+16:18:38Z and `3f1f544` (cycle) at 16:20:59Z. The cloud runner
+independently committed `db58ff3` (retro) at 16:19:54Z and `dd87ee7`
+(cycle) at 16:19:57Z. Both runners settled the SAME forecast
+(`96065826ed50`, Go Ahead Eagles) to the same status and outcome, with
+`settled_ts` three minutes apart, and each then wrote its own retro for
+it — `RETRO-20260908-1612` locally, `RETRO-20260908-1617` on origin. Two
+runners spent a full research cycle each producing the same settlement
+and two near-duplicate retros.
+
+Why neither guard caught it. Both guards are structurally blind to a
+collision this tight:
+
+1. The step-0 tip guard reads `origin/main`'s tip age. At the moment the
+   operator cycle started, origin's tip was the 15:57Z triggered commit,
+   over 20 minutes old — the guard correctly saw nothing. The cloud
+   cycle's own commits did not exist yet. A tip guard can only see
+   finished cycles, which is exactly what the runner lease was
+   introduced to fix.
+2. The lease could not fix it, because it is still half-broken in the
+   direction this proposal has been flagging since 2026-09-06: the cloud
+   credential cannot write `refs/phil/lease` (403 on custom refs), so the
+   cloud runner never publishes a lease the operator runner could see. On
+   this machine `PHIL_LEASE` was `acquired` and loop.sh proceeded, which
+   is correct behaviour given the information available — there was
+   simply no lease on origin to honour. The lease is currently a
+   one-directional signal: the operator can advertise, the cloud cannot.
+
+Consequence, which the operator has to clear by hand. `loop.sh` will
+push, be rejected, run `git pull --rebase origin main`, and hit conflicts
+on `journal/forecasts.jsonl`, `journal/cycles.log` and
+`strategy/schedule.json` — all three touched on both sides. Its rebase
+will abort by design (it must never hand-resolve a journal conflict) and
+the commits stay local. Per CYCLE.md step 0 this cycle continued on local
+state and did not reset or rebase over local commits.
+
+Worth noting for whoever resolves it: the `forecasts.jsonl` conflict is
+semantically empty. The two sides wrote byte-identical rows for
+`96065826ed50` apart from `settled_ts` (`16:12:19Z` local vs `16:15:16Z`
+origin). Taking either side loses no information. The retros are
+genuinely different text and both should survive.
+
+What I am asking for, restated with this instance attached. Either grant
+the cloud credential write access to `refs/phil/*`, or move the lease off
+custom refs entirely so both runners can advertise — the 2026-09-06 entry
+suggested a lease file committed to `journal/` on `main` itself, which
+has the property that any credential able to push the branch can also
+take the lease. Until one of those lands, two runners on the same hour
+will keep doing duplicate work and will keep diverging the branch; this
+window cost two redundant research cycles, two near-duplicate retros, and
+a manual merge.
+
+I am not proposing a workaround in my own paths. Serialising the runners,
+skipping a settle, or hand-editing the ledger to dodge a rebase conflict
+would each be worse than the divergence.
+
+**Status:** open, evidence added to the existing lease ask.
