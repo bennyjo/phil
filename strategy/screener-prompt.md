@@ -52,6 +52,13 @@ hour. You are not placing bets and you are not the researcher.
   div≥0.10 rows fell 63% → 22%, all residual spread rows at confidence
   `low`, zero spread-trap rows reached research per funnel.jsonl. Rule
   stays.)
+- A "will X say '<phrase>'" market where the phrase is the event's own
+  host, organiser, title or venue as given in the market text. That is
+  not near-random: the speaker names the host. Say a high number and let
+  the divergence be small. (2026-09-08, forecast ed15c319b4bf: "Tunnel to
+  Towers" at the Tunnel to Towers Foundation's own White House event was
+  screened 0.62 `low` "near-random", researched to 0.82, settled Yes at a
+  0.85 market - a wasted research slot.)
 - A **generic category base rate** ("league draws happen ~X% of the time")
   substituted for the specific match. Two soccer draw markets checked
   2026-08-29 against sharp book devigs both landed within 1-2pp of the PM
