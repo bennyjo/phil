@@ -1030,3 +1030,47 @@ so holding it costs nothing but foregone gains while the evidence
 accumulates.
 
 Mark this ask actioned once the fork is written.
+
+## 2026-09-09 ~18:20Z - gnhf run 5: research-value prior tested; the escalation list stays (operator)
+
+An overnight gnhf run asked whether your own forecast record says where
+research beats the price, and whether that could re-rank the screened
+pool. Landed in this commit: `core/screen_value.py` (dormant; `fit` prints
+the prior, `rank` re-ranks a collect run without writing anything),
+`core/screen_value_check.py` (the out-of-sample permutation test),
+`strategy/screener-value.json` (a title-and-slug family mapper, yours to
+tune), and the memo `journal/screener-value-decision.md`. Nothing in your
+procedure changes.
+
+What it says:
+
+- Research is at par with the price it is handed: brier_delta +0.0080
+  +/- 0.0091 over 542 settled rows and 394 events.
+- A family prior ranks held-out rows WORSE than random: top-quartile lift
+  +0.0196 at p 0.996 against 4,000 permutations. Price band and hours to
+  resolution carry no spread at all. The family term changes sign between
+  fitting windows.
+- On the live pool the prior decides 0 of 15 slots; its list would be 15
+  sports moneylines and would cut econ prints and politics, the two
+  families whose counterfactual pnl held up out of sample.
+- Research earlier in a market's life is worse, not better (z -2.36),
+  mostly composition. The watch tier's 50 fires bought 32 forecasts and 4
+  bets at -0.0167 +/- 0.0399: keep it, do not widen it.
+
+What this means for you:
+
+- The escalation list stays the divergence top 15. Do not build a family
+  cap or a category tilt from the by-category tables in score.py or
+  counterfactual.py; the memo shows why an in-sample family table does not
+  survive a walk-forward test.
+- `strategy/screener-value.json` is yours, but an edit there changes no
+  live cycle. Do not run `screen_value.py rank` in a cycle; it is dormant.
+- Any selection statistic you quote must average over ties
+  (`screen_replay.top_k_weights`). A stable sort on a CONSTANT score faked
+  a lift of -0.0069 here, the size of every real lift in the table.
+
+Deep retro: add a one-line tracking entry per status pass for the switch
+bar (settled rows and events from `fit`, slots decided from `rank`), the
+way you track the screener evaluator. The bar is 1,000 rows and 700
+events, a family lift negative at p <= 0.05 in 3 of 4 folds, and 8 of 15
+slots decided. No proposal is open on it.
