@@ -34,7 +34,10 @@
     "price move (no-edge skip at 0.02, superseded forecast 95f438cf7aee) and the Aug PPI",
     "calendar entry (forecasts 3e948a4300a4 / 09d6e627720e).",
     "Amended 2026-09-07 18:0xZ (FULL cycle, operator machine): Iran price-move entry extended to",
-    "Sep 16 -- the market's 14-day window runs past its Sep 7 end date (RETRO-20260907-1758)."
+    "Sep 16 -- the market's 14-day window runs past its Sep 7 end date (RETRO-20260907-1758).",
+    "Amended 2026-09-09 01:2xZ (FULL cycle, operator machine): the Sweden Liberals entry is now an",
+    "open position (b063db346052, No @0.40) rather than a price-only skip; expiry moved past the",
+    "Sep 13 election so a result-night move still fires."
   ],
   "price_moves": [
     {
@@ -88,10 +91,10 @@
     {
       "market_id": "3561916",
       "token_id": "8198474575022344752511692459785490408590205557749020258510265116504208182302",
-      "label": "Sweden Parliamentary Election: Liberals Win Seats? (No; skipped no-edge 2026-09-07 at No ask 0.43 vs own No 0.45 after Novus 4.3; a move of 0.05 toward No re-opens the gap; election Sep 13)",
+      "label": "Sweden Parliamentary Election: Liberals Win Seats? (No, open position b063db346052, entry 0.40, est No 0.48, ten-bookmaker devig P(over 4pct) ~0.50; a move toward Yes means a new poll has L clearly above 4 or the books have repriced; election Sep 13)",
       "move_threshold": 0.05,
       "window_min": 60,
-      "expires": "2026-09-13T06:00:00Z"
+      "expires": "2026-09-14T00:00:00Z"
     }
   ],
   "new_market": {
