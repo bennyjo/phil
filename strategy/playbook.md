@@ -3412,6 +3412,55 @@ than the veto grading — both are single-instance and carried as
 hypotheses, not rules, until a second China CPI print or a second
 TE/Lundgreen conflict tests them.
 
+**2026-09-09 update (14:2xZ resolve.py, FULL cycle, cloud; 1
+`outside-view-veto` forecast settled — the Chewy "Consumable" say-the-word
+row flagged in schedule.json for settlement grading).** `ffc3fcdcbaa6`
+(recorded 2026-09-08 20:21Z, superseding `e7a452fef1be` two minutes
+earlier as a label erratum — same 0.93 estimate, reclassified from
+`wide-spread-veto` because DEEP-2026-08-14's tiebreak routes a
+>0.10-claimed-edge row to outside-view-veto even when the spread gate
+also fires): Chewy fiscal Q2 2026 earnings call, own est 0.93 vs ask
+0.58 (mid 0.34, an empty-book artifact — bid was 0.10), on the evidence
+that "Consumables" is Chewy's own reported revenue segment name, used
+5-6 times in the prior-year Q2 transcript. Settled **Yes** — the
+declined Yes-side counterfactual trade **wins**. Grading the three
+questions the watch item pre-registered: (a) the tool's own subclass
+tagger filed this row under `fact-finality`, not unlabelled judgment —
+independent, mechanical support for treating "company repeats its own
+standard reported vocabulary" as closer to a mechanical base rate than
+a behavioural self-model, though n=1 is too thin to act on; (b) the
+blind mech (`superforcaster-market-aware`, service 44) gave 0.92 —
+within 0.01 of the own estimate — while self-classing the question
+`NR-utterance`/`researchability=0.15`, i.e. confidently right on a
+question it flagged as unresearchable, the same pattern the still-open
+Vance utterance rows show; (c) the 40-share ask at 0.58 was in fact
+takeable at the strategy's $5 (~8.6-share) stake size, so the
+wide-spread veto alone would have been overcautious here — the correct
+blocker was the outside-view veto's >0.10 boundary, which this row does
+not argue against. Full narrative in RETRO-20260909-1425.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Chewy "Consumable" say-the-word (ffc3fcdcbaa6) | 0.93 / 0.58 | Yes | +0.350 | Yes | **+3.62** |
+
+Current mechanical ledger's outside-view-veto line
+(`core/counterfactual.py ledger --skip-reason outside-view-veto`, after
+`screen_replay.py events --limit 200`, includes this row): 124 settled
+declined forecasts, 116 fillable CF trades, 82 events, 50W/66L, pnl
++$109.91, brier_delta +0.0264, held-out +$140.30 (was 123/115/49W-66L/
++$106.29/+0.0301/+$136.68 before this row). Side split: yes 35 rows/35
+trd/10W-25L/+$24.44 (adds this row's win, +$3.62, was 34/34/9W-25L/
++$20.82); no 89 rows/81 trd/40W-41L/+$85.47 (unchanged this batch).
+Check: 24.44+85.47=109.91 ✓.
+
+Ruling: no boundary change at n=1 within say-the-word (the category
+verdict threshold is ~15 settlements) and no change to the relaxation
+fork's status — overall brier_delta is still positive (+0.0264, agent
+behind market) and this single win doesn't reach the fork's per-fold
+recompute threshold on its own. The useful finding is the (a)/(b)/(c)
+grading above, carried as a baseline for the still-open Vance utterance
+rows (`83321f868e0f`, `906a1a65abc8`) rather than a rule change yet.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
