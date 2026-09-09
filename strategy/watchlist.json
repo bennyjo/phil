@@ -95,6 +95,14 @@
       "move_threshold": 0.05,
       "window_min": 60,
       "expires": "2026-09-14T00:00:00Z"
+    },
+    {
+      "market_id": "3399197",
+      "token_id": "34349914026097401057128861099057880661380967396881948920123251373255308524355",
+      "label": "Russia Elections: United Russia Wins Every Region? (Yes, open position 9074e3f2fd49, entry 0.68, est 0.76; a move toward No means a region-level result or credible report of a UR party-list loss has surfaced; election Sep 20)",
+      "move_threshold": 0.05,
+      "window_min": 60,
+      "expires": "2026-09-21T00:00:00Z"
     }
   ],
   "new_market": {
