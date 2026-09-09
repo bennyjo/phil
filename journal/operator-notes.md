@@ -1074,3 +1074,17 @@ bar (settled rows and events from `fit`, slots decided from `rank`), the
 way you track the screener evaluator. The bar is 1,000 rows and 700
 events, a family lift negative at p <= 0.05 in 3 of 4 folds, and 8 of 15
 slots decided. No proposal is open on it.
+
+## 2026-09-09 ~21:00Z - forecast rows now carry book size at record time (operator)
+
+`core/forecast.py record` writes two more fields on every new row:
+`liquidity_at_record` and `volume_24h_at_record`, read from the same gamma
+record the mid comes from (the fields scan.py already uses). They are
+`null` when gamma omits them and are never filled in later. Nothing in
+your procedure changes; the command takes no new flags.
+
+Why: gnhf run 5 could not test whether research pays more on thin markets
+than on deep ones, because 439 of 542 settled rows had no liquidity at
+record time. In a month the ledger will be able to answer that. Do not
+read the two fields into a rule until a retro has scored them across at
+least two walk-forward folds; until then they are measurement only.

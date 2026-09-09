@@ -77,6 +77,16 @@ def cmd_status(rows):
     }, indent=2))
 
 
+def _num(value):
+    """gamma numeric field -> float rounded to cents, or None if absent/unparseable."""
+    if value in (None, ""):
+        return None
+    try:
+        return round(float(value), 2)
+    except (TypeError, ValueError):
+        return None
+
+
 def cmd_record(args, rows):
     if not 0.0 < args.est_prob < 1.0:
         sys.exit("REJECTED: est-prob must be in (0,1)")
@@ -134,6 +144,12 @@ def cmd_record(args, rows):
         "best_bid_at_record": bid,
         "best_ask_at_record": ask,
         "market_prob_at_record": round(mid, 4),
+        # Book size at record time, from the same gamma record scan.py reads.
+        # Added 2026-09-09 so research edge can be split by liquidity later;
+        # gnhf run 5 had to drop that feature for lack of it. None when gamma
+        # omits the field - never a guess, never a later re-read.
+        "liquidity_at_record": _num(m.get("liquidityNum")),
+        "volume_24h_at_record": _num(m.get("volume24hr")),
         "category": args.category,
         "skip_reason": args.skip_reason,
         "fit_score": args.fit_score,
