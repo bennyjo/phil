@@ -3353,6 +3353,65 @@ next-day-style, so it informs but does not trigger that test). Within
 the veto slice, weather now reads 18 rows, 5W/13L, CF −$53.60, dBrier
 +0.0836: the veto's single best category.
 
+**2026-09-09 update (12:3xZ resolve.py, LIGHT tick, cloud; three
+`econ-cpi` veto forecasts settled on the China Aug 2026 CPI print — one
+`outside-view-veto`, one `wide-spread-veto` fillable, one
+`wide-spread-veto` refused as unexecutable).** NBS printed China Aug 2026
+CPI YoY at 0.8%, in the 0.7-0.8% bracket. The base-effect anchor used at
+record time (Jul YoY 0.5% + Aug seasonal MoM ~+0.3% → ~0.8%) was exact —
+first confirmed application of the PPI base-effect projection method
+(§"PPI YoY brackets: base-effect projection", 2026-08-11 above) to a
+second economic series. Two consensus sources disagreed by one bracket at
+record time (tradingeconomics 0.7% vs investing.com/Lundgreen 0.9%); TE's
+figure fell in the actual bracket, Lundgreen/investing.com's did not —
+n=1, too weak to rule on for future disputes, but the first data point
+favors TE when the two conflict.
+
+- **0.7-0.8% bracket** (`19cf14c87979`, outside-view-veto): mixture model
+  P=0.33 vs mid 0.485; the No-side apparent edge (~0.15) was built on the
+  contradictory consensus and vetoed under gate 2. Settled Yes — the
+  declined No bet would have LOST. Correct veto.
+- **≥0.9% bracket** (`7bacc91ddf91`, wide-spread-veto): own P=0.38 vs ask
+  0.305, spread 0.069 > max_spread 0.06. Settled No — the declined Yes
+  bet would have LOST. Correct veto.
+- **0.5-0.6% bracket, post-print supersede** (`9eff80f25296`,
+  wide-spread-veto): after the print, Yes ask 0.22 was mispriced (true
+  edge ~0.20 on No) but the No side had zero asks in the live book (bids
+  only) — refused by the fill model as unexecutable, correctly excluded
+  from the counterfactual trade count, not a real declined trade.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| China CPI 0.7-0.8% Aug26 (19cf14c87979) | 0.67 / 0.53 | No | +0.140 | Yes | −1.00 |
+| China CPI ≥0.9% Aug26 (7bacc91ddf91) | 0.38 / 0.331 | Yes | +0.049 | No | −1.00 |
+
+Net this batch: **−2.00u** (0W/2L). Current mechanical ledgers
+(`core/counterfactual.py ledger --skip-reason <reason>`, both include
+these rows):
+- outside-view-veto: 123 settled declined forecasts, 115 fillable CF
+  trades, 49W/66L, pnl +$106.29 ≙ +21.26u, brier_delta +0.0301, held-out
+  +$136.68 (was 122/114/49W-65L/+$111.29/+$141.68 before this row). Side
+  split: yes 34 rows/34 trd/9W-25L/+$20.82 (unchanged this batch); no 89
+  rows/81 trd/40W-41L/+$85.47 (adds this row's 0W/1L, −$5.00). Check:
+  20.82+85.47=106.29 ✓.
+- wide-spread-veto: 6 settled declined forecasts, 4 fillable CF trades,
+  2 refused, 2W/2L, pnl −$7.82 ≙ −1.56u, brier_delta −0.0326, held-out
+  −$8.51 (was 4/3/1 refused/2W-1L/−$2.82/−$2.83 before this batch). Side
+  split: yes 3 rows/3 trd/2W-1L/−$2.82 (unchanged this batch); no 3
+  rows/1 trd/0W-1L/−$5.00 (adds this row's 0W/1L, −$5.00, plus the
+  refused `9eff80f25296` which contributes a settled row but no trade).
+  Check: −2.82−5.00=−7.82 ✓.
+
+Ruling: no boundary change at n=2 on either gate — both counterfactual
+trades would have lost, i.e. both declines were correct, consistent with
+the standing reads (outside-view-veto's no-side already the stronger
+performer at 40W/41L vs yes-side's 9W/25L; wide-spread-veto still thin at
+n=6, too small to read). The base-effect method confirmation and the
+TE-vs-Lundgreen data point are the more useful findings from this batch
+than the veto grading — both are single-instance and carried as
+hypotheses, not rules, until a second China CPI print or a second
+TE/Lundgreen conflict tests them.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
