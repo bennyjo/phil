@@ -10,7 +10,12 @@ Usage:
     --tool <tool> --request-id <your invented id> --own-p <p> \
     [--market-p <mid>] [--result-json '<delivery result string>'] \
     [--params-json '<delivery metadata.params>'] [--latency-ms N] \
-    [--error "<one line>"] [--note "<one line>"]
+    [--error "<one line>"] [--note "<one line>"] [--context-p <p>]
+
+--context-p is the question-frame market_prob you passed in the request's
+`request_context` (CYCLE.md 5a); omit it when none was sent. It lands as
+`context_market_prob` (null when omitted), so a retro can tell a blind run
+from a context that was sent and not seen (`market_prob_seen` null).
 """
 import argparse
 import datetime as dt
@@ -50,6 +55,7 @@ def cmd_record(args):
         "request_id": args.request_id,
         "own_p": args.own_p,
         "market_p": args.market_p,
+        "context_market_prob": args.context_p,
         "latency_ms": args.latency_ms,
         "error": args.error or result.get("error"),
         "note": args.note,
@@ -82,6 +88,9 @@ def main():
                    help="the delivery's `result` string (JSON) verbatim")
     p.add_argument("--params-json", default="",
                    help="the delivery's `metadata.params` object as JSON")
+    p.add_argument("--context-p", type=float, default=None,
+                   help="question-frame market_prob sent in request_context; "
+                        "omit when no context was sent")
     p.add_argument("--latency-ms", type=int, default=None)
     p.add_argument("--error", default="", help="one line if the request failed")
     p.add_argument("--note", default="")

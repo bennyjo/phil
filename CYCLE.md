@@ -198,11 +198,25 @@ Every invocation runs as one of three ticks:
      - Prompt: one precise resolution question (criteria, resolution
        source, deadline in UTC - never just the market title), the market
        question itself as a single sentence ending in `?`, and no other
-       `?` sentences. Do NOT put the market price in the prompt: the tool
-       reads market context only from a `request_context` field that
-       `mech_request` cannot send, so it runs blind here
-       (`market_prob_seen` is null) and its `p_independent` stays a true
-       price-free estimate to compare against yours and the mid.
+       `?` sentences. Never put the market price in the prompt text.
+     - Market context (operator, 2026-09-09): the market-aware tool reads
+       the price from a separate `request_context` argument of
+       `mech_request`, never from the prompt. Pearl Connect added that
+       argument on 2026-09-07 (valory-xyz/connect#66); the build on this
+       machine may not carry it yet. So read the `mech_request` tool schema
+       once per cycle. If it lists `request_context`, pass it on EVERY
+       market-aware request as a JSON object in QUESTION frame (P(Yes) of
+       the market question, not of the outcome you researched):
+       `market_id` (the gamma id), `type` "polymarket", `market_prob` (the
+       Yes mid as a number in [0, 1], never a string), `market_close_at`
+       (the market's endDate, ISO 8601 UTC), `description` (the market's
+       resolution rules verbatim). Send the same context on the paired v4
+       request; v4 ignores it, so the pair stays a with-price versus blind
+       comparison. If the schema does not list it, send nothing extra and
+       write `mech context: unavailable` once in the cycle summary. The
+       context holds market facts only, never your own estimate: off-chain
+       it is part of the signed request digest, and on-chain it is uploaded
+       to public IPFS next to the prompt.
      - Read the whole delivery: the `result` JSON (`p_yes`, `p_no`,
        `confidence`, `info_utility`, `researchability` 0..1,
        `research_class` R / REVIEW / NR-*, `research_reason`,
@@ -216,15 +230,21 @@ Every invocation runs as one of three ticks:
          --tool <tool> --request-id <your id> --own-p <pre-mech p> \
          --market-p <mid> --result-json '<result string>' \
          --params-json '<metadata.params as JSON>' \
-         --latency-ms <execution_latency_ms> [--error "..."]`
+         --latency-ms <execution_latency_ms> [--error "..."] \
+         [--context-p <the market_prob you sent; omit when none was sent>]`
        (`journal/mech-requests.jsonl`; retros grade it).
      - Things worth calling out in the cycle summary and retros: the mech's
        `research_class`/`researchability` versus your own read of whether
        the question is mechanical or interpretive; `parse_tier` other than
        `clause` (the search query was not the market question);
-       `scan_truncated` true; `p_independent` differing from `p_yes` (it
-       should not while the tool is blind); errors or timeouts; and how
-       market-aware compares with v4, you, and the market at settlement.
+       `scan_truncated` true; `p_independent` equal to `p_yes` on a
+       delivery whose `market_prob_seen` is non-null (the price did not
+       move the estimate) or differing while it is null (it should not
+       while the tool is blind); errors or timeouts; and how market-aware
+       compares with v4, you, and the market at settlement. A market-aware
+       delivery with `market_prob_seen` null on a request you SENT a
+       context for is a supply-side bug: say so in the cycle summary and
+       the retro, with the request id, rather than reading it as blind.
    - `mech_tools()` lists live mechs; call it again with
      `priority_mech=<address>` for a mech's tool names and price
      (`max_delivery_rate`, base units of its payment asset).

@@ -1088,3 +1088,35 @@ than on deep ones, because 439 of 542 settled rows had no liquidity at
 record time. In a month the ledger will be able to answer that. Do not
 read the two fields into a rule until a retro has scored them across at
 least two walk-forward folds; until then they are measurement only.
+
+## 2026-09-09 ~21:45Z - mech second opinions have been blind by construction; send the market context once the tool allows it (operator)
+
+Every one of your 37 delivered mech requests ran the market-aware tool
+in blind mode (`market_prob_seen` null), because step 5a told you the
+price could not be sent. That was true until 2026-09-07: Pearl Connect
+merged a `request_context` argument for `mech_request`
+(valory-xyz/connect#66). It is not in a release yet, so the build on
+this machine may still lack it. Step 5a now says what to do in both
+cases: read the tool schema once per cycle, and when `request_context`
+is listed, send the market id, type, the Yes mid as a number, the
+endDate and the resolution rules on every market-aware request, plus
+the same object on the paired v4 request, which ignores it. Never put
+your own estimate in it; on-chain it is public IPFS.
+
+`core/mechlog.py record` takes `--context-p`, the market_prob you sent,
+and writes it as `context_market_prob` (null when you sent none). Use it
+on every mech log line from now on.
+
+What this means for retros:
+
+- Every mech comparison graded so far is blind versus blind versus you.
+  Do not carry those numbers forward as a verdict on the market-aware
+  tool; start a fresh paired count from the first delivery whose
+  `market_prob_seen` is non-null.
+- A market-aware delivery with `context_market_prob` set and
+  `market_prob_seen` null is a supply-side bug, not a blind run. Name
+  the request id in the cycle summary and the retro.
+- The question the new rows answer is whether market-aware WITH the
+  price beats the price it was shown. That is the number that decides
+  if a mech second opinion earns a research slot. Nothing else in your
+  procedure changes; the mech remains non-blocking.
