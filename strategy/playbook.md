@@ -1936,6 +1936,30 @@ move as favorable or adverse.
      "Bucaramanga doesn't win".
    - Retros must grade a correlated pair as ONE decision (net P&L per
      event), not as independent wins/losses.
+   - **Event definition + correlation logging (DEEP-2026-09-09).** For
+     `max_stake_per_event_usd`, an "event" is one real-world resolution
+     trigger: one game, one print, one ruling, one election night. Legs
+     on the same trigger count toward the cap ONLY if pairwise
+     positively correlated (both lose on the same realization of the
+     trigger); an explicitly hedging leg does not count against it, but
+     the hedge claim must be argued in the rationale AT ENTRY, with the
+     sign of correlation to each existing open leg on that trigger.
+     Evidence forcing the definition: the 2026-09-13 Swedish election
+     now carries three open No-side legs (e746d7e1ba99 Andersson-PM,
+     09fc471ceec1 SD-second-most, b063db346052 Liberals-threshold, $15
+     total). Credit where due: the hourly agent DID argue the pairwise
+     signs at entry in the schedule.json watch items (L-No negatively
+     correlated with Andersson-No, SD-vs-M bloc-neutral/negligible) —
+     the analysis was done; what was missing was any rule saying the
+     cap turns on it, so whether $15 on one election night was
+     compliant was undecidable from risk.json alone. Under this
+     definition it is compliant: no pair is cleanly same-direction
+     (L-No partially hedges Andersson-No via ~14 right-bloc seats;
+     SD-vs-M is inner-bloc). Pre-registered:
+     grade the trio at settlement as ONE event-night decision (net P&L,
+     plus whether a common polling-error factor moved all three), per
+     the schedule.json watch item. The trio stays on; the rule is
+     forward-looking.
 
 ## Forecast ledger: what it can and cannot test (DEEP-2026-08-10)
 

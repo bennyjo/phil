@@ -2186,4 +2186,58 @@ I am not proposing a workaround in my own paths. Serialising the runners,
 skipping a settle, or hand-editing the ledger to dodge a rebase conflict
 would each be worse than the divergence.
 
-**Status:** open, evidence added to the existing lease ask.
+**Status:** ENDORSED (DEEP-2026-09-09) — evidence verified end-to-end
+(twin retros RETRO-20260908-1612/-1617 grade the same forecast three
+minutes apart; cycle log confirms both runners burned a research cycle;
+the one-directional-lease diagnosis matches the 2026-09-06 operator fix
+note). Folded into the standing lease ask; remains an open operator
+action.
+
+
+## 2026-09-09 — deep-retro status pass
+
+Audit window 2026-09-08 ~05:00Z → 2026-09-09 ~04:30Z. Full analysis in
+journal/retros/DEEP-2026-09-09.md.
+
+Statuses set this pass:
+
+1. **Lease divergence proposal (2026-09-08 ~17:52Z): ENDORSED** —
+   evidence verified (twin retros for forecast 96065826ed50, two burned
+   research cycles, diagnosis consistent with the 2026-09-06 operator
+   fix note). It adds the first REALIZED cost to the standing lease ask:
+   either grant the cloud credential write access to `refs/phil/*` or
+   move the lease into a file on `main`. The agent was right to refuse
+   workarounds in its own paths.
+2. No other new proposals from the hourly agent this window.
+
+**Tracked conditions (one-liners, per standing instructions):**
+- Veto relaxation fork: slice byte-identical to yesterday (122 rows /
+  114 CF trades / +$111.29 / dBrier +0.0289) — **bar NOT MET**, veto
+  untouched; per-fold dBrier still quoted from the approximation
+  pending the counterfactual.py ask.
+- Blend: blend[disagreement] n=165, w_opt 0.843, delta −0.0011 — the
+  09-06 reversal did NOT sustain (0.802 → 0.843, delta shrank); bar
+  not met, keep watching.
+- gnhf policy v3 forward test: 117 rows, 14 bets, cw_return −0.2081,
+  pnl +$26.27, brier_delta +0.0034 — under the ≥15-bet bar, cw
+  direction worsened; insufficient data, hands off.
+- Mechanical-econ carve-out: no carve-out settlements this window;
+  bar and kill switch unchanged (rows 5/5, independent events 1/3).
+- Screener replay: baseline rev f7ddad12 is STALE (f872b51 edited
+  screener-prompt.md, deny-list addition); re-baseline against rev
+  6796568 before quoting s_exc/s_ez again.
+- Real ledger: 56 rows, all settle sweeps, zero real fills ever — dry
+  by design, informational.
+
+Audit verdict this window: no reverts (fifth consecutive clean window).
+fa14b26 (no-edge vs wide-spread-veto taxonomy + erratum) singled out as
+the best edit — it repaired the agent's own instrument at the cost of a
+better-looking record. New playbook rule this pass: event definition +
+correlation logging for max_stake_per_event_usd (Swedish trio compliant
+under it; graded as one event-night decision at settlement Sep 13).
+
+Open operator asks after this pass: **2** (lease writability / collision
+fix, now with realized cost; per-fold `fold_brier_delta` in
+core/counterfactual.py).
+
+**Status:** informational + the two asks above.
