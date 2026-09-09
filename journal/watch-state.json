@@ -1,5 +1,5 @@
 {
-  "last_fire_utc": "2026-09-09T01:38:15Z",
+  "last_fire_utc": "2026-09-09T02:23:08Z",
   "fired": {
     "cal:China August 2026 CPI (NBS, 01:30 UTC) - event 'August Inflation China - Annual', markets 3499774-3499778; forecasts 7bacc91ddf91 (>=0.9 est 0.38, wide-spread-veto) / 19cf14c87979 (0.7-0.8 est 0.33, outside-view-veto) / 9f93fff3d795; grade the contradictory-consensus read (TE 0.7 vs investing.com and Lundgreen 0.9) and the base-effect anchor against the print": "2026-09-09T01:38:15Z",
     "newmarket:4356606": "2026-09-08T05:22:56Z",
@@ -7,6 +7,6 @@
     "newmarket:4366825": "2026-09-08T15:53:05Z",
     "newmarket:4366826": "2026-09-08T15:53:05Z",
     "newmarket:4393845": "2026-09-09T00:22:32Z",
-    "pricemove:4168072": "2026-09-08T18:52:57Z"
+    "pricemove:4168072": "2026-09-09T02:23:08Z"
   }
 }
