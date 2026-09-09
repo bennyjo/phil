@@ -103,6 +103,14 @@
       "move_threshold": 0.05,
       "window_min": 60,
       "expires": "2026-09-21T00:00:00Z"
+    },
+    {
+      "market_id": "4178439",
+      "token_id": "38875386427248703653621980435280242968279395596038015491396219858156223747488",
+      "label": "Will John Ternus say \"Hardware\" during his Apple Keynote? (Yes, open position 2659709d25f9, entry 0.52, est 0.60; Apple 'Surprise and Shine' keynote Sep 9 17:00Z, backstop 2026-09-10 23:59 ET; a move signals leaked/live transcript news)",
+      "move_threshold": 0.08,
+      "window_min": 60,
+      "expires": "2026-09-11T04:00:00Z"
     }
   ],
   "new_market": {
@@ -124,6 +132,11 @@
     {
       "label": "Bank of Russia key-rate decision (13:30 MSK) - open position cd8b25268fe1 no-change Yes @0.70 (est 0.75), sibling cut forecast d8d34757ae8e; grade per the schedule.json watch item (RBC n=30 poll vs PM mid vs mech 0.68)",
       "fire_at": "2026-09-11T10:30:00Z",
+      "window_min": 45
+    },
+    {
+      "label": "Apple 'Surprise and Shine' keynote conclusion check - open position 2659709d25f9 (John Ternus says 'Hardware', Yes @0.52 est 0.60); event starts 17:00Z, keynotes typically run 60-100min, checking after for transcript/live-blog coverage of Ternus's remarks",
+      "fire_at": "2026-09-09T18:30:00Z",
       "window_min": 45
     },
     {
