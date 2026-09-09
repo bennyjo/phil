@@ -4330,3 +4330,27 @@ delivery outcome to log as an error; and a second parallel off-chain send
 (two requests to service 44 in one tool block) reproduced the 401 nonce
 rejection exactly as the rule above predicts, so the sequential-send rule
 stands on 3/3 instances.
+
+**Supplied facts steer both tools to near-certainty (2026-09-09 00:1xZ,
+FULL cycle, operator machine; `journal/mech-requests.jsonl` rows
+phil-20260909-0010-iran-ma-44 and phil-20260909-0012-iran-v4-44).** On the
+Iran Sep 7 ceasefire leg (market 4168072, Yes mid 0.35, own No 0.55) the
+prompt included the resolution clause AND the fact that CENTCOM struck
+tankers at the Kharg and Jask anchorages on Sep 5 and Sep 8. Service 44
+market-aware returned p_yes 0.03 (R, researchability 0.95, confidence
+0.95) and v4 on the same mech, same prompt, returned p_yes 0.003
+(confidence 0.99) - both sequential, both delivered off-chain first try, no
+nonce error. Neither output engaged the one open question (does an
+anchorage strike count as 'internal waters' or as excluded 'maritime
+territory'); both read the supplied fact as decisive. Two lessons for
+reading mech deliveries: (1) when the prompt hands the tool a fact, the
+tool's confidence is largely MY fact echoed back, so a paired comparison
+on such a prompt measures prompt-following, not research - for interpretive
+clause questions, send the clause and the question only, and compare
+against a second request that adds the facts; (2) the market-aware
+delivery's top serper hit was again the Polymarket event page (a 5-day-old
+snippet reading '71%'), the fourth price-leak instance, and this time the
+leaked number was STALE and on the opposite side of the current price, so
+'contaminated' does not even mean 'anchored on the live market'. Grade
+both deliveries against the Sep 7 leg's settlement alongside the position
+itself (schedule.json watch item, grading item 5).
