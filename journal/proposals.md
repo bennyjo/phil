@@ -2241,3 +2241,51 @@ fix, now with realized cost; per-fold `fold_brier_delta` in
 core/counterfactual.py).
 
 **Status:** informational + the two asks above.
+
+## 2026-09-10 — deep-retro status pass
+
+Audit window 2026-09-09 ~04:30Z → 2026-09-10 ~05:00Z. Full analysis in
+journal/retros/DEEP-2026-09-10.md.
+
+Statuses set this pass:
+
+1. **gnhf policy v3 forward test: RESOLVED-NEGATIVE (judged, FAILED).**
+   First pass over the ≥15-bet bar: 135 forward rows, 16 bets, pnl
+   +$28.40, cw_return −0.1557 (< 0, fails), and the largest single bet
+   (+$39.64, 5ee44ae81c9f) exceeds the entire net pnl (concentration
+   criterion also fails). Per the 2026-09-02 pre-registration: nothing
+   in strategy/ changes, policy.py untouched, dead zone not adopted.
+   This tracking line closes.
+2. No new proposals from the hourly agent this window.
+
+**Tracked conditions (one-liners, per standing instructions):**
+- Veto relaxation fork: 124 rows / 116 CF trades / 82 events / +$109.91
+  / dBrier +0.0264; per-fold dBrier (hand recipe) f3 +0.0981, f4
+  +0.0434 both positive — **bar NOT MET**, fork shut (playbook Status
+  2026-09-10 updated). Per-fold fold_brier_delta ask stands.
+- Blend: blend[disagreement] n=169, w_opt 0.760, delta −0.0027 — **bar
+  MET, pass 1 of the 2 consecutive passes required**; Chewy-row
+  leverage caveat recorded in the retro; operator ask files only if
+  tomorrow's pass also clears at n≥150.
+- Mechanical-econ carve-out: no settlements this window; rows 5/5,
+  independent events 1/3 — bar and kill switch unchanged. PPI print
+  Sep 10 12:30Z is the next live test.
+- Screener-value switch bar (first entry): fit 564 rows / 414 events
+  (bar 1,000/700); rank decided 0 of 15 slots (bar 8/15). Dormant.
+- Screener replay: re-baseline vs rev 6796568 attempted; outcomes-cache
+  refresh still running at commit time — s_exc/s_ez remain unquoted,
+  stale-baseline flag stands.
+- Mech: no deliveries this window; market-aware-with-context paired
+  count not yet started (needs an operator-machine cycle with the
+  request_context build).
+- Real ledger: 56 rows, zero real fills ever — dry by design.
+
+Audit verdict this window: no reverts (sixth consecutive clean window).
+c364c6a (Chewy veto-CF-win grading that still ruled "no boundary change
+at n=1") singled out as the best edit — it refused its own favorable
+anecdote. Settlement-grading discipline clean on every tick.
+
+Open operator asks after this pass: **2** (lease writability /
+collision fix; per-fold `fold_brier_delta` in core/counterfactual.py).
+
+**Status:** informational + the two asks above.

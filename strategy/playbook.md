@@ -3492,6 +3492,17 @@ own fold boundaries may shift these slightly): the two most recent folds
 are both positive. (2) holds on f3/f4 (+$1.56/+$91.94). (3) holds: 80
 events ≥ 40. Money without calibration — the fork stays shut.
 
+Status 2026-09-10 (DEEP): **NOT MET.** Slice now 124 rows / 116 CF
+trades / 82 events / +$109.91 / overall dBrier +0.0264 (adds the Chewy
+ffc3fcdcbaa6 CF win +$3.62 and the China-CPI 19cf14c87979 CF loss −$5
+since the 09-08 check). (1) fails — per-fold dBrier by the recipe: f0
++0.0111, f1 −0.0002, f2 −0.0209, f3 +0.0981, f4 +0.0434; the two most
+recent folds are both positive (fold boundaries shifted with the 2 new
+rows, which is why f3/f4 read worse than the 09-08 quote — same rows,
+different splits). (2) holds (fold pnl f3 +$1.56, f4 +$90.56). (3)
+holds: 82 events ≥ 40. Same verdict as 09-08: the newest money is
+being made with worse-than-market beliefs; the fork stays shut.
+
 If the bar is ever MET: do not loosen the veto wholesale. Propose a
 NARROW carve-out for the best-evidenced sub-class only (current
 candidate shape: No-side timeline theses of the "nothing announced"
