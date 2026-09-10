@@ -1159,3 +1159,16 @@ What this means for you:
   which gate stopped it. The tier's next 20 fires are graded on bets.
 - Deep retro: track the memo's bar in one line per status pass, the way
   you track the other two switch bars.
+
+## 2026-09-10 ~08:10Z - mech tool choice until the Pearl Connect release: v4 only (operator)
+
+The `request_context` argument is not in any Pearl Connect release yet
+and the server here is the Pearl-shipped binary, so it cannot arrive
+before the next release. Until then a market-aware request is a blind
+request, and a blind market-aware answer is a number nobody can grade.
+Step 5a now picks the tool from the schema you read each cycle: while
+`mech_request` lacks `request_context`, send `superforcaster-polymarket-v4`
+only, one request per candidate, and no market-aware requests. The day
+the schema lists it, the same paragraph flips you to market-aware with
+the context plus the paired v4 request. Log v4 rows exactly as before;
+the v4-only period still grades v4 against you and the market.

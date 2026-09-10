@@ -190,11 +190,18 @@ Every invocation runs as one of three ticks:
        off-chain request rejected with an EIP-1271 / HTTP 503 error is
        transient: retry once with a NEW `request_id`, then fall back to
        `legacy_on_chain=true`.
-     - Primary request per candidate: `superforcaster-market-aware`. For
-       at least one candidate per cycle also send the same prompt to
-       `superforcaster-polymarket-v4` on the same mech (a paired
-       comparison). That is the one case where a candidate may get two
-       requests.
+     - Which tool (operator, 2026-09-10): it depends on whether this
+       session's `mech_request` schema lists `request_context`; read the
+       schema once per cycle. WITHOUT it, the primary request per candidate
+       is `superforcaster-polymarket-v4`, which never reads market context,
+       and you send NO `superforcaster-market-aware` requests at all: run
+       blind, that tool only answers the question it exists for when it is
+       shown the price, so a blind call buys a number the retros cannot
+       grade. WITH it, the primary is `superforcaster-market-aware` with the
+       context below, and for at least one candidate per cycle you also
+       send the same prompt to `superforcaster-polymarket-v4` on the same
+       mech (a paired with-price versus blind comparison). That is the one
+       case where a candidate may get two requests.
      - Prompt: one precise resolution question (criteria, resolution
        source, deadline in UTC - never just the market title), the market
        question itself as a single sentence ending in `?`, and no other
@@ -204,7 +211,8 @@ Every invocation runs as one of three ticks:
        `mech_request`, never from the prompt. Pearl Connect added that
        argument on 2026-09-07 (valory-xyz/connect#66); the build on this
        machine may not carry it yet. So read the `mech_request` tool schema
-       once per cycle. If it lists `request_context`, pass it on EVERY
+       once per cycle (the same read that picks the tool above). If it
+       lists `request_context`, pass it on EVERY
        market-aware request as a JSON object in QUESTION frame (P(Yes) of
        the market question, not of the outcome you researched):
        `market_id` (the gamma id), `type` "polymarket", `market_prob` (the
@@ -212,8 +220,9 @@ Every invocation runs as one of three ticks:
        (the market's endDate, ISO 8601 UTC), `description` (the market's
        resolution rules verbatim). Send the same context on the paired v4
        request; v4 ignores it, so the pair stays a with-price versus blind
-       comparison. If the schema does not list it, send nothing extra and
-       write `mech context: unavailable` once in the cycle summary. The
+       comparison. If the schema does not list it, you are on the v4-only
+       rule above: send nothing extra and write `mech context: unavailable
+       (v4 only)` once in the cycle summary. The
        context holds market facts only, never your own estimate: off-chain
        it is part of the signed request digest, and on-chain it is uploaded
        to public IPFS next to the prompt.
