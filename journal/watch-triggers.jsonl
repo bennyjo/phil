@@ -55,3 +55,4 @@
 {"utc": "2026-09-09T17:23:18Z", "kind": "price_move", "key": "pricemove:4178439", "market_id": "4178439", "detail": "0.520 -> 0.260 (-0.260) over 58 min, threshold 0.080"}
 {"utc": "2026-09-09T18:38:08Z", "kind": "calendar", "key": "cal:Apple 'Surprise and Shine' keynote conclusion check - open position 2659709d25f9 (John Ternus says 'Hardware', Yes @0.52 est 0.60); event starts 17:00Z, keynotes typically run 60-100min, checking after for transcript/live-blog coverage of Ternus's remarks", "market_id": null, "detail": "window 2026-09-09T18:30:00Z .. 2026-09-09T19:15:00Z"}
 {"utc": "2026-09-10T08:53:10Z", "kind": "price_move", "key": "pricemove:2661523", "market_id": "2661523", "detail": "0.905 -> 0.830 (-0.075) over 59 min, threshold 0.050"}
+{"utc": "2026-09-10T21:37:50Z", "kind": "new_market", "key": "newmarket:4453231", "market_id": "4453231", "detail": "created 2026-09-10T21:27:03.347927Z, liquidity 15983 (floor 5000)"}
