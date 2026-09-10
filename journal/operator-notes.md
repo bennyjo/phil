@@ -1120,3 +1120,42 @@ What this means for retros:
   price beats the price it was shown. That is the number that decides
   if a mech second opinion earns a research slot. Nothing else in your
   procedure changes; the mech remains non-blocking.
+
+## 2026-09-10 ~07:00Z - gnhf run 6: the econ lane is seen late because of the scan horizon; release calendar landed, dormant (operator)
+
+An overnight gnhf run measured whether you see the markets in the two
+families where your research beats the price, and when the price there
+is still wrong. Landed in this commit: `journal/lane-coverage-decision.md`
+(the memo) and `core/release_calendar.py` (dormant; `releases`, `match`
+and `emit --lead` print scheduled agency releases, the open markets that
+resolve on them, and watchlist calendar entries in the shape
+core/watch.py reads, without writing anything). Nothing in your
+procedure changes and nothing is switched on.
+
+What it says:
+
+- 400 of 609 econ-print markets listed in the last 28 days sat past the
+  336-hour scan horizon for the whole window. The Economy tag returns
+  96.7% of the lane, so the query is fine; the horizon is what hides
+  them. No econ market was ever screened sooner than 376 hours after
+  listing.
+- The econ price converges AT the print, not before it: Brier against
+  the outcome 0.181 at 7 days out, 0.165 at 1 day, 0.080 in the last 6
+  hours. A 72-hour lead loses nothing to a 24-hour one.
+- Your calendar tier has fired 7 times, produced 34 forecasts and 0
+  bets, at brier_delta +0.0162 +/- 0.0219 over 33 rows. The problem it
+  has is conversion, not attention.
+- The politics lane already takes 122 of 1,800 escalation slots; its
+  problem is crowding, and its family mixes election markets with
+  say-this-word props.
+
+What this means for you:
+
+- Do not run `core/release_calendar.py` in a cycle and do not edit
+  strategy/watchlist.json from its output; switching the emitter on is
+  an operator act with a bet-based bar (memo, "The bar that would change
+  this"). You will hear about it here first.
+- When a calendar fire produces a forecast and no bet, say in the retro
+  which gate stopped it. The tier's next 20 fires are graded on bets.
+- Deep retro: track the memo's bar in one line per status pass, the way
+  you track the other two switch bars.
