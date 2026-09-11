@@ -3412,6 +3412,49 @@ than the veto grading — both are single-instance and carried as
 hypotheses, not rules, until a second China CPI print or a second
 TE/Lundgreen conflict tests them.
 
+**2026-09-11 update (08:1xZ resolve.py, LIGHT tick, cloud; RETRO-20260911-0814;
+3 more `wide-spread-veto` rows settled — one this tick, two backlog
+catch-ups found while reconciling the tool's live total against this
+table's last snapshot, both missed by earlier ticks):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Chewy "Consumable" wide-spread duplicate (`e7a452fef1be`) | 0.93 / 0.59 | Yes | +0.340 | Yes | **+3.47** |
+| RNC "2028/Campaign" (`906a1a65abc8`) | 0.80 / 0.71 | Yes | +0.090 | Yes | **+2.04** |
+| RNC "Tax on Tips/Overtime" (`83321f868e0f`) | 0.75 / 0.77 | Yes | −0.020 | Yes | **+1.49** |
+
+`e7a452fef1be` settled 2026-09-09T14:23:30Z but was never entered here:
+it's the original 0.93-est Chewy forecast, superseded two minutes after
+recording by `ffc3fcdcbaa6` when the label was corrected to
+`outside-view-veto` (that row is already graded above at line ~3444).
+`core/counterfactual.py` deliberately keeps superseded rows rather than
+dropping them, so this is a legitimate second row under
+`wide-spread-veto`, distinct from its already-graded successor — just
+never manually added. `906a1a65abc8` settled 2026-09-11T07:23:43Z but
+the 07:28:35Z TRIGGERED cycle that should have graded it (settlement
+duty applies to TRIGGERED cycles same as any other, per
+RETRO-20260908-2250) only logged its Sweden Liberals research and
+reported "settled 0" — a miss, caught up here one tick late.
+`83321f868e0f` is this tick's own genuine new settlement.
+
+Current mechanical ledger's wide-spread-veto line (`core/counterfactual.py
+ledger --skip-reason wide-spread-veto`): 9 settled declined forecasts, 7
+fillable CF trades, 2 refused, 5W/2L, pnl −$0.81, brier_delta −0.0967,
+held-out −$1.50 (was 6/4/2 refused/2W-2L/−$7.82/−0.0326/−$8.51 before
+this batch). Side split: yes 6 rows/6 trd/5W-1L/+$4.19 (adds all three
+new wins, +$7.00, was 3/3/2W-1L/−$2.82 before this batch); no 3 rows/1
+trd/0W-1L/−$5.00 (unchanged this batch). Check: 4.19−5.00=−0.81 ✓;
+−2.82+3.47+2.04+1.49=4.18≈4.19 (rounding) ✓.
+
+Ruling: no boundary change at n=9/7 trades — all three new rows are
+declined-Yes-side wins, extending the yes-side's edge but still far
+short of the ~15-settlement floor. `vance-mention` as a category: n=2,
+both won, +$3.54 — both are broad, near-default politician phrases
+("campaign", Vance's own stock "tax on tips/overtime" line) rather than
+narrow session-specific content, consistent with the broad-phrase side
+of the say-the-word split RETRO-20260911-0624 already documented; adds
+weak supporting evidence, not a new finding.
+
 **2026-09-09 update (14:2xZ resolve.py, FULL cycle, cloud; 1
 `outside-view-veto` forecast settled — the Chewy "Consumable" say-the-word
 row flagged in schedule.json for settlement grading).** `ffc3fcdcbaa6`
