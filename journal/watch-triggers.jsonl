@@ -61,3 +61,4 @@
 {"utc": "2026-09-11T09:22:40Z", "kind": "new_market", "key": "newmarket:4464642", "market_id": "4464642", "detail": "created 2026-09-11T09:07:25.336509Z, liquidity 17294 (floor 5000)"}
 {"utc": "2026-09-11T10:22:31Z", "kind": "price_move", "key": "pricemove:2661523", "market_id": "2661523", "detail": "0.800 -> 0.890 (+0.090) over 59 min, threshold 0.050"}
 {"utc": "2026-09-11T10:38:14Z", "kind": "calendar", "key": "cal:Bank of Russia key-rate decision (13:30 MSK) - open position cd8b25268fe1 no-change Yes @0.70 (est 0.75), sibling cut forecast d8d34757ae8e; grade per the schedule.json watch item (RBC n=30 poll vs PM mid vs mech 0.68)", "market_id": null, "detail": "window 2026-09-11T10:30:00Z .. 2026-09-11T11:15:00Z"}
+{"utc": "2026-09-11T12:37:49Z", "kind": "price_move", "key": "pricemove:2252245", "market_id": "2252245", "detail": "0.605 -> 0.755 (+0.150) over 59 min, threshold 0.050"}

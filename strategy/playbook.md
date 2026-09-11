@@ -46,6 +46,25 @@ Rank every candidate by WHY the market should be wrong, strongest first:
    something beyond the headline (revision risk, resolver read), not the
    crowd being slow; the NG win (`2dc417ed68f6`) was the opposite shape,
    an already-final official settlement print.
+   **Bracket-sibling verification / immediate-post-release-book trap
+   (2026-09-11, RETRO-20260911-1244):** for a bracket-set market (CPI/PPI/
+   GDP style, multiple binary legs on one release), once
+   `umaResolutionStatus` moves to `"proposed"` on the legs, checking the
+   sibling brackets directly by market ID is a cheap, sharp way to pin the
+   exact print — sharper than a calendar aggregator and available before a
+   primary-source page catches up (a clean bracket set has exactly one leg
+   near 1.0 and the rest near 0; if two adjacent legs are both elevated at
+   once, the set hasn't settled yet). The corollary this cycle had to learn
+   the hard way: an immediate post-release CLOB read, taken before that
+   proposed-resolution convergence, is NOT settlement corroboration — a
+   2026-09-11 cycle cited "the core-MoM-0.2 book moved to bid 0.72/ask
+   0.92" as market-side confirmation the Aug core CPI print was 0.2%; the
+   actual BLS print was 0.3%, the 0.2% leg fully reversed to ~0 within
+   the hour, and only the "treat as provisional" hedge already attached to
+   that note stopped the wrong figure from grading 11 open forecasts
+   against the wrong number. Don't cite "the market confirms X" for an
+   exact numeric print off an early, still-moving read — wait for a
+   proposed/clean-single-winner bracket set or a primary-source fetch.
 2. **Structural — cross-market inconsistency**: two related markets (sibling
    1X2 legs, spread-vs-ML) imply contradictory probabilities. Evidence:
    `1e8dec1078ba` won.
