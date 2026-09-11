@@ -11455,3 +11455,551 @@
 {"market_id": "3679235", "checked_ts": "2026-09-10T05:00:21Z", "status": "open", "winner": null, "end_date": "2026-09-16T21:00:00Z"}
 {"market_id": "3679237", "checked_ts": "2026-09-10T05:00:22Z", "status": "open", "winner": null, "end_date": "2026-09-16T21:00:00Z"}
 {"market_id": "3679460", "checked_ts": "2026-09-10T05:00:22Z", "status": "open", "winner": null, "end_date": "2026-09-16T21:00:00Z"}
+{"market_id": "4199679", "checked_ts": "2026-09-11T04:48:32Z", "status": "open", "winner": null, "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "3932697", "checked_ts": "2026-09-11T04:48:34Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T02:30:00Z"}
+{"market_id": "4178250", "checked_ts": "2026-09-11T04:48:35Z", "status": "open", "winner": null, "end_date": "2026-09-08T23:59:00Z"}
+{"market_id": "3539688", "checked_ts": "2026-09-11T04:48:38Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "3239630", "checked_ts": "2026-09-11T04:48:39Z", "status": "resolved", "winner": "49ers", "end_date": "2026-09-11T00:35:00Z"}
+{"market_id": "4359077", "checked_ts": "2026-09-11T04:48:41Z", "status": "open", "winner": null, "end_date": "2026-09-09T17:00:00Z"}
+{"market_id": "3539705", "checked_ts": "2026-09-11T04:48:43Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "3539687", "checked_ts": "2026-09-11T04:48:45Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "3932688", "checked_ts": "2026-09-11T04:48:47Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T02:30:00Z"}
+{"market_id": "3932696", "checked_ts": "2026-09-11T04:48:49Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T02:30:00Z"}
+{"market_id": "3977563", "checked_ts": "2026-09-11T04:48:50Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "3977553", "checked_ts": "2026-09-11T04:48:51Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T16:45:00Z"}
+{"market_id": "3539694", "checked_ts": "2026-09-11T04:48:52Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "3539707", "checked_ts": "2026-09-11T04:48:54Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "2491448", "checked_ts": "2026-09-11T04:48:57Z", "status": "open", "winner": null, "end_date": "2026-08-30T03:59:00Z"}
+{"market_id": "3977564", "checked_ts": "2026-09-11T04:48:59Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "4199677", "checked_ts": "2026-09-11T04:49:01Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "3539673", "checked_ts": "2026-09-11T04:49:02Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "3977567", "checked_ts": "2026-09-11T04:49:04Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "3539668", "checked_ts": "2026-09-11T04:49:06Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "3977552", "checked_ts": "2026-09-11T04:49:27Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T16:45:00Z"}
+{"market_id": "4346775", "checked_ts": "2026-09-11T04:49:29Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T03:59:00Z"}
+{"market_id": "3977554", "checked_ts": "2026-09-11T04:49:30Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T16:45:00Z"}
+{"market_id": "4215666", "checked_ts": "2026-09-11T04:49:38Z", "status": "open", "winner": null, "end_date": "2026-09-09T14:00:00Z"}
+{"market_id": "3977568", "checked_ts": "2026-09-11T04:49:40Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "3539686", "checked_ts": "2026-09-11T04:49:41Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "3977565", "checked_ts": "2026-09-11T04:49:44Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "3977555", "checked_ts": "2026-09-11T04:49:47Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T16:45:00Z"}
+{"market_id": "3977558", "checked_ts": "2026-09-11T04:49:48Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "3977560", "checked_ts": "2026-09-11T04:49:49Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "3977559", "checked_ts": "2026-09-11T04:49:50Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "3942369", "checked_ts": "2026-09-11T04:49:52Z", "status": "resolved", "winner": "49ers", "end_date": "2026-09-11T00:35:00Z"}
+{"market_id": "3977556", "checked_ts": "2026-09-11T04:49:54Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T16:45:00Z"}
+{"market_id": "3977557", "checked_ts": "2026-09-11T04:49:55Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T16:45:00Z"}
+{"market_id": "3932692", "checked_ts": "2026-09-11T04:49:57Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T02:30:00Z"}
+{"market_id": "3932691", "checked_ts": "2026-09-11T04:50:00Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T02:30:00Z"}
+{"market_id": "3932693", "checked_ts": "2026-09-11T04:50:01Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T02:30:00Z"}
+{"market_id": "3539697", "checked_ts": "2026-09-11T04:50:05Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "3539696", "checked_ts": "2026-09-11T04:50:08Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "3539672", "checked_ts": "2026-09-11T04:50:10Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "3539667", "checked_ts": "2026-09-11T04:50:13Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "3566688", "checked_ts": "2026-09-11T04:50:16Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "3539706", "checked_ts": "2026-09-11T04:50:19Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "3539675", "checked_ts": "2026-09-11T04:50:20Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "3539674", "checked_ts": "2026-09-11T04:50:21Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "3539708", "checked_ts": "2026-09-11T04:50:22Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "3539695", "checked_ts": "2026-09-11T04:50:23Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "3566686", "checked_ts": "2026-09-11T04:50:25Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "3566683", "checked_ts": "2026-09-11T04:50:28Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "3977561", "checked_ts": "2026-09-11T04:50:29Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "3932698", "checked_ts": "2026-09-11T04:50:31Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T02:30:00Z"}
+{"market_id": "3977562", "checked_ts": "2026-09-11T04:50:32Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "4199685", "checked_ts": "2026-09-11T04:50:33Z", "status": "open", "winner": null, "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "3539666", "checked_ts": "2026-09-11T04:50:36Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "4366722", "checked_ts": "2026-09-11T04:50:37Z", "status": "resolved", "winner": "T1 Academy", "end_date": "2026-09-10T14:00:00Z"}
+{"market_id": "3932690", "checked_ts": "2026-09-11T04:50:39Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T02:30:00Z"}
+{"market_id": "3932687", "checked_ts": "2026-09-11T04:50:42Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T02:30:00Z"}
+{"market_id": "4311754", "checked_ts": "2026-09-11T04:50:47Z", "status": "resolved", "winner": "NAVI Junior", "end_date": "2026-09-10T23:40:00Z"}
+{"market_id": "4178251", "checked_ts": "2026-09-11T04:50:49Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-09T23:59:00Z"}
+{"market_id": "3932689", "checked_ts": "2026-09-11T04:50:52Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T02:30:00Z"}
+{"market_id": "3566687", "checked_ts": "2026-09-11T04:50:53Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "3929208", "checked_ts": "2026-09-11T04:50:56Z", "status": "void", "winner": null, "end_date": "2026-09-08T15:00:00Z"}
+{"market_id": "4359075", "checked_ts": "2026-09-11T04:50:57Z", "status": "open", "winner": null, "end_date": "2026-09-09T15:00:00Z"}
+{"market_id": "4359076", "checked_ts": "2026-09-11T04:51:00Z", "status": "open", "winner": null, "end_date": "2026-09-09T15:00:00Z"}
+{"market_id": "3929207", "checked_ts": "2026-09-11T04:51:01Z", "status": "void", "winner": null, "end_date": "2026-09-08T13:00:00Z"}
+{"market_id": "4394795", "checked_ts": "2026-09-11T04:51:03Z", "status": "open", "winner": null, "end_date": "2026-09-09T16:00:00Z"}
+{"market_id": "3585979", "checked_ts": "2026-09-11T04:51:04Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-01T03:59:00Z"}
+{"market_id": "4335073", "checked_ts": "2026-09-11T04:51:06Z", "status": "resolved", "winner": "Any Questions Gaming", "end_date": "2026-09-10T17:00:00Z"}
+{"market_id": "4394796", "checked_ts": "2026-09-11T04:51:07Z", "status": "open", "winner": null, "end_date": "2026-09-09T16:00:00Z"}
+{"market_id": "4394797", "checked_ts": "2026-09-11T04:51:09Z", "status": "open", "winner": null, "end_date": "2026-09-09T16:00:00Z"}
+{"market_id": "4048366", "checked_ts": "2026-09-11T04:51:10Z", "status": "void", "winner": null, "end_date": "2026-09-08T13:30:00Z"}
+{"market_id": "4048363", "checked_ts": "2026-09-11T04:51:12Z", "status": "void", "winner": null, "end_date": "2026-09-08T13:30:00Z"}
+{"market_id": "4178252", "checked_ts": "2026-09-11T04:51:18Z", "status": "open", "winner": null, "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "4199709", "checked_ts": "2026-09-11T04:51:20Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "4059802", "checked_ts": "2026-09-11T04:51:21Z", "status": "void", "winner": null, "end_date": "2026-09-09T01:30:00Z"}
+{"market_id": "3929206", "checked_ts": "2026-09-11T04:51:23Z", "status": "void", "winner": null, "end_date": "2026-09-08T13:00:00Z"}
+{"market_id": "4007169", "checked_ts": "2026-09-11T04:51:30Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T19:15:00Z"}
+{"market_id": "4199692", "checked_ts": "2026-09-11T04:51:31Z", "status": "open", "winner": null, "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "4087236", "checked_ts": "2026-09-11T04:51:32Z", "status": "open", "winner": null, "end_date": "2026-09-02T09:00:00Z"}
+{"market_id": "4409096", "checked_ts": "2026-09-11T04:51:33Z", "status": "resolved", "winner": "1WIN", "end_date": "2026-09-10T20:15:00Z"}
+{"market_id": "4074842", "checked_ts": "2026-09-11T04:51:35Z", "status": "open", "winner": null, "end_date": "2026-09-09T08:00:00Z"}
+{"market_id": "4405626", "checked_ts": "2026-09-11T04:51:36Z", "status": "resolved", "winner": "9z", "end_date": "2026-09-10T09:20:00Z"}
+{"market_id": "3539665", "checked_ts": "2026-09-11T04:51:37Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "4405628", "checked_ts": "2026-09-11T04:51:43Z", "status": "resolved", "winner": "G2", "end_date": "2026-09-10T09:00:00Z"}
+{"market_id": "4405617", "checked_ts": "2026-09-11T04:51:48Z", "status": "resolved", "winner": "Alliance", "end_date": "2026-09-10T09:10:00Z"}
+{"market_id": "4190614", "checked_ts": "2026-09-11T04:51:49Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T16:00:00Z"}
+{"market_id": "4074775", "checked_ts": "2026-09-11T04:51:51Z", "status": "open", "winner": null, "end_date": "2026-09-09T08:00:00Z"}
+{"market_id": "4217298", "checked_ts": "2026-09-11T04:51:52Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T13:00:00Z"}
+{"market_id": "4311909", "checked_ts": "2026-09-11T04:51:53Z", "status": "resolved", "winner": "ENCE Prospects", "end_date": "2026-09-10T16:40:00Z"}
+{"market_id": "4358745", "checked_ts": "2026-09-11T04:51:57Z", "status": "open", "winner": null, "end_date": "2026-09-09T20:20:00Z"}
+{"market_id": "3932695", "checked_ts": "2026-09-11T04:52:00Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T02:30:00Z"}
+{"market_id": "4190638", "checked_ts": "2026-09-11T04:52:02Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T16:00:00Z"}
+{"market_id": "4190636", "checked_ts": "2026-09-11T04:52:05Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T16:00:00Z"}
+{"market_id": "4199714", "checked_ts": "2026-09-11T04:52:06Z", "status": "open", "winner": null, "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "4408283", "checked_ts": "2026-09-11T04:52:07Z", "status": "resolved", "winner": "5star", "end_date": "2026-09-10T13:20:00Z"}
+{"market_id": "4199711", "checked_ts": "2026-09-11T04:52:09Z", "status": "open", "winner": null, "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "4199700", "checked_ts": "2026-09-11T04:52:10Z", "status": "open", "winner": null, "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "4409454", "checked_ts": "2026-09-11T04:52:12Z", "status": "resolved", "winner": "magic", "end_date": "2026-09-10T12:00:00Z"}
+{"market_id": "3978435", "checked_ts": "2026-09-11T04:52:14Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "4406638", "checked_ts": "2026-09-11T04:52:16Z", "status": "resolved", "winner": "Heroic", "end_date": "2026-09-10T14:30:00Z"}
+{"market_id": "4007166", "checked_ts": "2026-09-11T04:52:19Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T19:15:00Z"}
+{"market_id": "4408282", "checked_ts": "2026-09-11T04:52:20Z", "status": "resolved", "winner": "Astralis", "end_date": "2026-09-10T13:20:00Z"}
+{"market_id": "4408529", "checked_ts": "2026-09-11T04:52:21Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "4408281", "checked_ts": "2026-09-11T04:52:23Z", "status": "resolved", "winner": "5star", "end_date": "2026-09-10T13:20:00Z"}
+{"market_id": "4311913", "checked_ts": "2026-09-11T04:52:24Z", "status": "resolved", "winner": "Inner Circle Prospect", "end_date": "2026-09-10T14:15:00Z"}
+{"market_id": "4369002", "checked_ts": "2026-09-11T04:52:26Z", "status": "resolved", "winner": "No", "end_date": "2026-09-09T23:59:00Z"}
+{"market_id": "4406630", "checked_ts": "2026-09-11T04:52:32Z", "status": "resolved", "winner": "Virtus.pro", "end_date": "2026-09-10T14:00:00Z"}
+{"market_id": "4369008", "checked_ts": "2026-09-11T04:52:33Z", "status": "resolved", "winner": "No", "end_date": "2026-09-09T23:59:00Z"}
+{"market_id": "4369009", "checked_ts": "2026-09-11T04:52:35Z", "status": "resolved", "winner": "No", "end_date": "2026-09-09T23:59:00Z"}
+{"market_id": "3978367", "checked_ts": "2026-09-11T04:52:37Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "3970672", "checked_ts": "2026-09-11T04:52:39Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T00:00:00Z"}
+{"market_id": "3932694", "checked_ts": "2026-09-11T04:52:40Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T02:30:00Z"}
+{"market_id": "3970674", "checked_ts": "2026-09-11T04:52:42Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T00:00:00Z"}
+{"market_id": "4409464", "checked_ts": "2026-09-11T04:52:43Z", "status": "resolved", "winner": "Legacy", "end_date": "2026-09-10T13:00:00Z"}
+{"market_id": "3971589", "checked_ts": "2026-09-11T04:52:46Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T00:00:00Z"}
+{"market_id": "3954676", "checked_ts": "2026-09-11T04:52:47Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-11T00:30:00Z"}
+{"market_id": "4178675", "checked_ts": "2026-09-11T04:52:47Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T00:20:00Z"}
+{"market_id": "4178676", "checked_ts": "2026-09-11T04:52:50Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T00:20:00Z"}
+{"market_id": "4178684", "checked_ts": "2026-09-11T04:52:51Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T00:20:00Z"}
+{"market_id": "4409465", "checked_ts": "2026-09-11T04:52:52Z", "status": "resolved", "winner": "Legacy", "end_date": "2026-09-10T15:00:00Z"}
+{"market_id": "3937217", "checked_ts": "2026-09-11T04:52:55Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T00:30:00Z"}
+{"market_id": "3937218", "checked_ts": "2026-09-11T04:52:57Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T00:30:00Z"}
+{"market_id": "3970675", "checked_ts": "2026-09-11T04:53:00Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T02:10:00Z"}
+{"market_id": "4408301", "checked_ts": "2026-09-11T04:53:01Z", "status": "resolved", "winner": "BetBoom Team", "end_date": "2026-09-10T15:00:00Z"}
+{"market_id": "4408534", "checked_ts": "2026-09-11T04:53:04Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "4108202", "checked_ts": "2026-09-11T04:53:05Z", "status": "resolved", "winner": "Learner Tien", "end_date": "2026-09-10T15:00:00Z"}
+{"market_id": "4199706", "checked_ts": "2026-09-11T04:53:07Z", "status": "open", "winner": null, "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "4199710", "checked_ts": "2026-09-11T04:53:07Z", "status": "open", "winner": null, "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "3934167", "checked_ts": "2026-09-11T04:53:08Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T02:30:00Z"}
+{"market_id": "3849974", "checked_ts": "2026-09-11T04:53:10Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:00:00Z"}
+{"market_id": "3539685", "checked_ts": "2026-09-11T04:53:11Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "4329803", "checked_ts": "2026-09-11T04:53:12Z", "status": "open", "winner": null, "end_date": "2026-09-10T08:10:00Z"}
+{"market_id": "4329804", "checked_ts": "2026-09-11T04:53:13Z", "status": "open", "winner": null, "end_date": "2026-09-10T08:00:00Z"}
+{"market_id": "4416404", "checked_ts": "2026-09-11T04:53:14Z", "status": "resolved", "winner": "100 Thieves", "end_date": "2026-09-10T20:40:00Z"}
+{"market_id": "4366719", "checked_ts": "2026-09-11T04:53:17Z", "status": "resolved", "winner": "Dplus KIA Challengers", "end_date": "2026-09-10T12:00:00Z"}
+{"market_id": "4318959", "checked_ts": "2026-09-11T04:53:18Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T13:40:00Z"}
+{"market_id": "4408539", "checked_ts": "2026-09-11T04:53:19Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "4409088", "checked_ts": "2026-09-11T04:53:22Z", "status": "resolved", "winner": "Nuclear TigeRES", "end_date": "2026-09-10T14:00:00Z"}
+{"market_id": "4245435", "checked_ts": "2026-09-11T04:53:23Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T14:45:00Z"}
+{"market_id": "4266640", "checked_ts": "2026-09-11T04:53:24Z", "status": "resolved", "winner": "FunPlus Phoenix", "end_date": "2026-09-10T15:00:00Z"}
+{"market_id": "3586724", "checked_ts": "2026-09-11T04:53:28Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T15:59:00Z"}
+{"market_id": "4105080", "checked_ts": "2026-09-11T04:53:32Z", "status": "resolved", "winner": "Elena Rybakina", "end_date": "2026-09-10T15:00:00Z"}
+{"market_id": "3586725", "checked_ts": "2026-09-11T04:53:33Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T15:59:00Z"}
+{"market_id": "4190610", "checked_ts": "2026-09-11T04:53:35Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T16:00:00Z"}
+{"market_id": "4404625", "checked_ts": "2026-09-11T04:53:38Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T20:00:00Z"}
+{"market_id": "4190612", "checked_ts": "2026-09-11T04:53:39Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T16:00:00Z"}
+{"market_id": "4190634", "checked_ts": "2026-09-11T04:53:44Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T16:00:00Z"}
+{"market_id": "4404621", "checked_ts": "2026-09-11T04:53:47Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T20:00:00Z"}
+{"market_id": "4215998", "checked_ts": "2026-09-11T04:53:48Z", "status": "resolved", "winner": "Shanghai Dragons", "end_date": "2026-09-10T16:10:00Z"}
+{"market_id": "4420353", "checked_ts": "2026-09-11T04:53:50Z", "status": "resolved", "winner": "BOMBA Team", "end_date": "2026-09-10T22:00:00Z"}
+{"market_id": "4317618", "checked_ts": "2026-09-11T04:53:53Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T16:15:00Z"}
+{"market_id": "3977917", "checked_ts": "2026-09-11T04:53:54Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T16:45:00Z"}
+{"market_id": "3978470", "checked_ts": "2026-09-11T04:53:56Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T16:45:00Z"}
+{"market_id": "3978503", "checked_ts": "2026-09-11T04:53:58Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T16:45:00Z"}
+{"market_id": "4413504", "checked_ts": "2026-09-11T04:53:59Z", "status": "resolved", "winner": "Wildcard", "end_date": "2026-09-10T17:00:00Z"}
+{"market_id": "4418902", "checked_ts": "2026-09-11T04:54:00Z", "status": "resolved", "winner": "Inner Circle Esports", "end_date": "2026-09-10T17:15:00Z"}
+{"market_id": "4404052", "checked_ts": "2026-09-11T04:54:01Z", "status": "resolved", "winner": "Daxak Club", "end_date": "2026-09-10T18:15:00Z"}
+{"market_id": "3977969", "checked_ts": "2026-09-11T04:54:02Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "4329802", "checked_ts": "2026-09-11T04:54:04Z", "status": "open", "winner": null, "end_date": "2026-09-10T06:00:00Z"}
+{"market_id": "4405616", "checked_ts": "2026-09-11T04:54:07Z", "status": "resolved", "winner": "Alliance", "end_date": "2026-09-10T09:10:00Z"}
+{"market_id": "4405627", "checked_ts": "2026-09-11T04:54:09Z", "status": "resolved", "winner": "G2", "end_date": "2026-09-10T09:20:00Z"}
+{"market_id": "4199696", "checked_ts": "2026-09-11T04:54:10Z", "status": "open", "winner": null, "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "4199715", "checked_ts": "2026-09-11T04:54:11Z", "status": "open", "winner": null, "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "4406637", "checked_ts": "2026-09-11T04:54:12Z", "status": "resolved", "winner": "Heroic", "end_date": "2026-09-10T14:30:00Z"}
+{"market_id": "4199713", "checked_ts": "2026-09-11T04:54:15Z", "status": "open", "winner": null, "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "4046823", "checked_ts": "2026-09-11T04:54:18Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "4199704", "checked_ts": "2026-09-11T04:54:19Z", "status": "open", "winner": null, "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "3931079", "checked_ts": "2026-09-11T04:54:21Z", "status": "resolved", "winner": "Hanshin Tigers", "end_date": "2026-09-10T09:00:00Z"}
+{"market_id": "4095052", "checked_ts": "2026-09-11T04:54:23Z", "status": "open", "winner": null, "end_date": "2026-09-04T23:59:00Z"}
+{"market_id": "4418910", "checked_ts": "2026-09-11T04:54:25Z", "status": "resolved", "winner": "Nemiga", "end_date": "2026-09-10T23:00:00Z"}
+{"market_id": "4217307", "checked_ts": "2026-09-11T04:54:26Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T16:00:00Z"}
+{"market_id": "4419244", "checked_ts": "2026-09-11T04:54:27Z", "status": "resolved", "winner": "Sinners", "end_date": "2026-09-10T17:10:00Z"}
+{"market_id": "4199708", "checked_ts": "2026-09-11T04:54:29Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "4412329", "checked_ts": "2026-09-11T04:54:32Z", "status": "resolved", "winner": "Elevate", "end_date": "2026-09-10T17:30:00Z"}
+{"market_id": "4413503", "checked_ts": "2026-09-11T04:54:34Z", "status": "resolved", "winner": "Wildcard", "end_date": "2026-09-10T17:00:00Z"}
+{"market_id": "4121578", "checked_ts": "2026-09-11T04:54:35Z", "status": "resolved", "winner": "Alexander Zverev", "end_date": "2026-09-10T15:00:00Z"}
+{"market_id": "4413512", "checked_ts": "2026-09-11T04:54:37Z", "status": "resolved", "winner": "HOTU", "end_date": "2026-09-10T18:00:00Z"}
+{"market_id": "4325868", "checked_ts": "2026-09-11T04:54:38Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T18:15:00Z"}
+{"market_id": "3978334", "checked_ts": "2026-09-11T04:54:39Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "3978400", "checked_ts": "2026-09-11T04:54:42Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "4282471", "checked_ts": "2026-09-11T04:54:42Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "4424832", "checked_ts": "2026-09-11T04:54:43Z", "status": "resolved", "winner": "K27", "end_date": "2026-09-10T20:15:00Z"}
+{"market_id": "4007171", "checked_ts": "2026-09-11T04:54:44Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T19:15:00Z"}
+{"market_id": "4279624", "checked_ts": "2026-09-11T04:54:45Z", "status": "open", "winner": null, "end_date": "2026-09-10T20:00:00Z"}
+{"market_id": "4404622", "checked_ts": "2026-09-11T04:54:51Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T20:00:00Z"}
+{"market_id": "4404626", "checked_ts": "2026-09-11T04:54:57Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T20:00:00Z"}
+{"market_id": "4404648", "checked_ts": "2026-09-11T04:55:01Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T20:00:00Z"}
+{"market_id": "4404651", "checked_ts": "2026-09-11T04:55:02Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T20:00:00Z"}
+{"market_id": "4404652", "checked_ts": "2026-09-11T04:55:04Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T20:00:00Z"}
+{"market_id": "3212060", "checked_ts": "2026-09-11T04:55:06Z", "status": "open", "winner": null, "end_date": "2026-09-23T23:59:00Z"}
+{"market_id": "4406629", "checked_ts": "2026-09-11T04:55:07Z", "status": "resolved", "winner": "Virtus.pro", "end_date": "2026-09-10T12:00:00Z"}
+{"market_id": "4409087", "checked_ts": "2026-09-11T04:55:09Z", "status": "resolved", "winner": "BET-M 33", "end_date": "2026-09-10T12:00:00Z"}
+{"market_id": "3539709", "checked_ts": "2026-09-11T04:55:11Z", "status": "open", "winner": null, "end_date": "2026-09-11T03:59:00Z"}
+{"market_id": "4420347", "checked_ts": "2026-09-11T04:55:13Z", "status": "open", "winner": null, "end_date": "2026-09-10T12:00:00Z"}
+{"market_id": "4408299", "checked_ts": "2026-09-11T04:55:14Z", "status": "resolved", "winner": "BetBoom Team", "end_date": "2026-09-10T16:40:00Z"}
+{"market_id": "4429217", "checked_ts": "2026-09-11T04:55:16Z", "status": "resolved", "winner": "Back to Back ", "end_date": "2026-09-10T23:50:00Z"}
+{"market_id": "3886759", "checked_ts": "2026-09-11T04:55:18Z", "status": "open", "winner": null, "end_date": "2026-08-27T03:59:59.999Z"}
+{"market_id": "4409463", "checked_ts": "2026-09-11T04:55:19Z", "status": "resolved", "winner": "Legacy", "end_date": "2026-09-10T13:00:00Z"}
+{"market_id": "4428426", "checked_ts": "2026-09-11T04:55:21Z", "status": "resolved", "winner": "ShindeN", "end_date": "2026-09-10T20:10:00Z"}
+{"market_id": "4287173", "checked_ts": "2026-09-11T04:55:22Z", "status": "resolved", "winner": "KT Wiz", "end_date": "2026-09-17T09:30:00Z"}
+{"market_id": "3952861", "checked_ts": "2026-09-11T04:55:23Z", "status": "resolved", "winner": "No", "end_date": "2026-09-11T00:30:00Z"}
+{"market_id": "4424849", "checked_ts": "2026-09-11T04:55:24Z", "status": "resolved", "winner": "FOKUS", "end_date": "2026-09-10T23:10:00Z"}
+{"market_id": "4409482", "checked_ts": "2026-09-11T04:55:25Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T13:40:00Z"}
+{"market_id": "4319473", "checked_ts": "2026-09-11T04:55:26Z", "status": "open", "winner": null, "end_date": "2026-09-14T04:00:00Z"}
+{"market_id": "4429810", "checked_ts": "2026-09-11T04:55:27Z", "status": "resolved", "winner": "No", "end_date": "2026-09-11T04:00:00Z"}
+{"market_id": "4319476", "checked_ts": "2026-09-11T04:55:28Z", "status": "open", "winner": null, "end_date": "2026-09-14T04:00:00Z"}
+{"market_id": "4319463", "checked_ts": "2026-09-11T04:55:30Z", "status": "open", "winner": null, "end_date": "2026-09-14T04:00:00Z"}
+{"market_id": "4412880", "checked_ts": "2026-09-11T04:55:31Z", "status": "open", "winner": null, "end_date": "2026-09-11T20:00:00Z"}
+{"market_id": "4426012", "checked_ts": "2026-09-11T04:55:31Z", "status": "resolved", "winner": "REVENIX", "end_date": "2026-09-10T14:00:00Z"}
+{"market_id": "4319529", "checked_ts": "2026-09-11T04:55:33Z", "status": "open", "winner": null, "end_date": "2026-09-14T04:00:00Z"}
+{"market_id": "4311911", "checked_ts": "2026-09-11T04:55:34Z", "status": "resolved", "winner": "Inner Circle Prospect", "end_date": "2026-09-10T14:15:00Z"}
+{"market_id": "4412882", "checked_ts": "2026-09-11T04:55:38Z", "status": "open", "winner": null, "end_date": "2026-09-11T20:00:00Z"}
+{"market_id": "4424734", "checked_ts": "2026-09-11T04:55:38Z", "status": "resolved", "winner": "Gothboiclique", "end_date": "2026-09-10T14:45:00Z"}
+{"market_id": "4319480", "checked_ts": "2026-09-11T04:55:42Z", "status": "open", "winner": null, "end_date": "2026-09-14T04:00:00Z"}
+{"market_id": "4369073", "checked_ts": "2026-09-11T04:55:46Z", "status": "open", "winner": null, "end_date": "2026-09-11T20:00:00Z"}
+{"market_id": "4428461", "checked_ts": "2026-09-11T04:55:48Z", "status": "resolved", "winner": "Maryville University", "end_date": "2026-09-11T03:00:00Z"}
+{"market_id": "3748352", "checked_ts": "2026-09-11T04:55:48Z", "status": "open", "winner": null, "end_date": "2026-09-20T23:59:00Z"}
+{"market_id": "4424737", "checked_ts": "2026-09-11T04:55:51Z", "status": "resolved", "winner": "Matrix", "end_date": "2026-09-10T16:00:00Z"}
+{"market_id": "4426014", "checked_ts": "2026-09-11T04:55:52Z", "status": "resolved", "winner": "maybe", "end_date": "2026-09-10T15:45:00Z"}
+{"market_id": "4372185", "checked_ts": "2026-09-11T04:55:54Z", "status": "resolved", "winner": "Lukas Neumayer", "end_date": "2026-09-17T08:00:00Z"}
+{"market_id": "4372193", "checked_ts": "2026-09-11T04:55:56Z", "status": "resolved", "winner": "Mika Brunold", "end_date": "2026-09-17T08:00:00Z"}
+{"market_id": "4144896", "checked_ts": "2026-09-11T04:55:57Z", "status": "open", "winner": null, "end_date": "2026-09-11T17:00:00Z"}
+{"market_id": "3952864", "checked_ts": "2026-09-11T04:55:58Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-11T00:30:00Z"}
+{"market_id": "4217304", "checked_ts": "2026-09-11T04:56:02Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T16:00:00Z"}
+{"market_id": "4431568", "checked_ts": "2026-09-11T04:56:03Z", "status": "open", "winner": null, "end_date": "2026-09-18T19:00:00Z"}
+{"market_id": "4341090", "checked_ts": "2026-09-11T04:56:05Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T16:00:00Z"}
+{"market_id": "4414103", "checked_ts": "2026-09-11T04:56:26Z", "status": "resolved", "winner": "BBL", "end_date": "2026-09-10T20:00:00Z"}
+{"market_id": "4317617", "checked_ts": "2026-09-11T04:56:27Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T16:15:00Z"}
+{"market_id": "3965768", "checked_ts": "2026-09-11T04:56:29Z", "status": "open", "winner": null, "end_date": "2026-09-11T19:00:00Z"}
+{"market_id": "3393097", "checked_ts": "2026-09-11T04:56:31Z", "status": "open", "winner": null, "end_date": "2026-09-20T23:59:00Z"}
+{"market_id": "4046401", "checked_ts": "2026-09-11T04:56:32Z", "status": "open", "winner": null, "end_date": "2026-09-12T16:00:00Z"}
+{"market_id": "4231941", "checked_ts": "2026-09-11T04:56:33Z", "status": "open", "winner": null, "end_date": "2026-09-11T20:00:00Z"}
+{"market_id": "4425796", "checked_ts": "2026-09-11T04:56:33Z", "status": "resolved", "winner": "Gauff", "end_date": "2026-09-18T00:30:00Z"}
+{"market_id": "4429814", "checked_ts": "2026-09-11T04:56:34Z", "status": "resolved", "winner": "No", "end_date": "2026-09-11T04:00:00Z"}
+{"market_id": "4372205", "checked_ts": "2026-09-11T04:56:37Z", "status": "resolved", "winner": "Gustavo Heide", "end_date": "2026-09-17T08:00:00Z"}
+{"market_id": "3393096", "checked_ts": "2026-09-11T04:56:38Z", "status": "open", "winner": null, "end_date": "2026-09-20T23:59:00Z"}
+{"market_id": "4335994", "checked_ts": "2026-09-11T04:56:39Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T17:00:00Z"}
+{"market_id": "3748594", "checked_ts": "2026-09-11T04:56:40Z", "status": "open", "winner": null, "end_date": "2026-09-20T23:59:00Z"}
+{"market_id": "4372203", "checked_ts": "2026-09-11T04:56:43Z", "status": "resolved", "winner": "Nicolai Budkov Kjaer", "end_date": "2026-09-17T09:00:00Z"}
+{"market_id": "4368970", "checked_ts": "2026-09-11T04:56:44Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-11T20:00:00Z"}
+{"market_id": "4428181", "checked_ts": "2026-09-11T04:56:47Z", "status": "resolved", "winner": "Klim Sani4", "end_date": "2026-09-10T18:00:00Z"}
+{"market_id": "3480145", "checked_ts": "2026-09-11T04:56:48Z", "status": "open", "winner": null, "end_date": "2026-09-13T23:59:00Z"}
+{"market_id": "3949474", "checked_ts": "2026-09-11T04:56:50Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "3949475", "checked_ts": "2026-09-11T04:56:52Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "3949476", "checked_ts": "2026-09-11T04:56:55Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "4429809", "checked_ts": "2026-09-11T04:56:56Z", "status": "resolved", "winner": "No", "end_date": "2026-09-11T04:00:00Z"}
+{"market_id": "4401879", "checked_ts": "2026-09-11T04:56:58Z", "status": "resolved", "winner": "MAGAZA", "end_date": "2026-09-10T22:00:00Z"}
+{"market_id": "3679467", "checked_ts": "2026-09-11T04:56:59Z", "status": "open", "winner": null, "end_date": "2026-09-16T21:00:00Z"}
+{"market_id": "3679472", "checked_ts": "2026-09-11T04:57:00Z", "status": "open", "winner": null, "end_date": "2026-09-16T21:00:00Z"}
+{"market_id": "3679473", "checked_ts": "2026-09-11T04:57:04Z", "status": "open", "winner": null, "end_date": "2026-09-16T21:00:00Z"}
+{"market_id": "3679477", "checked_ts": "2026-09-11T04:57:05Z", "status": "open", "winner": null, "end_date": "2026-09-16T21:00:00Z"}
+{"market_id": "3679479", "checked_ts": "2026-09-11T04:57:09Z", "status": "open", "winner": null, "end_date": "2026-09-16T21:00:00Z"}
+{"market_id": "3679489", "checked_ts": "2026-09-11T04:57:10Z", "status": "open", "winner": null, "end_date": "2026-09-16T21:00:00Z"}
+{"market_id": "4051873", "checked_ts": "2026-09-11T04:57:12Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4051874", "checked_ts": "2026-09-11T04:57:13Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4051875", "checked_ts": "2026-09-11T04:57:14Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4051884", "checked_ts": "2026-09-11T04:57:16Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "3775543", "checked_ts": "2026-09-11T04:57:18Z", "status": "resolved", "winner": "Real Betis Balompi\u00e9", "end_date": "2026-09-04T19:00:00Z"}
+{"market_id": "4051892", "checked_ts": "2026-09-11T04:57:19Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "3750430", "checked_ts": "2026-09-11T04:57:20Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T16:30:00Z"}
+{"market_id": "4412331", "checked_ts": "2026-09-11T04:57:22Z", "status": "resolved", "winner": "Weibo Gaming", "end_date": "2026-09-10T19:45:00Z"}
+{"market_id": "3679503", "checked_ts": "2026-09-11T04:57:23Z", "status": "open", "winner": null, "end_date": "2026-09-16T21:00:00Z"}
+{"market_id": "3889355", "checked_ts": "2026-09-11T04:57:26Z", "status": "resolved", "winner": "UAB", "end_date": "2026-09-04T01:00:00Z"}
+{"market_id": "3757129", "checked_ts": "2026-09-11T04:57:28Z", "status": "resolved", "winner": "Toulouse FC", "end_date": "2026-09-03T18:45:00Z"}
+{"market_id": "4051907", "checked_ts": "2026-09-11T04:57:30Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4051918", "checked_ts": "2026-09-11T04:57:31Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "3757672", "checked_ts": "2026-09-11T04:57:32Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T19:00:00Z"}
+{"market_id": "4051929", "checked_ts": "2026-09-11T04:57:34Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4051937", "checked_ts": "2026-09-11T04:57:36Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4426219", "checked_ts": "2026-09-11T04:57:37Z", "status": "resolved", "winner": "Misa Esports", "end_date": "2026-09-10T20:05:00Z"}
+{"market_id": "4424840", "checked_ts": "2026-09-11T04:57:42Z", "status": "resolved", "winner": "NIP", "end_date": "2026-09-10T23:00:00Z"}
+{"market_id": "3757671", "checked_ts": "2026-09-11T04:57:44Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T19:00:00Z"}
+{"market_id": "4158953", "checked_ts": "2026-09-11T04:57:46Z", "status": "resolved", "winner": "Kansas City Royals", "end_date": "2026-09-03T23:40:00Z"}
+{"market_id": "3952036", "checked_ts": "2026-09-11T04:57:48Z", "status": "resolved", "winner": "Boston Red Sox", "end_date": "2026-09-10T23:15:00Z"}
+{"market_id": "4153643", "checked_ts": "2026-09-11T04:57:49Z", "status": "resolved", "winner": "Houston Astros", "end_date": "2026-09-03T18:10:00Z"}
+{"market_id": "4166473", "checked_ts": "2026-09-11T04:57:50Z", "status": "resolved", "winner": "Texas Rangers", "end_date": "2026-09-04T00:05:00Z"}
+{"market_id": "4153600", "checked_ts": "2026-09-11T04:57:53Z", "status": "resolved", "winner": "Toronto Blue Jays", "end_date": "2026-09-03T17:10:00Z"}
+{"market_id": "3755961", "checked_ts": "2026-09-11T04:57:56Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T18:45:00Z"}
+{"market_id": "3755967", "checked_ts": "2026-09-11T04:57:58Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T18:45:00Z"}
+{"market_id": "3772684", "checked_ts": "2026-09-11T04:58:00Z", "status": "resolved", "winner": "No", "end_date": "2026-09-04T17:00:00Z"}
+{"market_id": "4372175", "checked_ts": "2026-09-11T04:58:02Z", "status": "resolved", "winner": "Matej Dodig", "end_date": "2026-09-16T08:00:00Z"}
+{"market_id": "4000567", "checked_ts": "2026-09-11T04:58:04Z", "status": "resolved", "winner": "BNK FEARX", "end_date": "2026-09-03T14:00:00Z"}
+{"market_id": "4153642", "checked_ts": "2026-09-11T04:58:06Z", "status": "resolved", "winner": "Toronto Blue Jays", "end_date": "2026-09-03T17:10:00Z"}
+{"market_id": "4158908", "checked_ts": "2026-09-11T04:58:08Z", "status": "resolved", "winner": "Chicago Cubs", "end_date": "2026-09-03T23:15:00Z"}
+{"market_id": "4015752", "checked_ts": "2026-09-11T04:58:09Z", "status": "resolved", "winner": "UAB", "end_date": "2026-09-04T01:00:00Z"}
+{"market_id": "3772656", "checked_ts": "2026-09-11T04:58:14Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-04T18:30:00Z"}
+{"market_id": "3792016", "checked_ts": "2026-09-11T04:58:15Z", "status": "resolved", "winner": "No", "end_date": "2026-09-05T16:30:00Z"}
+{"market_id": "4166549", "checked_ts": "2026-09-11T04:58:18Z", "status": "resolved", "winner": "Athletics", "end_date": "2026-09-04T01:40:00Z"}
+{"market_id": "3757135", "checked_ts": "2026-09-11T04:58:19Z", "status": "resolved", "winner": "Under", "end_date": "2026-09-03T18:45:00Z"}
+{"market_id": "3757679", "checked_ts": "2026-09-11T04:58:23Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T19:00:00Z"}
+{"market_id": "3757676", "checked_ts": "2026-09-11T04:58:24Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T19:00:00Z"}
+{"market_id": "3792001", "checked_ts": "2026-09-11T04:58:26Z", "status": "resolved", "winner": "No", "end_date": "2026-09-05T14:00:00Z"}
+{"market_id": "4166649", "checked_ts": "2026-09-11T04:58:28Z", "status": "resolved", "winner": "St. Louis Cardinals", "end_date": "2026-09-04T02:10:00Z"}
+{"market_id": "4000561", "checked_ts": "2026-09-11T04:58:29Z", "status": "resolved", "winner": "Over", "end_date": "2026-09-03T14:00:00Z"}
+{"market_id": "3954678", "checked_ts": "2026-09-11T04:58:30Z", "status": "resolved", "winner": "No", "end_date": "2026-09-11T00:30:00Z"}
+{"market_id": "4420227", "checked_ts": "2026-09-11T04:58:33Z", "status": "open", "winner": null, "end_date": "2026-09-17T07:00:00Z"}
+{"market_id": "4045601", "checked_ts": "2026-09-11T04:58:36Z", "status": "open", "winner": null, "end_date": "2026-09-12T20:00:00Z"}
+{"market_id": "4129593", "checked_ts": "2026-09-11T04:58:41Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-04T12:00:00Z"}
+{"market_id": "3889703", "checked_ts": "2026-09-11T04:58:44Z", "status": "resolved", "winner": "Nevada", "end_date": "2026-09-06T02:30:00Z"}
+{"market_id": "3499556", "checked_ts": "2026-09-11T04:58:47Z", "status": "open", "winner": null, "end_date": "2026-09-13T23:59:00Z"}
+{"market_id": "4366720", "checked_ts": "2026-09-11T04:58:48Z", "status": "resolved", "winner": "T1 Academy", "end_date": "2026-09-10T13:00:00Z"}
+{"market_id": "4389901", "checked_ts": "2026-09-11T04:58:52Z", "status": "resolved", "winner": "Guiomar Maristany", "end_date": "2026-09-17T08:00:00Z"}
+{"market_id": "4045721", "checked_ts": "2026-09-11T04:58:53Z", "status": "open", "winner": null, "end_date": "2026-09-13T02:15:00Z"}
+{"market_id": "4110121", "checked_ts": "2026-09-11T04:58:55Z", "status": "resolved", "winner": "Tien", "end_date": "2026-09-10T15:00:00Z"}
+{"market_id": "4167738", "checked_ts": "2026-09-11T04:58:57Z", "status": "resolved", "winner": "Lynn Vision", "end_date": "2026-09-03T10:00:00Z"}
+{"market_id": "3784929", "checked_ts": "2026-09-11T04:58:59Z", "status": "resolved", "winner": "No", "end_date": "2026-09-04T18:00:00Z"}
+{"market_id": "3757665", "checked_ts": "2026-09-11T04:59:00Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T19:00:00Z"}
+{"market_id": "3340157", "checked_ts": "2026-09-11T04:59:02Z", "status": "open", "winner": null, "end_date": "2026-09-11T00:35:00Z"}
+{"market_id": "3562260", "checked_ts": "2026-09-11T04:59:05Z", "status": "open", "winner": null, "end_date": "2026-09-13T00:00:00Z"}
+{"market_id": "4412885", "checked_ts": "2026-09-11T04:59:07Z", "status": "open", "winner": null, "end_date": "2026-09-11T20:00:00Z"}
+{"market_id": "2046507", "checked_ts": "2026-09-11T04:59:09Z", "status": "open", "winner": null, "end_date": "2026-09-20T00:00:00Z"}
+{"market_id": "4166090", "checked_ts": "2026-09-11T04:59:09Z", "status": "resolved", "winner": "Under", "end_date": "2026-09-03T16:35:00Z"}
+{"market_id": "4051004", "checked_ts": "2026-09-11T04:59:11Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4002640", "checked_ts": "2026-09-11T04:59:12Z", "status": "resolved", "winner": "Under", "end_date": "2026-09-03T18:30:00Z"}
+{"market_id": "3750434", "checked_ts": "2026-09-11T04:59:14Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T18:00:00Z"}
+{"market_id": "3566682", "checked_ts": "2026-09-11T04:59:15Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "4340082", "checked_ts": "2026-09-11T04:59:16Z", "status": "resolved", "winner": "Moez Echargui", "end_date": "2026-09-16T09:00:00Z"}
+{"market_id": "4161986", "checked_ts": "2026-09-11T04:59:18Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T18:45:00Z"}
+{"market_id": "4372197", "checked_ts": "2026-09-11T04:59:20Z", "status": "resolved", "winner": "Yanki Erel", "end_date": "2026-09-17T07:00:00Z"}
+{"market_id": "4410626", "checked_ts": "2026-09-11T04:59:21Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T15:00:00Z"}
+{"market_id": "4372179", "checked_ts": "2026-09-11T04:59:23Z", "status": "resolved", "winner": "Yi Zhou", "end_date": "2026-09-17T02:00:00Z"}
+{"market_id": "4231544", "checked_ts": "2026-09-11T04:59:24Z", "status": "open", "winner": null, "end_date": "2026-09-11T20:00:00Z"}
+{"market_id": "4166088", "checked_ts": "2026-09-11T04:59:26Z", "status": "resolved", "winner": "Pittsburgh Pirates", "end_date": "2026-09-03T16:35:00Z"}
+{"market_id": "4016676", "checked_ts": "2026-09-11T04:59:27Z", "status": "resolved", "winner": "No", "end_date": "2026-09-07T04:00:00Z"}
+{"market_id": "4107058", "checked_ts": "2026-09-11T04:59:29Z", "status": "resolved", "winner": "No", "end_date": "2026-09-04T12:00:00Z"}
+{"market_id": "4231539", "checked_ts": "2026-09-11T04:59:31Z", "status": "open", "winner": null, "end_date": "2026-09-11T20:00:00Z"}
+{"market_id": "4404071", "checked_ts": "2026-09-11T04:59:34Z", "status": "resolved", "winner": "Rostikfacekid Club", "end_date": "2026-09-10T22:30:00Z"}
+{"market_id": "3974068", "checked_ts": "2026-09-11T04:59:35Z", "status": "open", "winner": null, "end_date": "2026-09-11T18:00:00Z"}
+{"market_id": "3795647", "checked_ts": "2026-09-11T04:59:36Z", "status": "resolved", "winner": "Under", "end_date": "2026-09-05T14:00:00Z"}
+{"market_id": "4107057", "checked_ts": "2026-09-11T04:59:37Z", "status": "resolved", "winner": "No", "end_date": "2026-09-04T12:00:00Z"}
+{"market_id": "4107194", "checked_ts": "2026-09-11T04:59:37Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-04T12:00:00Z"}
+{"market_id": "4015131", "checked_ts": "2026-09-11T04:59:38Z", "status": "resolved", "winner": "Under", "end_date": "2026-09-04T00:00:00Z"}
+{"market_id": "4429222", "checked_ts": "2026-09-11T04:59:40Z", "status": "resolved", "winner": "Imperial", "end_date": "2026-09-11T05:30:00Z"}
+{"market_id": "4232007", "checked_ts": "2026-09-11T04:59:43Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-11T21:00:00Z"}
+{"market_id": "4372207", "checked_ts": "2026-09-11T04:59:44Z", "status": "resolved", "winner": "Joao Lucas Da Silva", "end_date": "2026-09-17T08:00:00Z"}
+{"market_id": "4107384", "checked_ts": "2026-09-11T04:59:46Z", "status": "resolved", "winner": "No", "end_date": "2026-09-04T12:00:00Z"}
+{"market_id": "4158811", "checked_ts": "2026-09-11T04:59:47Z", "status": "resolved", "winner": "Over", "end_date": "2026-09-03T17:10:00Z"}
+{"market_id": "4059381", "checked_ts": "2026-09-11T04:59:49Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4054478", "checked_ts": "2026-09-11T04:59:50Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "3953569", "checked_ts": "2026-09-11T04:59:51Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-04T16:00:00Z"}
+{"market_id": "3965746", "checked_ts": "2026-09-11T04:59:53Z", "status": "open", "winner": null, "end_date": "2026-09-11T19:00:00Z"}
+{"market_id": "4231997", "checked_ts": "2026-09-11T04:59:54Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-11T21:00:00Z"}
+{"market_id": "4199707", "checked_ts": "2026-09-11T04:59:55Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "4429812", "checked_ts": "2026-09-11T04:59:57Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-11T04:00:00Z"}
+{"market_id": "4176841", "checked_ts": "2026-09-11T04:59:58Z", "status": "resolved", "winner": "FlyQuest", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4153687", "checked_ts": "2026-09-11T05:00:00Z", "status": "resolved", "winner": "Over", "end_date": "2026-09-03T18:10:00Z"}
+{"market_id": "3964872", "checked_ts": "2026-09-11T05:00:01Z", "status": "resolved", "winner": "USC", "end_date": "2026-09-05T01:00:00Z"}
+{"market_id": "4175242", "checked_ts": "2026-09-11T05:00:07Z", "status": "resolved", "winner": "MIBR", "end_date": "2026-09-03T18:00:00Z"}
+{"market_id": "3757139", "checked_ts": "2026-09-11T05:00:08Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T18:45:00Z"}
+{"market_id": "3931481", "checked_ts": "2026-09-11T05:00:12Z", "status": "resolved", "winner": "Zimbabwe", "end_date": "2026-09-10T08:00:00Z"}
+{"market_id": "4107026", "checked_ts": "2026-09-11T05:00:14Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-04T12:00:00Z"}
+{"market_id": "4051917", "checked_ts": "2026-09-11T05:00:14Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4385252", "checked_ts": "2026-09-11T05:00:16Z", "status": "resolved", "winner": "India", "end_date": "2026-09-17T10:30:00Z"}
+{"market_id": "4187841", "checked_ts": "2026-09-11T05:00:19Z", "status": "resolved", "winner": "Yomiuri Giants", "end_date": "2026-09-17T09:00:00Z"}
+{"market_id": "4426019", "checked_ts": "2026-09-11T05:00:20Z", "status": "resolved", "winner": "Inner Circle Academy", "end_date": "2026-09-10T17:00:00Z"}
+{"market_id": "4427067", "checked_ts": "2026-09-11T05:00:21Z", "status": "resolved", "winner": "Leo Team", "end_date": "2026-09-10T17:00:00Z"}
+{"market_id": "4434785", "checked_ts": "2026-09-11T05:00:22Z", "status": "resolved", "winner": "Alliance", "end_date": "2026-09-10T18:10:00Z"}
+{"market_id": "4051939", "checked_ts": "2026-09-11T05:00:24Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4051951", "checked_ts": "2026-09-11T05:00:26Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4051952", "checked_ts": "2026-09-11T05:00:28Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4129413", "checked_ts": "2026-09-11T05:00:30Z", "status": "resolved", "winner": "Gen.G", "end_date": "2026-09-05T14:00:00Z"}
+{"market_id": "4051959", "checked_ts": "2026-09-11T05:00:31Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4051961", "checked_ts": "2026-09-11T05:00:33Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4325869", "checked_ts": "2026-09-11T05:00:34Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T18:15:00Z"}
+{"market_id": "4325870", "checked_ts": "2026-09-11T05:00:35Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T18:15:00Z"}
+{"market_id": "4051971", "checked_ts": "2026-09-11T05:00:37Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4051972", "checked_ts": "2026-09-11T05:00:38Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "3782975", "checked_ts": "2026-09-11T05:00:40Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T23:00:00Z"}
+{"market_id": "4051982", "checked_ts": "2026-09-11T05:00:42Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4051983", "checked_ts": "2026-09-11T05:00:43Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4051990", "checked_ts": "2026-09-11T05:00:44Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "3750428", "checked_ts": "2026-09-11T05:00:45Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T15:55:00Z"}
+{"market_id": "4412943", "checked_ts": "2026-09-11T05:00:49Z", "status": "open", "winner": null, "end_date": "2026-09-11T21:00:00Z"}
+{"market_id": "4231536", "checked_ts": "2026-09-11T05:00:50Z", "status": "open", "winner": null, "end_date": "2026-09-11T20:00:00Z"}
+{"market_id": "4051991", "checked_ts": "2026-09-11T05:00:51Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "3757678", "checked_ts": "2026-09-11T05:00:52Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T19:00:00Z"}
+{"market_id": "4051993", "checked_ts": "2026-09-11T05:00:55Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4052003", "checked_ts": "2026-09-11T05:00:57Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4166727", "checked_ts": "2026-09-11T05:00:58Z", "status": "resolved", "winner": "Los Angeles Dodgers", "end_date": "2026-09-04T02:10:00Z"}
+{"market_id": "4052004", "checked_ts": "2026-09-11T05:01:04Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4052005", "checked_ts": "2026-09-11T05:01:05Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4052006", "checked_ts": "2026-09-11T05:01:07Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4052015", "checked_ts": "2026-09-11T05:01:10Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4052016", "checked_ts": "2026-09-11T05:01:12Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4391268", "checked_ts": "2026-09-11T05:01:14Z", "status": "resolved", "winner": "Enrico Dalla Valle", "end_date": "2026-09-17T08:00:00Z"}
+{"market_id": "4052017", "checked_ts": "2026-09-11T05:01:17Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4052022", "checked_ts": "2026-09-11T05:01:19Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4052023", "checked_ts": "2026-09-11T05:01:21Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "3757682", "checked_ts": "2026-09-11T05:01:22Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T19:00:00Z"}
+{"market_id": "4052024", "checked_ts": "2026-09-11T05:01:26Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4052025", "checked_ts": "2026-09-11T05:01:28Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4052026", "checked_ts": "2026-09-11T05:01:30Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4052047", "checked_ts": "2026-09-11T05:01:33Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4052055", "checked_ts": "2026-09-11T05:01:35Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "3774292", "checked_ts": "2026-09-11T05:01:37Z", "status": "resolved", "winner": "Under", "end_date": "2026-09-04T19:00:00Z"}
+{"market_id": "3889403", "checked_ts": "2026-09-11T05:01:39Z", "status": "resolved", "winner": "Miami (FL)", "end_date": "2026-09-05T01:00:00Z"}
+{"market_id": "3755962", "checked_ts": "2026-09-11T05:01:40Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T18:45:00Z"}
+{"market_id": "4158909", "checked_ts": "2026-09-11T05:01:44Z", "status": "resolved", "winner": "Chicago Cubs", "end_date": "2026-09-03T23:15:00Z"}
+{"market_id": "4153684", "checked_ts": "2026-09-11T05:01:46Z", "status": "resolved", "winner": "Houston Astros", "end_date": "2026-09-03T18:10:00Z"}
+{"market_id": "3782976", "checked_ts": "2026-09-11T05:01:48Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T23:00:00Z"}
+{"market_id": "3889400", "checked_ts": "2026-09-11T05:01:51Z", "status": "resolved", "winner": "USC", "end_date": "2026-09-05T01:00:00Z"}
+{"market_id": "4372163", "checked_ts": "2026-09-11T05:01:53Z", "status": "resolved", "winner": "Thiago Seyboth Wild", "end_date": "2026-09-16T08:00:00Z"}
+{"market_id": "4391266", "checked_ts": "2026-09-11T05:01:57Z", "status": "resolved", "winner": "Max Alcala Gurri", "end_date": "2026-09-17T09:00:00Z"}
+{"market_id": "3965737", "checked_ts": "2026-09-11T05:01:59Z", "status": "open", "winner": null, "end_date": "2026-09-11T18:30:00Z"}
+{"market_id": "4221871", "checked_ts": "2026-09-11T05:02:01Z", "status": "open", "winner": null, "end_date": "2026-09-12T17:00:00Z"}
+{"market_id": "4158956", "checked_ts": "2026-09-11T05:02:03Z", "status": "resolved", "winner": "Over", "end_date": "2026-09-03T23:40:00Z"}
+{"market_id": "4161804", "checked_ts": "2026-09-11T05:02:04Z", "status": "resolved", "winner": "No", "end_date": "2026-09-04T19:00:00Z"}
+{"market_id": "4176185", "checked_ts": "2026-09-11T05:02:05Z", "status": "resolved", "winner": "K27", "end_date": "2026-09-03T18:40:00Z"}
+{"market_id": "3761308", "checked_ts": "2026-09-11T05:02:08Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T19:00:00Z"}
+{"market_id": "4070396", "checked_ts": "2026-09-11T05:02:10Z", "status": "open", "winner": null, "end_date": "2026-09-09T08:00:00Z"}
+{"market_id": "4231543", "checked_ts": "2026-09-11T05:02:11Z", "status": "open", "winner": null, "end_date": "2026-09-11T20:00:00Z"}
+{"market_id": "4427782", "checked_ts": "2026-09-11T05:02:13Z", "status": "open", "winner": null, "end_date": "2026-09-11T08:15:00Z"}
+{"market_id": "3986279", "checked_ts": "2026-09-11T05:02:15Z", "status": "open", "winner": null, "end_date": "2026-09-12T18:45:00Z"}
+{"market_id": "3949746", "checked_ts": "2026-09-11T05:02:16Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "4050671", "checked_ts": "2026-09-11T05:02:18Z", "status": "open", "winner": null, "end_date": "2026-09-11T16:00:00Z"}
+{"market_id": "4441185", "checked_ts": "2026-09-11T05:02:19Z", "status": "open", "winner": null, "end_date": "2026-09-11T15:00:00Z"}
+{"market_id": "4176845", "checked_ts": "2026-09-11T05:02:21Z", "status": "resolved", "winner": "3DMAX", "end_date": "2026-09-03T14:00:00Z"}
+{"market_id": "3952026", "checked_ts": "2026-09-11T05:02:23Z", "status": "resolved", "winner": "KT Wiz", "end_date": "2026-09-10T09:30:00Z"}
+{"market_id": "4107382", "checked_ts": "2026-09-11T05:02:25Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-04T12:00:00Z"}
+{"market_id": "3758700", "checked_ts": "2026-09-11T05:02:27Z", "status": "resolved", "winner": "Under", "end_date": "2026-09-03T19:00:00Z"}
+{"market_id": "4000563", "checked_ts": "2026-09-11T05:02:28Z", "status": "resolved", "winner": "Over", "end_date": "2026-09-03T14:00:00Z"}
+{"market_id": "3757137", "checked_ts": "2026-09-11T05:02:32Z", "status": "resolved", "winner": "Under", "end_date": "2026-09-03T18:45:00Z"}
+{"market_id": "4213197", "checked_ts": "2026-09-11T05:02:33Z", "status": "resolved", "winner": "Pittsburgh Pirates", "end_date": "2026-09-17T23:40:00Z"}
+{"market_id": "4412890", "checked_ts": "2026-09-11T05:02:36Z", "status": "open", "winner": null, "end_date": "2026-09-11T20:00:00Z"}
+{"market_id": "4437876", "checked_ts": "2026-09-11T05:02:37Z", "status": "open", "winner": null, "end_date": "2026-09-11T11:30:00Z"}
+{"market_id": "4426144", "checked_ts": "2026-09-11T05:02:39Z", "status": "resolved", "winner": "Without a Roof", "end_date": "2026-09-11T02:00:00Z"}
+{"market_id": "4054961", "checked_ts": "2026-09-11T05:02:40Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4001350", "checked_ts": "2026-09-11T05:02:43Z", "status": "resolved", "winner": "Bilibili Gaming", "end_date": "2026-09-03T15:00:00Z"}
+{"market_id": "4081839", "checked_ts": "2026-09-11T05:02:45Z", "status": "resolved", "winner": "AJ Auxerre", "end_date": "2026-09-04T17:00:00Z"}
+{"market_id": "4167741", "checked_ts": "2026-09-11T05:02:46Z", "status": "resolved", "winner": "DEPO", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "3955140", "checked_ts": "2026-09-11T05:02:48Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-04T19:15:00Z"}
+{"market_id": "3952029", "checked_ts": "2026-09-11T05:02:49Z", "status": "resolved", "winner": "Lotte Giants", "end_date": "2026-09-10T09:30:00Z"}
+{"market_id": "4230945", "checked_ts": "2026-09-11T05:02:51Z", "status": "open", "winner": null, "end_date": "2026-09-11T23:59:00Z"}
+{"market_id": "4429999", "checked_ts": "2026-09-11T05:02:53Z", "status": "resolved", "winner": "Claire Liu", "end_date": "2026-09-17T20:00:00Z"}
+{"market_id": "4412540", "checked_ts": "2026-09-11T05:02:54Z", "status": "open", "winner": null, "end_date": "2026-09-11T14:00:00Z"}
+{"market_id": "3977994", "checked_ts": "2026-09-11T05:02:56Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "4401941", "checked_ts": "2026-09-11T05:02:57Z", "status": "resolved", "winner": "Bubliki", "end_date": "2026-09-11T00:10:00Z"}
+{"market_id": "4058244", "checked_ts": "2026-09-11T05:03:00Z", "status": "resolved", "winner": "Enzo Aguiard", "end_date": "2026-09-10T02:00:00Z"}
+{"market_id": "4086849", "checked_ts": "2026-09-11T05:03:01Z", "status": "resolved", "winner": "Putintseva", "end_date": "2026-09-09T15:00:00Z"}
+{"market_id": "3340174", "checked_ts": "2026-09-11T05:03:09Z", "status": "resolved", "winner": "Patriots", "end_date": "2026-09-10T00:20:00Z"}
+{"market_id": "4058242", "checked_ts": "2026-09-11T05:03:10Z", "status": "resolved", "winner": "Kasidit Samrej", "end_date": "2026-09-10T02:00:00Z"}
+{"market_id": "3757687", "checked_ts": "2026-09-11T05:03:14Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T19:00:00Z"}
+{"market_id": "4106340", "checked_ts": "2026-09-11T05:03:16Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-04T12:00:00Z"}
+{"market_id": "4441174", "checked_ts": "2026-09-11T05:03:18Z", "status": "open", "winner": null, "end_date": "2026-09-11T12:00:00Z"}
+{"market_id": "3989228", "checked_ts": "2026-09-11T05:03:19Z", "status": "open", "winner": null, "end_date": "2026-09-12T13:30:00Z"}
+{"market_id": "4429679", "checked_ts": "2026-09-11T05:03:22Z", "status": "resolved", "winner": "antivalue", "end_date": "2026-09-11T05:15:00Z"}
+{"market_id": "4232006", "checked_ts": "2026-09-11T05:03:23Z", "status": "open", "winner": null, "end_date": "2026-09-11T21:00:00Z"}
+{"market_id": "4282467", "checked_ts": "2026-09-11T05:03:24Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "4144897", "checked_ts": "2026-09-11T05:03:26Z", "status": "open", "winner": null, "end_date": "2026-09-11T17:00:00Z"}
+{"market_id": "4111857", "checked_ts": "2026-09-11T05:03:29Z", "status": "resolved", "winner": "Sashi Esport", "end_date": "2026-09-03T17:15:00Z"}
+{"market_id": "4178104", "checked_ts": "2026-09-11T05:03:31Z", "status": "resolved", "winner": "PCIFIC ", "end_date": "2026-09-03T21:00:00Z"}
+{"market_id": "3774249", "checked_ts": "2026-09-11T05:03:33Z", "status": "resolved", "winner": "Como 1907", "end_date": "2026-09-04T18:45:00Z"}
+{"market_id": "4113718", "checked_ts": "2026-09-11T05:03:35Z", "status": "resolved", "winner": "No", "end_date": "2026-09-04T12:00:00Z"}
+{"market_id": "4192220", "checked_ts": "2026-09-11T05:03:36Z", "status": "open", "winner": null, "end_date": "2026-09-12T23:59:00Z"}
+{"market_id": "4383187", "checked_ts": "2026-09-11T05:03:38Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "3989233", "checked_ts": "2026-09-11T05:03:41Z", "status": "open", "winner": null, "end_date": "2026-09-12T13:30:00Z"}
+{"market_id": "4424742", "checked_ts": "2026-09-11T05:03:42Z", "status": "open", "winner": null, "end_date": "2026-09-10T19:00:00Z"}
+{"market_id": "4430001", "checked_ts": "2026-09-11T05:03:44Z", "status": "resolved", "winner": "Leolia Jeanjean", "end_date": "2026-09-17T21:30:00Z"}
+{"market_id": "4051953", "checked_ts": "2026-09-11T05:03:46Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "3774217", "checked_ts": "2026-09-11T05:03:49Z", "status": "resolved", "winner": "Over", "end_date": "2026-09-04T18:30:00Z"}
+{"market_id": "4046064", "checked_ts": "2026-09-11T05:03:50Z", "status": "resolved", "winner": "San Jose State", "end_date": "2026-09-04T22:30:00Z"}
+{"market_id": "4022319", "checked_ts": "2026-09-11T05:03:52Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T19:15:00Z"}
+{"market_id": "3989313", "checked_ts": "2026-09-11T05:03:55Z", "status": "open", "winner": null, "end_date": "2026-09-12T13:30:00Z"}
+{"market_id": "3989284", "checked_ts": "2026-09-11T05:03:56Z", "status": "open", "winner": null, "end_date": "2026-09-12T13:30:00Z"}
+{"market_id": "4192221", "checked_ts": "2026-09-11T05:04:00Z", "status": "open", "winner": null, "end_date": "2026-09-12T23:59:00Z"}
+{"market_id": "3890663", "checked_ts": "2026-09-11T05:04:02Z", "status": "void", "winner": null, "end_date": "2026-09-02T09:30:00Z"}
+{"market_id": "4049082", "checked_ts": "2026-09-11T05:04:03Z", "status": "resolved", "winner": "NIP", "end_date": "2026-09-03T20:55:00Z"}
+{"market_id": "4107147", "checked_ts": "2026-09-11T05:04:04Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-04T12:00:00Z"}
+{"market_id": "3889336", "checked_ts": "2026-09-11T05:04:06Z", "status": "resolved", "winner": "Southern Illinois", "end_date": "2026-09-03T23:00:00Z"}
+{"market_id": "4404687", "checked_ts": "2026-09-11T05:04:07Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T20:00:00Z"}
+{"market_id": "4427141", "checked_ts": "2026-09-11T05:04:08Z", "status": "open", "winner": null, "end_date": "2026-09-10T20:00:00Z"}
+{"market_id": "4372201", "checked_ts": "2026-09-11T05:04:17Z", "status": "resolved", "winner": "Henrique Rocha", "end_date": "2026-09-17T09:00:00Z"}
+{"market_id": "4359085", "checked_ts": "2026-09-11T05:04:19Z", "status": "open", "winner": null, "end_date": "2026-09-11T14:00:00Z"}
+{"market_id": "4214391", "checked_ts": "2026-09-11T05:04:22Z", "status": "resolved", "winner": "Senshi Esports Club", "end_date": "2026-09-10T21:00:00Z"}
+{"market_id": "4279631", "checked_ts": "2026-09-11T05:04:24Z", "status": "resolved", "winner": "Shopify Rebellion", "end_date": "2026-09-11T00:00:00Z"}
+{"market_id": "4401875", "checked_ts": "2026-09-11T05:04:26Z", "status": "resolved", "winner": "The Secret Club Esport", "end_date": "2026-09-10T21:00:00Z"}
+{"market_id": "4424858", "checked_ts": "2026-09-11T05:04:29Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T23:59:00Z"}
+{"market_id": "4413443", "checked_ts": "2026-09-11T05:04:30Z", "status": "open", "winner": null, "end_date": "2026-09-10T21:00:00Z"}
+{"market_id": "4231979", "checked_ts": "2026-09-11T05:04:31Z", "status": "open", "winner": null, "end_date": "2026-09-11T21:00:00Z"}
+{"market_id": "4158910", "checked_ts": "2026-09-11T05:04:33Z", "status": "resolved", "winner": "Under", "end_date": "2026-09-03T23:15:00Z"}
+{"market_id": "4087789", "checked_ts": "2026-09-11T05:04:34Z", "status": "resolved", "winner": "Flavio Cobolli", "end_date": "2026-09-09T15:00:00Z"}
+{"market_id": "4016628", "checked_ts": "2026-09-11T05:04:37Z", "status": "resolved", "winner": "No", "end_date": "2026-09-07T04:00:00Z"}
+{"market_id": "4062506", "checked_ts": "2026-09-11T05:04:39Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-04T20:00:00Z"}
+{"market_id": "4049074", "checked_ts": "2026-09-11T05:04:40Z", "status": "resolved", "winner": "FOKUS", "end_date": "2026-09-03T18:30:00Z"}
+{"market_id": "3796634", "checked_ts": "2026-09-11T05:04:43Z", "status": "resolved", "winner": "No", "end_date": "2026-09-05T19:00:00Z"}
+{"market_id": "4175248", "checked_ts": "2026-09-11T05:04:46Z", "status": "resolved", "winner": "Nuclear TigeRES", "end_date": "2026-09-03T21:00:00Z"}
+{"market_id": "4418908", "checked_ts": "2026-09-11T05:04:48Z", "status": "resolved", "winner": "Nemiga", "end_date": "2026-09-10T21:00:00Z"}
+{"market_id": "4429831", "checked_ts": "2026-09-11T05:04:49Z", "status": "resolved", "winner": "No", "end_date": "2026-09-11T04:00:00Z"}
+{"market_id": "4418909", "checked_ts": "2026-09-11T05:04:51Z", "status": "resolved", "winner": "Sinners", "end_date": "2026-09-10T21:00:00Z"}
+{"market_id": "4231546", "checked_ts": "2026-09-11T05:04:53Z", "status": "open", "winner": null, "end_date": "2026-09-11T20:00:00Z"}
+{"market_id": "4424847", "checked_ts": "2026-09-11T05:04:54Z", "status": "resolved", "winner": "FOKUS", "end_date": "2026-09-10T23:10:00Z"}
+{"market_id": "4424848", "checked_ts": "2026-09-11T05:04:56Z", "status": "resolved", "winner": "FOKUS", "end_date": "2026-09-10T23:10:00Z"}
+{"market_id": "4428430", "checked_ts": "2026-09-11T05:04:59Z", "status": "resolved", "winner": "DENDELE CS", "end_date": "2026-09-11T03:00:00Z"}
+{"market_id": "4202841", "checked_ts": "2026-09-11T05:05:00Z", "status": "resolved", "winner": "No", "end_date": "2026-09-11T00:35:00Z"}
+{"market_id": "4426093", "checked_ts": "2026-09-11T05:05:01Z", "status": "resolved", "winner": "MADMAN", "end_date": "2026-09-10T21:40:00Z"}
+{"market_id": "4052053", "checked_ts": "2026-09-11T05:05:05Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4052056", "checked_ts": "2026-09-11T05:05:06Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4168509", "checked_ts": "2026-09-11T05:05:08Z", "status": "void", "winner": null, "end_date": "2026-09-03T15:00:00Z"}
+{"market_id": "4052066", "checked_ts": "2026-09-11T05:05:10Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4052067", "checked_ts": "2026-09-11T05:05:11Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4199391", "checked_ts": "2026-09-11T05:05:12Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T22:00:00Z"}
+{"market_id": "4216761", "checked_ts": "2026-09-11T05:05:15Z", "status": "open", "winner": null, "end_date": "2026-09-11T16:00:00Z"}
+{"market_id": "4199393", "checked_ts": "2026-09-11T05:05:17Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T22:00:00Z"}
+{"market_id": "4353323", "checked_ts": "2026-09-11T05:05:19Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T22:00:00Z"}
+{"market_id": "4353325", "checked_ts": "2026-09-11T05:05:21Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T22:00:00Z"}
+{"market_id": "4401935", "checked_ts": "2026-09-11T05:05:24Z", "status": "resolved", "winner": "Dominion Goblins", "end_date": "2026-09-11T00:10:00Z"}
+{"market_id": "4401936", "checked_ts": "2026-09-11T05:05:25Z", "status": "resolved", "winner": "Bubliki", "end_date": "2026-09-11T00:10:00Z"}
+{"market_id": "4389899", "checked_ts": "2026-09-11T05:05:28Z", "status": "resolved", "winner": "Simona Waltert", "end_date": "2026-09-17T08:00:00Z"}
+{"market_id": "4052090", "checked_ts": "2026-09-11T05:05:32Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4052091", "checked_ts": "2026-09-11T05:05:34Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4113702", "checked_ts": "2026-09-11T05:05:36Z", "status": "resolved", "winner": "Leo Team", "end_date": "2026-09-03T17:45:00Z"}
+{"market_id": "4182438", "checked_ts": "2026-09-11T05:05:37Z", "status": "resolved", "winner": "Carlos Alcaraz", "end_date": "2026-09-11T15:00:00Z"}
+{"market_id": "4052100", "checked_ts": "2026-09-11T05:05:38Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4052101", "checked_ts": "2026-09-11T05:05:40Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "3750427", "checked_ts": "2026-09-11T05:05:42Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T15:55:00Z"}
+{"market_id": "4413445", "checked_ts": "2026-09-11T05:05:44Z", "status": "open", "winner": null, "end_date": "2026-09-10T22:00:00Z"}
+{"market_id": "4420351", "checked_ts": "2026-09-11T05:05:45Z", "status": "resolved", "winner": "BOMBA Team", "end_date": "2026-09-10T22:00:00Z"}
+{"market_id": "4391262", "checked_ts": "2026-09-11T05:05:48Z", "status": "resolved", "winner": "Juan Pablo Varillas", "end_date": "2026-09-17T08:00:00Z"}
+{"market_id": "4420390", "checked_ts": "2026-09-11T05:05:51Z", "status": "resolved", "winner": "Aeterna Esports", "end_date": "2026-09-10T22:00:00Z"}
+{"market_id": "4440748", "checked_ts": "2026-09-11T05:05:53Z", "status": "resolved", "winner": "Natus Vincere", "end_date": "2026-09-10T22:00:00Z"}
+{"market_id": "3956772", "checked_ts": "2026-09-11T05:05:55Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T22:30:00Z"}
+{"market_id": "3748590", "checked_ts": "2026-09-11T05:05:56Z", "status": "open", "winner": null, "end_date": "2026-09-20T23:59:00Z"}
+{"market_id": "3956775", "checked_ts": "2026-09-11T05:05:57Z", "status": "resolved", "winner": "No", "end_date": "2026-09-10T22:30:00Z"}
+{"market_id": "3757675", "checked_ts": "2026-09-11T05:06:01Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T19:00:00Z"}
+{"market_id": "4049088", "checked_ts": "2026-09-11T05:06:06Z", "status": "resolved", "winner": "fnatic", "end_date": "2026-09-04T00:00:00Z"}
+{"market_id": "4052125", "checked_ts": "2026-09-11T05:06:08Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4052126", "checked_ts": "2026-09-11T05:06:10Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4082020", "checked_ts": "2026-09-11T05:06:13Z", "status": "resolved", "winner": "Yulia Starodubtseva", "end_date": "2026-09-09T15:00:00Z"}
+{"market_id": "4052134", "checked_ts": "2026-09-11T05:06:15Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4052135", "checked_ts": "2026-09-11T05:06:17Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4052136", "checked_ts": "2026-09-11T05:06:19Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "3750426", "checked_ts": "2026-09-11T05:06:20Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T15:55:00Z"}
+{"market_id": "3956776", "checked_ts": "2026-09-11T05:06:22Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-10T22:30:00Z"}
+{"market_id": "4401937", "checked_ts": "2026-09-11T05:06:25Z", "status": "resolved", "winner": "Dominion Goblins", "end_date": "2026-09-11T00:10:00Z"}
+{"market_id": "4424839", "checked_ts": "2026-09-11T05:06:27Z", "status": "resolved", "winner": "NIP", "end_date": "2026-09-10T23:00:00Z"}
+{"market_id": "4428456", "checked_ts": "2026-09-11T05:06:29Z", "status": "resolved", "winner": "Winthrop University", "end_date": "2026-09-11T01:00:00Z"}
+{"market_id": "4054259", "checked_ts": "2026-09-11T05:06:31Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4054260", "checked_ts": "2026-09-11T05:06:33Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4054261", "checked_ts": "2026-09-11T05:06:34Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4054262", "checked_ts": "2026-09-11T05:06:38Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4054272", "checked_ts": "2026-09-11T05:06:39Z", "status": "resolved", "winner": "Yes", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4054273", "checked_ts": "2026-09-11T05:06:40Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4054274", "checked_ts": "2026-09-11T05:06:42Z", "status": "resolved", "winner": "No", "end_date": "2026-09-03T12:00:00Z"}
+{"market_id": "4434209", "checked_ts": "2026-09-11T05:06:44Z", "status": "resolved", "winner": "KAMUI", "end_date": "2026-09-10T23:00:00Z"}
+{"market_id": "4427074", "checked_ts": "2026-09-11T05:06:47Z", "status": "resolved", "winner": "Black Phoenix", "end_date": "2026-09-10T23:10:00Z"}
+{"market_id": "4427075", "checked_ts": "2026-09-11T05:06:48Z", "status": "resolved", "winner": "INOX Division", "end_date": "2026-09-10T23:10:00Z"}
+{"market_id": "4311802", "checked_ts": "2026-09-11T05:06:51Z", "status": "resolved", "winner": "LPH Gaming", "end_date": "2026-09-10T23:40:00Z"}
+{"market_id": "4429215", "checked_ts": "2026-09-11T05:06:53Z", "status": "resolved", "winner": "Back to Back ", "end_date": "2026-09-10T23:50:00Z"}
