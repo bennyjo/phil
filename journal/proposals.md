@@ -2289,3 +2289,86 @@ Open operator asks after this pass: **2** (lease writability /
 collision fix; per-fold `fold_brier_delta` in core/counterfactual.py).
 
 **Status:** informational + the two asks above.
+
+## 2026-09-11 — deep-retro status pass + NEW operator ask (blend bar met, pass 2 of 2)
+
+Audit window 2026-09-10 ~05:00Z → 2026-09-11 ~04:55Z. Full analysis in
+journal/retros/DEEP-2026-09-11.md.
+
+### NEW OPERATOR ASK: market-prior blend — the 2026-09-03 replacement bar is met on two consecutive passes; decision is yours
+
+The bar on file (operator, 2026-09-03: "w_opt ≤ 0.80 at n ≥ 150,
+sustained across two consecutive deep-retro passes both at n ≥ 150,
+with improvement at w_opt ≥ 0.002 brier vs market. No calibrate.py, no
+blend rule until then"):
+
+- Pass 1 (DEEP-2026-09-10): blend[disagreement] n=169, w_opt 0.760,
+  improvement 0.0027 — met.
+- Pass 2 (this pass, score.py): blend[disagreement] n=171, w_opt
+  0.746, improvement 0.0030 — met.
+
+The letter of the bar is satisfied, so this ask is filed as the
+2026-09-03 note requires. **Read the fragility analysis before
+shipping anything:**
+
+- Leave-one-out on the exact score.py disagreement slice: removing the
+  single highest-leverage row (cc0b2361223a, mlb-moneyline, est 0.97
+  vs mkt 0.134, won) leaves improvement 0.0013 — BELOW the 0.002 bar.
+  Three further rows (cfda85a4abde, e398cebab2e6, ffc3fcdcbaa6) each
+  individually move it by ≥0.0010. The pass is single-row fragile.
+- Excluding only the Chewy row (ffc3fcdcbaa6, whose scored mid 0.34 is
+  the empty-book artifact flagged in DEEP-2026-09-10): n=170, w_opt
+  0.786, improvement 0.0020 — exactly at the bar, no margin.
+- Direction of drift is real, though: 0.915 (09-03) → 0.843 → 0.760 →
+  0.746 across four passes with n growing 114→171. The estimate is
+  genuinely starting to add information at the margin; the question is
+  whether 0.002 of Brier is yet distinguishable from 3-4 lucky rows.
+
+Recommendation (advisory only): treat the two-pass letter as
+necessary, not sufficient — either require the improvement to survive
+leave-one-out (≥0.002 after dropping any single row) before writing
+calibrate.py, or take a third consecutive pass at n≥180 so no single
+row can carry it. If you ship anyway, ship shadow-mode first (blend
+recorded per forecast, no bet-side effect) so the rule accrues its own
+settled slice before touching money.
+
+Status: PROPOSED (operator decision; agent will keep reporting the
+tracking line either way)
+
+### Statuses set this pass
+
+1. No new proposals from the hourly agent this window — nothing to
+   endorse or reject.
+2. Blend tracking line: see the ask above (bar met, pass 2 of 2).
+
+**Tracked conditions (one-liners, per standing instructions):**
+- Veto relaxation fork: 126 rows / 118 CF trades / 84 events /
+  +$114.43 / dBrier +0.0246; per-fold dBrier f3 +0.0977, f4 +0.0394
+  both positive — **bar NOT MET**, fork shut (playbook Status
+  2026-09-11 added; the two RNC utterance CF wins are in the table).
+- Mechanical-econ carve-out: rows 6/5 ✓, events 2/3 ✗, dBrier −0.1147
+  ✓, pnl +$61.68 ✓, held-out folds 1/3 ✗ — advanced (PPI), not met;
+  CPI print Sep 11 12:30Z is the next live test.
+- Screener-value switch bar: fit 573 rows / 422 events (bar
+  1,000/700); rank still tie-dominated. Dormant.
+- Release-calendar memo bar (first tracking line): emitter dormant,
+  0 of the first 20 emit-sourced calendar fires accrued.
+- Screener replay re-baseline: third attempt; outcomes-cache refresh
+  still running at commit time — s_exc/s_ez remain unquoted,
+  stale-baseline flag stands.
+- Mech: 1 v4 blind delivery this window (2304229, p_yes 0.62 at
+  conf 0.6 with no poll data found, vs own 0.14 / mkt 0.18; settles
+  Sep 13). Market-aware-paired count still 0 (Pearl Connect release).
+- Real ledger: 56 rows, zero real fills ever — dry by design.
+
+Audit verdict this window: no reverts (seventh consecutive clean
+window); only pacing edits, all event-anchored and defensible.
+Settlement-grading discipline clean on every tick, including this deep
+retro's own resolve settlements (RNC pair graded in (c), CF table
+extended same-commit).
+
+Open operator asks after this pass: **3** — (1) lease writability /
+collision fix; (2) per-fold `fold_brier_delta` in
+core/counterfactual.py; (3) the blend-bar decision above.
+
+**Status:** informational + the three asks above.

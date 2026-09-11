@@ -3453,6 +3453,28 @@ trd/10W-25L/+$24.44 (adds this row's win, +$3.62, was 34/34/9W-25L/
 +$20.82); no 89 rows/81 trd/40W-41L/+$85.47 (unchanged this batch).
 Check: 24.44+85.47=109.91 ✓.
 
+DEEP-2026-09-11 batch (settled by the deep retro's own resolve run,
+graded DEEP-2026-09-11 (c), table extended same-commit per the
+2026-08-23 rule). Both are fact-finality utterance rows (standard rally
+vocabulary, multi-hour speech window) declined at claimed edges
+0.21/0.18 under the >0.10 veto:
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| RNC "Radical Left" trump-mention (36ff9feec021) | 0.87 / 0.66 | Yes | +0.210 | Yes | **+2.58** |
+| RNC "MAGA/MAGA-full" say-the-word (87736f3e8ab9) | 0.90 / 0.72 | Yes | +0.180 | Yes | **+1.94** |
+
+Mechanical ledger after this batch: 126 settled declined forecasts,
+118 fillable CF trades, 84 events, 52W/66L, pnl +$114.43, brier_delta
++0.0246, held-out +$143.25. Side split: yes 37 rows/37 trd/12W-25L/
++$28.96 (adds both wins, +$2.58 and +$1.94, was 35/35/10W-25L/+$24.44);
+no 89 rows/81 trd/40W-41L/+$85.47 (unchanged this batch).
+Check: 28.96+85.47=114.43 ✓. The subclass reading stays uncomfortable
+in the honest direction: fact-finality is now n=29 labeled rows at CF
+pnl +$122.08 but subclass dBrier +0.0419 — the wins are real money and
+still worse-than-market beliefs on average; the fork bar below, not
+this table, decides anything.
+
 Ruling: no boundary change at n=1 within say-the-word (the category
 verdict threshold is ~15 settlements) and no change to the relaxation
 fork's status — overall brier_delta is still positive (+0.0264, agent
@@ -3502,6 +3524,17 @@ rows, which is why f3/f4 read worse than the 09-08 quote — same rows,
 different splits). (2) holds (fold pnl f3 +$1.56, f4 +$90.56). (3)
 holds: 82 events ≥ 40. Same verdict as 09-08: the newest money is
 being made with worse-than-market beliefs; the fork stays shut.
+
+Status 2026-09-11 (DEEP): **NOT MET.** Slice now 126 rows / 118 CF
+trades / 84 events / +$114.43 / overall dBrier +0.0246 (adds the two
+RNC utterance CF wins 36ff9feec021 +$2.58 and 87736f3e8ab9 +$1.94,
+settled by the deep retro's resolve run). (1) fails again — per-fold
+dBrier by the recipe: f0 +0.0099, f1 −0.0009, f2 −0.0239, f3 +0.0977,
+f4 +0.0394; the two most recent folds are both positive. (2) holds
+(fold CF pnl f3 +$1.56, f4 +$95.08). (3) holds: 84 events ≥ 40. Fourth
+consecutive reading of money-without-calibration; the fork stays shut,
+and the fact-finality subclass (n=29, CF +$122.08, dBrier +0.0419)
+shows the same shape inside itself.
 
 If the bar is ever MET: do not loosen the veto wholesale. Propose a
 NARROW carve-out for the best-evidenced sub-class only (current
