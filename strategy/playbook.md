@@ -3483,6 +3483,33 @@ recompute threshold on its own. The useful finding is the (a)/(b)/(c)
 grading above, carried as a baseline for the still-open Vance utterance
 rows (`83321f868e0f`, `906a1a65abc8`) rather than a rule change yet.
 
+**2026-09-11 06:24Z update (LIGHT tick, cloud, resolve.py; 2 more of the
+same RNC Sep10 utterance family settled — both fact-finality, both
+`Yes`-side, both declined at a wide claimed edge):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| RNC "Endorse/Endorsed/Endorsement" say-the-word (16e13abfec2f) | 0.58 / 0.43 | Yes | +0.150 | No | **−5.00** |
+| RNC "America First" say-the-word (11ea1286d8c7) | 0.62 / 0.28 | Yes | +0.340 | No | **−5.00** |
+
+Mechanical ledger after this batch (`core/counterfactual.py ledger
+--skip-reason outside-view-veto`): 128 settled declined forecasts, 120
+fillable CF trades, 86 events, 52W/68L, pnl +$104.43, brier_delta
++0.0279, held-out +$133.25 (was 126/118/84/52W-66L/+$114.43/+0.0246/
++$143.25 before this batch). Side split: yes 39 rows/39 trd/12W-27L/
++$18.96 (adds both losses, −$5.00 each, was 37/37/12W-25L/+$28.96); no
+89 rows/81 trd/40W-41L/+$85.47 (unchanged this batch). Check:
+18.96+85.47=104.43 ✓.
+
+Ruling: both declines correct — the counterfactual Yes trades both lose,
+so the >0.10 veto again saved money on this event family (now 2 wins /
+2 losses for the same-event Sep10 RNC utterance batch: MAGA and Radical
+Left won, Endorse and America First lost). The same-session bet
+(`e77eef5d06ad`, "Afford", edge 0.06, under the veto) also lost this
+tick — see RETRO-20260911-0624 for the full family read. No boundary
+change (fork status is deep-retro-only per the section below); this is
+a table extension only.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
