@@ -3731,6 +3731,26 @@ validates gate 2's numeric-survey requirement rather than arguing for
 loosening it — a case exactly like this is what gate 2 exists to keep out
 of the carve-out.
 
+**Gate-2 supporting evidence, August CPI cluster (RETRO-20260911-1615):**
+10 forecast-only rows on the Aug-2026 CPI bracket ladders (headline MoM,
+core MoM, headline YoY, core YoY) all shared a Cleveland Fed nowcast as
+sourced mean but an unsourced sd (Knotek-Zaman recalled from memory, PDF
+unreadable at research time) — correctly excluded from the carve-out by
+gate 2. At settlement (headline MoM 0.4%, core MoM 0.3%, headline YoY
+3.4%, core YoY 2.4%), the market's tighter implied sd (~0.07) put more
+probability mass on the winning bracket than the own model's wider
+unsourced sd on 3 of 4 independent bracket families (headline MoM 0.34 vs
+market 0.465, headline YoY 0.345 vs 0.415, core YoY 0.376 vs 0.425); only
+core MoM matched the market, and that leg's edge came from a flagged
+directional mean-shift off the raw nowcast ("market ladder skews up," own
+mean 0.22 vs nowcast 0.20), not from the sd choice. Fifth line of evidence
+that an unsourced dispersion input underperforms the market's own implied
+spread — gate 2 stands. Forward note: shifting a nowcast-centered
+Gaussian's MEAN toward the market's bracket-ladder shape is a legible,
+gate-1-compatible adjustment; substituting a recalled-from-memory SD for
+the market's implied one is not, and should not be treated as
+"benchmarked" just because the mean half of the same model is sourced.
+
 **2026-08-21 update (18:11Z settlement): the Aug14-21 Musk weekly set's
 two >0.10-disagreement legs both settled, both LOST.** 240-259
 (cd3af116ed2a, No side, bid 0.252 vs est 0.16) lost to the actual count
