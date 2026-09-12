@@ -3572,6 +3572,34 @@ tick — see RETRO-20260911-0624 for the full family read. No boundary
 change (fork status is deep-retro-only per the section below); this is
 a table extension only.
 
+**DEEP-2026-09-12 catch-up batch (settled 2026-09-11 with the Aug CPI
+cluster; the 16:17Z settlement commit e081582 graded the cluster
+narratively in its gate-2 note but did NOT extend this table in the
+same commit — a violation of the 2026-08-23 same-commit rule on its
+face, recorded in DEEP-2026-09-12 (d) and repaired here.** Both rows
+are Aug-CPI bracket legs recorded on the No token (question frame
+below follows the tool: both count as No-side), declined under the
+>0.10 veto on an unsourced-sd Gaussian (gate 2):
+
+| Row | est vs mkt (No token) | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Aug headline MoM 0.4% bracket, No leg (5a6d5321c25a) | 0.66 / 0.515 | No | +0.140 | print was 0.4% (No leg lost) | **−5.00** |
+| Aug core MoM 0.2% bracket, No leg (79e72c3002c3) | 0.62 / 0.45 | No | +0.160 | print was 0.3% (No leg won) | **+5.87** |
+
+Mechanical ledger after this batch (`core/counterfactual.py ledger
+--skip-reason outside-view-veto`): 130 settled declined forecasts, 122
+fillable CF trades, 88 events, 53W/69L, pnl +$105.30, brier_delta
++0.0276, held-out +$134.12 (was 128/120/86/52W-68L/+$104.43/+0.0279/
++$133.25 before this batch). Side split: yes 39 rows/39 trd/12W-27L/
++$18.96 (unchanged this batch); no 91 rows/83 trd/41W-42L/+$86.34
+(adds −$5.00 and +$5.87, was 89/81/40W-41L/+$85.47).
+Check: 18.96+86.34=105.30 ✓. Ruling: net +$0.87 on the pair, and the
+winning leg is the one whose edge came from a legible mean-shift off
+the sourced nowcast, while the losing leg's edge rested on the
+unsourced sd — the same split RETRO-20260911-1615's gate-2 note found
+across the whole cluster. Supports gate 2 as written; no boundary
+change.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
@@ -3624,6 +3652,21 @@ f4 +0.0394; the two most recent folds are both positive. (2) holds
 consecutive reading of money-without-calibration; the fork stays shut,
 and the fact-finality subclass (n=29, CF +$122.08, dBrier +0.0419)
 shows the same shape inside itself.
+
+Status 2026-09-12 (DEEP): **NOT MET.** Slice now 130 rows / 122 CF
+trades / 88 events / +$105.30 / overall dBrier +0.0276 (adds the two
+Aug-CPI No-leg rows 5a6d5321c25a −$5.00 and 79e72c3002c3 +$5.87, table
+extended above). (1) fails — per-fold dBrier by the recipe (all-rows
+frame, which reproduces the tool's printed fold pnl −28.81/+38.89/
+−7.29/+4.38/+98.14 exactly): f0 +0.0083, f1 −0.0118, f2 +0.0094, f3
++0.0754, f4 −0.0092 — f3 positive, so "two most recent both negative"
+fails. (2) holds (fold CF pnl f3 +$4.38, f4 +$98.14). (3) holds: 88
+events ≥ 40. Fifth consecutive NOT MET — but note honestly: f4's
+dBrier is negative for the FIRST time in five readings. One more batch
+of well-calibrated declines would put the two newest folds in genuine
+contention; nothing to act on today (fold boundaries shift with n and
+the f4 flip is partly the +$5.87 CPI win), but the next deep retro
+should recompute before assuming the verdict is static.
 
 If the bar is ever MET: do not loosen the veto wholesale. Propose a
 NARROW carve-out for the best-evidenced sub-class only (current
@@ -4227,6 +4270,42 @@ benchmark-unreachable (same property-2 failure as JOLTS/ISM Manufacturing,
 DEEP-2026-08-18), no forecast recorded (never-invent-an-estimate rule).
 Added to schedule.json watch_items alongside the JOLTS/ISM Manufacturing
 cluster for a ~Aug 28-29 re-check.
+
+## Utterance-market base-rate gate (enacted DEEP-2026-09-12)
+
+A Yes-side BET on a say-the-word / trump-mention / vance-mention /
+earnings-call-mention market requires the rationale to QUOTE a
+frequency base rate from at least TWO comparable prior transcripts of
+the same speaker in the same venue class (e.g., "said X in 4 of the
+last 5 rally speeches", "'Consumable' appears in every one of the last
+4 Chewy earnings calls"), quoted at research time. Thematic reasoning
+("this event will be economically themed, so 'Afford' is likely") does
+NOT qualify. Without the quoted base rate the row stays forecast-only,
+skip_reason `unvalidated-method`. No-side utterance bets and all
+forecasts are unaffected; standard floors unchanged.
+
+Evidence basis (settled rows): the category's only two real-money bets
+both lost on exactly this failure — `e77eef5d06ad` (RNC "Afford",
+−$5.00, thematic-guess rationale) and `2659709d25f9` (Ternus keynote
+"Hardware", −$5.00); the same-event vetoed narrow-phrase forecasts
+16e13abfec2f ("Endorse") and 11ea1286d8c7 ("America First") lost as CF
+trades (−$5.00 each) on the same shape, while the settled winners in
+this family all had the base rate the gate demands — evergreen rally
+vocabulary (MAGA 87736f3e8ab9 +$1.94 CF, Radical Left 36ff9feec021
++$2.58 CF), Vance's own stock lines (906a1a65abc8, 83321f868e0f, both
+won), and Chewy "Consumable" (e7a452fef1be/ffc3fcdcbaa6, won — narrow
+in wording but with a real every-call base rate, which is why the gate
+keys on SOURCED FREQUENCY, not on broad-vs-narrow wording).
+
+Honest caveats, pre-registered review: the four narrow losses span
+only two events (RNC Sep10 supplies three, and RETRO-20260911-0624
+itself flags that the convention's theme may be ONE correlated miss,
+not four independent ones), so this is enacted as a cheap
+sourcing-discipline gate in the spirit of carve-out gate 2, not as a
+claimed category edge. Review after 5 further settled utterance rows
+recorded under the gate: if gated-out rows (thematic-only, forecast
+status) start WINNING at their est more often than losing, loosen or
+drop the gate in a deep retro and say so here.
 
 ## First bet in 13 days: the AfD Sachsen-Anhalt audit (DEEP-2026-08-24)
 

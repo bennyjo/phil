@@ -2372,3 +2372,42 @@ collision fix; (2) per-fold `fold_brier_delta` in
 core/counterfactual.py; (3) the blend-bar decision above.
 
 **Status:** informational + the three asks above.
+
+## 2026-09-12 — deep-retro status pass
+
+Full detail in journal/retros/DEEP-2026-09-12.md. Summary:
+
+- **No new proposals from the hourly agent this window** — nothing to
+  endorse/reject.
+- **No new operator asks.** The three standing asks are unchanged:
+  (1) lease writability / simultaneous-start collision fix (every
+  cloud cycle still logs `written=false`); (2) per-fold
+  `fold_brier_delta` in core/counterfactual.py — implementation note
+  from today's fourth hand-computation: use the all-rows frame
+  (superseded included), it is the frame that reproduces the tool's
+  printed fold pnl exactly; (3) the blend-bar decision — today reads
+  as **pass 3** (disagreement n=184, w_opt 0.768, improvement 0.0024)
+  with the improvement WEAKENING (0.0030 → 0.0024) exactly as the
+  fragility analysis attached to the ask predicted. Recommendation
+  unchanged: require robustness, don't ship on the letter.
+- **Fork status: NOT MET, fifth consecutive reading**, but per-fold
+  dBrier f4 went negative (−0.0092) for the first time — flagged for
+  the next pass, nothing to act on today.
+- **Discipline:** two lapses in the window, both repaired — the
+  2026-09-11 16:17Z settlement commit (e081582) graded two
+  outside-view-veto rows without the same-commit CF-table extension
+  (repaired in this pass's playbook edit), and the 07:28Z triggered
+  tick skipped a settlement duty (self-caught one tick later by the
+  hourly agent). Second instance each of known classes; no new rule,
+  escalation pre-registered in the retro if a third appears.
+- **Gate enacted (agent-owned, playbook):** utterance-market base-rate
+  gate — Yes-side say-the-word/mention bets need a quoted ≥2-transcript
+  frequency base rate or stay forecast-only; evidence and
+  pre-registered review in the retro and playbook section.
+- **Screener replay re-baseline (rev 6796568): COMPLETED** after four
+  attempts — s_exc −0.0011 / s_ez −0.3 over 27 batches (3,316 rows):
+  no excess screening skill beyond the mids under the new prompt rev.
+  Stale-baseline flag clears; the DEEP-2026-09-01 freeze stands,
+  re-confirmed. This closes the item opened DEEP-2026-09-09.
+
+**Status:** informational — no new asks.
