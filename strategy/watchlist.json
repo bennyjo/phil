@@ -37,7 +37,13 @@
     "Sep 16 -- the market's 14-day window runs past its Sep 7 end date (RETRO-20260907-1758).",
     "Amended 2026-09-09 01:2xZ (FULL cycle, operator machine): the Sweden Liberals entry is now an",
     "open position (b063db346052, No @0.40) rather than a price-only skip; expiry moved past the",
-    "Sep 13 election so a result-night move still fires."
+    "Sep 13 election so a result-night move still fires.",
+    "Amended 2026-09-12 04:1xZ (FULL cycle, cloud): pruned four expired calendar entries (China Aug",
+    "CPI, US Aug PPI, Bank of Russia decision, US Aug CPI -- all past window, already graded in prior",
+    "retros) and three expired price_moves (Bank of Russia no-change -- position settled, no longer",
+    "open; US CPI 0.4pct veto -- print already released; Apple Ternus 'Hardware' -- keynote long over).",
+    "Added a calendar entry for the SNB Sep24 decision and price-move watches for the two no-edge",
+    "skips this cycle (Man Utd/Man City draw devig, SNB no-change) so a reversal re-opens research."
   ],
   "price_moves": [
     {
@@ -65,28 +71,12 @@
       "expires": "2026-09-21T00:00:00Z"
     },
     {
-      "market_id": "2661523",
-      "token_id": "101226646659160481931269342739035989075280131990130572924718801665839150667247",
-      "label": "Will the Bank of Russia make no change to the key rate after the September meeting? (Yes, open position cd8b25268fe1, entry 0.70; decision Sep 11 10:30Z)",
-      "move_threshold": 0.05,
-      "window_min": 60,
-      "expires": "2026-09-12T00:00:00Z"
-    },
-    {
       "market_id": "2252245",
       "token_id": "63842529068710005716169325380315470359047749786610778647370693404952498013178",
       "label": "Will the Fed increase interest rates by 25 bps after the September 2026 meeting? (Yes; skipped no-edge 2026-09-07 at ask 0.49 vs own 0.52, FedWatch ~0.56; a move toward 0.40 re-opens the cross-market gap)",
       "move_threshold": 0.05,
       "window_min": 60,
       "expires": "2026-09-16T20:00:00Z"
-    },
-    {
-      "market_id": "3539667",
-      "token_id": "59533291979005451027301161253701619382906657645157548326972285410455577606339",
-      "label": "Will monthly inflation increase by 0.4% in August? (No; vetoed 2026-09-07 at No ask 0.52 vs own 0.66 on an unsourced sd; print Sep 11 12:30Z)",
-      "move_threshold": 0.05,
-      "window_min": 60,
-      "expires": "2026-09-11T14:00:00Z"
     },
     {
       "market_id": "3561916",
@@ -105,12 +95,20 @@
       "expires": "2026-09-21T00:00:00Z"
     },
     {
-      "market_id": "4178439",
-      "token_id": "38875386427248703653621980435280242968279395596038015491396219858156223747488",
-      "label": "Will John Ternus say \"Hardware\" during his Apple Keynote? (Yes, open position 2659709d25f9, entry 0.52, est 0.12 as of 18:38Z post-conclusion check -- 3 live blogs (MacRumors/Macworld/Gizmodo) found no 'hardware' from Ternus across opening through closing; backstop 2026-09-10 23:59 ET; a move now would mean official resolver ruling or a missed-quote correction surfacing)",
-      "move_threshold": 0.08,
+      "market_id": "4016653",
+      "token_id": "81620591815934305295894536336762324734546908372436178923464162613848438028803",
+      "label": "Will Manchester United FC vs. Manchester City FC end in a draw? (Yes; skipped no-edge 2026-09-12 at mid 0.245 vs own 9-book power-devig 0.2448 -- essentially exact; a move away from ~0.245 without a lineup/news catalyst re-opens the devig check; match Sep 13)",
+      "move_threshold": 0.05,
       "window_min": 60,
-      "expires": "2026-09-11T04:00:00Z"
+      "expires": "2026-09-14T00:00:00Z"
+    },
+    {
+      "market_id": "4443883",
+      "token_id": "44823521030235665325095619801947921774270389938522386846172915977769791983539",
+      "label": "Will the Swiss National Bank make no change to the SNB policy rate at the September meeting? (Yes; skipped no-edge 2026-09-12 at mid 0.885 vs own 0.90 (SNB Jun18 hold + mild inflation, no reliable 2026 poll found -- a genuine Reuters poll surfacing, or the mid dropping toward 0.85, both worth a re-check); decision Sep 24)",
+      "move_threshold": 0.05,
+      "window_min": 60,
+      "expires": "2026-09-25T00:00:00Z"
     }
   ],
   "new_market": {
@@ -120,28 +118,13 @@
   },
   "calendar": [
     {
-      "label": "China August 2026 CPI (NBS, 01:30 UTC) - event 'August Inflation China - Annual', markets 3499774-3499778; forecasts 7bacc91ddf91 (>=0.9 est 0.38, wide-spread-veto) / 19cf14c87979 (0.7-0.8 est 0.33, outside-view-veto) / 9f93fff3d795; grade the contradictory-consensus read (TE 0.7 vs investing.com and Lundgreen 0.9) and the base-effect anchor against the print",
-      "fire_at": "2026-09-09T01:30:00Z",
-      "window_min": 45
-    },
-    {
-      "label": "US August 2026 PPI (BLS, 08:30 ET) - final demand 12-month NSA bracket set, event 'PPI YoY - August 2026' (markets 3566679-3566688); forecasts 3e948a4300a4 (>=5.1 est 0.67 vs 0.705, no-edge) / 09d6e627720e (5.0 est 0.067); grade the base-effect chain (4.88 + 1.05 x MoM, consensus +0.4 -> 5.3) and the sd choice (own 0.53 vs market-implied ~0.45), plus the service-21 market-aware stale-year miss (0.07)",
-      "fire_at": "2026-09-10T12:30:00Z",
-      "window_min": 45
-    },
-    {
-      "label": "Bank of Russia key-rate decision (13:30 MSK) - open position cd8b25268fe1 no-change Yes @0.70 (est 0.75), sibling cut forecast d8d34757ae8e; grade per the schedule.json watch item (RBC n=30 poll vs PM mid vs mech 0.68)",
-      "fire_at": "2026-09-11T10:30:00Z",
-      "window_min": 45
-    },
-    {
-      "label": "US August 2026 CPI (BLS, 08:30 ET) - headline MoM/YoY, core MoM/YoY bracket sets (events of 3539666/3539673/3539688/3539696); 11 forecasts recorded 2026-09-07 off the Cleveland Fed nowcast (0.36/3.38/0.20/2.38 as of 09/04); grade the dispersion thesis (market implied sd ~0.07 vs own 0.11) on the 0.4 No veto row 5a6d5321c25a and the core 0.2 No veto row 79e72c3002c3",
-      "fire_at": "2026-09-11T12:30:00Z",
-      "window_min": 45
-    },
-    {
       "label": "FOMC September 2026 decision (statement 14:00 ET) - hike/hold pair 2252245/2252244, forecasts ead3094ccd48 (hike est 0.52) / a47f9db6f4b9; grade FedWatch (0.56 on Sep 4) vs Kalshi (0.505) vs PM (0.485) vs own, and the two mech reads (market-aware 0.02 price-leak, v4 0.22)",
       "fire_at": "2026-09-16T18:00:00Z",
+      "window_min": 45
+    },
+    {
+      "label": "SNB September 2026 policy rate decision - market 4443883 no-change Yes @0.885, forecast cf76e5d0536c (own 0.90, no-edge, thin book $315 liquidity) -- grade the persistent-hold base rate against the actual print, and note if a genuine dated 2026 poll ever surfaces (this cycle's WebSearch kept returning a stale 2025-vintage recycled-headline poll, discarded)",
+      "fire_at": "2026-09-24T00:00:00Z",
       "window_min": 45
     }
   ]
