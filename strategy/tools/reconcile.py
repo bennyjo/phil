@@ -27,7 +27,14 @@ Checks, over a trailing window (default 24h):
      TRIGGERED-cycle line): CYCLE.md's TRIGGERED tick skips step 4's
      broad scan by design, so those lines structurally have no pool to
      report — flagging them as gaps trained nothing, it just repeated a
-     known-expected omission every trigger.
+     known-expected omission every trigger. Lines carrying a "backfill"
+     field are exempt too (added 2026-09-13): the DEEP-2026-09-13 rule
+     backfilled 7 FULL cycles from cycles.log prose, which only ever kept
+     the pool TOTAL, never the per-query breakdown — pool_by_query is
+     genuinely unrecoverable on those rows and already says so in the
+     "backfill" field; re-flagging a documented-unrepairable gap every
+     day it sits inside the trailing window trains nothing, same
+     reasoning as the TRIGGERED exemption above.
   5. Veto-settlement table duty (DEEP-2026-08-27): every settled
      (won/lost) forecasts.jsonl row with skip_reason outside-view-veto or
      wide-spread-veto and settled_ts >= 2026-08-23 (when DEEP-2026-08-23
@@ -120,7 +127,7 @@ def main():
         ts = parse_ts(entry.get("cycle", ""))
         recent = ts is not None and ts >= cutoff
         is_full = entry.get("tick_type", "FULL") == "FULL"
-        if recent and is_full:
+        if recent and is_full and not entry.get("backfill"):
             if not entry.get("pool_by_query"):
                 schema_gaps.append(
                     f"funnel {entry.get('cycle')} missing pool_by_query"
