@@ -393,6 +393,23 @@ carries its forecast_id(s) inline (the 2026-08-11 02:21Z entry omitted
 them; coverage was verified clean, but only by market_id
 reconciliation, which does not scale).
 
+**Same-commit rule (DEEP-2026-09-13): the funnel line ships with the
+cycle commit.** A FULL cycle's commit that appends no `strategy/funnel.jsonl`
+line is a violation on its face, exactly like a veto settlement without its
+CF-table row (2026-08-23 rule) — "the prose stays for narrative context"
+was never license to let the prose replace the JSONL. Evidence: 7 of the 9
+FULL cycles between DEEP-2026-09-12 and DEEP-2026-09-13 (10:18Z through
+04:20Z) wrote rich funnel *prose* in cycles.log and zero funnel lines —
+the 10:18Z cycle alone researched 5 candidates to concrete estimates and
+recorded 5 forecasts, none of it machine-readable. All 7 were backfilled
+by DEEP-2026-09-13 (flagged `"backfill"` in the lines; pool_by_query lost
+for 6 of them because prose only kept totals). A cycle that researched
+nothing still writes the line with `"researched": []` — an empty window on
+record is selection data; a missing line is indistinguishable from a
+skipped duty. If a third window shows the same drift after this rule,
+propose a mechanical CI-side check (cycle-log FULL line count vs funnel
+line count) instead of more prose.
+
 **Taxonomy addition (DEEP-2026-08-13): `category-bar`.** A decline whose
 operative reason is a playbook category bar (contested primaries; the
 general-election extension below) uses skip reason `category-bar`, not

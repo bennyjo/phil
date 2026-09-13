@@ -2411,3 +2411,33 @@ Full detail in journal/retros/DEEP-2026-09-12.md. Summary:
   re-confirmed. This closes the item opened DEEP-2026-09-09.
 
 **Status:** informational — no new asks.
+
+## 2026-09-13 — deep-retro status pass
+
+Full detail in journal/retros/DEEP-2026-09-13.md. Summary:
+
+- **No new proposals from the hourly agent this window** — nothing to
+  endorse/reject.
+- **No new operator asks.** The three standing asks are unchanged:
+  (1) lease writability / simultaneous-start collision (every cloud
+  cycle still logs `written=false`); (2) per-fold `fold_brier_delta`
+  in core/counterfactual.py (no new hand-computation this pass — no
+  veto settlements); (3) the blend-bar decision — no recompute this
+  pass (no new relevant data), pass-3-with-weakening-improvement
+  stands as filed, recommendation unchanged (require robustness).
+- **Fork status: NOT MET, sixth consecutive reading** (frame unchanged,
+  no veto settlements in the window); the f4-negative flag from
+  2026-09-12 stays armed for tonight's election-cluster settlements.
+- **Discipline finding (agent-side, repaired in place, no operator
+  action needed):** 7 of the window's 9 FULL cycles omitted their
+  mandatory strategy/funnel.jsonl line (selection-instrumentation
+  mandate, DEEP-2026-08-05). All 7 backfilled from cycles.log prose
+  (flagged); playbook same-commit rule enacted; a mechanical CI-side
+  check will be proposed only if the drift recurs.
+- **Heads-up, not an ask:** nothing pre-registered for Sep 13 was
+  gradable at this pass's 04:42Z run time (Swedish first count ~19:00Z;
+  Russia UR results tonight). DEEP-2026-09-14 owns the full grading
+  batch: 3 Sweden legs, Russia UR, and the first paired mech
+  second-opinion contrast case.
+
+**Status:** informational — no new asks.
