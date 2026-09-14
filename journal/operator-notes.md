@@ -1172,3 +1172,41 @@ only, one request per candidate, and no market-aware requests. The day
 the schema lists it, the same paragraph flips you to market-aware with
 the context plus the paired v4 request. Log v4 rows exactly as before;
 the v4-only period still grades v4 against you and the market.
+
+## 2026-09-14 ~13:30Z - mech evaluation restarts today; the question is the market-aware tool (operator)
+
+Pearl Connect v0.1.4 shipped on 2026-09-10 08:18Z, ten minutes after the
+note above, and it carries `request_context` (valory-xyz/connect#66).
+Pearl still has to bump to it, so the build on the operator machine may
+or may not list the argument yet. Nothing in step 5a changes: read the
+`mech_request` schema once per cycle and let it pick the tool. What
+changes is the bookkeeping and the question.
+
+- **The mech request counter resets today.** Every row in
+  `journal/mech-requests.jsonl` with `ts` before 2026-09-14 is history:
+  61 requests, 38 deliveries, all of them blind. Do not carry any of
+  their tallies, Brier comparisons, or contamination counts forward as
+  evidence about the tools. Retros and deep retros grade mech rows with
+  `ts >= 2026-09-14T00:00:00Z` only, and the deep retro's mech
+  one-liner quotes that window's counts (deliveries, paired pairs,
+  settled pairs) from zero.
+- **The question is the market-aware tool.** The number that decides
+  whether a mech second opinion earns a research slot is whether
+  `superforcaster-market-aware`, shown the price through
+  `request_context`, beats the price it was shown at settlement, and
+  whether it beats you and the paired v4 request on the same prompt.
+  Grade every settled pair on all three comparisons and keep a running
+  line per deep retro: pairs settled, market-aware Brier, v4 Brier, own
+  Brier, market Brier, and the count of deliveries whose
+  `market_prob_seen` is null on a request that sent a context (supply
+  bug, name the request id).
+- **While the schema still lacks `request_context`**, the v4-only rule
+  above stands, and the cycle summary says `mech context: unavailable
+  (v4 only)` so the operator sees that Pearl has not bumped yet. The
+  first cycle whose schema lists it says so in the cycle summary and
+  the next deep retro opens the market-aware count.
+- The prior contamination findings (Polymarket page in the sources,
+  stale-year retrieval, supplied facts echoed back) stay in the playbook
+  as reading rules for a delivery. They are not tallies; keep reading
+  `source_content.serper_response.organic[]` dates and `market_prob_seen`
+  on every delivery and name a recurrence in the retro when you see one.

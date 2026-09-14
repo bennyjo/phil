@@ -170,10 +170,15 @@ Every invocation runs as one of three ticks:
    - Form your OWN estimate first, before requesting. The mech's answer is
      evidence like any other: if it honestly moves your belief, your
      recorded est-prob moves - but always note your pre-mech estimate.
-   - **Current test focus (operator, 2026-09-03):** the three Polygon
-     predict mechs run mech-predict v0.21.29 and newly serve
-     `superforcaster-market-aware` next to `superforcaster-polymarket-v4`.
-     Exercise the new tool deliberately:
+   - **Current test focus (operator, 2026-09-03; evaluation window reset
+     2026-09-14):** the three Polygon predict mechs run mech-predict
+     v0.21.29 and newly serve `superforcaster-market-aware` next to
+     `superforcaster-polymarket-v4`. Mech rows dated before 2026-09-14
+     are history and never count as evidence about the tools; retros
+     grade rows from 2026-09-14 on, and the question they answer is
+     whether market-aware, shown the price, beats the price, you, and
+     the paired v4 request (operator note 2026-09-14). Exercise the new
+     tool deliberately:
      - Mechs (all price 10000 = 0.01 USDC): service 21
        `0x76a9a29441c7acd072b03e63911f0e177de56ab7`, service 44
        `0xe7f818513a48d74c99b8bde153bee0b70dbb300b`, service 25
