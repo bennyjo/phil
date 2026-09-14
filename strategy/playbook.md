@@ -4735,3 +4735,40 @@ leaked number was STALE and on the opposite side of the current price, so
 'contaminated' does not even mean 'anchored on the live market'. Grade
 both deliveries against the Sep 7 leg's settlement alongside the position
 itself (schedule.json watch item, grading item 5).
+
+## Watch-item hygiene: schedule.json is a pacing instrument, not a journal (DEEP-2026-09-14)
+
+schedule.json is read by every tick to decide pacing; by 2026-09-14 it
+had grown to 87KB (watch_items 75KB), with the Iran item at 31.6KB
+carrying 30 near-identical "finding UNCHANGED" paragraphs and the
+Andersson item at 14.2KB. That growth pattern is not free: an 87KB file
+cannot be printed whole without the tool-output spill that destroyed the
+2026-08-28 deep-retro session (output over the harness cap lands in a
+permission-gated spill file nobody can approve), and every cycle commit
+rewrites the whole blob. The history was also redundant — every one of
+those checkpoints already existed in cycles.log, funnel.jsonl, and git.
+
+Rules, effective now:
+
+1. **Checkpoints update IN PLACE.** A re-check that changes nothing
+   updates the item's status line (count + latest timestamp, e.g. "30
+   consecutive UNCHANGED checks through 2026-09-13 20:1xZ"), it does
+   not append a paragraph. A re-check that DOES change the picture
+   replaces the stale part of the item and cites the forecast id it
+   recorded — the forecast/funnel/retro record is the durable history,
+   the watch item is the current state.
+2. **~2,000-character soft cap per item.** An item that needs more than
+   that is carrying history, not state; move the history to the cycle
+   retro and point at it ("full lineage: git/cycles.log/funnel
+   <daterange>"). Decision-critical content — clause readings, entry
+   facts, pre-registered grading questions, standing instructions —
+   always stays in the item; the cap is met by cutting repetition,
+   never by cutting the things grading needs.
+3. **ARCHIVED items get pruned by the next deep retro** after their
+   grading has landed in a retro. Git retains them; the working file
+   does not.
+
+Applied 2026-09-14: items 4/5/9/10 compressed to decision-relevant
+cores, three ARCHIVED items pruned, 87KB → ~30KB. Nothing needed for
+the pending Sweden/Iran/Russia gradings was dropped (verified against
+the pre-registrations in item 11 and the clause reading in item 5).

@@ -2441,3 +2441,52 @@ Full detail in journal/retros/DEEP-2026-09-13.md. Summary:
   second-opinion contrast case.
 
 **Status:** informational — no new asks.
+
+## 2026-09-14 — deep-retro status pass + NEW operator ask (funnel weld → CI)
+
+Full detail in journal/retros/DEEP-2026-09-14.md. Summary:
+
+- **No new proposals from the hourly agent this window** — nothing to
+  endorse/reject.
+- **NEW operator ask: enforce the funnel weld at push time in
+  core/validate.py (CI).** Spec: any non-`operator:` commit whose diff
+  ADDS rows to journal/forecasts.jsonl must, in the SAME commit, also
+  add at least one line to strategy/funnel.jsonl; a later commit adding
+  a `backfill`-marked funnel line remains the remediation path (the
+  check is per-commit and forward-looking only — no retroactive
+  flagging of history, mirroring reconcile.py's 24h scope). Evidence:
+  nine instances of the forecast-without-funnel class since 2026-08-19.
+  The agent-side escalation ladder is exhausted — prose rule
+  (DEEP-2026-08-20), same-commit weld, mechanical self-check
+  (DEEP-2026-08-21), literal-token proof (DEEP-2026-08-22), explicit
+  closure to triggered ticks (DEEP-2026-09-03) — and the class still
+  recurred twice on 2026-09-13 (TRIGGERED 22:2xZ and 23:2xZ,
+  forecasts ed0496ead6ec / 7348969de07e, no funnel line, no reconcile
+  token), the very day DEEP-2026-09-13 armed its recurrence trigger.
+  Triggered ticks are exactly the context where a rushed agent skips
+  the self-check; only a check the agent cannot skip closes the class.
+- **Standing ask 1 (lease writability / simultaneous-start): unchanged,
+  one new evidence row** — 2026-09-14 00:25Z TRIGGERED tick reported
+  cash $967.98 one minute after the 00:24Z FULL cycle placed a bet
+  (cash $962.98): a concurrent runner on a stale view, harmless this
+  time only because it placed nothing. 70 `written=false` lines in
+  cycles.log to date.
+- **Standing ask 2 (per-fold fold_brier_delta): unchanged** — no veto
+  settlements this window, no new hand-computation. Note: Sep 20
+  settles three correlated German-bracket veto rows at once.
+- **Standing ask 3 (blend bar): no recompute** — only near-zero-
+  disagreement forecast settlements this window; pass-3-with-weakening-
+  improvement stands, recommendation unchanged (require robustness).
+- **Release-calendar bar: no calendar-tier fires this window**; 0 of
+  the next-20 graded fires elapsed. Bar unchanged.
+- **Fork status: NOT MET, seventh consecutive reading** (no veto
+  settlements; f4-negative flag stays armed for Sep 20).
+- **Discipline:** funnel-weld instances 8–9 (above, self-caught and
+  backfilled by the 02:11Z cycle); otherwise clean — one bet placed
+  (Russia turnout, audited compliant, event cap now FULL at $10 for
+  the Sep 18–20 Russia election), no under-floor/in-play/spread
+  breaches. Election-night trio provisionally graded +$10 net as one
+  event decision; official settlements pending.
+
+**Status:** one new ask (CI funnel-weld check) awaiting operator
+decision; everything else informational.
