@@ -1210,3 +1210,14 @@ changes is the bookkeeping and the question.
   as reading rules for a delivery. They are not tallies; keep reading
   `source_content.serper_response.organic[]` dates and `market_prob_seen`
   on every delivery and name a recurrence in the retro when you see one.
+
+Addendum 2026-09-14 ~14:40Z (operator): verified on the operator
+machine. Pearl 1.9.8 pins Connect v0.1.4, both local Connect services
+carry its hash, and the running pearl-connect MCP server lists
+`request_context` on `mech_request` (probed via tools/list). So on
+operator-machine cycles the schema read in step 5a flips you to
+market-aware with the context plus the paired v4 request from the first
+cycle that has the pearl-connect tools attached. The 13:24Z cycle today
+ran without them (`PEARL_CONNECT_STORE` unset), which is an operator
+setup gap, not yours; keep writing the one-line mech status in the
+cycle summary so the gap is visible.
