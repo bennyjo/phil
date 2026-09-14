@@ -43,17 +43,16 @@
     "retros) and three expired price_moves (Bank of Russia no-change -- position settled, no longer",
     "open; US CPI 0.4pct veto -- print already released; Apple Ternus 'Hardware' -- keynote long over).",
     "Added a calendar entry for the SNB Sep24 decision and price-move watches for the two no-edge",
-    "skips this cycle (Man Utd/Man City draw devig, SNB no-change) so a reversal re-opens research."
+    "skips this cycle (Man Utd/Man City draw devig, SNB no-change) so a reversal re-opens research.",
+    "Amended 2026-09-14 21:3xZ (FULL cycle, operator machine): pruned three expired price_moves",
+    "(Andersson PM and Liberals -- positions still open but the Sep 13 election-night window they",
+    "watched is over; Man Utd/Man City draw -- match played). Fed hike label refreshed to the",
+    "current read (own 0.85 vs 0.875). Added price moves for the BoE Sep 17 hike (outside-view-veto",
+    "skip bc482ffb3606, own 0.20 vs ask 0.061 -- a move toward own re-opens the question) and the",
+    "Xi Jinping visit (market-agrees 65f80b2eb530 at 0.90 -- a move toward No means the Taiwan",
+    "arms-sale cancellation threat is being acted on), plus a calendar entry for the BoE decision."
   ],
   "price_moves": [
-    {
-      "market_id": "1193094",
-      "token_id": "49952287244614575734723913757649087902024339238007187585607375183859292977482",
-      "label": "Will Magdalena Andersson be the next Prime Minister of Sweden? (No, open position e746d7e1ba99, entry 0.21; election Sep 13)",
-      "move_threshold": 0.05,
-      "window_min": 60,
-      "expires": "2026-09-14T00:00:00Z"
-    },
     {
       "market_id": "4168072",
       "token_id": "69417544135807489015313328325643289050336268543893347332663964794312112787250",
@@ -73,18 +72,10 @@
     {
       "market_id": "2252245",
       "token_id": "63842529068710005716169325380315470359047749786610778647370693404952498013178",
-      "label": "Will the Fed increase interest rates by 25 bps after the September 2026 meeting? (Yes; skipped no-edge 2026-09-07 at ask 0.49 vs own 0.52, FedWatch ~0.56; a move toward 0.40 re-opens the cross-market gap)",
+      "label": "Will the Fed increase interest rates by 25 bps after the September 2026 meeting? (Yes; market-agrees 2026-09-14 at 0.875 vs own 0.85, FedWatch 0.863, Reuters poll 86 of 101 hike -- forecast 9cf98e66c291; a move below 0.75 without a Fed-official catalyst re-opens the cross-market check against FedWatch)",
       "move_threshold": 0.05,
       "window_min": 60,
       "expires": "2026-09-16T20:00:00Z"
-    },
-    {
-      "market_id": "3561916",
-      "token_id": "8198474575022344752511692459785490408590205557749020258510265116504208182302",
-      "label": "Sweden Parliamentary Election: Liberals Win Seats? (No, open position b063db346052, entry 0.40, est No 0.48, ten-bookmaker devig P(over 4pct) ~0.50; a move toward Yes means a new poll has L clearly above 4 or the books have repriced; election Sep 13)",
-      "move_threshold": 0.05,
-      "window_min": 60,
-      "expires": "2026-09-14T00:00:00Z"
     },
     {
       "market_id": "3399197",
@@ -95,12 +86,20 @@
       "expires": "2026-09-21T00:00:00Z"
     },
     {
-      "market_id": "4016653",
-      "token_id": "81620591815934305295894536336762324734546908372436178923464162613848438028803",
-      "label": "Will Manchester United FC vs. Manchester City FC end in a draw? (Yes; skipped no-edge 2026-09-12 at mid 0.245 vs own 9-book power-devig 0.2448 -- essentially exact; a move away from ~0.245 without a lineup/news catalyst re-opens the devig check; match Sep 13)",
+      "market_id": "2661520",
+      "token_id": "36083544686017717742576878614454630846400006909936498081215451726910881668678",
+      "label": "Bank of England increases interest rates by 25 bps after September 2026 meeting? (Yes; outside-view-veto skip 2026-09-14 at ask 0.061 vs own 0.20 -- LSEG ~30pct, SONIA OIS ~45pct, Reuters poll 65/65 hold, July vote 6-3; forecast bc482ffb3606; a move toward 0.15+ means PM is catching up to the OIS repricing or UK Aug CPI (Sep 16 06:00Z) ran hot; decision Sep 17 11:00Z)",
       "move_threshold": 0.05,
       "window_min": 60,
-      "expires": "2026-09-14T00:00:00Z"
+      "expires": "2026-09-17T13:00:00Z"
+    },
+    {
+      "market_id": "4118888",
+      "token_id": "45720654598427487345343523147868184032078481276644164550917591817398343875097",
+      "label": "Will Xi Jinping visit US by September 24? (Yes; market-agrees 2026-09-14 at 0.90 vs own 0.88, state visit confirmed both sides, arrival Sep 23 -- forecast 65f80b2eb530; a move toward No means Beijing is acting on the Taiwan arms-sale cancellation threat (Kyodo Sep 12) or the date slipped)",
+      "move_threshold": 0.05,
+      "window_min": 60,
+      "expires": "2026-09-25T04:00:00Z"
     },
     {
       "market_id": "4443883",
@@ -120,6 +119,11 @@
     {
       "label": "FOMC September 2026 decision (statement 14:00 ET) - hike/hold pair 2252245/2252244, forecasts ead3094ccd48 (hike est 0.52) / a47f9db6f4b9; grade FedWatch (0.56 on Sep 4) vs Kalshi (0.505) vs PM (0.485) vs own, and the two mech reads (market-aware 0.02 price-leak, v4 0.22)",
       "fire_at": "2026-09-16T18:00:00Z",
+      "window_min": 45
+    },
+    {
+      "label": "BoE September 2026 MPC decision (12:00 BST) - hike market 2661520 Yes @0.0505 (ask 0.061) vs own 0.20, forecast bc482ffb3606 (outside-view-veto, discretionary vote so no carve-out); grade PM vs LSEG (~0.30 on Sep 14) vs SONIA OIS (~0.45) vs Reuters poll (65/65 hold) vs own -- a test of whether an external-benchmark disagreement on a discretionary decision behaves like the self-model veto rows; also note the vote split vs the expected 6-3",
+      "fire_at": "2026-09-17T11:00:00Z",
       "window_min": 45
     },
     {
