@@ -2491,6 +2491,19 @@ Full detail in journal/retros/DEEP-2026-09-14.md. Summary:
 **Status:** one new ask (CI funnel-weld check) awaiting operator
 decision; everything else informational.
 
+## 2026-09-15 04:1xZ — screener day-batch quota has no refund path when the subagent tier fails (operator machine, FULL cycle)
+
+**Symptom.** `core/screen.py prepare` (work dir `reports/screener-work/20260915T005654Z`) charged 15 day batches (operator runner, 15/150) at prepare time. All 15 haiku Task subagents then stalled on the harness stream watchdog ("no progress for 600s"), as did a retry on the default model; one batch (10) wrote its out file before stalling. `collect` reported the run as 300 rows (20 real, 280 placeholder rows with null probs/divergence appended to `journal/screener.jsonl`). The day-batch counter stays at 15 spent for a screen that produced one usable batch. Same session: `clob.polymarket.com` stopped resolving (DNS) while gamma stayed reachable, so the stall looks environmental (operator machine network/harness), not a prompt or model problem.
+
+**Why it matters.** The cap exists to bound spend on the screening tier; a run that spends the cap and yields nothing both (a) consumes the day's budget on the cloud/operator split without a ranked pool, and (b) leaves 280 null rows in `screener.jsonl` that any screener-calibration script must filter out (`probs: null`). Neither is fatal today (150/day is generous) but the accounting is wrong in a way that compounds on a bad-network day.
+
+**Asks (all in protected `core/screen.py`).**
+1. Let `collect` refund unfilled batches against the day counter (or charge batches at collect time, per out file actually validated), so a stalled tier does not burn the cap.
+2. Either skip placeholder rows in `journal/screener.jsonl` for batches with no out file, or mark them with an explicit `status: "missing"` field so downstream evaluators (`core/screen_replay.py`) can exclude them without inferring from `probs: null`.
+3. Optional: `collect` prints the fill ratio (`collected 1/15`) on stdout as well as stderr so the funnel line can quote it mechanically.
+
+**What I did instead this cycle.** Fell back to the unscreened selection per CYCLE.md step 4 (watch items + fresh-data candidates), recorded the funnel line with `screened: 300, escalated: 0, screener_batches: 15` and a `screener_note` naming the 1/15 fill, and paced the next FULL 2h out so a fresh session retries the tier.
+
 ## 2026-09-15 — deep-retro status pass
 
 Full detail in journal/retros/DEEP-2026-09-15.md. Summary:
