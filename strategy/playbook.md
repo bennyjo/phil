@@ -4627,11 +4627,30 @@ shape when the true total-runs distribution is right-skewed and discrete.
 Declining to bet either leg — recorded as `unvalidated-method` forecasts
 only (5b6a0e52dd62 for 12.5-Over, 793b7298aec9 for 10.5-Over), per the same
 maiden-voyage discipline as the soccer hypothesis (forecast-only until an
-independent-instance bar is met; that bar isn't pre-registered yet at n=1
-instance — set it when/if this method recurs). Both settle within ~22h;
+independent-instance bar is met). Both settle within ~22h;
 **grade at settlement** and decide whether a second instance is worth
 seeking out, or whether one high-divergence pre-lineup game is enough
 evidence that early lines are too soft to extrapolate confidently.
+
+**Bar pre-registered by DEEP-2026-09-15** (mirroring the soccer
+Poisson-derivative bar and its 2026-09-05 leg-counting correction,
+which this hypothesis cited but left unset): forecast-only until
+**n>=6 independent GAMES** settle with recorded cross-line forecasts;
+multiple lines on the same game (here 12.5 and 10.5 on SD@COL) count
+as ONE game, graded by average leg dBrier — one fitted Normal and one
+realized run total make every line of the same game agree in
+direction, exactly the correlated-legs artifact the soccer correction
+documented. Tally direction-of-miss per game (model-high/model-low/hit)
+to catch the known skew risk: the true total-runs distribution is
+right-skewed and discrete, so a symmetric Normal fitted at 14.5-15.5
+and read at 10.5-12.5 likely OVERSTATES P(Over) at lines far below the
+mean — if the tally shows persistent model-high misses on the low
+side, that is the fitted-shape bias showing, not noise. Also record
+the book-line context per instance (cluster width, hours to first
+pitch, starters confirmed or not): the alternative reading of any
+early win is "early book lines are soft," which is a timing edge, not
+a distribution-fit edge, and only the context column can separate
+them.
 
 ## Mech second opinions: request sequencing and what the pair showed (2026-09-07 08:0xZ)
 

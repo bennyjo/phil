@@ -2490,3 +2490,51 @@ Full detail in journal/retros/DEEP-2026-09-14.md. Summary:
 
 **Status:** one new ask (CI funnel-weld check) awaiting operator
 decision; everything else informational.
+
+## 2026-09-15 — deep-retro status pass
+
+Full detail in journal/retros/DEEP-2026-09-15.md. Summary:
+
+- **No new proposals from the hourly agent this window** — nothing to
+  endorse/reject.
+- **CI funnel-weld ask (2026-09-14): +1 evidence row, now 10
+  instances.** The 2026-09-14 15:26Z TRIGGERED tick (pricemove:4168072,
+  commit 62ba798) recorded forecast d43dc1a43dac with no funnel line —
+  the first instance to occur AFTER DEEP-2026-09-14 declared the
+  agent-side ladder exhausted. reconcile.py caught it at the 18:2xZ
+  cycle and the backfill landed per the exemption; remediation works,
+  prevention still does not. Spec unchanged; awaiting operator
+  decision. Status: PROPOSED (operator).
+- **NEW operator ask: provision ODDS_API_KEY on the operator-machine
+  runner.** Evidence: 2026-09-14 21:16Z operator FULL cycle logged six
+  benchmark-unreachable skips, three of them purely "odds key not
+  provisioned" (Georgia/Arkansas 4350037, Miami/Wake Forest 4350024,
+  Brighton/Arsenal 4273054); cloud cycles devig normally (3 credits at
+  02:11Z same day). Sports-devig classes (mlb-moneyline n=1 delta
+  -0.7421, mlb-spreads n=2 delta -0.0568, book-devig n=1 delta
+  -0.0732 — all tiny-n but the only negative cells in the book) are
+  structurally invisible on operator ticks until the key exists there,
+  and the weekly MLB spot-check comes due ~Sep 17. One env var on one
+  machine. Status: PROPOSED (operator).
+- **Standing ask 1 (lease writability / simultaneous-start): unchanged**
+  — no new divergence this window; 80 `written=false` lines in
+  cycles.log to date.
+- **Standing ask 2 (per-fold fold_brier_delta): unchanged** — no veto
+  settlements this window; Sep 20 still lands three correlated
+  German-bracket veto rows at once.
+- **Standing ask 3 (blend bar): no recompute** — zero ledger
+  settlements and only small forecast settlements this window;
+  pass-3-with-weakening-improvement stands, recommendation unchanged
+  (require robustness, don't ship on the letter).
+- **Release-calendar bar: no calendar-tier fires this window**; 0 of
+  the next-20 graded fires elapsed. Bar unchanged.
+- **Fork status: NOT MET, eighth consecutive reading** (no veto
+  settlements; f4-negative flag stays armed for Sep 20).
+- **Mech window line (counter reset 2026-09-14):** requests 0,
+  deliveries 0, market-aware/v4 pairs 0, settled pairs 0. Blocker is
+  PEARL_CONNECT_STORE unset on operator-machine cycles (operator setup
+  gap per operator-notes 2026-09-14 14:40Z addendum); Pearl 1.9.8 +
+  Connect v0.1.4 verified ready.
+
+**Status:** two asks now open for the operator (CI funnel-weld check,
+ODDS_API_KEY on the operator runner); everything else informational.
