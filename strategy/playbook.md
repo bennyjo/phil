@@ -4856,3 +4856,46 @@ Applied 2026-09-14: items 4/5/9/10 compressed to decision-relevant
 cores, three ARCHIVED items pruned, 87KB → ~30KB. Nothing needed for
 the pending Sweden/Iran/Russia gradings was dropped (verified against
 the pre-registrations in item 11 and the clause reading in item 5).
+
+## Grading duty discharged: 0ed1d77858d7 settled LOST, clause-mapping error confirmed (RETRO-20260915-2015)
+
+The Iran Sep7 ceasefire No bet (`0ed1d77858d7`, est 0.93 @0.54, edge
+0.39, edge_class info-race) settled **LOST** 2026-09-15 — the market
+resolved Yes (clean 14-day window completed). Per the grading duty
+pre-registered at line ~300 above (RETRO-20260907-1758 §2), this row is
+graded as a **clause-mapping error, not a fact-quality error**: the
+CENTCOM Sep 1 strike was correctly sourced and verified multi-source
+(condition (i) of the fact-finality gate was genuinely satisfied on the
+fact itself), but the entry rationale quoted the clause's own sentence
+("...if the most recent qualifying military action occurred on or
+before the specified end date") and then read it backwards, calling a
+window that the clause explicitly permits to run past the end date
+"arithmetically impossible." The 2026-09-07 correction diagnosed this
+within 2 days of entry; today's settlement confirms that corrected
+diagnosis was right, and no further gate change follows from it — the
+gate already requires showing the (a)/(b) clause-to-outcome mapping,
+and this loss is exactly the failure that requirement targets.
+
+**Tally update.** This is the first `>0.10-claimed-edge` bet to settle
+since the founding set closed at 0W/8L (RETRO-20260901-0639); it
+extends the tally to **0W/9L, -$45**. Distinct from the founding set's
+failure modes (documented-but-unfinished process: GTA VI, Lake America;
+resolver-interpretation: ai-leaderboard), this row is the gate's first
+settled instance of a *clause-mapping* failure specifically — worth
+tracking as its own sub-shape if a second instance appears, since the
+fix (require the explicit (a)/(b) mapping) is different from either of
+the other two.
+
+**Second finding, not yet a rule.** The six re-checks after the 2026-09-07
+correction (est walking 0.40 → 0.45 → 0.55 → 0.35 → 0.32 → 0.27) held
+above the market's No price at every checkpoint from Sep 9 onward, and
+the market was closer to the true outcome (No never occurred) at every
+one of those checkpoints. Each re-check found a residual reason
+("Kharg/Jask anchorage might still be judged qualifying," "a new strike
+might still land") to stay above the market rather than converge to it.
+One position is not enough to generalize from — flagging as a pattern
+to watch: an already-held position with no exit may bias re-checks
+toward finding reasons the original thesis still holds rather than
+updating fully to the market on the residual risk that justified
+staying in. No gate change from n=1; revisit if a second held position
+shows the same shape at settlement.
