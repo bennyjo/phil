@@ -4354,6 +4354,21 @@ recorded under the gate: if gated-out rows (thematic-only, forecast
 status) start WINNING at their est more often than losing, loosen or
 drop the gate in a deep retro and say so here.
 
+**Method note (2026-09-15): exact-phrase transcript search undercounts
+disfluent real speech.** Sourcing the base rate for the Trump NC
+"Stock Market" market (Rocky Mount Dec19'25 / Myrtle Beach Aug21'26
+rally transcripts), a literal two-word search for "stock market"
+initially returned 0/2 because one transcript renders the phrase
+interrupted mid-word ("the stock ar-- market is much higher now") —
+a verbatim transcription of a real stutter. A follow-up sweep for the
+constituent words ("stock", "market", "401k") caught it, flipping the
+base rate to 2/2 and matching the market's own high price (0.94),
+which the naive 0/2 read would have contradicted by a large, wrong
+margin. When sourcing a base rate from a verbatim/disfluency-preserving
+transcript (rally speeches especially — official Fed transcripts are
+cleaned and don't show this), sweep constituent words in addition to
+the exact n-gram before concluding a term is absent.
+
 ## First bet in 13 days: the AfD Sachsen-Anhalt audit (DEEP-2026-08-24)
 
 The 2026-08-24 03:11Z cycle placed de95e5168de3 ($5 No @0.66, edge 0.05,
