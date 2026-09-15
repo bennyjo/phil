@@ -50,17 +50,10 @@
     "current read (own 0.85 vs 0.875). Added price moves for the BoE Sep 17 hike (outside-view-veto",
     "skip bc482ffb3606, own 0.20 vs ask 0.061 -- a move toward own re-opens the question) and the",
     "Xi Jinping visit (market-agrees 65f80b2eb530 at 0.90 -- a move toward No means the Taiwan",
-    "arms-sale cancellation threat is being acted on), plus a calendar entry for the BoE decision."
+    "arms-sale cancellation threat is being acted on), plus a calendar entry for the BoE decision.",
+    "Amended 2026-09-15 20:2xZ (FULL cycle, cloud): pruned the Iran Sep7 ceasefire price-move entry (0ed1d77858d7 settled LOST this cycle, RETRO-20260915-2015)."
   ],
   "price_moves": [
-    {
-      "market_id": "4168072",
-      "token_id": "69417544135807489015313328325643289050336268543893347332663964794312112787250",
-      "label": "US x Iran Effective Ceasefire by September 7? (No, open position 0ed1d77858d7, entry 0.54, superseded est No 0.40; resolves Yes if no US strike on Iranian land before Sep 15 16:00Z, No on any such strike -- a move toward No means a land strike is being reported)",
-      "move_threshold": 0.05,
-      "window_min": 60,
-      "expires": "2026-09-16T00:00:00Z"
-    },
     {
       "market_id": "3748592",
       "token_id": "21785292107581402359788738310101564722940089518133858678134395612535216449548",
