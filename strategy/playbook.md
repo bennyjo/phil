@@ -3491,6 +3491,36 @@ narrow session-specific content, consistent with the broad-phrase side
 of the say-the-word split RETRO-20260911-0624 already documented; adds
 weak supporting evidence, not a new finding.
 
+**2026-09-15 12:5xZ update (LIGHT tick, operator machine, resolve.py; 1
+`wide-spread-veto` forecast settled, plus a catch-up row).** `705c1219decd`
+is this tick's genuine settlement: F1 Italian GP safety car (raced Sep6,
+market end date Sep13), a fact-final row where the F1.com race report
+confirmed a physical Safety Car on lap 2. Declined because the spread
+(0.099) exceeded max_spread 0.06. `697a7f4f3799` (Emmys, Last Week
+Tonight) settled 2026-09-15T04:13Z and was graded narratively in
+RETRO-20260915-0414, but that commit did not extend this table - a
+violation of the 2026-08-23 same-commit rule, repaired here.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Emmys Variety Series, Last Week Tonight (`697a7f4f3799`) | 0.19 / 0.14 | Yes | +0.050 | No | **−5.00** |
+| F1 Italian GP safety car, fact-final (`705c1219decd`) | 0.99 / 0.899 | Yes | +0.091 | Yes | **+0.56** |
+
+Current mechanical ledger's wide-spread-veto line (`core/counterfactual.py
+ledger --skip-reason wide-spread-veto`): 11 settled declined forecasts, 9
+fillable CF trades, 2 refused, 6W/3L, pnl −$5.25, brier_delta −0.0788,
+held-out −$0.93 (was 9/7/2 refused/5W-2L/−$0.81/−0.0967/−$1.50). Side
+split: yes 8 rows/8 trd/6W-2L/−$0.25 (adds −$5.00 and +$0.56, was
+6/6/5W-1L/+$4.19); no 3 rows/1 trd/0W-1L/−$5.00 (unchanged). Check:
+−0.25−5.00=−5.25 ✓; 4.19−5.00+0.56=−0.25 ✓.
+
+Ruling: no boundary change at n=11/9 trades. The fact-finality subclass
+is now 4 trades, 3W/1L, +$0.65: the veto costs little on fact-final rows
+because a 0.90 ask leaves only ~$0.56 to win on a $5 stake, so a tight
+spread gate there forgoes small, near-certain gains rather than large
+ones. The −$5.00 Emmys row is a thin-edge (+0.05) judgment row the veto
+correctly kept out.
+
 **2026-09-09 update (14:2xZ resolve.py, FULL cycle, cloud; 1
 `outside-view-veto` forecast settled — the Chewy "Consumable" say-the-word
 row flagged in schedule.json for settlement grading).** `ffc3fcdcbaa6`
