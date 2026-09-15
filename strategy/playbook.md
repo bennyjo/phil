@@ -4598,6 +4598,41 @@ matches settle, the method may end up selectively useful on
 extreme-divergence instances rather than uniformly — which the existing
 >= 0.04-divergence recording filter already partially selects for.
 
+## New hypothesis: Normal-fit cross-line extrapolation for MLB totals (2026-09-15 02:4xZ)
+
+TRIGGERED cycle on two new PM markets, SD@COL (Coors Field) O/U 12.5
+(4573201) and O/U 10.5 (4573200), both created ~10min before the watch
+trigger, ~22h before first pitch. `core/odds.py odds baseball_mlb --markets
+totals` returned 6 sportsbook lines clustered at 14.5/15.0/15.5 — a full run
+higher than either PM line, and itself spread across a full run
+(14.5-15.5), consistent with early/soft pricing before starters are
+confirmed. Power-devigged each book (`strategy/tools/devig.py`), averaged
+by line (14.5: 0.518, 15.0: 0.488, 15.5: 0.428), fit a Normal(mu,sigma) to
+the 14.5/15.5 points (mu=14.70, sigma=4.39 — checked against the 15.0 point:
+predicted 0.473 vs observed 0.488, close enough to trust the shape), then
+extrapolated down to PM's lines: 12.5 → model P(Over)=0.692 vs ask 0.43
+(claimed edge 0.26); 10.5 → model P(Over)=0.831 vs ask 0.59 (claimed edge
+0.24).
+
+This is a first-contact method for MLB (no prior cross-line total
+extrapolation attempted in this book — the closest precedent is the soccer
+Poisson-derivative section above, which fits a scoreline model to devigged
+h2h rather than fitting a distribution directly to devigged totals at
+multiple lines). Both claimed edges are far past the 0.10 outside-view-veto
+boundary with no fact-final or mechanical-benchmark anchor (a self-built
+Normal fit is exactly the self-model class the veto exists to catch, not a
+carve-out candidate), and the 2-3 run gap being extrapolated (down from a
+14.5-15.5 cluster to 10.5/12.5) is a wide reach for an assumed-Gaussian
+shape when the true total-runs distribution is right-skewed and discrete.
+Declining to bet either leg — recorded as `unvalidated-method` forecasts
+only (5b6a0e52dd62 for 12.5-Over, 793b7298aec9 for 10.5-Over), per the same
+maiden-voyage discipline as the soccer hypothesis (forecast-only until an
+independent-instance bar is met; that bar isn't pre-registered yet at n=1
+instance — set it when/if this method recurs). Both settle within ~22h;
+**grade at settlement** and decide whether a second instance is worth
+seeking out, or whether one high-divergence pre-lineup game is enough
+evidence that early lines are too soft to extrapolate confidently.
+
 ## Mech second opinions: request sequencing and what the pair showed (2026-09-07 08:0xZ)
 
 Two settled instances now show the same off-chain failure shape:
