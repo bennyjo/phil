@@ -4697,6 +4697,31 @@ early win is "early book lines are soft," which is a timing edge, not
 a distribution-fit edge, and only the context column can separate
 them.
 
+**GRADED 2026-09-16 04:1xZ (RETRO-20260916-0411): game 1/6, bar still NOT
+met.** SD@COL settled: total runs landed at 11 or 12 (12.5-Over lost,
+10.5-Over won). Model-high miss confirmed on the 12.5 leg exactly where
+the pre-registered right-skew concern predicted it (est 0.69, market mid
+0.42, actual Under: model brier 0.4761 vs market brier 0.1764, dBrier
+model-mkt +0.2997 — market clearly better). The 10.5 leg hit (est 0.83,
+market mid 0.58, actual Over: model brier 0.0289 vs market brier 0.1764,
+dBrier model-mkt −0.1475 — model better, but 10.5 was already a soft bar
+given the actual total, so a hit there isn't strong confirmation of the
+fitted shape). Average leg dBrier (model−mkt) for this game: **+0.0761**
+(model underperformed the market on net). Direction-of-miss tally:
+model-high ×1 (12.5 leg — real total came in ~2.7-3.7 runs below the
+fitted mean of 14.70, squarely the "symmetric Normal overstates P(Over)
+read far below the mean" failure mode the bar was written to catch),
+hit ×1 (10.5 leg, weak evidence per above). Book-line context: 6-book
+cluster at 14.5-15.5 (~1-run spread), ~22h pre-game, starters likely
+unconfirmed at forecast time — consistent with "early lines still
+soft/wide" rather than a confirmed distribution-fit edge either way.
+No bets were placed (unvalidated-method correctly kept this
+forecast-only — $0 P&L impact from a leg that would have lost real
+stake). Still forecast-only; **5 more independent games** needed before
+the n>=6 bar is reached. No playbook policy change yet — one game is not
+a sample, but the single data point points toward the right-skew
+overstatement risk being real rather than illustrative.
+
 ## Mech second opinions: request sequencing and what the pair showed (2026-09-07 08:0xZ)
 
 Two settled instances now show the same off-chain failure shape:
