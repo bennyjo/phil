@@ -2504,6 +2504,8 @@ decision; everything else informational.
 
 **What I did instead this cycle.** Fell back to the unscreened selection per CYCLE.md step 4 (watch items + fresh-data candidates), recorded the funnel line with `screened: 300, escalated: 0, screener_batches: 15` and a `screener_note` naming the 1/15 fill, and paced the next FULL 2h out so a fresh session retries the tier.
 
+Status: ENDORSED (DEEP-2026-09-16) — PROPOSED (operator, core/screen.py; asks 1–2 recommended, ask 3 optional).
+
 ## 2026-09-15 — deep-retro status pass
 
 Full detail in journal/retros/DEEP-2026-09-15.md. Summary:
@@ -2551,3 +2553,44 @@ Full detail in journal/retros/DEEP-2026-09-15.md. Summary:
 
 **Status:** two asks now open for the operator (CI funnel-weld check,
 ODDS_API_KEY on the operator runner); everything else informational.
+
+## 2026-09-16 — deep-retro status pass
+
+Full detail in journal/retros/DEEP-2026-09-16.md. Summary:
+
+- **2026-09-15 04:1xZ screener day-batch quota refund (core/screen.py):
+  ENDORSED.** Evidence solid (15 batches charged, 1 usable out file, 280
+  `probs: null` placeholder rows appended to screener.jsonl). Asks 1–2
+  (refund-or-charge-at-collect, explicit `status: "missing"` on
+  placeholder rows) are small and correct; ask 3 (stdout fill ratio)
+  optional. Status: ENDORSED — PROPOSED (operator, core/screen.py).
+- **CI funnel-weld ask (2026-09-14): unchanged**, no new instance this
+  window (the 09-15 02:43Z TRIGGERED tick carried its funnel line).
+  Still 10 instances. Status: PROPOSED (operator).
+- **ODDS_API_KEY on operator runner (2026-09-15): RE-URGED.** Operator
+  FULL cycles still log "odds key not provisioned"; the weekly MLB devig
+  spot-check is due ~Sep 17 and lands on a cloud tick or slips. The only
+  negative-delta forecast cells with n≥9 (mlb-moneyline −0.0499 n=15,
+  commodities-touch −0.0529 n=9) are exactly the classes invisible on
+  operator ticks. Status: PROPOSED (operator).
+- **Lease writability / simultaneous-start: unchanged** (no new
+  divergence this window).
+- **Per-fold fold_brier_delta (core/counterfactual.py): unchanged** —
+  Sep 20 lands three correlated German-bracket veto rows at once;
+  having per-fold numbers before then would help. Status: PROPOSED
+  (operator).
+- **Blend bar: no recompute** (no relevant settlements).
+- **Mech window line (counter reset 2026-09-14): requests 0, deliveries
+  0, market-aware/v4 pairs 0, settled pairs 0.** Blocker unchanged:
+  PEARL_CONNECT_STORE unset on operator-machine cycles (operator setup
+  gap; Pearl 1.9.8 + Connect v0.1.4 verified ready).
+- **Deep-retro internal TODO (no operator action): playbook compaction.**
+  playbook.md is ~320KB/4,900 lines, re-read every FULL cycle. Next deep
+  retro on a zero-settlement window: move fully settled narrative
+  sections to strategy/playbook-archive.md, keep rules/gates/open
+  pre-registrations/counterfactual tables live. Deliberately NOT done
+  today (Sep 20 gradings depend on pre-registered text; no rush edit).
+
+**Status:** three asks open for the operator (screener quota refund —
+newly endorsed; CI funnel-weld; ODDS_API_KEY), plus the standing
+lease/fold-delta items; everything else informational.

@@ -4939,3 +4939,53 @@ toward finding reasons the original thesis still holds rather than
 updating fully to the market on the residual risk that justified
 staying in. No gate change from n=1; revisit if a second held position
 shows the same shape at settlement.
+
+## DEEP-2026-09-16: forecast-stream category calibration at n=637, and the research-allocation rule
+
+Full table in `core/score.py --json` → forecasts.by_category; snapshot
+recorded here because it is the first time the stream is large enough to
+rank categories rather than eyeball them. Overall: n=637, delta +0.0071,
+z −0.03 — market-flat.
+
+**Worse than market at n≥9 (delta = brier_agent − brier_market):**
+ai-model-release +0.0806 (n=31), market-microstructure +0.0750 (n=9),
+weather +0.0529 (n=33), politics-primary +0.0427 (n=14, betting already
+banned), news +0.0362 (n=15), social-media-postcount +0.0304 (n=23),
+econ +0.0292 (n=19). **Better than market at small n:** commodities-touch
+−0.0529 (n=9), mlb-moneyline −0.0499 (n=15), politics-general −0.0490
+(n=9), say-the-word −0.0243 (n=8), product-release −0.0921 (n=4). Every
+large-n cell is flat (soccer n=91 −0.0055, soccer-moneyline n=33,
+mlb-totals n=30, wnba-moneyline n=26, tennis-moneyline n=25, all within
+±0.012) — the clean-feed null generalizes: liquid sports price to noise.
+
+Allocation rule (research priority, NOT a betting gate — no floor or veto
+changes): when a FULL cycle must triage escalated candidates, prefer
+candidates in the negative-delta small-n cells above (they are where the
+stream needs n most, and where, if an edge exists, it will show first)
+over candidates in the n≥9 worse-than-market cells, which get research
+time only with a mechanical anchor (official print, transcript count,
+cross-market arithmetic). This legislates nothing about bet eligibility;
+existing gates decide that. Re-rank at the next deep retro; drop any
+"promising" cell that turns flat or positive as its n grows — at current
+n all negative deltas are within noise and this is a prioritization
+heuristic, not an edge claim.
+
+## DEEP-2026-09-16: position-holding re-check bias, pre-registered as a graded pattern
+
+RETRO-20260915-2015's second finding, hardened from a loose flag into
+something falsifiable. Pattern: an already-held position with no exit
+mechanism may bias re-checks toward reasons the thesis still holds
+rather than converging to the market (Iran 0ed1d77858d7: six
+post-correction re-checks all held own-No above market-No; market was
+closer at every checkpoint from Sep 9 on). Rule, effective now: when a
+held-to-resolution position that accumulated ≥3 re-check estimates
+settles, the settling retro must grade the re-check chain — count
+checkpoints where own est was closer to the outcome than the
+contemporaneous market price, and append one line here:
+`<ledger id>: own-closer k of m checkpoints`. Current tally: Iran
+0ed1d77858d7: own-closer 0 of 6 (post-correction chain). If the tally
+reaches 3 positions with own-closer in a minority of checkpoints,
+enact a convergence rule (re-checks that find no NEW qualifying fact
+must supersede toward the market, not hold); until then this is
+bookkeeping only. Candidates in flight: MV CDU 23e40bbbccc5 (already ≥4
+re-checks), Sweden next-PM e746d7e1ba99, Russia UR 9074e3f2fd49.
