@@ -4449,6 +4449,25 @@ that the count is speaker-only and give the per-transcript numbers.
 Threshold markets (N+ times) need the per-event count, never a pooled
 total across events.
 
+**Settlement update (2026-09-16, RETRO-20260916-2211): both this
+event's bets lost, and this is the gate's first tracked evidence.**
+`5886cf8c42b7` settled LOST and `3704ba650a69` (Warsh "Bet"/"Betting"
+Yes @0.61, est 0.70, 2/2 habit base rate shaded to 0.70) also settled
+LOST — Warsh said "bet"/"betting" zero times and "inflation" fewer
+than 20. The Inflation-20+ loss confirms the whole-transcript-vs-
+speaker-only bug above was the entire source of the apparent edge: the
+corrected speaker-only base rate (18/27, threshold cleared 1 of 2) put
+the honest estimate at 0.62, BELOW the 0.78 entry ask — had the count
+been done right at research time, this bet would never have cleared
+`min_edge` and likely would not have been placed at all. Both bets
+satisfied the base-rate-gate's sourcing requirement (quoted >=2-
+transcript frequencies), so this is the gate's first tracked
+post-enactment result: 2 of the "5 further settled utterance rows"
+review checkpoint, 0-for-2. Say-the-word BET category is now 0-for-4
+lifetime (-$20, score.py). n=2 is far too small to tighten or loosen
+the gate (mind-small-n rule) — logged here so the pending review has
+the count, not acted on yet.
+
 ## First bet in 13 days: the AfD Sachsen-Anhalt audit (DEEP-2026-08-24)
 
 The 2026-08-24 03:11Z cycle placed de95e5168de3 ($5 No @0.66, edge 0.05,
