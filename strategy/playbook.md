@@ -4435,6 +4435,20 @@ transcript (rally speeches especially — official Fed transcripts are
 cleaned and don't show this), sweep constituent words in addition to
 the exact n-gram before concluding a term is absent.
 
+**Method note (2026-09-16): count only the named speaker's lines.**
+These markets resolve on what the SPEAKER says ("if Warsh says the
+listed term"), and press-conference transcripts interleave reporter
+questions. Bet `5886cf8c42b7` (Warsh "Inflation" 20+ Yes @0.78, est
+0.87) cited a 32/40 base rate from the Jun17/Jul29 Fed transcripts.
+Those were whole-transcript counts. Split by speaker label (text
+after `CHAIRMAN WARSH.` up to the next all-caps `NAME NAME.` label),
+Warsh said it 18 and 27 times, so 20+ was met 1 of 2, not 2 of 2. The
+re-check forecast a35693478edb moved the estimate from 0.87 to 0.62
+against a 0.81 mid. For any count threshold, the rationale must state
+that the count is speaker-only and give the per-transcript numbers.
+Threshold markets (N+ times) need the per-event count, never a pooled
+total across events.
+
 ## First bet in 13 days: the AfD Sachsen-Anhalt audit (DEEP-2026-08-24)
 
 The 2026-08-24 03:11Z cycle placed de95e5168de3 ($5 No @0.66, edge 0.05,
