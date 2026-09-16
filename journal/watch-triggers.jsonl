@@ -72,3 +72,5 @@
 {"utc": "2026-09-14T15:22:41Z", "kind": "price_move", "key": "pricemove:4168072", "market_id": "4168072", "detail": "0.085 -> 0.170 (+0.085) over 59 min, threshold 0.050"}
 {"utc": "2026-09-15T02:37:29Z", "kind": "new_market", "key": "newmarket:4573201", "market_id": "4573201", "detail": "created 2026-09-15T02:28:35.508526Z, liquidity 5163 (floor 5000)"}
 {"utc": "2026-09-15T02:37:29Z", "kind": "new_market", "key": "newmarket:4573200", "market_id": "4573200", "detail": "created 2026-09-15T02:28:35.264389Z, liquidity 5142 (floor 5000)"}
+{"utc": "2026-09-16T18:22:49Z", "kind": "price_move", "key": "pricemove:2252245", "market_id": "2252245", "detail": "0.855 -> 1.000 (+0.145) over 59 min, threshold 0.050"}
+{"utc": "2026-09-16T18:22:49Z", "kind": "calendar", "key": "cal:FOMC September 2026 decision (statement 14:00 ET) - hike/hold pair 2252245/2252244, forecasts ead3094ccd48 (hike est 0.52) / a47f9db6f4b9; grade FedWatch (0.56 on Sep 4) vs Kalshi (0.505) vs PM (0.485) vs own, and the two mech reads (market-aware 0.02 price-leak, v4 0.22)", "market_id": null, "detail": "window 2026-09-16T18:00:00Z .. 2026-09-16T18:45:00Z"}
