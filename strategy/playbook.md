@@ -2303,6 +2303,17 @@ tracker + politpro seat model, bet WON, brier_delta -0.0315; see §First
 bet in 13 days for the seat-model family ruling). The carve-out stands
 as written; two instances do not widen it.
 
+**Another confirming instance of the durable bar itself (RETRO-20260916-0621):**
+RI Governor GOP primary (Sep 8, 2026), category-bar declined on both
+legs off the same Aug 3-11 poll (Pelino 37 / Guckian 17 / undecided 44,
+n=857): `1d37368ed8f2` Pelino Yes est 0.80 vs mkt 0.905 **LOST**;
+`09bc7a9861e8`/`ee25da18db9d` Guckian Yes est 0.09 vs mkt 0.098 **WON**.
+The market itself was pricing the eventual loser at 0.905 the night
+before the vote — same shape as the WI Hong/Crowley miss that founded
+this rule (large undecided share, market wrong too, not just the
+poll-derived estimate), at zero bankroll cost because the bar kept both
+legs forecast-only. No rule change; the bar keeps calling this correctly.
+
 ## Outside-view veto: settled counterfactual ledger (DEEP-2026-08-15)
 
 Per-row fill arithmetic over ALL settled `outside-view-veto` forecast rows
@@ -3521,6 +3532,33 @@ spread gate there forgoes small, near-certain gains rather than large
 ones. The −$5.00 Emmys row is a thin-edge (+0.05) judgment row the veto
 correctly kept out.
 
+**2026-09-16 06:2xZ update (LIGHT tick, cloud, resolve.py; 1
+`wide-spread-veto` forecast settled — the third sibling in this week's
+Israel x Lebanon "diplomatic meeting by <date>" family, see
+RETRO-20260916-0621).** `7d43ec49805b` (Israel x Lebanon by-Sep15,
+supersedes `cea6c0cc22f9`): own 0.75 vs Yes ask 0.90 (No ask 0.19,
+implied No-side edge 0.06), declined because spread 0.09 exceeded
+max_spread 0.06. Settled **Yes** — the declined No-side counterfactual
+trade **loses**.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Israel x Lebanon by-Sep15 (`7d43ec49805b`) | 0.75 / 0.855 | No | +0.060 | Yes | **−5.00** |
+
+Current mechanical ledger's wide-spread-veto line (`core/counterfactual.py
+ledger --skip-reason wide-spread-veto`): 12 settled declined forecasts,
+10 fillable CF trades, 2 refused, 6W/4L, pnl −$10.25, brier_delta
+−0.0688, held-out −$5.93 (was 11/9/2 refused/6W-3L/−$5.25/−0.0788/
+−$0.93). Side split: yes 8 rows/8 trd/6W-2L/−$0.25 (unchanged); no 4
+rows/2 trd/0W-2L/−$10.00 (adds this loss, was 3/1/0W-1L/−$5.00). Check:
+−0.25−10.00=−10.25 ✓.
+
+Ruling: no boundary change at n=12/10 trades. This is the same shape as
+the two outside-view-veto siblings settled the same tick (own estimate
+below market on a multi-channel diplomatic-contact process, market
+right); see the outside-view-veto section below for the cross-family
+read.
+
 **2026-09-09 update (14:2xZ resolve.py, FULL cycle, cloud; 1
 `outside-view-veto` forecast settled — the Chewy "Consumable" say-the-word
 row flagged in schedule.json for settlement grading).** `ffc3fcdcbaa6`
@@ -3646,6 +3684,34 @@ the sourced nowcast, while the losing leg's edge rested on the
 unsourced sd — the same split RETRO-20260911-1615's gate-2 note found
 across the whole cluster. Supports gate 2 as written; no boundary
 change.
+
+**2026-09-16 06:2xZ update (LIGHT tick, cloud, resolve.py; 2 rows from
+the Israel x Lebanon "diplomatic meeting by <date>" family settled, both
+No-side timeline declines — see RETRO-20260916-0621 for the full family
+read across all 5 settled siblings):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Israel x Lebanon by-Sep18 (9894fc8df165) | 0.55 / 0.835 | No | +0.260 | Yes | **−5.00** |
+| Israel x Lebanon by-Sep16 (459635ab318c) | 0.62 / 0.935 | No | +0.281 | Yes | **−5.00** |
+
+Mechanical ledger after this batch (`core/counterfactual.py ledger
+--skip-reason outside-view-veto`): 132 settled declined forecasts, 124
+fillable CF trades, 90 events, 53W/71L, pnl +$95.30, brier_delta
++0.0296, held-out +$123.84 (was 130/122/88/53W-69L/+$105.30/+0.0276/
++$134.12 before this batch). Side split: yes 52 rows/52 trd/16W-36L/
+−$13.56 (unchanged this batch); no 72 rows/72 trd/37W-35L/+$108.86
+(adds both −$5.00 losses, was 70/70/37W-33L/+$118.86). Check:
+−13.56+108.86=95.30 ✓.
+
+Ruling: both declines correct in isolation (the market beat the
+discounted timeline estimate both times), but this is the third sibling
+in the same underlying process to do so this week (the third,
+`7d43ec49805b`, is a wide-spread-veto row extended in that section
+below) — worth a deep retro look at whether "multiple parallel qualifying
+channels" markets deserve a higher outside-view floor, but n=3 from one
+process is far short of the relaxation fork's 40-event bar and that fork
+is deep-retro-only. No boundary change today.
 
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
