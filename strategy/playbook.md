@@ -4468,6 +4468,21 @@ lifetime (-$20, score.py). n=2 is far too small to tighten or loosen
 the gate (mind-small-n rule) — logged here so the pending review has
 the count, not acted on yet.
 
+**Settlement update (2026-09-17, RETRO-20260917-0211): two gated-out rows
+settle, first genuine blocked-edge win.** Trump Gastonia NC rally Sep16:
+`fbf9bb472258` ("Crime"/"Criminal" 15+, unvalidated-method, est 0.55 vs ask
+0.43 — a ~0.12 edge blocked purely for lacking a quoted per-speech
+frequency, thematic-only reasoning) settled **Yes** — the first
+post-enactment case of a gated-out row that would have been a winning bet
+had the gate not applied. `e606426411cc` ("Communist"/"Communism" 5+,
+unvalidated-method) also settled Yes but is not informative for the gate:
+est 0.65 was already below the 0.775 market, so no edge existed
+independent of the gate. Running tally: n=4 of the pre-registered 5-row
+checkpoint (2 gate-satisfied bets LOST, 2 gated-out forecasts WON — one
+with a real blocked edge, one without). Still one row short and n=4 is too
+small to act (mind-small-n rule); the next settled utterance row completes
+the checkpoint and should force an actual keep/loosen/drop call.
+
 ## First bet in 13 days: the AfD Sachsen-Anhalt audit (DEEP-2026-08-24)
 
 The 2026-08-24 03:11Z cycle placed de95e5168de3 ($5 No @0.66, edge 0.05,
