@@ -3713,6 +3713,34 @@ channels" markets deserve a higher outside-view floor, but n=3 from one
 process is far short of the relaxation fork's 40-event bar and that fork
 is deep-retro-only. No boundary change today.
 
+**2026-09-16 22:11Z update (FULL cycle, operator machine; resolve.py
+settled 7 declined-side rows this window — the Sept15 box-office bracket
+and the full Warsh Sep16 FOMC-presser word-count batch, 5 outside-view-veto
++ 1 wide-spread-veto):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Spider-Man overtake Star Wars by Sep15 (6eb52610fb5c) | 0.68 / 0.885 | No | +0.170 | Yes | **−5.00** |
+| Warsh "Anchor"/"Anchored" (fd03d4763d62) | 0.20 / 0.325 | No | +0.120 | Yes | **−5.00** |
+| Warsh "Inflation" 40+ (340afae4c4b8) | 0.08 / 0.215 | No | +0.130 | No | **+1.33** |
+| Warsh "Echo" (5ed39e44acd1) | 0.75 / 0.475 | Yes | +0.270 | No | **−5.00** |
+| Warsh "Scenario" (03962bee9d8d) | 0.30 / 0.465 | No | +0.150 | No | **+4.09** |
+| Warsh "Luck"/"Lucky" (e94a328d4e7f) | 0.20 / 0.37 | No | +0.150 | No | **+2.69** |
+| Warsh "Labor Force" (0dd29ac81ce4, wide-spread-veto) | 0.30 / 0.47 | No | +0.140 | No | **+3.93** |
+
+Net this batch: outside-view-veto **−1.94u** (2W/4L: Anchor/Echo/Spider-Man
+lost, Inflation-40+/Scenario/Luck won); wide-spread-veto **+3.93u** (1W/0L,
+Labor Force). Ruling: the Warsh press-conference batch splits almost
+evenly (3W/3L on the outside-view-veto legs) rather than confirming or
+refuting the veto boundary at this n — same "confident middle, thin
+tails" shape noted elsewhere in this ledger for point-estimate Gaussians
+on a single transcript. Mechanical ledger is the record going forward
+(`core/counterfactual.py ledger --skip-reason outside-view-veto` /
+`--skip-reason wide-spread-veto`); this table entry satisfies the
+per-row documentation duty (reconcile.py check 5) without re-deriving
+the running hand totals, per the 2026-09-06 operator note above that
+this file's totals are narrative only.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
