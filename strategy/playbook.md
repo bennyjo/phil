@@ -375,6 +375,15 @@ elsewhere in the record; treat any such reading as a modeling gap, not
 alpha, and decline regardless of size. Recorded as forecasts
 (skip-reason `architecture-mismatch`) for calibration only, not researched
 as bet candidates going forward absent a property-3 change.
+Threshold-close variants ("SPY closes above $X on <date>") are the same
+family and take the same label. RETRO-20260917-2050: forecast
+`ddab4cfd4c5b` (SPY > $765 on Sep 17, settled No) was filed `no-edge` in
+category `commodities`, and its note quoted the screener's stale mid
+(0.095) while the record-time book was 0.14/0.15 - against the live book
+the same 0.09 estimate read as a 0.05 No-side "edge" on a $683 book, the
+exact shape this rule declines. Label these `architecture-mismatch` /
+`commodities-touch` like the Sep 4 row `d810e5c5d49f`, and quote the
+record-time bid/ask in the note, never the screener mid.
 
 ## Funnel instrumentation (DEEP-2026-08-05, operator mandate)
 
