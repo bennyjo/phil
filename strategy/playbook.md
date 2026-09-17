@@ -4532,6 +4532,36 @@ with a real blocked edge, one without). Still one row short and n=4 is too
 small to act (mind-small-n rule); the next settled utterance row completes
 the checkpoint and should force an actual keep/loosen/drop call.
 
+**Checkpoint correction and verdict (2026-09-17, RETRO-20260917-0413): the
+n=4 count above undercounted — `ce38242f9b07` ("Software", Warsh presser,
+unvalidated-method) settled LOST at the exact same timestamp
+(2026-09-16T22:11:54Z) as the Inflation/Bet-Betting bets and should have
+been in the tally from RETRO-20260916-2211 onward; it never got listed
+there. Correct post-enactment count of gate-governed rows (skip_reason
+`bet` or `unvalidated-method`) is n=6, with the 5-row checkpoint actually
+completed at Communist (RETRO-20260917-0211), one retro earlier than
+flagged. **KEEP the gate, verdict as of n=6:** 2 gate-satisfied bets LOST
+(Inflation, Bet/Betting — root cause already diagnosed as a
+whole-transcript-vs-speaker-only counting bug, not a gate design flaw);
+4 gated-out (unvalidated-method) rows split exactly 2 WON (Crime,
+Communist) / 2 LOST (Software, Six Seven) — a wash, not "winning more
+often than losing," so the playbook's own loosen criterion is not met.
+Of those four, only two are actually informative about a blocked YES-side
+edge (the gate only restricts YES bets): Software (est 0.30 vs ask 0.22,
+a real ~0.08 Yes edge blocked, settled No — gate correctly avoided a
+loser) and Crime (real ~0.12 Yes edge blocked, settled Yes — gate cost a
+winner). Communist and Six Seven had no blocked YES edge at all (both
+est below market on the Yes side; Six Seven's only edge was a thin
+at-the-floor No-side edge, which the gate never restricts, so its
+`unvalidated-method` skip_reason is a mislabel — it was declined on the
+separate at-the-floor-noise rule, not the sourcing gate). Net informative
+signal: 1-for-2 correct blocks, from two different events (Warsh presser,
+Trump rally) — not remotely enough to overturn a cheap sourcing-discipline
+gate, and the split outcome gives no directional push either way. No
+change to the gate. Retire this checkpoint; future review needs a fresh
+n and should count only genuinely blocked-YES-edge rows, not every
+unvalidated-method row regardless of which side had the edge.
+
 ## First bet in 13 days: the AfD Sachsen-Anhalt audit (DEEP-2026-08-24)
 
 The 2026-08-24 03:11Z cycle placed de95e5168de3 ($5 No @0.66, edge 0.05,
