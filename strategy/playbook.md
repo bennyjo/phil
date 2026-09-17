@@ -5296,3 +5296,58 @@ enact a convergence rule (re-checks that find no NEW qualifying fact
 must supersede toward the market, not hold); until then this is
 bookkeeping only. Candidates in flight: MV CDU 23e40bbbccc5 (already ≥4
 re-checks), Sweden next-PM e746d7e1ba99, Russia UR 9074e3f2fd49.
+
+## Two reachable benchmarks found on first contact (2026-09-17 16:0xZ, FULL cycle, operator machine)
+
+Method notes, not rule changes: no gate, floor or veto moves until the rows
+below settle. Evidence is the research record of this cycle (forecast ids
+inline); grading duties sit in the schedule.json watch items.
+
+**1. Commodity touch ladders: read the Active Month clause before the
+spot price.** The WTI "hit (HIGH/LOW) $X in September" rules define the
+Active Month as rolling to the next contract at the start of the second
+trading session before the front contract's last trading session. For
+September 2026 that is 22:00Z Sep 17 (Oct LTD Tue Sep 22), and the curve
+was in steep backwardation: Oct 100.78, Nov 96.27, Dec 92.12
+(oilprice.com). From the headline ~$100.5 "spot", LOW $95 at 0.81 and
+LOW $90 at 0.50 look absurd; against the Nov contract they are fair. With
+a SOURCED vol input (OVX 57.49, FRED OVXCLS - the first non-guessed vol
+in the commodities-touch cell, which the touch-family ruling requires) a
+martingale reflection model on S=96.27 with 9 sessions left reproduced
+six of seven PM rungs within 0.05 (LOW90 0.553 vs 0.50, LOW85 0.268 vs
+0.23, HIGH105 0.420 vs 0.43, HIGH110 0.205 vs 0.20). The market prices
+the roll and prices at implied vol. The one rung off the model was LOW95
+(0.909 vs ask 0.81). Forecast-only under the touch-family gate
+(18672a24a234, 98134efdddcf, 0ad60d107c54, 52fac91e76d7, 41c92e76901c).
+The Aug 18 first test (8 legs, guessed 38pct vol, front-month spot) never
+read this clause; any re-read of those rows should check whether a roll
+fell inside that window before blaming the vol input.
+
+**2. PCE brackets: the Fed chair's presser opening statement carries a
+staff estimate.** After CPI and PPI, the opening statement gives the
+staff translation to 12-month PCE (Sep 16: total "around 3.6 percent",
+core "about 3.2 percent"). It is a named, dated, primary source, and it
+is reachable from this runner (the PDF needs the stdlib zlib extraction;
+poppler is absent). On first contact it sat 0.2 below the Cleveland Fed
+nowcast on BOTH total and core (3.78 / 3.40), and bank trackers split the
+same way (GS 3.16 vs BofA 3.4), attributed to the annual revisions
+landing in the same BEA release. PM's modal bucket was 3.3, the July
+print, which neither camp forecasts. One standard-floor bet, 3.3 No
+(8894592b953a, edge 0.08); the 3.2 Yes leg stayed vetoed (edge 0.13,
+spread 0.10) because the staff estimate's hit rate is recalled, not
+sourced - gate 2's variance clause, unchanged. If the revision camp is
+right at settlement, the next step is to source that hit rate (chair
+statement vs printed value, 2024 on) so the carve-out can be tested on
+it; if wrong, record that "running at about" is looser than the
+Powell-era formula and stop treating it as a staff point estimate.
+
+**Mech, same cycle (3 market-aware + 1 paired v4, all off-chain first
+try, context delivered: `market_prob_seen` equalled the sent price on all
+three).** The tool's retrieval missed the decisive current fact on every
+question: the Warsh/GS/BofA numbers (PCE), the revision variance (UMich,
+p_independent 0.85 on "prelim is inside the bracket"), and the November
+contract price (WTI, although the prompt spelled out the roll).
+Polymarket-derived pages ranked in the serper top 7 on two of three (UMich: June
+event page #1 and a stale "27%" snippet; WTI: event page #1, laikalabs
+"76%", chanceindex), price-leak instances five and six. Grade at
+settlement; nothing to act on yet.

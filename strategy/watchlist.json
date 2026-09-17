@@ -52,7 +52,8 @@
     "Xi Jinping visit (market-agrees 65f80b2eb530 at 0.90 -- a move toward No means the Taiwan",
     "arms-sale cancellation threat is being acted on), plus a calendar entry for the BoE decision.",
     "Amended 2026-09-15 20:2xZ (FULL cycle, cloud): pruned the Iran Sep7 ceasefire price-move entry (0ed1d77858d7 settled LOST this cycle, RETRO-20260915-2015).",
-    "Amended 2026-09-17 11:2xZ (TRIGGERED cycle, cloud): pruned two watch.py-reported expired entries (FOMC Sep16 calendar, past window and already graded; Fed hike price_move 2252245, past expires). Also pruned the BoE calendar entry and its paired price_move (market 2661520) now that the decision is out (WebFetch-confirmed: held at 3.75pct, 6-3, same three hawks Pill/Greene/Mann as July -- matches the expected split exactly; PM now 0.0005/0.9995, fully resolved) -- forecast bc482ffb3606 still open pending official UMA settlement, grading deferred to the retro that settles it; no further watch value in either entry."
+    "Amended 2026-09-17 11:2xZ (TRIGGERED cycle, cloud): pruned two watch.py-reported expired entries (FOMC Sep16 calendar, past window and already graded; Fed hike price_move 2252245, past expires). Also pruned the BoE calendar entry and its paired price_move (market 2661520) now that the decision is out (WebFetch-confirmed: held at 3.75pct, 6-3, same three hawks Pill/Greene/Mann as July -- matches the expected split exactly; PM now 0.0005/0.9995, fully resolved) -- forecast bc482ffb3606 still open pending official UMA settlement, grading deferred to the retro that settles it; no further watch value in either entry.",
+    "Amended 2026-09-17 16:0xZ (FULL cycle, operator machine): added the core PCE YoY 3.3pct price move (new open position 8894592b953a, No @0.68) and calendar entries for the UMich final (Sep 25) and the BEA August PCE release (Sep 30)."
   ],
   "price_moves": [
     {
@@ -86,6 +87,14 @@
       "move_threshold": 0.05,
       "window_min": 60,
       "expires": "2026-09-25T00:00:00Z"
+    },
+    {
+      "market_id": "3938031",
+      "token_id": "39400114973934221253761872304842829808714135241326313029175177821282061696710",
+      "label": "Will Core PCE YoY be 3.3% in August? (No, open position 8894592b953a, entry 0.68, est No 0.76; a move toward Yes means a dated consensus or a bank tracker has settled on 3.3 -- re-read the camps (Fed staff/GS ~3.2 vs BofA/Cleveland ~3.4); BEA release Sep 30 12:30Z)",
+      "move_threshold": 0.05,
+      "window_min": 60,
+      "expires": "2026-09-30T12:00:00Z"
     }
   ],
   "new_market": {
@@ -97,6 +106,16 @@
     {
       "label": "SNB September 2026 policy rate decision - market 4443883 no-change Yes @0.885, forecast cf76e5d0536c (own 0.90, no-edge, thin book $315 liquidity) -- grade the persistent-hold base rate against the actual print, and note if a genuine dated 2026 poll ever surfaces (this cycle's WebSearch kept returning a stale 2025-vintage recycled-headline poll, discarded)",
       "fire_at": "2026-09-24T00:00:00Z",
+      "window_min": 45
+    },
+    {
+      "label": "UMich September 2026 FINAL sentiment (14:00Z) - market 4386146 bracket 46.0-48.9 Yes @0.605, forecast 3904e426ee6d (own 0.64, market-agrees; prelim 47.8) -- grade own revision-sd read (0.64) vs market (0.605) vs mech market-aware (0.80, ignored revision variance)",
+      "fire_at": "2026-09-25T14:00:00Z",
+      "window_min": 45
+    },
+    {
+      "label": "BEA August 2026 Personal Income and Outlays (12:30Z) - core PCE YoY, bet 8894592b953a No on 3.3pct @0.68 (forecast 60a82af6f2e6) plus forecast-only siblings 9f05a589aba3 (3.2 Yes 0.49, vetoed) / 66fb88403435 / 8356b12268ee and MoM 9a871262d874 -- grade the two-camp read: Fed staff ~3.2 + GS 3.16 vs BofA 3.4 + Cleveland 3.40 vs PM modal 3.3",
+      "fire_at": "2026-09-30T12:30:00Z",
       "window_min": 45
     }
   ]
