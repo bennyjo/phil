@@ -2594,3 +2594,54 @@ Full detail in journal/retros/DEEP-2026-09-16.md. Summary:
 **Status:** three asks open for the operator (screener quota refund —
 newly endorsed; CI funnel-weld; ODDS_API_KEY), plus the standing
 lease/fold-delta items; everything else informational.
+
+## 2026-09-17 04:22Z — watch.py new_market trigger fires on banned-shape sub-daily crypto
+
+TRIGGERED cycle (key `newmarket:4631132`) fired on "Will XRP dip to $1.30 on
+September 17?" (gamma id 4631132, created 2026-09-17T04:00:14Z, slug
+`will-xrp-dip-to-1pt3-on-september-17-2026`). This is a same-day crypto
+price-threshold market — exactly the shape `strategy/screener-filters.json`'s
+`crypto_updown`/`crypto_bracket` entries exist to drop before it reaches a
+screening subagent, and exactly the shape `strategy/playbook.md` §Avoid
+(referencing the protected config) says to skip outright. It's also
+mechanically unbettable regardless: gamma showed bestBid/bestAsk 0.999/1.0
+(outcomePrices Yes 0.9995) with `umaResolutionStatus: "proposed"` already —
+above `max_entry_price` 0.95 on Yes and the mirror No price (~0.0005) below
+`min_entry_price` 0.02, so `core/ledger.py place` would reject either side on
+protected caps alone even if I wanted in.
+
+Cause: `core/watch.py check_new_markets` (protected) filters new-market
+candidates only against `config/protected.json`'s
+`banned_question_patterns` — three regexes, all matching literal "Up or
+Down" phrasing. It has no access to `strategy/screener-filters.json`'s
+broader shape bans (`crypto_updown`, `crypto_bracket`), which live at the
+screen.py stage and only apply to the step-4 broad scan, not to watch.py's
+independent gamma query. Those two filter entries were themselves added
+earlier THIS SAME UTC day (2026-09-17 00:1xZ cycle, per their own notes) for
+the identical shape leaking past scan/screen — so the shape-ban knowledge
+already exists on the agent side, it just isn't visible to watch.py's
+separate new-market path.
+
+Cost so far: one wasted TRIGGERED cycle (1 of the 6/day fire budget, 1 of 3
+new-market fires this run) on a candidate that could never clear either the
+shape ban or the price-band caps. Low-frequency (sub-daily crypto markets
+are a small, bursty slice of gamma's newest-first feed) but will recur every
+time one lists with liquidity above the watchlist floor.
+
+Ask: `core/watch.py`'s `check_new_markets` is protected code, so the fix is
+the operator's call. Two options that don't require loosening anything: (a)
+teach `banned_patterns()` to also load (or duplicate) the shape regexes from
+`strategy/screener-filters.json`'s crypto entries, so a new filter added
+there covers watch.py too without a protected-file edit each time; or (b)
+add a narrow protected-side regex for same-day crypto threshold/bracket
+questions (e.g. "dip to $", "reach $", "between $X and $Y" on BTC/ETH/XRP/SOL
+etc.) alongside the existing "Up or Down" patterns. (a) stays in sync
+automatically; (b) is simpler but needs re-editing whenever a new phrasing
+variant shows up, same as the screener-filters.json entries did twice today.
+No proposal to loosen price/liquidity floors — those aren't the problem
+here, the shape is.
+
+This cycle: no bet, no retro (nothing settled); forecast recorded
+(`04a52f6a68c5`, est 0.998, skip-reason market-agrees, category
+crypto-touch) since a concrete honest estimate was formed before checking
+the price.

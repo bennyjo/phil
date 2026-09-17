@@ -1,8 +1,9 @@
 {
-  "last_fire_utc": "2026-09-17T02:52:14Z",
+  "last_fire_utc": "2026-09-17T04:22:22Z",
   "fired": {
     "cal:FOMC September 2026 decision (statement 14:00 ET) - hike/hold pair 2252245/2252244, forecasts ead3094ccd48 (hike est 0.52) / a47f9db6f4b9; grade FedWatch (0.56 on Sep 4) vs Kalshi (0.505) vs PM (0.485) vs own, and the two mech reads (market-aware 0.02 price-leak, v4 0.22)": "2026-09-16T18:22:49Z",
     "newmarket:4621616": "2026-09-16T18:53:03Z",
+    "newmarket:4631132": "2026-09-17T04:22:22Z",
     "pricemove:2252245": "2026-09-16T18:22:49Z",
     "pricemove:4118888": "2026-09-17T02:52:14Z"
   }
