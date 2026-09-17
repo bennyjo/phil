@@ -3802,6 +3802,33 @@ instance RETRO-20260822-1314), likely because the settling retro was
 absorbed in the utterance-checkpoint correction; the rule stands as
 written and needs no sharpening — it was not followed, not unclear.
 
+**2026-09-17 14:15Z REPAIR + update (LIGHT tick, cloud; resolve.py settled
+1 new outside-view-veto forecast — BoE 25bp hike, `bc482ffb3606`, the
+pre-registered discretionary-vote-veto test — and reconciling found 3
+more from the 06:13:08Z Sweden Liberals settlement batch that never got a
+table row; see RETRO-20260917-1415 for the full read):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Sweden Liberals re-forecast 1 (07a026bde227) | 0.23 / 0.49 | No | +0.260 | Yes | **−5.00** |
+| Sweden Liberals re-forecast 2 (fb5dc4ef2365) | 0.12 / 0.47 | No | +0.350 | Yes | **−5.00** |
+| Sweden Liberals re-forecast 3 (42edbef0f086) | 0.27 / 0.049 | No | +0.221 | Yes | **−5.00** |
+| BoE 25bp hike (bc482ffb3606) | 0.20 / 0.061 | Yes | +0.139 | No | **−5.00** |
+
+Mechanical ledger after this batch (`core/counterfactual.py ledger
+--skip-reason outside-view-veto`): 143 settled declined forecasts, 135
+fillable CF trades, 99 events, 56W/79L, pnl +$63.41, brier_delta +0.0370,
+held-out +$67.42 (was 139/131/56W-75L/+$83.41/+0.0315/+$89.19 before this
+batch). Ruling: no boundary change — three of the four rows are re-reads
+of the same already-graded Sweden Liberals event (consistent with its
+settled bet `b063db346052`, all No-side declines lost together), and the
+BoE row is a clean confirmation that a discretionary MPC vote reads like
+the self-model veto class, not a special case: the market (and the
+Reuters poll it tracked) beat both the own estimate and the weaker LSEG/
+SONIA secondary-sourced benchmarks that motivated the claimed edge. This
+entry satisfies the per-row documentation duty without re-deriving the
+running hand totals, per the 2026-09-06 operator note above.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
