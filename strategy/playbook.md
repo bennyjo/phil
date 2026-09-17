@@ -140,6 +140,25 @@ Rank every candidate by WHY the market should be wrong, strongest first:
    hypothetical. Unchanged at n=2; the blocked 0.02–0.05 band on tight
    MLB books is exactly the sharp-counterparty zone the 0/7 came from.
 
+   **Recreational/political bookmaker tables are a weaker counterparty
+   than sports sharp books — don't treat them as the same evidence tier
+   (2026-09-17, `b063db346052` settled LOST).** The sports-book-devig
+   record above (2W/0L post-fix) is built on liquid, continuously-updated
+   sharp books (MLB/soccer/WNBA feeds via `core/odds.py`). The Liberals
+   entry instead devigged "ten Swedish bookmakers over/under 4.0" scraped
+   via WebSearch — the rationale itself flagged this table as undated and
+   the books as recreational (8pct overround) before betting. Settlement
+   confirms the flagged risk: PM had already repriced 0.375→0.50 on Sep 4
+   in anticipation of the Novus 4.3 poll (confirmed by the outcome — L
+   cleared decisively at 5.40%), while the scraped book table and the
+   devig built on it lagged that move. A book-devig edge on an election/
+   political market needs either a dated, refreshable book source (not a
+   one-off WebSearch scrape) or an explicit check for recent poll-driven
+   PM moves the books haven't caught up to yet; absent both, treat the
+   edge as sports-book-devig treats a stale line (§thin-or-stale-book
+   caution above), not as a clean sharp-book read. n=1 for this specific
+   failure mode — a caution to weigh at entry, not yet a ban.
+
 Info-race status (updated DEEP-2026-08-12): the class is **2W/4L by
 decision** — wins on mechanical/final facts (`2dc417ed68f6` official
 print, `1e8dec1078ba` cross-market), losses on provisional or
