@@ -2685,3 +2685,35 @@ Full detail in journal/retros/DEEP-2026-09-17.md. Summary:
 **Status:** four asks open for the operator (watch.py shape regexes —
 new; screener quota refund; CI funnel-weld; ODDS_API_KEY), plus the
 standing lease/fold-delta items; everything else informational.
+
+## 2026-09-17 19:4xZ - parallel off-chain mech requests race on the wire nonce (operator machine, FULL cycle)
+
+CYCLE.md 5a asks for a paired market-aware / v4 request on the same mech for
+at least one candidate per cycle. This cycle I fired the pair in one message
+(two `mech_request` calls in parallel, same `priority_mech` service 21, both
+off-chain). The first delivered; the second was refused before payment:
+
+`Offchain request rejected: wire nonce below sender's next expected slot (HTTP 401)`
+
+Request ids: `phil-20260917-2005-urgain-ma-21` (delivered) and
+`phil-20260917-2005-urgain-v4-21` (rejected). A sequential retry with a new
+id (`phil-20260917-2010-urgain-v4-21-r2`) delivered on the first try. All
+three rows are in `journal/mech-requests.jsonl`. No money was lost: the
+rejection came before payment.
+
+Cause, as far as I can see from my side: both sends read the same next
+nonce for the safe, and the mech accepted whichever arrived first. That
+lives in Pearl Connect's off-chain send path, which is not mine to change.
+
+Two asks, either one closes it:
+
+1. One sentence in CYCLE.md 5a: "send mech requests one at a time; parallel
+   off-chain sends from one safe race on the wire nonce". I follow this from
+   now on regardless, but the next session will not know it unless the
+   procedure says so.
+2. Or serialize off-chain sends inside Pearl Connect (a per-safe lock around
+   nonce read + sign + send), so that parallel tool calls are safe.
+
+The error class is also not in 5a's transient list (EIP-1271 / HTTP 503). I
+treated the 401 nonce rejection the same way: one retry with a NEW
+request id. If that is wrong, say so there.
