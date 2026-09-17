@@ -3762,6 +3762,27 @@ re-deriving the running hand totals, per the 2026-09-06 operator note.
 No boundary change at this n — two more same-family confirmations, not a
 new failure mode.
 
+**2026-09-17 deep-retro REPAIR (DEEP-2026-09-17): one veto settlement
+missed its same-commit table entry.** `3a539d9be02d` (Trump NC rally
+"Furniture", wide-spread-veto, live ask 0.74/bid 0.40 at record) settled
+on the 2026-09-17 04:1xZ LIGHT tick and RETRO-20260917-0413 graded it
+narratively, but the same commit (9acd1e8) did not extend this table —
+the exact violation shape the schedule.json `_comment` rule (DEEP-2026-08-23,
+re-affirmed DEEP-2026-09-02) names as "a violation on its face". Row,
+booked here one deep-retro late:
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Trump NC "Furniture" (3a539d9be02d, wide-spread-veto) | 0.15 / 0.57 | No | +0.250 | No | **+3.33** |
+
+Mechanical ledger after this row (`core/counterfactual.py ledger
+--skip-reason wide-spread-veto`, verified this retro): 15 rows/13 trd/
+8W-5L/−$7.99/dBrier −0.0684/held-out −$3.67; side split yes 8/8/6W-2L/
+−$0.25, no 7/5/2W-3L/−$7.74. The miss is an isolated recurrence (last
+instance RETRO-20260822-1314), likely because the settling retro was
+absorbed in the utterance-checkpoint correction; the rule stands as
+written and needs no sharpening — it was not followed, not unclear.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
@@ -4562,6 +4583,21 @@ change to the gate. Retire this checkpoint; future review needs a fresh
 n and should count only genuinely blocked-YES-edge rows, not every
 unvalidated-method row regardless of which side had the edge.
 
+**Fresh checkpoint, formalized (DEEP-2026-09-17).** Counting starts
+empty as of 2026-09-17. A row counts only if BOTH: (1) skip_reason is
+`unvalidated-method` (or a bet the gate passed), AND (2) the YES side
+had a realizable edge at record time (est > ask, since the gate only
+restricts Yes bets). Current qualifying tally from the retired
+checkpoint's informative pair, carried for reference but NOT counted:
+Software (correct block), Crime (costly block) — 1-for-2. Review fires
+at 5 NEW qualifying rows; the settling retro of the 5th row owes a
+keep/loosen/drop call with counterfactual P&L on the blocked rows, same
+arithmetic as the veto tables. Bet-side context the review must weigh:
+say-the-word bets are 0-for-4 lifetime (−$20, score.py), both
+post-gate losses root-caused to the whole-transcript counting bug the
+speaker-only method note has since fixed — the gate has not yet been
+tested with correct counts.
+
 ## First bet in 13 days: the AfD Sachsen-Anhalt audit (DEEP-2026-08-24)
 
 The 2026-08-24 03:11Z cycle placed de95e5168de3 ($5 No @0.66, edge 0.05,
@@ -5162,6 +5198,38 @@ existing gates decide that. Re-rank at the next deep retro; drop any
 "promising" cell that turns flat or positive as its n grows — at current
 n all negative deltas are within noise and this is a prioritization
 heuristic, not an edge claim.
+
+**DEEP-2026-09-17 re-rank (n=750 settled, overall delta +0.0086, window
+added 58 settlements dominated by two correlated word-count events —
+Warsh FOMC presser 21 rows, Trump Gastonia rally ~10 rows).** Moves
+since yesterday's snapshot, per the re-rank duty above:
+
+- **DROPPED from the promising list: say-the-word** −0.0243 (n=8) →
+  −0.0012 (n=42). The Warsh/Gastonia batch flattened it exactly as the
+  rule anticipated ("drop any promising cell that turns flat as its n
+  grows"). Worse, the window's mid-priced interpretive slice (market
+  0.2–0.8, n=17) ran +0.0290 AGAINST us — point-estimate word-frequency
+  models on mid-range words lose to the market; the flat aggregate is
+  carried by near-certain habit words priced ≥0.85 where we match the
+  market. Research priority: only mechanical, margin-clearing threshold
+  counts (speaker-only, per the method note), not mid-range presence
+  guesses. n caveat: the 31 window rows come from 2 events, so the
+  mid-range read is 2 correlated samples, not 17 independent ones.
+- **DROPPED: product-release** −0.0921 (n=4) → +0.0631 (n=5). One
+  settlement flipped the sign — which is the proof it was noise.
+- **ADDED (candidate, same caveats): econ-rates** −0.0322 (n=22), the
+  best negative delta at n≥20 after the FOMC cluster settled clean.
+  Honest deflator: most of those rows are market-agrees/no-edge skips
+  clustered on a handful of Fed events, so the cell is calibration of
+  agreement, not evidence of disagreement edge.
+- **Holding:** mlb-moneyline −0.0499 (n=15), commodities-touch −0.0461
+  (n=10), politics-general −0.0443 (n=11).
+- **Worse-than-market cells hardened:** news +0.0362 (n=15) → +0.0581
+  (n=33) — the Israel×Lebanon diplomatic-meeting family settled Yes
+  against every own-No lean, same multi-channel-process shape as prior
+  losses; ai-model-release +0.0607 (n=40), weather +0.0566 (n=34),
+  market-microstructure +0.0612 (n=11) unchanged in kind. The
+  mechanical-anchor requirement for research time in these cells stands.
 
 ## DEEP-2026-09-16: position-holding re-check bias, pre-registered as a graded pattern
 

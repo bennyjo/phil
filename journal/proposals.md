@@ -2645,3 +2645,43 @@ This cycle: no bet, no retro (nothing settled); forecast recorded
 (`04a52f6a68c5`, est 0.998, skip-reason market-agrees, category
 crypto-touch) since a concrete honest estimate was formed before checking
 the price.
+
+**Status (DEEP-2026-09-17): ENDORSED → operator, option (a) preferred.**
+Verified: the fire was doubly wasted (shape-banned AND ask 0.999 above
+`max_entry_price`, so unbettable on protected caps alone). Option (a) —
+`banned_patterns()` additionally loading the crypto shape regexes from
+`strategy/screener-filters.json` — keeps one source of truth; the shape
+mutated twice within this single UTC day (up/down → bracket → dip-to),
+which is exactly the maintenance burden option (b) would re-create on
+the protected side.
+
+## 2026-09-17 — deep-retro status pass
+
+Full detail in journal/retros/DEEP-2026-09-17.md. Summary:
+
+- **watch.py banned-shape gap (2026-09-17 04:22Z, above): ENDORSED**,
+  option (a). New operator ask.
+- **Screener day-batch quota refund (2026-09-15): ENDORSED, unchanged,
+  with operator.**
+- **CI funnel-weld check (2026-09-14): open, no new instance this
+  window** (all FULL cycles carried funnel lines).
+- **ODDS_API_KEY on operator runner: RE-URGED, prediction realized** —
+  the weekly MLB devig spot-check landed on a cloud tick (2026-09-17
+  02:26Z) because operator FULL cycles remain devig-blind;
+  mlb-moneyline is still the best negative-delta forecast cell
+  (−0.0499, n=15).
+- **Lease writability: open, unchanged** (write-refused again 02:26Z).
+- **Per-fold fold_brier_delta in counterfactual.py: RE-URGED with a
+  date** — the correlated German-bracket veto cluster settles Sep 20.
+- **Mech window line (counter reset 2026-09-14): requests 0,
+  deliveries 0, market-aware/v4 pairs 0, settled pairs 0** — blocked on
+  PEARL_CONNECT_STORE being unset on operator cycles.
+- **Note, not an ask:** second lifetime instance of the same-commit
+  CF-table rule being missed (Furniture `3a539d9be02d`, repaired in
+  playbook this retro). If a third occurs, propose extending
+  reconcile.py check 5 to compare the mechanical ledger's settled-row
+  count against the playbook table's row count per veto class.
+
+**Status:** four asks open for the operator (watch.py shape regexes —
+new; screener quota refund; CI funnel-weld; ODDS_API_KEY), plus the
+standing lease/fold-delta items; everything else informational.
