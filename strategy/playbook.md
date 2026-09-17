@@ -3741,6 +3741,27 @@ per-row documentation duty (reconcile.py check 5) without re-deriving
 the running hand totals, per the 2026-09-06 operator note above that
 this file's totals are narrative only.
 
+**2026-09-17 02:53Z update (TRIGGERED cycle; resolve.py settled 2
+declined-side rows from the Trump Gastonia NC rally say-the-word
+family — see RETRO-20260917-0253):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| MAHA (0c64397063d4, outside-view-veto) | 0.48 / 0.63 | No | +0.130 | Yes | **−5.00** |
+| Egg (56c24f26e025, wide-spread-veto) | 0.45 / 0.735 | No | +0.050 | Yes | **−5.00** |
+
+Both declines correct: same rally, both self-modeled from thin
+(1-2-transcript) base rates on topic-contingent phrases, both resolved
+Yes against the model's No lean — the veto avoided both losses. Mechanical
+ledger after this batch (`core/counterfactual.py ledger --skip-reason
+outside-view-veto` / `--skip-reason wide-spread-veto`): outside-view-veto
+139 rows/131 trd/56W-75L/+$83.41/dBrier +0.0315/held-out +$89.19;
+wide-spread-veto 14 rows/12 trd/7W-5L/−$11.32/dBrier −0.0517/held-out
+−$7.00. This entry satisfies the per-row documentation duty without
+re-deriving the running hand totals, per the 2026-09-06 operator note.
+No boundary change at this n — two more same-family confirmations, not a
+new failure mode.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
