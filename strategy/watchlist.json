@@ -51,7 +51,8 @@
     "skip bc482ffb3606, own 0.20 vs ask 0.061 -- a move toward own re-opens the question) and the",
     "Xi Jinping visit (market-agrees 65f80b2eb530 at 0.90 -- a move toward No means the Taiwan",
     "arms-sale cancellation threat is being acted on), plus a calendar entry for the BoE decision.",
-    "Amended 2026-09-15 20:2xZ (FULL cycle, cloud): pruned the Iran Sep7 ceasefire price-move entry (0ed1d77858d7 settled LOST this cycle, RETRO-20260915-2015)."
+    "Amended 2026-09-15 20:2xZ (FULL cycle, cloud): pruned the Iran Sep7 ceasefire price-move entry (0ed1d77858d7 settled LOST this cycle, RETRO-20260915-2015).",
+    "Amended 2026-09-17 11:2xZ (TRIGGERED cycle, cloud): pruned two watch.py-reported expired entries (FOMC Sep16 calendar, past window and already graded; Fed hike price_move 2252245, past expires). Also pruned the BoE calendar entry and its paired price_move (market 2661520) now that the decision is out (WebFetch-confirmed: held at 3.75pct, 6-3, same three hawks Pill/Greene/Mann as July -- matches the expected split exactly; PM now 0.0005/0.9995, fully resolved) -- forecast bc482ffb3606 still open pending official UMA settlement, grading deferred to the retro that settles it; no further watch value in either entry."
   ],
   "price_moves": [
     {
@@ -63,28 +64,12 @@
       "expires": "2026-09-21T00:00:00Z"
     },
     {
-      "market_id": "2252245",
-      "token_id": "63842529068710005716169325380315470359047749786610778647370693404952498013178",
-      "label": "Will the Fed increase interest rates by 25 bps after the September 2026 meeting? (Yes; market-agrees 2026-09-14 at 0.875 vs own 0.85, FedWatch 0.863, Reuters poll 86 of 101 hike -- forecast 9cf98e66c291; a move below 0.75 without a Fed-official catalyst re-opens the cross-market check against FedWatch)",
-      "move_threshold": 0.05,
-      "window_min": 60,
-      "expires": "2026-09-16T20:00:00Z"
-    },
-    {
       "market_id": "3399197",
       "token_id": "34349914026097401057128861099057880661380967396881948920123251373255308524355",
       "label": "Russia Elections: United Russia Wins Every Region? (Yes, open position 9074e3f2fd49, entry 0.68, est 0.76; a move toward No means a region-level result or credible report of a UR party-list loss has surfaced; election Sep 20)",
       "move_threshold": 0.05,
       "window_min": 60,
       "expires": "2026-09-21T00:00:00Z"
-    },
-    {
-      "market_id": "2661520",
-      "token_id": "36083544686017717742576878614454630846400006909936498081215451726910881668678",
-      "label": "Bank of England increases interest rates by 25 bps after September 2026 meeting? (Yes; outside-view-veto skip 2026-09-14 at ask 0.061 vs own 0.20 -- LSEG ~30pct, SONIA OIS ~45pct, Reuters poll 65/65 hold, July vote 6-3; forecast bc482ffb3606; a move toward 0.15+ means PM is catching up to the OIS repricing or UK Aug CPI (Sep 16 06:00Z) ran hot; decision Sep 17 11:00Z)",
-      "move_threshold": 0.05,
-      "window_min": 60,
-      "expires": "2026-09-17T13:00:00Z"
     },
     {
       "market_id": "4118888",
@@ -109,16 +94,6 @@
     "keywords": []
   },
   "calendar": [
-    {
-      "label": "FOMC September 2026 decision (statement 14:00 ET) - hike/hold pair 2252245/2252244, forecasts ead3094ccd48 (hike est 0.52) / a47f9db6f4b9; grade FedWatch (0.56 on Sep 4) vs Kalshi (0.505) vs PM (0.485) vs own, and the two mech reads (market-aware 0.02 price-leak, v4 0.22)",
-      "fire_at": "2026-09-16T18:00:00Z",
-      "window_min": 45
-    },
-    {
-      "label": "BoE September 2026 MPC decision (12:00 BST) - hike market 2661520 Yes @0.0505 (ask 0.061) vs own 0.20, forecast bc482ffb3606 (outside-view-veto, discretionary vote so no carve-out); grade PM vs LSEG (~0.30 on Sep 14) vs SONIA OIS (~0.45) vs Reuters poll (65/65 hold) vs own -- a test of whether an external-benchmark disagreement on a discretionary decision behaves like the self-model veto rows; also note the vote split vs the expected 6-3",
-      "fire_at": "2026-09-17T11:00:00Z",
-      "window_min": 45
-    },
     {
       "label": "SNB September 2026 policy rate decision - market 4443883 no-change Yes @0.885, forecast cf76e5d0536c (own 0.90, no-edge, thin book $315 liquidity) -- grade the persistent-hold base rate against the actual print, and note if a genuine dated 2026 poll ever surfaces (this cycle's WebSearch kept returning a stale 2025-vintage recycled-headline poll, discarded)",
       "fire_at": "2026-09-24T00:00:00Z",
