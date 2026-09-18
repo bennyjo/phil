@@ -4737,6 +4737,42 @@ small-party/near-threshold DE state election shows the same pattern,
 that is the point to consider a directional (not just wider) dispersion
 adjustment rather than a purely symmetric sd widening.
 
+**Fourth data point, first outside Saxony-Anhalt and first DOWNWARD miss:
+SD >= 20% paired forecasts (`3216cfbf39ef` No 0.63 / `b9ec9f7eba14` Yes
+0.38, both no-edge skips) settled 2026-09-18 05:36Z, No.** Poll mean
+19.62 (five September polls, sd 1.3), official SD share 17.47 (val.se,
+count completed Sep 17): -2.15pt, 1.65 sd. Net Brier vs market on the
+pair +0.010 (flat). Full grading in RETRO-20260918-0537. Two consequences:
+
+1. **Empirical sd, not a hand-picked one.** Four of four vote-share rows
+   at sd 1.2-1.3 missed by >1.5 sd, in both directions across two
+   elections, so the sd is too tight symmetrically; the DE "biased low"
+   reading is still one correlated election. But widening is not free:
+   on a bracket whose boundary sits within ~0.5pt of the poll mean,
+   P(bracket) is ~0.4-0.6 by construction and a wider sd pushes it toward
+   0.5 (here sd 2.0 would have made the losing Yes-frame row worse, 0.38
+   -> 0.42, while improving the still-open 18-20 sibling 0.51 -> 0.37).
+   Pre-registered: once the Sep 20 German rows (MV CDU 11-14 at sd 2.2,
+   Berlin Linke) and the SD 18-20 sibling `b019781165c6` settle, fit the
+   sd that minimises Brier across all settled vote-share Gaussian rows
+   (S-A x3, Sweden x2-3, MV, Berlin) and write that number here as the
+   default, with a separate figure for state and national elections if
+   n allows. Until then keep sd >= 1.8 on any new vote-share bracket
+   research and treat a near-boundary bracket (mean within 0.5pt of the
+   edge) as no-edge unless the CENTER has a sourced shift.
+2. **Sibling ladders inherit the party's center correction.** The
+   SD-second bet (`09fc471ceec1`, same 22:19Z cycle) applied the 2022
+   SD-M gap correction and won +$20; this bracket on the same party left
+   SD at its raw poll mean. Realized: SD down 2.15 and M up ~2, so the
+   correction was right and undersized, and its SD-side half moved this
+   bracket too (mean 18.9 -> P(>= 20) 0.20 vs mid 0.34, a No-side 0.14
+   that the outside-view veto would have caught, so no missed bet). Rule:
+   when an ordinal market (second place, most seats, majority) on an
+   event gets a center correction for party X, every vote-share bracket
+   on party X researched on that event applies the same correction to
+   its mean, in the same commit, and the forecast note says so. One
+   party, one center.
+
 ## Funnel pool_total: prose rule escalated to a mechanical check
 (DEEP-2026-08-24)
 
