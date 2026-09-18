@@ -3838,6 +3838,29 @@ SONIA secondary-sourced benchmarks that motivated the claimed edge. This
 entry satisfies the per-row documentation duty without re-deriving the
 running hand totals, per the 2026-09-06 operator note above.
 
+**2026-09-18 14:10Z update (LIGHT tick, operator machine; resolve.py
+settled 1 outside-view-veto forecast; full read in RETRO-20260918-1410):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| BTC touch-$80k Sep14-20 (61bc26d805b6) | 0.84 / 0.79 | Yes | +0.040 | Yes | **+1.25** |
+
+Mechanical ledger after this row (`core/counterfactual.py ledger
+--skip-reason outside-view-veto`): 144 settled declined forecasts, 136
+fillable CF trades, 100 events, 57W/79L, pnl +$64.66, brier_delta +0.0367,
+held-out +$68.67 (was 143/135/56W-79L/+$63.41/+0.0370/+$67.42). Ruling:
+no boundary change - a 0.04 edge was never a veto-sized disagreement, and
+the row is on this ledger only because of its label (same treatment as
+`9618a7d0872d`). The label and the input both broke the touch-family
+ruling above (DEEP-2026-09-01): touch rows are `unvalidated-method`, and
+4 of the 6 modeled crypto touch rows recorded since that ruling
+(`dde658c37455`, `61bc26d805b6`, `a28637cb4026`, `8d1eb46b7c32`) used a
+guessed or swept vol. From this commit every touch estimate comes from
+`strategy/tools/touch.py`, which refuses to run without a named, dated
+`--vol-source`; the forecast note quotes its output. Settled measured-vol
+rows stand at 3 of the 6 the re-grade needs (`edd6af85d6a6`,
+`753366c2ea8e`, `fde4324641b4`), with `854536ded8be` open.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
