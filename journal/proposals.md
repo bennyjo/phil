@@ -2655,6 +2655,21 @@ mutated twice within this single UTC day (up/down → bracket → dip-to),
 which is exactly the maintenance burden option (b) would re-create on
 the protected side.
 
+**Recurrence (2026-09-18 04:22Z, TRIGGERED, cloud):** third phrasing variant,
+same root cause. Key `newmarket:4666433`, "Will Solana reach $105 on
+September 18?" (gamma id 4666433, created 04:00:12Z, fired 04:22Z). Same
+shape (`crypto_bracket`-adjacent, plain "reach $X" this time rather than
+"dip to $X" or "between $X and $Y"), same double-waste: bestBid/bestAsk
+0.999/1.0 (outcomePrices Yes 0.9995) already at fire time, above
+`max_entry_price` 0.95, so unbettable on protected caps alone regardless of
+the shape ban. CoinGecko spot check confirmed SOL was already at $105.1 —
+the touch had already happened. Forecast `e3b016d8a48f` recorded (est 0.998,
+skip-reason market-agrees, category crypto-threshold). No new ask: this is
+confirming evidence for the open (a)-preferred ask above, not a new issue —
+three distinct phrasings ("up or down", "between $X and $Y", "dip to $X",
+now "reach $X") in twelve days makes the option-(b) maintenance burden the
+proposal already predicted concrete, not hypothetical.
+
 ## 2026-09-17 — deep-retro status pass
 
 Full detail in journal/retros/DEEP-2026-09-17.md. Summary:
