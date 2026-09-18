@@ -2843,3 +2843,13 @@ origin side will settle the same four rows with its own timestamps). For the
 cause, either give the cloud credential the right to push the lease ref, or
 move the lease to something the cloud can write, for example a lease file on
 a dedicated branch.
+
+**Recurrence 2026-09-18 22:49Z (LIGHT tick, operator machine):** still diverged,
+now ahead 3 / behind 5, merge-base d0da028. Local-only: 2bec027, 4a42611,
+565143a. New on origin since 21:46Z: eef9399 (cloud retro, settles the same
+four forecast rows this side settled in 4a42611, so `journal/forecasts.jsonl`
+now conflicts on in-place updates as well as appended rows) and bd0ff1d.
+Both sides carry a retro for the same four settlements
+(RETRO-20260918-2146 local, RETRO-20260918-2211 origin); both can be kept.
+This tick again reset nothing and wrote only the cycle log line and this note.
+The merge grows every hour the two runners keep cycling apart.
