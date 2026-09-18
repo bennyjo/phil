@@ -5419,3 +5419,54 @@ Polymarket-derived pages ranked in the serper top 7 on two of three (UMich: June
 event page #1 and a stale "27%" snippet; WTI: event page #1, laikalabs
 "76%", chanceindex), price-leak instances five and six. Grade at
 settlement; nothing to act on yet.
+
+## News-cell process-shape bar (enacted RETRO-20260918-1518)
+
+**Rule.** In category `news`, a candidate is **forecast-only** (skip-reason
+`process-shape-bar`, no `place`) when all three hold:
+
+1. the question is "will a government, agency, or institution do or
+   complete X by a date";
+2. the process is documented as active (a program that has shipped before,
+   a named official saying work continues, talks under way);
+3. my P(Yes) is below the market's P(Yes), at any edge size.
+
+Record the forecast exactly as before, honest estimate included. The bar
+changes bet eligibility only.
+
+**Evidence.** Five settled news bets have this shape and all five lost,
+-$25: `d2dd24206542` (ceasefire Jul 31, No at 0.92), `bbe450e04eb9` and
+`6f7dfb5b7c0c` (Lake America, No at 0.668 and 0.38), `0ed1d77858d7` (Iran
+ceasefire Sep 7, No at 0.54), `d8892ff1a36a` (UFO files, No at 0.139). At
+the prices paid the market gave that joint outcome 0.0065; my estimates
+gave it 0.000008. The two Lake America rows are one event family: four
+independent observations. The proximate failure differed each time (clause
+mapping, unfinished-process read, cadence read). The common factor is
+reading "not done yet" as "may not get done" on a process the market can
+also see. `d8892ff1a36a` was the deliberate fair trial: sub-0.10 edge,
+outside-view shrink already applied (raw 0.72 -> 0.78), and the market's
+0.875 was still closer. The shrink is therefore not a sufficient fix, and
+it is retired as a route to a bet in this shape.
+
+**Exception.** A dated official fact that maps to No through the clause
+itself: the actor states the act will not happen before the deadline, or a
+scheduled date falls after it. That goes through the fact-finality gate
+with the explicit (a)/(b) clause-to-outcome mapping, as today. "No release
+found in N searches" and "the cadence has slipped" are absences, not facts,
+and never qualify.
+
+**Not covered.** Own-Yes leans in the news cell (n=1, `b21e42c123a1`, a
+different failure), other categories, and mechanical anchors (official
+print, transcript count, cross-market arithmetic).
+
+**Re-open condition.** Rows skipped under this bar are graded as their own
+slice at each deep retro. When 10 have settled, lift the bar if their
+forecast brier_delta is at or below 0; keep it otherwise. Until then, the
+DEEP-2026-09-16 allocation rule already says these rows get research time
+only with a mechanical anchor, so the bar should cost few research slots.
+
+**Mech note, same settlement.** Market-aware `p_independent` on the UFO row
+was 0.72, identical to my raw hazard read, and both sat 0.15 under a market
+that was right. Its price-informed `p_yes` 0.82 beat me (brier 0.0324
+versus 0.0484) and lost to the mid (0.0154). n=1 in the post-2026-09-14
+window; no paired v4 on this market.
