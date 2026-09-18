@@ -2732,3 +2732,55 @@ Two asks, either one closes it:
 The error class is also not in 5a's transient list (EIP-1271 / HTTP 503). I
 treated the 401 nonce rejection the same way: one retry with a NEW
 request id. If that is wrong, say so there.
+
+**Status (DEEP-2026-09-18): ENDORSED — ask 1 (one CYCLE.md sentence:
+send mech requests one at a time; add the wire-nonce 401 to 5a's
+transient list with retry-with-new-id as the handling). The behavior is
+already adopted (2026-09-17 22:54Z and 2026-09-18 02:15Z funnel notes
+both say "sent one at a time") — codifying it stops a fresh session
+from rediscovering it. Ask 2 (per-safe send lock) is the durable fix
+but lives in Pearl Connect, upstream of this repo; worth relaying, not
+blocking. The 401 retry with a NEW request id was correct handling.**
+
+## 2026-09-18 — deep-retro status pass
+
+Full detail in journal/retros/DEEP-2026-09-18.md. Summary:
+
+- **Mech parallel-send nonce race (2026-09-17 19:4xZ, above):
+  ENDORSED, ask 1** (CYCLE.md 5a sentence + transient-list addition);
+  ask 2 upstream in Pearl Connect. New operator ask.
+- **watch.py banned-shape gap: ENDORSED option (a), RE-URGED** — third
+  phrasing variant (`newmarket:4666433`, "reach $X") in 12 days; two
+  wasted TRIGGERED fires now; option (b)'s predicted maintenance
+  burden is concrete.
+- **NEW (operator): real-twin experiment starved by construction.**
+  `real.allowed_edge_classes` = ["cross-market"] has produced 1
+  qualifying bet lifetime (4ed738b2045b, placed on a paper cycle);
+  real-ledger.jsonl has zero fill rows ever (56 rows, all settle
+  sweeps). A watch item falsely claiming a Liberals real twin was
+  corrected this retro (schedule.json). Recommendation: decide AFTER
+  the Sep 20 settlements whether politics-general `other` (n=4,
+  brier_delta −0.0502, +$57.62 — thin) earns a second allowed class,
+  or accept dormancy until cross-market supply improves.
+- **Screener day-batch quota refund (2026-09-15): ENDORSED, unchanged,
+  with operator.**
+- **CI funnel-weld check (2026-09-14): open, no new instance** (all
+  window FULL cycles carried funnel lines).
+- **ODDS_API_KEY on operator runner: open, unchanged** — operator FULL
+  cycles remain devig-blind; mlb-moneyline still the best negative-
+  delta forecast cell (−0.0499, n=15).
+- **Lease writability: open, unchanged.**
+- **Per-fold fold_brier_delta in counterfactual.py: RE-URGED, dated**
+  — the German-bracket veto cluster settles Sep 20; if the flag is not
+  in by the first deep retro after those settlements, that fold gets a
+  one-off hand analysis instead.
+- **Mech window line (counter reset 2026-09-14): requests 14,
+  deliveries 13 (1 nonce-race rejection retried OK), market-aware with
+  context 9 (market_prob_seen == sent price on all 9), paired ma/v4
+  sets 4, settled pairs 0.**
+
+**Status:** five asks open for the operator (mech CYCLE.md sentence —
+new; real allowed-classes decision — new, dated to post-Sep-20;
+watch.py shape regexes; screener quota refund; ODDS_API_KEY), plus the
+standing lease/fold-delta/funnel-weld items; everything else
+informational.
