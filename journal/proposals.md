@@ -2784,3 +2784,62 @@ new; real allowed-classes decision — new, dated to post-Sep-20;
 watch.py shape regexes; screener quota refund; ODDS_API_KEY), plus the
 standing lease/fold-delta/funnel-weld items; everything else
 informational.
+
+## 2026-09-18 21:46Z - recurrence: watch.py new_market fires on line-constructed rungs, daily budget exhausted
+
+Recurrence on the open 2026-09-17 04:22Z proposal (watch.py new_market fires
+on shapes the agent already bans; option (a) endorsed by DEEP-2026-09-17).
+New shape, new consequence.
+
+**Evidence:** `journal/watch-triggers.jsonl` holds six rows dated 2026-09-18,
+which is `DAILY_FIRE_BUDGET`. Four of the six are shapes
+`strategy/screener-filters.json` drops before screening: `newmarket:4666433`
+(Solana reach $105, ask 0.999) and the three Espanyol v Elche totals rungs
+`newmarket:4674701/2/3` (O/U 6.5, 7.5, 8.5; mids 0.022, 0.011, 0.003). The
+three rungs match the `line_constructed` regex. They were unbettable on the
+protected caps before research: the Over side cannot reach `min_edge` from a
+mid under 0.03, the Under side sits above `max_entry_price`. They settled
+this tick with brier deltas under 0.0001 (RETRO-20260918-2146). Because each
+key counts as one fire, that one 07:22Z run took half the day's budget. The
+budget ran out at 15:22Z and the watcher could not fire for the last 8.6
+hours of the UTC day, the day voting opened in an election where I hold two
+positions.
+
+**What I changed on my side:** nothing that fixes it. `new_market.keywords`
+is an allow list, and an allow list narrow enough to stop totals rungs would
+also stop the unknown catalyst the trigger exists for. I did add two missing
+`price_moves` entries (2046508, 789957); that gap was mine.
+
+**Ask (unchanged, scope widened):** option (a) should load every
+`exclude_title_patterns` entry from `strategy/screener-filters.json` in
+`check_new_markets`, not only the crypto ones. Separate, smaller ask: count
+one `check` run that fires several sibling keys as ONE fire against the daily
+budget. Three rungs of one match are one decision.
+
+## 2026-09-18 21:46Z - genuine divergence on the operator machine, second cause on the lease item
+
+**Evidence:** at this tick's step 0, local main was ahead 1 and behind 3
+with merge-base d0da028 (not shallow). Local-only: 2bec027, the 16:31Z
+operator FULL cycle. Origin-only: f772af1 (cloud FULL 16:22Z), 181f22c,
+bdc90e9. The cloud cycle pushed while the operator cycle was mid-flight.
+The operator cycle had synced before that push, so loop.sh's push after the
+cycle must have been rejected. I did not see loop.sh's output. Both sides
+edited `journal/forecasts.jsonl` and `strategy/schedule.json`, the files
+`.gitattributes` leaves out of the union merge on purpose, so its rebase
+fallback would have stopped there and left the commit local. Both runners
+then kept cycling for five hours on different histories. This tick followed CYCLE.md: warned, continued on local
+state, reset nothing, and kept its footprint small (LIGHT).
+
+**Cause:** the standing "lease writability" item. The cloud credential
+cannot write `refs/phil/lease` (the 06:25Z and 07:23Z cloud log lines today
+both record `written=false`), so an in-flight cloud FULL cycle is invisible to the operator runner.
+The tip guard only sees finished cycles. Every hour both runners go FULL
+inside the same window, the second push loses, and any such pair that both
+record forecasts ends in a manual merge.
+
+**Ask:** the operator resolves today's divergence by hand (the local side
+adds forecast rows from 16:31Z and 21:46Z plus four settlement updates; the
+origin side will settle the same four rows with its own timestamps). For the
+cause, either give the cloud credential the right to push the lease ref, or
+move the lease to something the cloud can write, for example a lease file on
+a dedicated branch.

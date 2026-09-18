@@ -53,7 +53,8 @@
     "arms-sale cancellation threat is being acted on), plus a calendar entry for the BoE decision.",
     "Amended 2026-09-15 20:2xZ (FULL cycle, cloud): pruned the Iran Sep7 ceasefire price-move entry (0ed1d77858d7 settled LOST this cycle, RETRO-20260915-2015).",
     "Amended 2026-09-17 11:2xZ (TRIGGERED cycle, cloud): pruned two watch.py-reported expired entries (FOMC Sep16 calendar, past window and already graded; Fed hike price_move 2252245, past expires). Also pruned the BoE calendar entry and its paired price_move (market 2661520) now that the decision is out (WebFetch-confirmed: held at 3.75pct, 6-3, same three hawks Pill/Greene/Mann as July -- matches the expected split exactly; PM now 0.0005/0.9995, fully resolved) -- forecast bc482ffb3606 still open pending official UMA settlement, grading deferred to the retro that settles it; no further watch value in either entry.",
-    "Amended 2026-09-17 16:0xZ (FULL cycle, operator machine): added the core PCE YoY 3.3pct price move (new open position 8894592b953a, No @0.68) and calendar entries for the UMich final (Sep 25) and the BEA August PCE release (Sep 30)."
+    "Amended 2026-09-17 16:0xZ (FULL cycle, operator machine): added the core PCE YoY 3.3pct price move (new open position 8894592b953a, No @0.68) and calendar entries for the UMich final (Sep 25) and the BEA August PCE release (Sep 30).",
+    "Amended 2026-09-18 21:4xZ (LIGHT tick, operator machine): added the Russia turnout price move (open position 475edf2e2654, No @0.883). Its thesis broke on the CEC day-one turnout print (RETRO-20260918-2146) and it had no watch entry. Added the Berlin Linke most-seats price move (open position 7ec71e307f12, No @0.34) for the same reason: a Sep 20 election position with no entry."
   ],
   "price_moves": [
     {
@@ -71,6 +72,22 @@
       "move_threshold": 0.05,
       "window_min": 60,
       "expires": "2026-09-21T00:00:00Z"
+    },
+    {
+      "market_id": "2046508",
+      "token_id": "27269723445891365956615633577982237391836227956552390727032452700940879851272",
+      "label": "Russian parliamentary election turnout 62pct or higher? (No, open position 475edf2e2654, entry 0.883; own P(No) cut 0.94 -> 0.55 on 2026-09-18 after the CEC day-one print of 29.4pct versus 16.85pct in 2021; a move toward Yes means the day-two or day-three CEC turnout print is tracking above 62pct; voting ends Sep 20)",
+      "move_threshold": 0.05,
+      "window_min": 60,
+      "expires": "2026-09-21T00:00:00Z"
+    },
+    {
+      "market_id": "789957",
+      "token_id": "35822333134032191975022672535219362705637593082315022545398810381128098331002",
+      "label": "Will Linke win the most seats in the 2026 Berlin state elections? (No, open position 7ec71e307f12, entry 0.34, est 0.39; a move on election night Sep 20 means exit polls or first counts are out)",
+      "move_threshold": 0.05,
+      "window_min": 60,
+      "expires": "2026-09-21T12:00:00Z"
     },
     {
       "market_id": "4118888",
