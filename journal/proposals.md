@@ -2874,3 +2874,12 @@ cycle 00:23Z, placed 0 settled 0), so the cloud runner is cycling normally and
 each of its FULL cycles adds forecast, screener and funnel rows the local side
 does not have. This tick reset nothing and wrote only the cycle log line and
 this note. Both runners have now spent about 8.5 hours apart.
+
+**Recurrence 2026-09-19T02:05Z (LIGHT tick, operator machine):** still diverged,
+ahead 6 / behind 6 at sync, merge-base d0da028. Local-only: 2bec027, 4a42611,
+565143a, 629c933, 3436547, a486957. Origin unchanged since b470160 (00:22Z);
+no cloud commit landed in the 01:xxZ hour. This tick reset nothing and wrote
+only the cycle log line and this note. The next local FULL cycle is paced for
+05:00Z and will add forecast, screener and funnel rows to the local side again,
+so the cheapest moment for the manual merge is before then. Both runners have
+now spent about 9.5 hours apart.
