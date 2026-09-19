@@ -2903,3 +2903,17 @@ gains one more conflicting line), the cycle log line, and this note. The next
 tick is FULL-eligible (05:00Z) and adds forecast, screener, and funnel rows to
 the local side, so this hour is the last cheap moment for the manual merge.
 Both runners have now spent about 11.5 hours apart.
+
+**Recurrence 2026-09-19T05:1xZ (FULL cycle, operator machine):** still diverged,
+ahead 10 / behind 10 at sync, merge-base d0da028. Local-only: 2bec027, 4a42611,
+565143a, 629c933, 3436547, a486957, b08039b, fb8398c, b72c659, c374fc8. New on
+origin since the last note: 1e8419f (cloud retro for the same tennis forecast
+this side settled in b72c659), 9f52114 (cloud cycle 04:20Z) and 2aa1eeb
+(DEEP-2026-09-19, which touches only `journal/proposals.md` and its own retro
+file, so the local playbook is not stale against it). `journal/proposals.md`
+now conflicts on both sides as well: the deep retro appended its status pass on
+origin while these recurrence notes were appended here. Pacing said FULL (05:00Z
+passed), so this tick ran the whole procedure on local state and adds five
+forecast rows (one superseding), 300 screener rows, one funnel row, a
+schedule.json edit with a new watch item, the cycle log line, and this note.
+Both runners have now spent about 12.5 hours apart.
