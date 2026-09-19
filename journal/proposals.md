@@ -2938,3 +2938,17 @@ line, and this note. The two sides now research different rows under different
 watch lists: the cloud side has no record of the Hormuz pair, the BTC rungs, the
 5y Treasury row, or the Resident Evil trio, and this side has none of the
 cloud's Sep 18-19 forecasts. Both runners have now spent about 25.5 hours apart.
+
+**Recurrence 2026-09-19T19:24Z (FULL cycle, operator machine):** still diverged,
+ahead 14 / behind 21 at sync, merge-base d0da028 (ahead 16 after this tick's
+retro and cycle commits). New on origin since the last note: f71329f (cloud
+cycle 18:13Z, placed 0 settled 0). This tick reset nothing. It adds one retro
+(RETRO-20260919-1925, with a playbook data-point note), seven forecast rows
+(two superseding), 300 screener rows, one funnel row, a schedule.json edit with
+a new watch item, the cycle log line, and this note. Cost of the split this
+hour: the min-cycles guardrail counts FULL lines in the LOCAL `journal/cycles.log`
+only, so it forced a FULL cycle here one hour after the last one, while the
+cloud side ran its own FULL cycles that this log cannot see. Two runners on two
+histories each satisfy the daily minimum separately, which doubles the
+screening spend (45 of 150 operator day batches by 19:26Z) for the same pool.
+Both runners have now spent about 27 hours apart.
