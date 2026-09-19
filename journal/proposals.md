@@ -2924,3 +2924,17 @@ ahead 11 / behind 11 at sync, merge-base d0da028. Local-only: 2bec027, 4a42611,
 New on origin since the last note: d92ed7f (cloud cycle 06:12Z, placed 0 settled
 0). This tick reset nothing and wrote only the cycle log line and this note.
 Both runners have now spent about 13.5 hours apart.
+
+**Recurrence 2026-09-19T18:10Z (FULL cycle, operator machine):** still diverged,
+ahead 12 / behind 20 at sync, merge-base d0da028 (ahead 14 after this tick's
+retro and cycle commits). The local loop did not run between 06:21Z and 18:10Z.
+New on origin since the last note: 5a7e7ed, 2af071c (triggered, pricemove
+4118888), ddfe73f (cloud retro for the WTI LOW95 row this side settled again at
+18:11Z), 73ab681, 6877624, 690f339, 57b9ca4 (Osasuna retro; forecast
+db5e96f96cd8 exists only on origin), acffc23 (triggered, newmarket 4726778), 58abc99.
+This tick reset nothing. It adds one retro, four forecast rows, 300 screener
+rows, one funnel row, a schedule.json edit with a new watch item, the cycle log
+line, and this note. The two sides now research different rows under different
+watch lists: the cloud side has no record of the Hormuz pair, the BTC rungs, the
+5y Treasury row, or the Resident Evil trio, and this side has none of the
+cloud's Sep 18-19 forecasts. Both runners have now spent about 25.5 hours apart.
