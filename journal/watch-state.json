@@ -1,17 +1,13 @@
 {
-  "last_fire_utc": "2026-09-18T15:22:25Z",
+  "last_fire_utc": "2026-09-19T07:52:38Z",
   "fired": {
     "cal:BoE September 2026 MPC decision (12:00 BST) - hike market 2661520 Yes @0.0505 (ask 0.061) vs own 0.20, forecast bc482ffb3606 (outside-view-veto, discretionary vote so no carve-out); grade PM vs LSEG (~0.30 on Sep 14) vs SONIA OIS (~0.45) vs Reuters poll (65/65 hold) vs own -- a test of whether an external-benchmark disagreement on a discretionary decision behaves like the self-model veto rows; also note the vote split vs the expected 6-3": "2026-09-17T11:23:10Z",
-    "cal:FOMC September 2026 decision (statement 14:00 ET) - hike/hold pair 2252245/2252244, forecasts ead3094ccd48 (hike est 0.52) / a47f9db6f4b9; grade FedWatch (0.56 on Sep 4) vs Kalshi (0.505) vs PM (0.485) vs own, and the two mech reads (market-aware 0.02 price-leak, v4 0.22)": "2026-09-16T18:22:49Z",
-    "newmarket:4621616": "2026-09-16T18:53:03Z",
-    "newmarket:4631132": "2026-09-17T04:22:22Z",
     "newmarket:4666433": "2026-09-18T04:22:18Z",
     "newmarket:4674701": "2026-09-18T07:22:32Z",
     "newmarket:4674702": "2026-09-18T07:22:32Z",
     "newmarket:4674703": "2026-09-18T07:22:32Z",
     "newmarket:4679288": "2026-09-18T10:22:32Z",
-    "pricemove:2252245": "2026-09-16T18:22:49Z",
     "pricemove:3938031": "2026-09-18T15:22:25Z",
-    "pricemove:4118888": "2026-09-17T02:52:14Z"
+    "pricemove:4118888": "2026-09-19T07:52:38Z"
   }
 }
