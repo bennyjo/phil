@@ -4804,6 +4804,21 @@ pair +0.010 (flat). Full grading in RETRO-20260918-0537. Two consequences:
    its mean, in the same commit, and the forecast note says so. One
    party, one center.
 
+**Fifth data point, and the M-side instance of rule 2: M >= 20%
+(`20eec9b43176`, Yes 0.02 vs mid 0.05, no-edge skip) settled 2026-09-19
+19:24Z, No.** Poll mean 17.36 (sd 1.3), official M share 19.85: +2.49pt,
+1.9 sd, 0.15pt short of the barrier. The row won on the Brier (-0.0021)
+but the process did not earn it: it was recorded in the same 22:19Z cycle
+as the SD-second bet whose whole edge was "final polls understate M", and
+it left M at the raw poll mean. With that bet's own 0.7pt shift, P(>= 20)
+is 0.068 at sd 1.3 and 0.14 at sd 1.8, so the market's 0.05 was the more
+consistent number. A tail call that wins by 0.15pt counts FOR the wider
+sd in the pre-registered fit, never against it: fit on the realized miss
+in sd units, not on the Brier sign. The SD 18-20 sibling `b019781165c6`
+settled the same tick (No, -0.0236, tally only). The fit set is now S-A
+x3, Sweden x3 (SD >= 20, SD 18-20, M >= 20) and waits only for the Sep 20
+German rows. Full grading in RETRO-20260919-1925.
+
 ## Funnel pool_total: prose rule escalated to a mechanical check
 (DEEP-2026-08-24)
 
