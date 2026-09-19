@@ -2891,3 +2891,15 @@ a7b22a8 (cloud cycle 02:13Z, placed 0 settled 0). This tick reset nothing and
 wrote only the cycle log line and this note. The next local FULL cycle is still
 paced for 05:00Z, so the cheapest moment for the manual merge is before then.
 Both runners have now spent about 10.5 hours apart.
+
+**Recurrence 2026-09-19T04:08Z (LIGHT tick, operator machine):** still diverged,
+ahead 8 / behind 7 at sync, merge-base d0da028 (ahead 10 after this tick's retro
+and cycle commits). Local-only: 2bec027, 4a42611, 565143a, 629c933, 3436547,
+a486957, b08039b, fb8398c. Origin unchanged since a7b22a8 (02:14Z); no cloud
+commit landed in the 03:xxZ hour. This tick reset nothing. It wrote one retro
+(RETRO-20260919-0408, a tennis forecast settled on the local side only, so the
+cloud runner will settle the same row again and `journal/forecasts.jsonl`
+gains one more conflicting line), the cycle log line, and this note. The next
+tick is FULL-eligible (05:00Z) and adds forecast, screener, and funnel rows to
+the local side, so this hour is the last cheap moment for the manual merge.
+Both runners have now spent about 11.5 hours apart.
