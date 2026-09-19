@@ -24,9 +24,12 @@ whose range contains another market's threshold) is not itself inconsistent
 (playbook Edge class 2 validity test).
 """
 import json
+import os
 import sys
 import urllib.request
 
+FORECASTS = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                         "..", "..", "journal", "forecasts.jsonl")
 EVENTS_URL = "https://gamma-api.polymarket.com/events/{}"
 MARKET_URL = "https://gamma-api.polymarket.com/markets?id={}"
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; paper-trader-siblings)"}
@@ -36,6 +39,32 @@ def fetch(url):
     req = urllib.request.Request(url, headers=HEADERS)
     with urllib.request.urlopen(req, timeout=15) as r:
         return json.load(r)
+
+
+def open_forecasts():
+    """market_id -> my open forecast rows (read-only view of the journal).
+
+    Why (cycle 2026-09-18 23:50Z): the BanRep September event was researched
+    twice in 8 hours. The coverage check was per MARKET (the 50+bp rung had no
+    forecast) while the hold rung of the same event carried open forecast
+    55fa44583b8b from 16:25Z with the same sources. Coverage is a property of
+    the EVENT, and this census is the one step that sees the whole event.
+    """
+    out = {}
+    try:
+        with open(FORECASTS) as fh:
+            for line in fh:
+                try:
+                    r = json.loads(line)
+                except ValueError:
+                    continue
+                if r.get("status") == "open" and not r.get("superseded_by"):
+                    out.setdefault(str(r.get("market_id")), []).append(
+                        {"id": r.get("id"), "ts": r.get("ts"), "outcome": r.get("outcome"),
+                         "est_prob": r.get("est_prob"), "skip_reason": r.get("skip_reason")})
+    except OSError:
+        pass
+    return out
 
 
 def main(market_id):
@@ -51,6 +80,8 @@ def main(market_id):
     event_id = events[0]["id"]
     event = fetch(EVENTS_URL.format(event_id))
     siblings = event.get("markets") or []
+    covered = open_forecasts()
+    n_covered = 0
     yes_sum = 0.0
     for m in siblings:
         try:
@@ -66,8 +97,12 @@ def main(market_id):
             "yes_price": yes_price,
             "closed": m.get("closed"),
             "is_query_target": m.get("id") == market_id,
+            "my_open_forecasts": covered.get(str(m.get("id")), []),
         }))
+        if covered.get(str(m.get("id"))):
+            n_covered += 1
     print(json.dumps({"_sum_check": round(yes_sum, 4), "n_siblings": len(siblings),
+                       "siblings_with_my_open_forecast": n_covered,
                        "event_title": event.get("title"),
                        "note": "siblings must be MUTUALLY EXCLUSIVE for this sum to mean "
                                "anything -- verify from the questions before treating "

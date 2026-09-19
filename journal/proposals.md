@@ -2853,3 +2853,16 @@ Both sides carry a retro for the same four settlements
 (RETRO-20260918-2146 local, RETRO-20260918-2211 origin); both can be kept.
 This tick again reset nothing and wrote only the cycle log line and this note.
 The merge grows every hour the two runners keep cycling apart.
+
+**Recurrence 2026-09-19 00:0xZ (FULL cycle, operator machine):** still diverged,
+ahead 4 / behind 5 at sync, merge-base d0da028. Local-only: 2bec027, 4a42611,
+565143a, 629c933. Origin unchanged since bd0ff1d (22:13Z); no cloud commit
+landed in the 23:xxZ hour. Pacing said FULL (23:00Z passed), so this tick ran
+the whole procedure on local state and adds five forecast rows, 300 screener
+rows, one funnel row, a schedule.json edit and a strategy/tools/siblings.py
+edit to the local side. All of it is append-only except schedule.json, where
+the local copy should win on `reason`/`next_full_cycle_after` only if the
+operator keeps the local history. Second, smaller item from the same tick:
+`core/odds.py` reports no ODDS_API_KEY on the operator runner (env or
+`~/.config/phil/odds-api-key`), so the book-devig benchmark is cloud-only
+today; the one uncovered escalated row (Dolphins v 49ers) got no forecast.

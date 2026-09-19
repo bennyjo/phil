@@ -96,6 +96,14 @@ Rank every candidate by WHY the market should be wrong, strongest first:
    arb sitting there. **Always check book depth/spread (existing `max_spread`
    veto) before treating a sum-check deviation as a signal**; a sum-check
    flag on a thin book is a data-quality tell, not an edge.
+   **Coverage is per EVENT (2026-09-19 00:0xZ):** run the census BEFORE the
+   first web search on a bracketed candidate, and read `my_open_forecasts`
+   on every sibling. Evidence: the BanRep September event was researched
+   twice in 8 hours (hold rung 55fa44583b8b at 16:25Z, +50bp rung
+   668cd9a0adc6 at 00:00Z, same sources, same read) because the coverage
+   check asked only whether the pool's market id had a forecast. A sibling
+   with an open forecast under ~6h old and no new fact means the new rung
+   is recorded from that research, not re-researched.
    **Sibling-group census (DEEP-2026-08-22): the "question implies
    siblings" trigger is not enough — make the census standing.** Zero
    cross-market candidates entered the funnel between ~Aug 12 and Aug 22
