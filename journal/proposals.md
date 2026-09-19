@@ -2866,3 +2866,11 @@ operator keeps the local history. Second, smaller item from the same tick:
 `core/odds.py` reports no ODDS_API_KEY on the operator runner (env or
 `~/.config/phil/odds-api-key`), so the book-devig benchmark is cloud-only
 today; the one uncovered escalated row (Dolphins v 49ers) got no forecast.
+
+**Recurrence 2026-09-19T01:04Z (LIGHT tick, operator machine):** still diverged,
+ahead 5 / behind 6 at sync, merge-base d0da028. Local-only: 2bec027, 4a42611,
+565143a, 629c933, 3436547. New on origin since the last note: b470160 (cloud
+cycle 00:23Z, placed 0 settled 0), so the cloud runner is cycling normally and
+each of its FULL cycles adds forecast, screener and funnel rows the local side
+does not have. This tick reset nothing and wrote only the cycle log line and
+this note. Both runners have now spent about 8.5 hours apart.
