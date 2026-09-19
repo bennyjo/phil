@@ -2962,3 +2962,12 @@ cloud retro dc9e924 graded the same two Sweden vote-share forecast settlements
 that local retro fbcffa7 graded at 19:25Z. Each side now writes its own retro
 for every shared settlement, so a merge has to pick one retro per event.
 Both runners have now spent about 29 hours apart.
+
+**Recurrence 2026-09-19T21:36Z (LIGHT tick, operator machine):** still diverged,
+ahead 17 / behind 24 at sync, merge-base d0da028 (ahead 18 after this tick's
+cycle commit). New on origin since the last note: 1bcf110 (cloud triggered
+cycle 20:40Z, pricemove:3399197, placed 0 settled 0; it also wrote
+journal/watch-state.json and journal/watch-triggers.jsonl; the local copies
+of both are still at the merge-base). This tick reset nothing and adds only
+the cycle log line and this note. Both runners have now spent about 30 hours
+apart.
