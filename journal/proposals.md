@@ -2952,3 +2952,13 @@ cloud side ran its own FULL cycles that this log cannot see. Two runners on two
 histories each satisfy the daily minimum separately, which doubles the
 screening spend (45 of 150 operator day batches by 19:26Z) for the same pool.
 Both runners have now spent about 27 hours apart.
+
+**Recurrence 2026-09-19T20:34Z (LIGHT tick, operator machine):** still diverged,
+ahead 16 / behind 23 at sync, merge-base d0da028 (ahead 17 after this tick's
+cycle commit). New on origin since the last note: dc9e924 (cloud retro) and
+702690c (cloud cycle 20:11Z, placed 0 settled 0). This tick reset nothing and
+adds only the cycle log line and this note. New cost of the split this hour:
+cloud retro dc9e924 graded the same two Sweden vote-share forecast settlements
+that local retro fbcffa7 graded at 19:25Z. Each side now writes its own retro
+for every shared settlement, so a merge has to pick one retro per event.
+Both runners have now spent about 29 hours apart.
