@@ -2883,3 +2883,11 @@ only the cycle log line and this note. The next local FULL cycle is paced for
 05:00Z and will add forecast, screener and funnel rows to the local side again,
 so the cheapest moment for the manual merge is before then. Both runners have
 now spent about 9.5 hours apart.
+
+**Recurrence 2026-09-19T03:07Z (LIGHT tick, operator machine):** still diverged,
+ahead 7 / behind 7 at sync, merge-base d0da028. Local-only: 2bec027, 4a42611,
+565143a, 629c933, 3436547, a486957, b08039b. New on origin since the last note:
+a7b22a8 (cloud cycle 02:13Z, placed 0 settled 0). This tick reset nothing and
+wrote only the cycle log line and this note. The next local FULL cycle is still
+paced for 05:00Z, so the cheapest moment for the manual merge is before then.
+Both runners have now spent about 10.5 hours apart.
