@@ -90,3 +90,4 @@
 {"utc": "2026-09-20T06:52:30Z", "kind": "price_move", "key": "pricemove:3399197", "market_id": "3399197", "detail": "0.695 -> 0.750 (+0.055) over 59 min, threshold 0.050"}
 {"utc": "2026-09-20T12:52:41Z", "kind": "price_move", "key": "pricemove:3938031", "market_id": "3938031", "detail": "0.785 -> 0.735 (-0.050) over 59 min, threshold 0.050"}
 {"utc": "2026-09-20T13:22:33Z", "kind": "price_move", "key": "pricemove:3399197", "market_id": "3399197", "detail": "0.710 -> 0.760 (+0.050) over 59 min, threshold 0.050"}
+{"utc": "2026-09-20T19:52:35Z", "kind": "price_move", "key": "pricemove:3399197", "market_id": "3399197", "detail": "0.705 -> 0.645 (-0.060) over 59 min, threshold 0.050"}
