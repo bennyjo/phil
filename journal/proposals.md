@@ -2971,3 +2971,16 @@ journal/watch-state.json and journal/watch-triggers.jsonl; the local copies
 of both are still at the merge-base). This tick reset nothing and adds only
 the cycle log line and this note. Both runners have now spent about 30 hours
 apart.
+
+**Recurrence 2026-09-20T21:20Z (FULL cycle, operator machine):** still diverged,
+ahead 18 / behind 45 at sync, merge-base d0da028 (ahead 19 after this tick's
+cycle commit). The operator loop did not tick between 2026-09-19T21:37Z and
+now; origin gained 21 commits in that gap (cloud cycles, three retros, the
+2026-09-20 deep retro 1ea482e, and four triggered cycles on pricemove:3399197
+and pricemove:3938031). This tick reset nothing. It adds eight forecast rows,
+300 screener rows, one funnel row, a schedule.json edit with a new watch item,
+the cycle log line, and this note. New cost this hour: the cloud side's deep
+retro and any playbook edits in it are invisible here, so this cycle ran
+election night on a strategy that is two days stale, and both sides will grade
+the Sep 20 election bets separately. Both runners have now spent about 53 hours
+apart.
