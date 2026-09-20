@@ -2984,3 +2984,14 @@ retro and any playbook edits in it are invisible here, so this cycle ran
 election night on a strategy that is two days stale, and both sides will grade
 the Sep 20 election bets separately. Both runners have now spent about 53 hours
 apart.
+
+**Recurrence 2026-09-20T22:33Z (LIGHT tick, operator machine):** still diverged,
+ahead 19 / behind 46 at sync, merge-base d0da028 (ahead 20 after this tick's
+cycle commit). New on origin since the last note: e27f91e (cloud cycle 22:19Z,
+placed 0 settled 0). This tick reset nothing and adds only the cycle log line
+and this note. New cost this hour: the collision guard read the cloud tip
+(14 min old) and demoted this tick to LIGHT, while local pacing wanted a FULL
+cycle (1 FULL line in the local log in the last 24h, min 4). The guard sees
+origin's cycles and the pacing count does not, so the two rules now disagree
+every time the cloud runner ticks first. Both runners have now spent about 54
+hours apart.
