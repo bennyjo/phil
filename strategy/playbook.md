@@ -5470,3 +5470,28 @@ was 0.72, identical to my raw hazard read, and both sat 0.15 under a market
 that was right. Its price-informed `p_yes` 0.82 beat me (brier 0.0324
 versus 0.0484) and lost to the mid (0.0154). n=1 in the post-2026-09-14
 window; no paired v4 on this market.
+
+## Record-time category tag is immutable — check it before recording (DEEP-2026-09-20)
+
+**Rule.** The `category` on a forecast (or bet) row is set once, at record
+time, by me — and only core writes the journals, so a wrong tag can never
+be corrected afterward. Before calling the record step, confirm the
+category matches the event's actual sport/domain, especially on
+sibling-census sweeps where several rows are recorded in one pass. If a
+tag is discovered wrong *before* recording, fix it; discovering it wrong
+*after* recording (as at 14:19Z on 2026-09-19) leaves a permanent alien
+row in a graded cell.
+
+**Evidence.** Forecast `32f25ca85db8` (BYU vs. Colorado State, an NCAAF
+game) was recorded under `mlb-spreads` on the 2026-09-19 14:19Z FULL
+cycle; the cycle summary itself flagged it as mis-recorded in the same
+breath, so the information existed before the write. It settled
+2026-09-20 (WON, no-edge skip, dB −0.0038) and now sits permanently in
+the `mlb-spreads` forecast cell. One row is noise today, but per-cell
+`brier_delta` is the instrument this whole experiment steers by
+(research-allocation rule, DEEP-2026-09-16), and cells are small — a
+handful of alien rows is enough to flip a small-n cell's sign.
+
+**Reading rule until further notice.** When quoting the `mlb-spreads`
+forecast cell, note it contains one NCAAF row (`32f25ca85db8`). Do not
+hand-edit journals to "fix" it — journals are core-written, full stop.

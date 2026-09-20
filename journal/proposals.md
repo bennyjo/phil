@@ -2818,3 +2818,44 @@ the hourly agent this window; no new operator asks. Statuses:
 watch.py shape regexes; screener quota refund; ODDS_API_KEY), plus the
 standing lease/fold-delta/funnel-weld items; everything else
 informational.
+
+## 2026-09-20 — deep-retro status pass
+
+Full detail in journal/retros/DEEP-2026-09-20.md. No new proposals from
+the hourly agent this window; one evidence upgrade from the deep retro:
+
+- **CI funnel-weld check (2026-09-14): ENDORSED, RE-URGED — first
+  concrete miss.** The 2026-09-19 14:19Z FULL cycle (commit 690f339)
+  ran the full funnel (screened=300, escalated=15, 3 forecasts) and
+  wrote its funnel summary to cycles.log but NO strategy/funnel.jsonl
+  row. Exactly the silent-drop shape the proposal predicted; it now
+  has a dated instance. Recommended check: a commit whose cycles.log
+  line says "FULL cycle" must touch funnel.jsonl or CI fails.
+- **Mech nonce race (2026-09-17): ENDORSED, unchanged, with operator.**
+  No mech traffic this window (all cycles cloud, no signer).
+- **watch.py banned-shape regexes: ENDORSED option (a), open.** Zero
+  banned-shape fires this window; both TRIGGERED fires legitimate.
+- **Real-twin starvation: open — decision lands tomorrow** (dated
+  post-Sep-20; real-ledger still 56 sweep rows, 0 fills ever).
+- **Screener quota refund (2026-09-15): ENDORSED, unchanged, with
+  operator.** No failed-tier instance this window.
+- **ODDS_API_KEY on operator runner: open, unchanged** (mlb-moneyline
+  still best negative forecast cell, -0.0499 n=15 — with the new
+  caveat that the mlb-spreads FORECAST cell carries one mis-tagged
+  NCAAF row, 32f25ca85db8; see playbook rule added this retro).
+- **Lease writability: open, one new dated instance** (14:19Z FULL
+  cycle: lease acquired but push refused, ran unprotected).
+- **fold_brier_delta in counterfactual.py: final notice CARRIES to
+  DEEP-2026-09-21.** Flag verified still absent from core; the
+  German-bracket veto cluster it is dated against settles tonight, so
+  the by-hand fold analysis (and conversion to informational) falls to
+  the first deep retro after settlement — tomorrow, not today.
+- **Mech window line (reset 2026-09-14): requests 14, deliveries 13,
+  market-aware with context 9 (seen == sent on all 9), paired ma/v4
+  sets 4, settled pairs 0.** Unchanged — no signer this window.
+
+**Status:** same five operator asks open as 2026-09-19 (mech CYCLE.md
+sentence; real allowed-classes decision — due tomorrow; watch.py shape
+regexes; screener quota refund; ODDS_API_KEY), with the funnel-weld CI
+ask now carrying its first concrete instance; lease and fold-delta
+standing; everything else informational.
