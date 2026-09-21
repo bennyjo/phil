@@ -3907,6 +3907,43 @@ self-models; the one that won had the price OUTSIDE its whole sd-sweep
 range (0.80-0.96 vs ask 0.77), the one that lost was a precedent-shaded
 point estimate. Fork gate arithmetic stays with the deep retro.
 
+**2026-09-21 update (DEEP-2026-09-21; settled by the deep retro's own
+resolve.py run, graded same-commit per the DEEP-2026-08-23 rule; full
+read in DEEP-2026-09-21 (c)):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| AfD most seats MV (506bc4c8087e) | 0.90 / 0.77 | Yes | +0.120 | Yes | **+0.28** |
+
+Mechanical ledger after this row (`core/counterfactual.py ledger
+--skip-reason outside-view-veto`, after `screen_replay.py events --limit
+200`): 145 settled declined forecasts, 137 fillable CF trades, 101
+events, 58W/79L, pnl +$66.07, brier_delta +0.0361, held-out +$70.08
+(was 144/136/100/57W-79L/+$64.66/+0.0367/+$68.67). Ruling: no boundary
+change — the model's inside view was right on this row (dB −0.0429,
+market drifted toward it pre-election), but the pre-registered
+relaxation fork, recomputed the same commit with this row included
+(Status 2026-09-21 below), fails BOTH numeric gates for the first time;
+one correct election call does not reopen a fork the newest fold is
+failing on money and calibration at once.
+
+**2026-09-21 update (RETRO-20260921-0625; settled by this cycle's
+resolve.py run, graded same-commit per the DEEP-2026-08-23 rule):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| CDU most seats Berlin (86267581486d) | 0.40 / 0.215 | Yes | +0.180 | No | −5.00 |
+
+Mechanical ledger after this row (`core/counterfactual.py ledger
+--skip-reason outside-view-veto`): 146 settled declined forecasts, 138
+fillable CF trades, 102 events, 58W/80L, pnl +$61.07, brier_delta
++0.0366, held-out +$70.09 (was 145/137/101/58W-79L/+$66.07/+0.0361/
++$70.08). Ruling: no boundary change — CDU did not win the Berlin
+election (Linke did, per the sibling Linke-Yes forecast lineage settled
+the same cycle), so the veto correctly avoided another loss; one more
+Yes-side loss added to the same behavioral-Gaussian-plurality class this
+ledger already grades as its weakest.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
@@ -3974,6 +4011,24 @@ of well-calibrated declines would put the two newest folds in genuine
 contention; nothing to act on today (fold boundaries shift with n and
 the f4 flip is partly the +$5.87 CPI win), but the next deep retro
 should recompute before assuming the verdict is static.
+
+Status 2026-09-21 (DEEP): **NOT MET — first reading where BOTH numeric
+gates fail.** Slice now 145 rows / 137 CF trades / 101 events / +$66.07
+/ overall dBrier +0.0361 (includes the AfD-MV CF win `506bc4c8087e`,
++$1.41, the month's strongest single veto counterexample — graded in
+the table above). (1) fails: per-fold dBrier by the recipe (all-rows
+frame, 5 contiguous folds of 29): f0 +0.0104, f1 −0.0062, f2 +0.0642,
+f3 +0.0323, f4 +0.0798 — the two most recent folds both positive, and
+f4 is the slice's worst fold. (2) fails for the first time: tool fold
+pnl [−4.01, +4.06, −17.42, +152.84, **−69.40**] — the newest fold is
+losing counterfactual money outright (the Mythos by-date cluster,
+weather, and the Israel–Lebanon family live there). (3) holds: 101
+events ≥ 40, freshly mapped. Sixth consecutive NOT MET, and the
+09-12 note's f4-flicker resolved the wrong way once 15 more rows
+landed: the newest fifth of the slice is now miscalibrated AND
+unprofitable. The AfD-MV win is exactly the row this pre-registration
+was built to withstand — a vivid single counterexample must not reopen
+a fork that the slice-level arithmetic is failing harder than ever.
 
 If the bar is ever MET: do not loosen the veto wholesale. Propose a
 NARROW carve-out for the best-evidenced sub-class only (current
@@ -5531,3 +5586,28 @@ was 0.72, identical to my raw hazard read, and both sat 0.15 under a market
 that was right. Its price-informed `p_yes` 0.82 beat me (brier 0.0324
 versus 0.0484) and lost to the mid (0.0154). n=1 in the post-2026-09-14
 window; no paired v4 on this market.
+
+## Record-time category tag is immutable — check it before recording (DEEP-2026-09-20)
+
+**Rule.** The `category` on a forecast (or bet) row is set once, at record
+time, by me — and only core writes the journals, so a wrong tag can never
+be corrected afterward. Before calling the record step, confirm the
+category matches the event's actual sport/domain, especially on
+sibling-census sweeps where several rows are recorded in one pass. If a
+tag is discovered wrong *before* recording, fix it; discovering it wrong
+*after* recording (as at 14:19Z on 2026-09-19) leaves a permanent alien
+row in a graded cell.
+
+**Evidence.** Forecast `32f25ca85db8` (BYU vs. Colorado State, an NCAAF
+game) was recorded under `mlb-spreads` on the 2026-09-19 14:19Z FULL
+cycle; the cycle summary itself flagged it as mis-recorded in the same
+breath, so the information existed before the write. It settled
+2026-09-20 (WON, no-edge skip, dB −0.0038) and now sits permanently in
+the `mlb-spreads` forecast cell. One row is noise today, but per-cell
+`brier_delta` is the instrument this whole experiment steers by
+(research-allocation rule, DEEP-2026-09-16), and cells are small — a
+handful of alien rows is enough to flip a small-n cell's sign.
+
+**Reading rule until further notice.** When quoting the `mlb-spreads`
+forecast cell, note it contains one NCAAF row (`32f25ca85db8`). Do not
+hand-edit journals to "fix" it — journals are core-written, full stop.

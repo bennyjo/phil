@@ -3023,3 +3023,142 @@ tick reset nothing. Added cost this hour: one more forecast settlement
 (f9e4a2056cec) and six new forecast rows that exist only in the local
 `journal/forecasts.jsonl`. The suggested merge path from the 06:33Z note still
 applies. Both runners have now spent about 87 hours apart.
+
+## 2026-09-19 — deep-retro status pass
+
+Full detail in journal/retros/DEEP-2026-09-19.md. No new proposals from
+the hourly agent this window; no new operator asks. Statuses:
+
+- **Mech nonce race (2026-09-17): ENDORSED, unchanged, with operator.**
+  No recurrence this window.
+- **watch.py banned-shape regexes: ENDORSED option (a), open.** Zero
+  banned-shape fires this window (all 4 triggers legitimate; the
+  tennis new_market fire produced a properly graded forecast). Still
+  worth shipping on the three-variants-in-12-days record.
+- **Real-twin starvation: open, dated post-Sep-20** (real-ledger still
+  56 sweep rows, 0 fills ever).
+- **Screener quota refund (2026-09-15): ENDORSED, unchanged, with
+  operator.** No failed-tier instance this window.
+- **CI funnel-weld (2026-09-14): open, no new instance.**
+- **ODDS_API_KEY on operator runner: open, unchanged** (mlb-moneyline
+  still best negative forecast cell, -0.0499 n=15).
+- **Lease writability: open, unchanged.**
+- **fold_brier_delta in counterfactual.py: RE-URGED, final notice** —
+  German-bracket veto cluster settles Sep 20; absent the flag,
+  DEEP-2026-09-20 does the fold analysis by hand and this ask converts
+  to informational.
+- **Mech window line (reset 2026-09-14): requests 14, deliveries 13,
+  market-aware with context 9 (seen == sent on all 9), paired ma/v4
+  sets 4, settled pairs 0.** One settled unpaired ma row (UFO):
+  price-shown p_yes beat own, lost to mid; n=1.
+
+**Status:** same five operator asks open as the 2026-09-18 pass
+(mech CYCLE.md sentence; real allowed-classes decision post-Sep-20;
+watch.py shape regexes; screener quota refund; ODDS_API_KEY), plus the
+standing lease/fold-delta/funnel-weld items; everything else
+informational.
+
+## 2026-09-20 — deep-retro status pass
+
+Full detail in journal/retros/DEEP-2026-09-20.md. No new proposals from
+the hourly agent this window; one evidence upgrade from the deep retro:
+
+- **CI funnel-weld check (2026-09-14): ENDORSED, RE-URGED — first
+  concrete miss.** The 2026-09-19 14:19Z FULL cycle (commit 690f339)
+  ran the full funnel (screened=300, escalated=15, 3 forecasts) and
+  wrote its funnel summary to cycles.log but NO strategy/funnel.jsonl
+  row. Exactly the silent-drop shape the proposal predicted; it now
+  has a dated instance. Recommended check: a commit whose cycles.log
+  line says "FULL cycle" must touch funnel.jsonl or CI fails.
+- **Mech nonce race (2026-09-17): ENDORSED, unchanged, with operator.**
+  No mech traffic this window (all cycles cloud, no signer).
+- **watch.py banned-shape regexes: ENDORSED option (a), open.** Zero
+  banned-shape fires this window; both TRIGGERED fires legitimate.
+- **Real-twin starvation: open — decision lands tomorrow** (dated
+  post-Sep-20; real-ledger still 56 sweep rows, 0 fills ever).
+- **Screener quota refund (2026-09-15): ENDORSED, unchanged, with
+  operator.** No failed-tier instance this window.
+- **ODDS_API_KEY on operator runner: open, unchanged** (mlb-moneyline
+  still best negative forecast cell, -0.0499 n=15 — with the new
+  caveat that the mlb-spreads FORECAST cell carries one mis-tagged
+  NCAAF row, 32f25ca85db8; see playbook rule added this retro).
+- **Lease writability: open, one new dated instance** (14:19Z FULL
+  cycle: lease acquired but push refused, ran unprotected).
+- **fold_brier_delta in counterfactual.py: final notice CARRIES to
+  DEEP-2026-09-21.** Flag verified still absent from core; the
+  German-bracket veto cluster it is dated against settles tonight, so
+  the by-hand fold analysis (and conversion to informational) falls to
+  the first deep retro after settlement — tomorrow, not today.
+- **Mech window line (reset 2026-09-14): requests 14, deliveries 13,
+  market-aware with context 9 (seen == sent on all 9), paired ma/v4
+  sets 4, settled pairs 0.** Unchanged — no signer this window.
+
+**Status:** same five operator asks open as 2026-09-19 (mech CYCLE.md
+sentence; real allowed-classes decision — due tomorrow; watch.py shape
+regexes; screener quota refund; ODDS_API_KEY), with the funnel-weld CI
+ask now carrying its first concrete instance; lease and fold-delta
+standing; everything else informational.
+
+## 2026-09-21 — deep-retro status pass
+
+Full detail in journal/retros/DEEP-2026-09-21.md. No new proposals from
+the hourly agent this window. The day's headline: the four
+pre-registered election ledger rows did NOT officially resolve, so every
+decision gated on them carries with its trigger intact; and the AfD-MV
+outside-view-veto forecast (`506bc4c8087e`, est 0.90 vs mkt 0.77)
+settled as a CF WIN — graded same-commit, fork recomputed, veto stays.
+
+- **CI funnel-weld check (2026-09-14): ENDORSED, RE-URGED — SECOND
+  concrete miss.** The 2026-09-21 04:18Z FULL cycle (commit fb326b5)
+  ran the full funnel per its own cycles.log line (scan 810, screened
+  300/15, escalated 15) and wrote no strategy/funnel.jsonl row — the
+  file ends at the 02:12Z cycle. First miss was 690f339 (2026-09-19
+  14:19Z, flagged DEEP-2026-09-20). That is 2 silent drops in the last
+  13 FULL cycles. Operator: the check is one line in core CI — a commit
+  whose cycles.log line says "FULL cycle" must touch funnel.jsonl or
+  fail the push.
+- **fold_brier_delta in counterfactual.py: final notice CARRIES again —
+  trigger still unfired.** The German-bracket veto cluster it is dated
+  against remains unsettled (markets open). Today's deep retro ran the
+  by-hand fold recipe anyway for the relaxation-fork status (playbook
+  Status 2026-09-21: fold dBrier f3 +0.0323 / f4 +0.0798, fold pnl f4
+  −$69.40 — first double-gate failure). Conversion to informational
+  happens in the first deep retro after the cluster settles, per the
+  standing commitment.
+- **Real-twin starvation / allowed-classes decision: CARRIES, trigger
+  intact.** Dated post-Sep-20 with the election settlements as input;
+  those four rows are still open, so deciding today would be deciding
+  without the input the pre-registration named. Real ledger still 56
+  sweep rows, 0 fills ever; allowed class cross-market is 1 of 47
+  ledger rows (2.6% of paper flow).
+- **watch.py banned-shape regexes: ENDORSED option (a), open.** Zero
+  banned-shape fires this window (six fires, all legitimate). Related
+  hygiene shipped by the hourly agent instead: PCE move_threshold
+  0.05→0.10 (ec53056) after three researched no-catalyst fires in
+  three days on a 0.01–0.10-spread book — endorsed, KEEP.
+- **Mech nonce race (2026-09-17): ENDORSED, unchanged, with operator.**
+  No mech traffic this window (all cloud, no signer).
+- **Screener quota refund (2026-09-15): ENDORSED, unchanged, with
+  operator.** No failed-tier instance; one slow batch (~93s) plus 4
+  malformed returns on the 04:18Z cycle, logged, below this proposal's
+  bar.
+- **ODDS_API_KEY on operator runner: open, unchanged** (mlb-moneyline
+  still best negative forecast cell, −0.0499 n=15).
+- **Lease writability: open** — every cloud cycle this window acquired
+  but could not write the lease and proceeded unprotected; no
+  collision this window.
+- **Mech window line (reset 2026-09-14):** requests 14, deliveries 13,
+  market-aware with context 9 (seen == sent on all 9), paired ma/v4
+  sets 4, settled pairs 0. Unchanged.
+- **Sep-20 election pre-registrations: STANDING.** Reaffirmed verbatim:
+  the four open rows grade as TWO event-night decisions (Russia
+  `9074e3f2fd49`+`475edf2e2654`; German `23e40bbbccc5`+`7ec71e307f12`);
+  the empirical-sd fit runs on all settled vote-share rows in the retro
+  that settles the German brackets; the retro that grades them also
+  closes the real-twin decision and the fold-delta conversion.
+
+**Status:** same five operator asks open (mech CYCLE.md sentence; real
+allowed-classes — trigger pending settlement; watch.py shape regexes;
+screener quota refund; ODDS_API_KEY), funnel-weld CI ask now at TWO
+dated instances and re-urged; lease and fold-delta standing; everything
+else informational.
