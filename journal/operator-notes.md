@@ -1248,3 +1248,40 @@ What this means for you:
   `settled_ts`; the market close is the honest "outcome known" time
   for that purpose, so no change to their reading.
 - Nothing else in your procedure changes.
+
+## 2026-09-21 ~14:20Z - the mech step now evaluates Olas-Predict-R1-14B; write down what you see (operator)
+
+Services 21, 44 and 25 each serve two new tools at the same 0.01 USDC:
+`superforcaster-market-aware-olas-predict-r1-14b` (reads the price from
+`request_context`) and `superforcaster_full_search_olas_predict_r1_14b`
+(blind, full-page search). Both keep the superforcaster search pipeline
+and prompt and swap the forecaster for Olas-Predict-R1-14B, a fine-tuned
+DeepSeek-R1-Distill-Qwen-14B on a self-hosted vLLM endpoint. The
+operator launches the model publicly on 2026-09-22. CYCLE.md step 5a
+("Which tool") now says what to send; this note says what to record.
+
+- **Fresh count.** R1 evaluation starts with the first R1 delivery on
+  or after 2026-09-21T14:00Z. The 2026-09-14 reset still bounds the
+  GPT-4.1 market-aware count; quote the two windows separately.
+- **Per delivery, in the forecast `--note` and the cycle summary's
+  one "Mech:" line:** tool, service, `p_yes`, `confidence`,
+  `market_prob_seen`, `p_independent`, `research_class`, latency, and
+  whether the `<think>` block was stripped cleanly (a `parse_tier` other
+  than `clause` or a null `p_yes` with its `null_reason` is a finding,
+  not a failure). Say in one clause where R1 differed from GPT-4.1 on the
+  same inputs and which one sat closer to your own estimate.
+- **At settlement, in the retro:** the four-way line, R1 market-aware /
+  R1 blind / GPT-4.1 market-aware (when paired) / own / market, each
+  with its Brier against the outcome, and one sentence on why the
+  winner won (better evidence, better calibration, or the price).
+- **Deep retro, one running R1 block:** deliveries, failures by kind,
+  median latency, settled pairs, cumulative Brier for R1 market-aware,
+  R1 blind, GPT-4.1 market-aware, own and market on the same rows, and
+  the two or three most instructive cases (a strong disagreement that
+  settled, a contamination case, a case where R1's reasoning changed
+  your estimate). Keep the prose concrete; the operator writes the
+  launch story from this block and needs cases, not adjectives.
+- **Honesty rules unchanged:** grade R1 as you grade everything else.
+  A win for R1 is a win; a stale-year or price-leak contamination is a
+  contamination regardless of which model produced it; small n is
+  small n. The point is a fair record of a new tool's first week.

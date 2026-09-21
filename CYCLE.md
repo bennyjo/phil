@@ -195,18 +195,25 @@ Every invocation runs as one of three ticks:
        off-chain request rejected with an EIP-1271 / HTTP 503 error is
        transient: retry once with a NEW `request_id`, then fall back to
        `legacy_on_chain=true`.
-     - Which tool (operator, 2026-09-10): it depends on whether this
-       session's `mech_request` schema lists `request_context`; read the
-       schema once per cycle. WITHOUT it, the primary request per candidate
-       is `superforcaster-polymarket-v4`, which never reads market context,
-       and you send NO `superforcaster-market-aware` requests at all: run
-       blind, that tool only answers the question it exists for when it is
-       shown the price, so a blind call buys a number the retros cannot
-       grade. WITH it, the primary is `superforcaster-market-aware` with the
-       context below, and for at least one candidate per cycle you also
-       send the same prompt to `superforcaster-polymarket-v4` on the same
-       mech (a paired with-price versus blind comparison). That is the one
-       case where a candidate may get two requests.
+     - Which tool (operator, 2026-09-21; supersedes the 2026-09-10 rule):
+       the three mechs now serve two tools backed by Olas-Predict-R1-14B,
+       the model the operator launches on 2026-09-22, and evaluating them
+       is the mech step's job from now on. Read the `mech_request` schema
+       once per cycle as before. WITH `request_context` (the operator
+       machine has it), every candidate researched to a concrete estimate
+       gets a PAIR on the same mech, sent sequentially:
+       `superforcaster-market-aware-olas-predict-r1-14b` with the context
+       below, then `superforcaster_full_search_olas_predict_r1_14b` with
+       the same prompt (blind, full-page search). For at least one
+       candidate per cycle, add a third request on the same mech,
+       `superforcaster-market-aware` with the same context, so the GPT-4.1
+       baseline sits next to the R1 pair on identical inputs. WITHOUT
+       `request_context`, send `superforcaster_full_search_olas_predict_r1_14b`
+       only, one per candidate. Rotate `priority_mech` across services
+       21, 44 and 25 as before. Nothing else in this step changes: own
+       estimate first, one precise question, no price in the prompt text,
+       log every request with `mechlog.py record` using the exact tool
+       name, read the whole delivery, mech failures never block.
      - Prompt: one precise resolution question (criteria, resolution
        source, deadline in UTC - never just the market title), the market
        question itself as a single sentence ending in `?`, and no other
