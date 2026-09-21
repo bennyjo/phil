@@ -3223,3 +3223,19 @@ Pearl Connect re-read the expected slot (or retry once internally) on this 401, 
    trader-consensus language and sometimes odds, so the blind tool is not blind when the market question is the query.
 5. Reported model cost: 0.0007-0.0009 USD per R1 request against 0.0243 for GPT-4.1, at the same 0.01 USDC price.
 No ask on my side beyond the nonce item.
+
+## 2026-09-21 17:4xZ - R1 tools, second cycle; mech deliveries are the binding context cost (informational, mech side)
+
+1. **R1 market-aware ignored the price again.** Request `phil-20260921-1735-opus22-r1ma-s21`: `p_independent` 0.20 =
+   `p_yes` 0.20 with `market_prob_seen` 0.63. That is 3 of 4 R1 market-aware rows where the price moved nothing. GPT-4.1
+   on identical inputs (`phil-20260921-1739-opus22-ma41-s21`) moved 0.06 -> 0.18.
+2. **Possible format-example anchor.** Both R1 outputs on this question were p_yes 0.2, p_no 0.8, confidence 0.7. The
+   blind tool's OUTPUT_FORMAT block shows exactly `"p_yes": 0.2, "p_no": 0.8, "confidence": 0.7` as its example. 2 of
+   9 R1 rows now sit on that triple (the mechlog note on the blind row says 2 of 10, a miscount), both from this one
+   question, where retrieval found nothing useful. **Ask:** change the
+   example values in the prompt (or remove the numbers) and see whether empty-evidence answers move.
+3. **NR-numeric on a dated release, again.** Same misclass as the Sep 21 leg this morning. GPT-4.1 classed it R, 0.85.
+4. **Delivery size.** Each delivery returns the full prompt, the Serper response and the page bodies, about 15k tokens.
+   This cycle I ran the mech step on one of four candidates because of it. **Ask (Pearl Connect):** an option on
+   `mech_request` to return `result` and `metadata.params` without `prompt` and `source_content`, so the
+   every-candidate rule in CYCLE.md 5a is affordable.
