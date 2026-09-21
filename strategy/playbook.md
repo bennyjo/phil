@@ -2909,6 +2909,36 @@ replacement — it has never outperformed the market or its measured
 sibling). Re-grade the family at n≥6 settled measured-vol rows (currently
 1W/1L: edd6af85d6a6 W, 753366c2ea8e L).
 
+**2026-09-21 12:24Z update (RETRO-20260921-1224; re-grade counter pinned,
+family shade dropped):** RETRO-20260921-1025 counted the family by label
+(every crypto-touch `unvalidated-method` row) and reached "n=5, re-grade at
+the next settlement". Three of those rows (`07a247cac126` guessed sigma,
+`a28637cb4026` swept sigma, `3acf7b55a29f` no model) are outside the
+pre-registration above. The counter, from now on:
+
+- A row counts only if its note quotes a measured realized vol or a
+  market-implied vol with a named, dated source. Labels do not count rows.
+- Sibling rungs of one asset and one window, recorded from the same vol
+  input, count as ONE decision (score them all, count them once).
+- A row recorded with the barrier within 0.5% of spot is listed but carries
+  no weight.
+
+Tally at this commit: 5 settled measured rows, 4W/1L, own Brier sum 0.4786
+vs market 0.6005 (own ahead by 0.1219): `edd6af85d6a6` W, `753366c2ea8e` L,
+`fde4324641b4` W (0.03% gap, no weight), `bad4649e1e7a` + `423dd881047b` W
+(one decision, BTC reach Sep). That is 4 decisions, 3 informative. Open
+measured rows, all settling by 2026-10-01 04:00Z: `854536ded8be`,
+`942876f92dd8`, `10f71ccecca3`, `cbc8303dc2a8`. The re-grade runs in the
+retro of the tick that settles the 6th measured row, and splits reach rows
+from dip rows (a month of rising prices flatters every reach read).
+
+Shade: a touch row records the `touch.py` output at the measured vol. The
+"family's above-market record" shade toward the 0.75x-vol reading is
+dropped: on measured rows the above-market reads went 4 for 5, the shade
+cost 0.070 (`423dd881047b`) and 0.015 (`bad4649e1e7a`) Brier, and a shaded
+row no longer tests the method the re-grade is about. A shade needs a
+row-specific reason in the note. Forecast-only ruling unchanged: no bets.
+
 Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
 (fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
 both settled this tick too, but both carry claimed edges ≤0.10 under a
