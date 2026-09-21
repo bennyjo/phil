@@ -2995,3 +2995,21 @@ cycle (1 FULL line in the local log in the last 24h, min 4). The guard sees
 origin's cycles and the pacing count does not, so the two rules now disagree
 every time the cloud runner ticks first. Both runners have now spent about 54
 hours apart.
+
+**Recurrence 2026-09-21T06:33Z (FULL cycle, operator machine):** still diverged,
+ahead 20 / behind 55 at sync, merge-base d0da028 (ahead 22 after this tick's
+retro and cycle commits). Origin tip cfed7d4 is the 2026-09-21 deep retro; CI
+there is green. This tick reset nothing. New cost this hour, and the largest
+so far: `resolve.py` settled the Berlin Linke-most bet 7ec71e307f12 (LOST -5.00)
+and 13 forecasts on the LOCAL ledger and forecast files. Origin's deep retro
+ran at 04:50Z, before the settlement landed, so the cloud runner will settle
+the same rows on its next tick with its own `settled_ts`, write its own retro,
+and edit the same playbook section. `journal/ledger.jsonl` now differs on both
+sides in the same row, and CYCLE.md forbids hand-editing it, so a plain rebase
+can no longer succeed even in principle. Suggested operator path: take origin's
+`journal/ledger.jsonl` and `journal/forecasts.jsonl` as the base, re-run
+`core/resolve.py`, re-record the local-only forecast rows through
+`core/forecast.py`, and carry over by hand only `strategy/` and
+`journal/retros/` (RETRO-20260921-0633 and the playbook's
+price-inside-model-range paragraph are local-only). Both runners have now
+spent about 86 hours apart.
