@@ -2350,6 +2350,26 @@ this rule (large undecided share, market wrong too, not just the
 poll-derived estimate), at zero bankroll cost because the bar kept both
 legs forecast-only. No rule change; the bar keeps calling this correctly.
 
+**Price-inside-the-model-range rule (RETRO-20260921-0633, numeric-polling
+elections and any other self-built model):** when my model prints a RANGE
+across defensible input choices (poll weighting, recency window, error sd)
+and the market price lies inside that range, the claimed edge is an input
+choice, not a disagreement: record `no-edge` and do not bet. A bet needs the
+price outside the WHOLE range by at least `min_edge`, and the forecast note
+must quote the range. Evidence: Berlin Linke-most No `7ec71e307f12` LOST
+−$5 (MC 0.55 recency-weighted to 0.665 newest-poll-only, price 0.665, own
+0.60 picked mid-range, "edge" 0.05); all six Berlin Linke/CDU reads sat on
+the CDU side of a deep 0.01-spread book and all six lost to the mid
+(dBrier +0.005 to +0.114, one draw). Counter-instance where the test passes:
+MV AfD `506bc4c8087e` (sd sweep 0.80-0.96 vs ask 0.77, won). Corollary
+(label consistency): a market declined as `unvalidated-method` stays
+declined on that method until a settled row validates it; a smaller edge
+days later is not new evidence (Sep 14 decline at edge 0.06, Sep 18 bet at
+0.05, same Gaussian). Keep counting, not yet a rule: in both Sep 20 states
+my precedent adjustment (Berlin-2023 CDU bonus, Brandenburg-2024 SPD
+consolidation) shaded AWAY from the poll leader and the poll leader won
+(n=2 elections, one night).
+
 ## Outside-view veto: settled counterfactual ledger (DEEP-2026-08-15)
 
 Per-row fill arithmetic over ALL settled `outside-view-veto` forecast rows
@@ -3868,6 +3888,24 @@ guessed or swept vol. From this commit every touch estimate comes from
 `--vol-source`; the forecast note quotes its output. Settled measured-vol
 rows stand at 3 of the 6 the re-grade needs (`edd6af85d6a6`,
 `753366c2ea8e`, `fde4324641b4`), with `854536ded8be` open.
+
+**2026-09-21 06:33Z update (FULL cycle, operator machine, local copy of a
+diverged main; resolve.py settled 2 outside-view-veto forecasts from the
+Sep 20 German election night; full read in RETRO-20260921-0633):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| MV AfD most seats (506bc4c8087e) | 0.90 / 0.77 | Yes | +0.120 | Yes | **+0.28** |
+| Berlin CDU most seats (86267581486d) | 0.40 / 0.215 | Yes | +0.180 | No | −1.00 |
+
+Net this batch: **−0.72u** (1W/1L). Mechanical ledger after these rows:
+146 settled declined forecasts, 138 fillable CF trades, 102 events,
+58W/80L, pnl +$61.07, brier_delta +0.0366, held-out +$70.09 (was
+144/136/57W-79L/+$64.66/+0.0367/+$68.67; −$3.59 = +$1.41 − $5.00 ✓).
+Ruling: no boundary change. Both rows are poll-Gaussian election
+self-models; the one that won had the price OUTSIDE its whole sd-sweep
+range (0.80-0.96 vs ask 0.77), the one that lost was a precedent-shaded
+point estimate. Fork gate arithmetic stays with the deep retro.
 
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
