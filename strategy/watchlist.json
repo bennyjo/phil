@@ -53,7 +53,8 @@
     "arms-sale cancellation threat is being acted on), plus a calendar entry for the BoE decision.",
     "Amended 2026-09-15 20:2xZ (FULL cycle, cloud): pruned the Iran Sep7 ceasefire price-move entry (0ed1d77858d7 settled LOST this cycle, RETRO-20260915-2015).",
     "Amended 2026-09-17 11:2xZ (TRIGGERED cycle, cloud): pruned two watch.py-reported expired entries (FOMC Sep16 calendar, past window and already graded; Fed hike price_move 2252245, past expires). Also pruned the BoE calendar entry and its paired price_move (market 2661520) now that the decision is out (WebFetch-confirmed: held at 3.75pct, 6-3, same three hawks Pill/Greene/Mann as July -- matches the expected split exactly; PM now 0.0005/0.9995, fully resolved) -- forecast bc482ffb3606 still open pending official UMA settlement, grading deferred to the retro that settles it; no further watch value in either entry.",
-    "Amended 2026-09-17 16:0xZ (FULL cycle, operator machine): added the core PCE YoY 3.3pct price move (new open position 8894592b953a, No @0.68) and calendar entries for the UMich final (Sep 25) and the BEA August PCE release (Sep 30)."
+    "Amended 2026-09-17 16:0xZ (FULL cycle, operator machine): added the core PCE YoY 3.3pct price move (new open position 8894592b953a, No @0.68) and calendar entries for the UMich final (Sep 25) and the BEA August PCE release (Sep 30).",
+    "Amended 2026-09-21 02:3xZ (TRIGGERED cycle, cloud): raised the core PCE (3938031) move_threshold 0.05 -> 0.10. Three fires on this exact key in three days (Sep18 15:22Z +0.070, Sep20 12:52Z -0.050, Sep21 02:37Z -0.065), each individually researched (WebSearch/WebFetch) and each confirmed no dated news catalyst -- the observed CLOB spread on this token has run 0.01-0.10 across the same window, i.e. within spread-noise range of the 0.05 threshold on a thin ($660 liquidity) book. 0.10 still catches a real consensus-forming move (a genuine settle-on-3.3 signal implies a much larger repricing toward the extremes) while filtering the bid/ask wobble this item has fired on three times running for zero bets."
   ],
   "price_moves": [
     {
@@ -92,7 +93,7 @@
       "market_id": "3938031",
       "token_id": "39400114973934221253761872304842829808714135241326313029175177821282061696710",
       "label": "Will Core PCE YoY be 3.3% in August? (No, open position 8894592b953a, entry 0.68, est No 0.76; a move toward Yes means a dated consensus or a bank tracker has settled on 3.3 -- re-read the camps (Fed staff/GS ~3.2 vs BofA/Cleveland ~3.4); BEA release Sep 30 12:30Z)",
-      "move_threshold": 0.05,
+      "move_threshold": 0.1,
       "window_min": 60,
       "expires": "2026-09-30T12:00:00Z"
     }
