@@ -4627,6 +4627,18 @@ not this band. 4 forecasts recorded (e55e146a3195, d70b70d9ed59,
 1b550471f8f5, plus WNBA Dream/Aces 710604907e82 at edge -0.0227, same
 result), 0 bets.
 
+**Sub-$20k tennis, first instance (RETRO-20260921-1405).** Saint Tropez
+Challenger qualifying, Cassone vs Zahraj (`77126d78cefe`, liq $5.4k, market
+17 minutes old, no clean book feed): own 0.70 vs mid 0.755, favourite won,
+market ahead by 0.030 Brier. n=1, no sign of a lag in the thin band. The
+error was a consistency one: the note listed two signals (ranking gap,
+opponent's next-day fatigue) that both favoured the favourite, then recorded
+a number under the book on one unverified non-sharp scrape. Rule: when every
+qualitative signal in the note points the same way as the book's lean, the
+recorded number does not sit on the other side of the mid because of a
+single scrape of unknown freshness - centre on the mid and record
+`market-agrees`.
+
 **Exploration budget, commodity touch-anytime brackets (2026-08-18 07:23Z,
 first test of this category).** WTI/Gold "hit HIGH/LOW $X by Sep 1" markets
 (8 legs: WTI HIGH 90/95/100, WTI LOW 70/75, Gold HIGH 4500/4600/4700) — same
