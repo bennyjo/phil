@@ -7,6 +7,23 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
+# One loop per checkout. Two loop.sh processes in the same working tree
+# commit over each other and collide with the cloud routine (2026-09-15 to
+# 2026-09-21: a second loop started without PEARL_CONNECT_STORE ran next to
+# the real one for six days). The pid file guards the start; a stale file
+# left by a crashed loop is harmless because the pid is checked for liveness.
+LOCK=".loop.pid"
+if [ -f "$LOCK" ] && kill -0 "$(cat "$LOCK" 2>/dev/null)" 2>/dev/null; then
+  echo "ERROR: loop.sh is already running in this checkout (pid $(cat "$LOCK")); refusing to start a second one" >&2
+  exit 1
+fi
+echo $$ > "$LOCK"
+trap 'rm -f "$LOCK"' EXIT
+
+if [ -z "${PEARL_CONNECT_STORE:-}" ]; then
+  echo "NOTE: PEARL_CONNECT_STORE is unset — this loop runs without the Pearl Connect tools (no mech second opinions, no real twins)" >&2
+fi
+
 REAL_MODE=0
 ARGS=()
 for a in "$@"; do

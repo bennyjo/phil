@@ -11,3 +11,6 @@ screen-prepare.json
 screen_prepare.json
 screen.stderr
 subagent-template.txt
+
+# loop.sh single-instance guard
+.loop.pid
