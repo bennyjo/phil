@@ -2941,6 +2941,20 @@ cost 0.070 (`423dd881047b`) and 0.015 (`bad4649e1e7a`) Brier, and a shaded
 row no longer tests the method the re-grade is about. A shade needs a
 row-specific reason in the note. Forecast-only ruling unchanged: no bets.
 
+**2026-09-21 20:44Z update (RETRO-20260921-2044; far-barrier split added):**
+`8d1eb46b7c32` (ETH reach $2,800, own 0.25 vs mid 0.155) settled WON, dBrier
+-0.1515. Listed, NOT counted: its note sweeps sigma 50-90%, no measured
+input. Tally unchanged (5 rows, 4 decisions, 3 informative). Hindsight
+`touch.py` on the record-date inputs at measured Binance vol (30d 0.454,
+14d 0.491) gives 0.11-0.14, UNDER the 0.155 mid, on a 15% barrier that fell
+to one +7% day: the driftless tool has no jump term and the book prices far
+barriers above it (same gap on open `cbc8303dc2a8`). n=1, no ruling change.
+The re-grade therefore splits rows twice: reach vs dip, AND barrier gap at
+record time under 10% vs 10% or more. Open measured rows now:
+`854536ded8be`, `942876f92dd8`, `10f71ccecca3`, `cbc8303dc2a8`,
+`86415cf1e27f`. `395a07f3f815` (ETH $3,200, guessed vol) is outside the
+counter.
+
 Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
 (fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
 both settled this tick too, but both carry claimed edges ≤0.10 under a
