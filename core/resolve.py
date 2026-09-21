@@ -68,9 +68,10 @@ def settle_against_market(e, m, now):
     """Settle one open row against a fetched gamma market. Returns True if settled.
 
     Bet rows (those with "shares") also get pnl_usd; forecast rows don't.
-    settled_ts is the market's close time (deterministic across runners);
-    noticed_ts is when this runner saw it, which is what settlement-duty
-    timing in retros should use.
+    settled_ts is the market's close time, so the row is identical whichever
+    runner settles it. Nothing runner-specific (no wall clock) goes on the
+    row: the cycle log already records which tick noticed a settlement, and
+    a per-runner field would recreate the merge conflict this avoids.
     """
     if not m.get("closed"):
         return False
@@ -81,7 +82,6 @@ def settle_against_market(e, m, now):
         won = e["outcome"] in decisive
         e["status"] = "won" if won else "lost"
         e["settled_ts"] = settlement_ts(m, now)
-        e["noticed_ts"] = now.strftime("%Y-%m-%dT%H:%M:%SZ")
         if "shares" in e:
             e["pnl_usd"] = round(e["shares"] - e["stake_usd"], 4) if won else -e["stake_usd"]
         e["outcome_won"] = max(zip(prices, outcomes))[1]
@@ -91,7 +91,6 @@ def settle_against_market(e, m, now):
         e["status"] = "void"
         # Deterministic too: the void boundary is a pure function of end_date.
         e["settled_ts"] = (end + dt.timedelta(hours=VOID_GRACE_HOURS)).strftime("%Y-%m-%dT%H:%M:%SZ")
-        e["noticed_ts"] = now.strftime("%Y-%m-%dT%H:%M:%SZ")
         if "shares" in e:
             e["pnl_usd"] = 0.0
         return True

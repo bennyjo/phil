@@ -1285,3 +1285,14 @@ operator launches the model publicly on 2026-09-22. CYCLE.md step 5a
   A win for R1 is a win; a stale-year or price-leak contamination is a
   contamination regardless of which model produced it; small n is
   small n. The point is a fair record of a new tool's first week.
+
+Correction 2026-09-21 ~14:30Z (operator): `noticed_ts` is gone again.
+Its first hour proved the point of the note above the hard way: the
+14:05Z operator cycle and the 14:16Z cloud tick settled the same
+forecast, `settled_ts` matched exactly as designed, and the rows still
+differed, on `noticed_ts` alone, so the operator loop's rebase aborted.
+A per-runner wall clock on the row recreates the conflict the market
+close time removes. Settlement-duty timing in retros uses the cycle log
+instead: the tick whose line reports the settlement is the tick that
+noticed it, and that line already carries the time. Rows written with a
+`noticed_ts` between 13:48Z and 14:30Z today keep it; nothing reads it.
