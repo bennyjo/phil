@@ -4029,6 +4029,37 @@ decline it again today. What the row adds: the market moved from 0.40 to
 0.57 to 0.22 on no new poll, so a price swing on a thin state-election
 bracket is not information about the centre.
 
+**2026-09-21 22:1xZ update (RETRO-20260921-2215; LIGHT tick, cloud;
+resolve.py settled 4 forecasts, 2 `outside-view-veto`, graded same-commit
+per the DEEP-2026-08-23 rule).** MV SPD second-vote brackets, election
+Sep20, official SPD share landed inside the >=31% bracket (own poll-mean
+model correct on direction both times, wrong on the veto's implied side
+once):
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| MV SPD >=31% (e056578ff5cf, Sep 14) | 0.81 / 0.86 | No | +0.040 | Yes | −5.00 |
+| MV SPD 28-31% (52c0faf90ae2, Sep 14) | 0.24 / 0.095 | Yes | +0.140 | No | −5.00 |
+
+Mechanical ledger after these rows (`core/counterfactual.py ledger
+--skip-reason outside-view-veto`, after a fresh `screen_replay.py events`
+sweep): 150 settled declined forecasts, 142 fillable CF trades, 100
+events, 60W/82L, pnl +$60.11, brier_delta +0.0337, held-out +$69.12 (was
+148/140/103/60W-80L/+$70.11/+0.0337/+$79.12 before this pair; the evts
+drop from 103 to 100 is `screen_replay.py` re-clustering existing
+mappings, not new data). Side split: no 105 rows/97 trades/46W-51L/
++$58.49; yes 45 rows/45 trades/14W-31L/+$1.62. Ruling: no boundary
+change at n=2. Both rows are the SAME sd-sensitivity shape the veto was
+built for (`e056578ff5cf`'s note: "sign holds (No) but size flips on the
+sd judgment parameter"): the >=31% row's point estimate (0.81) sat on the
+correct side of 0.5 but the veto declined the market-implied No edge
+that the loose-sd tail created, and that declined No trade lost because
+SPD did clear 31%. The 28-31% sibling declined a Yes-side edge built on
+the same Gaussian and also lost, since the outcome landed in the >=31%
+bucket, not 28-31%. Net: the veto avoided nothing here (the market was
+right, the self-built Gaussian tails were not) — consistent with this
+family's standing weakest-class read, not a new failure mode.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
