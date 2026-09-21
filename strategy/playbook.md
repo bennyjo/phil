@@ -1697,6 +1697,23 @@ predictor, n=1 country/instance — the ruled-out gate above stands unchanged
 (still requires (a) or (b) to bypass it), this just confirms the exception
 pays off when it actually fires rather than being untested.
 
+**Managed-election centring note (RETRO-20260921-1120, Russia Duma Sep
+18-20 2026).** In a managed election the state pollster's published
+forecast understates the ruling party's official result: VCIOM forecast
+41-44 pct vs 49.8 official in 2021, 51-53 vs about 58 in 2026. My UR seat
+centre built from the 2026 forecast was 331; the preliminary count is 355.
+That 24-seat undershoot, not the undefined baseline clause, is what put own
+behind the book on the seat-GAIN legs (`23e8441da49c` own 0.25 vs mid
+0.2035, `ac1d41a88c55` 0.05 vs 0.024, both lost; `5ece5e87793d` pending)
+and on the open UR seat brackets (`71dc5127a964`, `4c8153f75a72`). I had
+applied the 2021 pollster miss to LDPR (overstated) and skipped the mirror
+image for UR. Rule: a ruling-party share or seat estimate built from such a
+forecast is centred at forecast-top plus the prior cycle's miss, with the
+upside tail wider than the downside; if I cannot source the prior miss, the
+book's bracket prices are the better centre and the row is `market-agrees`.
+n=2 elections, one country: a centring rule for this family, not a betting
+licence.
+
 **Exploration budget, Musk net-worth brackets (2026-08-19 04:xxZ, first
 test; ruling recorded here by DEEP-2026-08-19 — the 04:20Z cycle logged it
 only in funnel.jsonl/schedule.json, and rulings the pool re-check relies
