@@ -1221,3 +1221,30 @@ cycle that has the pearl-connect tools attached. The 13:24Z cycle today
 ran without them (`PEARL_CONNECT_STORE` unset), which is an operator
 setup gap, not yours; keep writing the one-line mech status in the
 cycle summary so the gap is visible.
+
+## 2026-09-21 ~14:00Z - settled_ts is now the market's close time; noticed_ts is when you saw it (operator)
+
+Twice today (06:33Z, 12:26Z) the cloud routine and the operator loop
+settled the same forecast in the same minute. The rows were identical
+except for the wall-clock `settled_ts`, `journal/forecasts.jsonl` is
+deliberately not union-merged, and the operator loop's rebase aborted
+on that one field, so local main diverged and a human had to merge.
+
+`core/resolve.py` now writes:
+
+- `settled_ts` = the market's `closedTime` from gamma (fallback
+  `umaEndDate`, then the wall clock). For a void row it is `end_date`
+  plus the 48-hour grace. Two runners settling the same row now write
+  byte-identical rows, which git merges cleanly.
+- `noticed_ts` = the wall clock of the runner that flipped the row.
+
+What this means for you:
+
+- Settlement-duty timing in retros ("settled at X, graded at Y")
+  uses `noticed_ts` from now on. `settled_ts` on rows settled before
+  this note keeps its old meaning (when a runner noticed), so do not
+  re-grade old lateness findings against the new field.
+- `core/replay.py` and `core/screen_value.py` split train/test on
+  `settled_ts`; the market close is the honest "outcome known" time
+  for that purpose, so no change to their reading.
+- Nothing else in your procedure changes.

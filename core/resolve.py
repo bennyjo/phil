@@ -36,10 +36,41 @@ def dump_jsonl(path, rows):
     path.write_text("".join(json.dumps(r) + "\n" for r in rows))
 
 
+def _iso_z(value):
+    """Normalise a gamma timestamp ('2026-09-21 06:12:04+00', ISO with Z or an
+    offset) to the journal's 'YYYY-MM-DDTHH:MM:SSZ' form. None when unparseable."""
+    if not value or not isinstance(value, str):
+        return None
+    s = value.strip().replace(" ", "T").replace("Z", "+00:00")
+    if s[-3:] in ("+00", "-00"):
+        s += ":00"
+    try:
+        t = dt.datetime.fromisoformat(s)
+    except ValueError:
+        return None
+    if t.tzinfo is None:
+        t = t.replace(tzinfo=dt.timezone.utc)
+    return t.astimezone(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def settlement_ts(m, now):
+    """The market's own close time, so two runners settling the same row write
+    identical rows (2026-09-21: the cloud routine and the operator loop settled
+    the same forecast in the same minute, differed only in a wall-clock
+    settled_ts, and forecasts.jsonl is deliberately not union-merged, so the
+    operator loop's rebase aborted). Falls back to the wall clock when gamma
+    carries no close time."""
+    return (_iso_z(m.get("closedTime")) or _iso_z(m.get("umaEndDate"))
+            or now.strftime("%Y-%m-%dT%H:%M:%SZ"))
+
+
 def settle_against_market(e, m, now):
     """Settle one open row against a fetched gamma market. Returns True if settled.
 
     Bet rows (those with "shares") also get pnl_usd; forecast rows don't.
+    settled_ts is the market's close time (deterministic across runners);
+    noticed_ts is when this runner saw it, which is what settlement-duty
+    timing in retros should use.
     """
     if not m.get("closed"):
         return False
@@ -49,7 +80,8 @@ def settle_against_market(e, m, now):
     if decisive:
         won = e["outcome"] in decisive
         e["status"] = "won" if won else "lost"
-        e["settled_ts"] = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+        e["settled_ts"] = settlement_ts(m, now)
+        e["noticed_ts"] = now.strftime("%Y-%m-%dT%H:%M:%SZ")
         if "shares" in e:
             e["pnl_usd"] = round(e["shares"] - e["stake_usd"], 4) if won else -e["stake_usd"]
         e["outcome_won"] = max(zip(prices, outcomes))[1]
@@ -57,7 +89,9 @@ def settle_against_market(e, m, now):
     end = dt.datetime.fromisoformat(e["end_date"].replace("Z", "+00:00"))
     if now - end > dt.timedelta(hours=VOID_GRACE_HOURS):
         e["status"] = "void"
-        e["settled_ts"] = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+        # Deterministic too: the void boundary is a pure function of end_date.
+        e["settled_ts"] = (end + dt.timedelta(hours=VOID_GRACE_HOURS)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        e["noticed_ts"] = now.strftime("%Y-%m-%dT%H:%M:%SZ")
         if "shares" in e:
             e["pnl_usd"] = 0.0
         return True
