@@ -3861,6 +3861,26 @@ guessed or swept vol. From this commit every touch estimate comes from
 rows stand at 3 of the 6 the re-grade needs (`edd6af85d6a6`,
 `753366c2ea8e`, `fde4324641b4`), with `854536ded8be` open.
 
+**2026-09-21 update (DEEP-2026-09-21; settled by the deep retro's own
+resolve.py run, graded same-commit per the DEEP-2026-08-23 rule; full
+read in DEEP-2026-09-21 (c)):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| AfD most seats MV (506bc4c8087e) | 0.90 / 0.77 | Yes | +0.120 | Yes | **+0.28** |
+
+Mechanical ledger after this row (`core/counterfactual.py ledger
+--skip-reason outside-view-veto`, after `screen_replay.py events --limit
+200`): 145 settled declined forecasts, 137 fillable CF trades, 101
+events, 58W/79L, pnl +$66.07, brier_delta +0.0361, held-out +$70.08
+(was 144/136/100/57W-79L/+$64.66/+0.0367/+$68.67). Ruling: no boundary
+change — the model's inside view was right on this row (dB −0.0429,
+market drifted toward it pre-election), but the pre-registered
+relaxation fork, recomputed the same commit with this row included
+(Status 2026-09-21 below), fails BOTH numeric gates for the first time;
+one correct election call does not reopen a fork the newest fold is
+failing on money and calibration at once.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
@@ -3928,6 +3948,24 @@ of well-calibrated declines would put the two newest folds in genuine
 contention; nothing to act on today (fold boundaries shift with n and
 the f4 flip is partly the +$5.87 CPI win), but the next deep retro
 should recompute before assuming the verdict is static.
+
+Status 2026-09-21 (DEEP): **NOT MET — first reading where BOTH numeric
+gates fail.** Slice now 145 rows / 137 CF trades / 101 events / +$66.07
+/ overall dBrier +0.0361 (includes the AfD-MV CF win `506bc4c8087e`,
++$1.41, the month's strongest single veto counterexample — graded in
+the table above). (1) fails: per-fold dBrier by the recipe (all-rows
+frame, 5 contiguous folds of 29): f0 +0.0104, f1 −0.0062, f2 +0.0642,
+f3 +0.0323, f4 +0.0798 — the two most recent folds both positive, and
+f4 is the slice's worst fold. (2) fails for the first time: tool fold
+pnl [−4.01, +4.06, −17.42, +152.84, **−69.40**] — the newest fold is
+losing counterfactual money outright (the Mythos by-date cluster,
+weather, and the Israel–Lebanon family live there). (3) holds: 101
+events ≥ 40, freshly mapped. Sixth consecutive NOT MET, and the
+09-12 note's f4-flicker resolved the wrong way once 15 more rows
+landed: the newest fifth of the slice is now miscalibrated AND
+unprofitable. The AfD-MV win is exactly the row this pre-registration
+was built to withstand — a vivid single counterexample must not reopen
+a fork that the slice-level arithmetic is failing harder than ever.
 
 If the bar is ever MET: do not loosen the veto wholesale. Propose a
 NARROW carve-out for the best-evidenced sub-class only (current
