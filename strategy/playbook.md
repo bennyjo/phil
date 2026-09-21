@@ -3881,6 +3881,23 @@ relaxation fork, recomputed the same commit with this row included
 one correct election call does not reopen a fork the newest fold is
 failing on money and calibration at once.
 
+**2026-09-21 update (RETRO-20260921-0625; settled by this cycle's
+resolve.py run, graded same-commit per the DEEP-2026-08-23 rule):**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| CDU most seats Berlin (86267581486d) | 0.40 / 0.215 | Yes | +0.180 | No | −5.00 |
+
+Mechanical ledger after this row (`core/counterfactual.py ledger
+--skip-reason outside-view-veto`): 146 settled declined forecasts, 138
+fillable CF trades, 102 events, 58W/80L, pnl +$61.07, brier_delta
++0.0366, held-out +$70.09 (was 145/137/101/58W-79L/+$66.07/+0.0361/
++$70.08). Ruling: no boundary change — CDU did not win the Berlin
+election (Linke did, per the sibling Linke-Yes forecast lineage settled
+the same cycle), so the veto correctly avoided another loss; one more
+Yes-side loss added to the same behavioral-Gaussian-plurality class this
+ledger already grades as its weakest.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
