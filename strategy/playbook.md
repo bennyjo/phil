@@ -3993,6 +3993,28 @@ the same cycle), so the veto correctly avoided another loss; one more
 Yes-side loss added to the same behavioral-Gaussian-plurality class this
 ledger already grades as its weakest.
 
+**2026-09-21 17:3xZ update (RETRO-20260921-1730; FULL cycle, operator
+machine; resolve.py settled 4 forecasts, 2 `outside-view-veto`, graded
+same-commit per the DEEP-2026-08-23 rule).** Berlin SPD under 10% of
+second votes, two snapshots of one market (`3748352`), both on the No
+side, official SPD share 12.1% -> No, both declined trades WIN:
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Berlin SPD <10% (d0396e9b0cdd, Sep 12) | 0.20 / 0.40 | No | +0.161 | No | **+2.82** |
+| Berlin SPD <10% (62f72f65c634, Sep 14) | 0.28 / 0.5675 | No | +0.274 | No | **+6.21** |
+
+Mechanical ledger after these rows (`core/counterfactual.py ledger
+--skip-reason outside-view-veto`): 148 settled declined forecasts, 140
+fillable CF trades, 103 events, 60W/80L, pnl +$70.11, brier_delta
++0.0337, held-out +$79.12 (was 146/138/102/58W-80L/+$61.07/+0.0366/
++$70.09). One event, so one draw. Ruling: no boundary change. The veto
+reason was honest (the No edge flipped sign between a full-poll mean and
+a newest-poll-only mean), and the input-sensitivity rule above would
+decline it again today. What the row adds: the market moved from 0.40 to
+0.57 to 0.22 on no new poll, so a price swing on a thin state-election
+bracket is not information about the centre.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
@@ -5043,6 +5065,39 @@ REPLACE the interim "sd >= 1.8" line in rule 1 above:
    in both states every party with a trend beat its final polls in the
    trend direction (Linke +4.7, AfD +1.5, CDU -1.7 from the final-week
    mean). This is the single-party form of rule 2's transfer reading.
+
+**Eighth and ninth data points, the first out-of-sample test of the sd
+default: MV Linke 8-11% (`3b51b45cfd43`, own Yes 0.64 vs mid 0.655,
+market-agrees) and Berlin SPD under 10% (three rows, last one
+`06c6be0cad66`, own 0.26 vs mid 0.2205) settled 2026-09-21 17:2xZ, all
+No.** Official MV Linke share 6.5% against a six-poll mean of 10.17:
+-3.67pt. Official Berlin SPD share 12.1% against a final mean of 11.6:
++0.5pt. Full grading in RETRO-20260921-1730. Rulings:
+
+1. **The default held.** With the two new draws (and MV CDU corrected to
+   the official 4.9%, a -4.1pt miss, not the 5.3% the watch item carried)
+   the RMS realized miss is 2.9pt over nine draws and 3.1 over the seven
+   German state draws. It was 2.9 and 3.1 before. Keep sd 3.0 state, 2.5
+   national. Refit still at n >= 12.
+2. **The spread between polls is never the sd.** The Linke note set sd
+   1.4 "matched to observed dispersion" and called the wider sd a
+   "spurious" edge. Six polls that agree with each other measure house
+   agreement. They say nothing about the distance from the poll mean to
+   the result. At the default sd 3.0 the same mean gives P(8-11) = 0.37,
+   Brier 0.14 against the market's 0.43 and my 0.41. A vote-share note
+   that uses an sd under the default must cite settled rows that justify
+   it. Poll agreement does not.
+3. **Consolidation squeezes the small parties on the leader's side
+   (keep counting, n=2 elections, not a bet rule yet).** MV 2026: the
+   premier's SPD beat its polls by about 4 (derived from the polled
+   5-point AfD lead closing to 2.7) while Linke (-3.7) and CDU (-4.1
+   from the entry mean) under-ran theirs. Brandenburg 2024 had the same
+   shape. When a state race is a two-party fight for first place
+   against AfD, run the centre stress test on every small-party bracket
+   with the mean moved 2 points DOWN, whatever that party's own trend
+   says. This does not contradict the "shaded away from the poll leader"
+   count above: that count is about who finishes first, this one is
+   about the shares of the parties that cannot.
 
 ## Funnel pool_total: prose rule escalated to a mechanical check
 (DEEP-2026-08-24)
