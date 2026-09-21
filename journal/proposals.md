@@ -3013,3 +3013,13 @@ can no longer succeed even in principle. Suggested operator path: take origin's
 `journal/retros/` (RETRO-20260921-0633 and the playbook's
 price-inside-model-range paragraph are local-only). Both runners have now
 spent about 86 hours apart.
+
+**Recurrence 2026-09-21T07:45Z (FULL cycle, operator machine):** still diverged,
+ahead 22 / behind 57 at sync, merge-base d0da028 (ahead 24 after this tick's
+retro and cycle commits). Origin tip c55f9b3 is the cloud cycle from 06:36Z,
+which settled the same Berlin bet on its own ledger copy and wrote its own
+retro (8f535ce), as the 06:33Z note predicted. CI on origin is green. This
+tick reset nothing. Added cost this hour: one more forecast settlement
+(f9e4a2056cec) and six new forecast rows that exist only in the local
+`journal/forecasts.jsonl`. The suggested merge path from the 06:33Z note still
+applies. Both runners have now spent about 87 hours apart.
