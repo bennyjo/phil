@@ -4945,6 +4945,8 @@ pair +0.010 (flat). Full grading in RETRO-20260918-0537. Two consequences:
    n allows. Until then keep sd >= 1.8 on any new vote-share bracket
    research and treat a near-boundary bracket (mean within 0.5pt of the
    edge) as no-edge unless the CENTER has a sourced shift.
+   (The sd floor is SUPERSEDED 2026-09-21 by the seventh data point
+   below: sd 3.0 state, 2.5 national. The near-boundary rule stands.)
 2. **Sibling ladders inherit the party's center correction.** The
    SD-second bet (`09fc471ceec1`, same 22:19Z cycle) applied the 2022
    SD-M gap correction and won +$20; this bracket on the same party left
@@ -4999,6 +5001,48 @@ independent. The fit set is now S-A x3, Sweden x3, MV AfD x1, and still
 waits on MV CDU (ledger bet, UMA lag as usual for this class) and Berlin
 Linke (already settled, RETRO-20260921-1520) before the pre-registered sd
 fit runs. Full grading in RETRO-20260921-1614.
+
+**Seventh data point, the fit itself, and the German-set joint verdict: MV
+CDU 11-14% bet (`23e40bbbccc5`, $5 Yes @0.09, own 0.1701 at mean 9.0 sd
+2.2) settled 2026-09-21 16:15Z, No, LOST -$5.00, brier_delta +0.0208.**
+Official CDU share 5.3%: -3.7pt from the entry mean (1.7 sd), -1.7pt from
+the final-week poll mean of 7. With Berlin Linke-most No (`7ec71e307f12`,
+-$5.00) the German set nets -$10.00, both legs lost. Full grading in
+RETRO-20260921-1625; fit script `work/sdfit_0921.py`. Rulings, which
+REPLACE the interim "sd >= 1.8" line in rule 1 above:
+
+1. **Default sd: 3.0 points for a state or regional election, 2.5 for a
+   national one.** The pre-registered Brier-minimising fit is degenerate
+   on this set (Brier falls monotonically with sd, 0.347 at 1.2 to 0.162
+   at 5.0, because five of seven draws landed in a tail bracket), so the
+   number comes from the estimator this section already prescribed, the
+   realized miss: RMS of official share minus model mean, one draw per
+   party-election, is 2.9pt over all seven (S-A SPD +1.2, S-A Grüne +3.0,
+   SD -2.15, M +2.49, MV CDU -3.7, MV AfD +1.53, Berlin Linke +4.7), 3.1
+   for the five German state draws, 2.3 for the two Swedish ones (n=2, a
+   floor and not a fit). Sensitivity 2.6-3.0. Every sd used so far (1.2 to
+   2.5) sat under it. Points, not a fraction of the share: Grüne missed by
+   3.0 from a 5.9 mean. Mean miss +1.0 with a standard error near 1.1, so
+   NO directional "polls read low" shift. Open vote-share rows join the
+   set as they settle; refit at n >= 12 draws.
+2. **The centre stress test is the robustness check; an sd sweep is not.**
+   This bet's rationale called its edge "robust across sd 2.0-2.5". A
+   bracket that does not contain the mean gains probability from any
+   widening, so an sd sweep can never reject it (at sd 3.0 this losing bet
+   reads 0.20, a BIGGER edge). Before any vote-share bracket bet, recompute
+   with the mean at the most recent poll, then one further point along the
+   poll trend. The edge must stay >= min_edge at both. Here: mean 8.0 ->
+   0.083 at sd 2.2, under the 0.09 ask; mean 7.0 at sd 3.0 -> 0.081. No
+   bet either way. Write both numbers in the rationale.
+3. **No bet against the trend.** No Yes bet on a bracket, and no bet on an
+   ordinal leg (most seats, second place), that needs the party to reverse
+   its trailing poll trend, unless a sourced event explains the reversal.
+   A poll mean is a lagging average of a moving series. Evidence: both
+   German-set legs sat opposite the late trend (CDU down a year from 13 to
+   8, I bought the bracket above my centre; Linke rising, I held No), and
+   in both states every party with a trend beat its final polls in the
+   trend direction (Linke +4.7, AfD +1.5, CDU -1.7 from the final-week
+   mean). This is the single-party form of rule 2's transfer reading.
 
 ## Funnel pool_total: prose rule escalated to a mechanical check
 (DEEP-2026-08-24)
