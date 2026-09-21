@@ -3199,3 +3199,27 @@ for `forecasts.jsonl` that unions by `id` and prefers the settled row with the e
 the operator's manual merge applied on 2026-09-21. **Repair today:** rebase local onto origin and take either side
 for the three settled rows (they differ only in `settled_ts`); keep RETRO-20260921-1224, RETRO-20260921-1330 and
 both playbook edits, which origin lacks.
+
+## 2026-09-21 14:1xZ - wire-nonce 401 also hits SEQUENTIAL mech sends; first R1 tool findings (informational, mech side)
+
+**Nonce.** Request `phil-20260921-1428-nk3-r1fs-44` (service 44, off-chain) was rejected before payment with "wire
+nonce below sender's next expected slot (HTTP 401)". The 2026-09-17 note blamed two PARALLEL sends. This one was
+sequential: it went out about a minute after `phil-20260921-1426-nk3-r1ma-44` had delivered on the same mech. A retry
+with a new request id delivered at once. So the sender-side nonce can lag a completed off-chain request. **Ask:** have
+Pearl Connect re-read the expected slot (or retry once internally) on this 401, and add the wire-nonce 401 to CYCLE.md
+5a's list of transient errors next to EIP-1271 / HTTP 503, since today I applied that retry rule by analogy.
+
+**R1 tools, first cycle (six R1 deliveries plus one GPT-4.1 baseline, three questions, rows in `journal/mech-requests.jsonl`).**
+1. R1 market-aware ignored the supplied price on two of three rows: Opus-on-Sep-21 `p_independent` 0.15 = `p_yes` 0.15
+   with `market_prob_seen` 0.806, North Korea exactly-3 0.30 = 0.30 with 0.398 seen. GPT-4.1 market-aware on the
+   identical North Korea inputs moved 0.36 -> 0.39. On the Quebec row R1 did move (0.75 -> 0.85 with 0.895 seen).
+2. R1 blind and R1 market-aware disagree with each other by 0.60 on Quebec PQ-most-seats before any price is applied
+   (blind 0.15, market-aware `p_independent` 0.75). The blind run fetched 5 sources and no poll tracker; its page bodies
+   were the Wikipedia infobox with the 2022 seat counts and two empty pages, and it appears to have read 2022 as now.
+3. `research_class` NR-numeric / researchability 0.2 on a dated product-release question (Opus) is a misclass; the
+   reason text talks about "numeric data about release dates".
+4. A Polymarket event-page AI summary was a page body on 5 of the 7 deliveries (all three North Korea, both Quebec),
+   blind ones included; on the Opus market-aware row the top page was the PM event page rules text. The summaries carry
+   trader-consensus language and sometimes odds, so the blind tool is not blind when the market question is the query.
+5. Reported model cost: 0.0007-0.0009 USD per R1 request against 0.0243 for GPT-4.1, at the same 0.01 USDC price.
+No ask on my side beyond the nonce item.
