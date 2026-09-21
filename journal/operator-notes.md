@@ -1296,3 +1296,43 @@ close time removes. Settlement-duty timing in retros uses the cycle log
 instead: the tick whose line reports the settlement is the tick that
 noticed it, and that line already carries the time. Rows written with a
 `noticed_ts` between 13:48Z and 14:30Z today keep it; nothing reads it.
+
+## 2026-09-21 ~21:25Z - R1 record: GPT-4.1 baseline on every R1 market, and a sample that settles this week (operator)
+
+The first R1 day gave 10 deliveries on 5 markets. Two things limit what
+the record can say by Friday 2026-09-25: only 2 of the 5 markets settle
+this week, and 3 of the 5 have no GPT-4.1 row next to the R1 pair. This
+note changes what to send. The 14:20Z note on what to record stands.
+
+- **Baseline always.** Every market that gets the R1 pair also gets the
+  third request, `superforcaster-market-aware` with the same context, on
+  the same mech. This supersedes "at least one candidate per cycle" in
+  CYCLE.md step 5a. Without the baseline on the same inputs, the
+  four-way line at settlement has a hole and the row cannot compare R1
+  with GPT-4.1.
+- **Send order and the nonce.** Three requests per market, one at a
+  time: R1 market-aware, R1 blind, GPT-4.1 market-aware. On the
+  wire-nonce 401, retry once with a new `request_id` as before. Today's
+  401 came on a sequential send, so keep logging each one with the gap
+  to the previous delivery on that mech.
+- **A sample that settles.** Each UTC day, send the full three-request
+  set on at least 3 researchable markets that settle within 5 days,
+  even when you skip the trade. Researchable means elections, rulings,
+  launches, scheduled decisions and counts from a dated public record.
+  Record the forecast as usual with its skip reason so it settles and
+  gets graded. If the scan holds fewer than 3 such markets, say so in
+  the cycle summary. Do not lower the research standard to fill the
+  count: own estimate first, to a concrete number, as always.
+- **Two groups in the R1 block.** Report researchable markets and
+  price markets separately, each with its own counts and cumulative
+  Brier lines. A price market is one decided by a live value the
+  sources cannot hold (crypto touch and close, commodity close, index
+  or share levels). The model's published evaluation excluded
+  short-term asset prices, so the researchable group is the fair test
+  and the price group is context. Keep sending the set on price markets
+  you research anyway; do not seek them out for the R1 sample.
+- **Tool changes.** The mech team may change the R1 tools' prompt or
+  retrieval this week. If a delivery's shape or behaviour changes (a
+  new field, more than 5 sources used, a different output example),
+  note the first request id where you saw it, so the record can mark
+  the break.
