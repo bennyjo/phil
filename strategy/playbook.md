@@ -5520,6 +5520,24 @@ leaked number was STALE and on the opposite side of the current price, so
 both deliveries against the Sep 7 leg's settlement alongside the position
 itself (schedule.json watch item, grading item 5).
 
+**Mech prompt front-loading (2026-09-21 20:5xZ, seven R1-window requests).**
+The tools build their Serper query from the first ~140-150 characters of
+my prompt and show the model only the top 5 organic results. Evidence:
+`phil-20260921-2100-opus22b-r1ma-s21` and its blind twin searched "Will
+Anthropic make its next Claude Opus model (... Claude Opus 5.5) available
+to" - the date fell off the end, and the results were the Opus 5 and 4.5
+launch posts; `phil-20260921-2056-musk200-r1ma-s25` lost the week the same
+way and got other weeks' event pages. Rule: the first 140 characters of a
+mech prompt carry the distinguishing noun AND the date (or the live
+quantity's name), e.g. "Claude Opus 5.5 release on September 22, 2026:
+will Anthropic ...". Still one `?` sentence, still no price. Second
+finding, for grading: retrieval is not repeatable between calls. On the
+BTC 90k trio (service 44) the same query 50 seconds apart put the live
+Binance price at rank 8 for the R1 pair (outside the top-5 cut, p 0.30 and
+0.10) and at ranks 4-5 for the GPT-4.1 baseline (p 0.565). A baseline row
+is only a model comparison when `serper_response.organic` top 5 match;
+check that before quoting an R1-vs-GPT gap in a retro.
+
 ## Watch-item hygiene: schedule.json is a pacing instrument, not a journal (DEEP-2026-09-14)
 
 schedule.json is read by every tick to decide pacing; by 2026-09-14 it

@@ -3239,3 +3239,29 @@ No ask on my side beyond the nonce item.
    This cycle I ran the mech step on one of four candidates because of it. **Ask (Pearl Connect):** an option on
    `mech_request` to return `result` and `metadata.params` without `prompt` and `source_content`, so the
    every-candidate rule in CYCLE.md 5a is affordable.
+
+## 2026-09-21 20:5xZ - R1 tools, third cycle: the retrieval layer decides the answer (informational, mech side)
+
+Seven requests, seven deliveries, all off-chain first try. Request ids are in `journal/mech-requests.jsonl`.
+
+1. **The search query is the first 140 to 150 characters of the prompt.** On `phil-20260921-2100-opus22b-r1ma-s21`
+   and its blind twin the query ended at "available to", before my date, and the results were the Opus 5 and Opus 4.5
+   launch posts. On the Musk pair the week fell off the same way and the results were other weeks' event pages. I now
+   front-load the date (playbook rule, this commit). **Ask:** build the query from the whole question sentence, or
+   from extracted entities plus the date, so a long precise question is not punished.
+2. **Only the top 5 organic results reach the model.** On `phil-20260921-2052-btc90k-r1fs-s44` the one on-point
+   source (CoinGlass snippet, BTC 86,159.50, +6.32 pct) sat at rank 8. The model answered 0.10 on a barrier 4 pct from
+   spot. **Ask:** for price-threshold questions, fetch one live quote, or pass all 10 snippets.
+3. **Retrieval is not repeatable, so the GPT-4.1 baseline is confounded.** Same query 50 seconds later
+   (`phil-20260921-2054-btc90k-ma41-s44`) ranked the live Binance price at 4 and 5. GPT-4.1 answered 0.565, the R1
+   pair 0.30 and 0.10. I cannot attribute that gap to the model. **Ask:** an option to pin one retrieval across a
+   pair or trio (cache by query for a few minutes), so paired rows compare models on identical evidence.
+4. **R1 market-aware ignored the price a fourth time.** `phil-20260921-2100-opus22b-r1ma-s21`: `p_independent` 0.10 =
+   `p_yes` 0.10 at `market_prob_seen` 0.732, with its own `evidence_quality` at 0.1. The ORDER OF WORK text says the
+   final answer should move where the price carries facts the sources lack. It moved on the other two (0.20 -> 0.30
+   toward 0.5655; 0.60 -> 0.55 toward 0.495). The shown-price answer landed BELOW the blind twin (0.10 vs 0.15).
+5. **Class labels.** R1 called the Musk post count `NR-sports` with the reason "which is a non-sports event" and
+   researchability 0.9; the BTC barrier `NR-numeric` at 0.8 (GPT-4.1: `NR-price`, 0.12); the dated Opus release
+   `NR-numeric` at 0.2 for the third time. The class and the number disagree with each other on two of three.
+6. **`[... evidence truncated ...]` appeared in the Opus market-aware prompt while `scan_truncated` was false.** If
+   those are different truncations, a second flag would help.
