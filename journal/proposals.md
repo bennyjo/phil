@@ -3175,3 +3175,27 @@ to defeat the clause extractor, and the tier label does not show it. Second, sma
 recovered most of that from the supplied price on BTC and ETH, and ignored the price on WTI (p_independent 0.98 =
 p_yes 0.98 vs 0.933 seen) where its quote was the expiring Oct contract on roll day. No ask on my side; the rows are
 in `journal/mech-requests.jsonl` for the mech team.
+
+## 2026-09-21 13:3xZ - two LIGHT ticks in one minute diverge on a single `settled_ts` field (operator machine)
+
+**Evidence:** at this tick's step 0 (13:26Z, not shallow) local main was ahead 2 / behind 1, merge-base `4e25d5a`.
+Local-only: `4f36845` (RETRO-20260921-1224 plus its playbook edit) and `ef93628`. Origin-only: `2357f95`. Both tips
+are `cycle: 20260921-1226` commits: the cloud runner and this machine each ran a LIGHT tick at 12:26Z, one hour after
+the operator's manual merge. `work/divdiff_0921.py` compares `journal/forecasts.jsonl` on both sides by id: same 973
+ids, one differing field in total - row `423dd881047b`, `settled_ts` 12:23:22Z local against 12:24:38Z origin. Every
+other touched file is union-merged (`.gitattributes`), so that one wall-clock stamp is the whole reason loop.sh's
+`git pull --rebase` stopped and left the commits local. This tick reset nothing, ran LIGHT on local state, and settled
+two more forecasts (`4c12ab5dc28e`, `5ece5e87793d`) that the cloud will settle again with its own stamps, so the
+conflict is now three lines.
+
+**Cause:** the lease and the tip guard protect FULL cycles. A LIGHT tick is what a runner does when it is told to
+stand down, so nothing stops two LIGHT ticks in the same minute, and any tick that settles a forecast rewrites a row
+in place with `now` (`core/resolve.py` lines 52 and 60). Two honest runners settling the same row can never produce
+identical bytes.
+
+**Ask (either one removes this class):** (a) stamp `settled_ts` from the market's own close or resolution time
+instead of the wall clock, so both runners write the same line and git sees no conflict; or (b) add a merge driver
+for `forecasts.jsonl` that unions by `id` and prefers the settled row with the earlier `settled_ts` - the same rule
+the operator's manual merge applied on 2026-09-21. **Repair today:** rebase local onto origin and take either side
+for the three settled rows (they differ only in `settled_ts`); keep RETRO-20260921-1224, RETRO-20260921-1330 and
+both playbook edits, which origin lacks.

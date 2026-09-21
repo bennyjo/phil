@@ -1704,7 +1704,9 @@ forecast understates the ruling party's official result: VCIOM forecast
 centre built from the 2026 forecast was 331; the preliminary count is 355.
 That 24-seat undershoot, not the undefined baseline clause, is what put own
 behind the book on the seat-GAIN legs (`23e8441da49c` own 0.25 vs mid
-0.2035, `ac1d41a88c55` 0.05 vs 0.024, both lost; `5ece5e87793d` pending)
+0.2035, `ac1d41a88c55` 0.05 vs 0.024, both lost; `5ece5e87793d` own No
+0.35 vs mid 0.245, settled lost 2026-09-21 13:27Z, dB +0.0625; the event
+closed 0 for 3 against the book, summed dB +0.0855, one draw)
 and on the open UR seat brackets (`71dc5127a964`, `4c8153f75a72`). I had
 applied the 2021 pollster miss to LDPR (overstated) and skipped the mirror
 image for UR. Rule: a ruling-party share or seat estimate built from such a
@@ -5633,6 +5635,18 @@ was 0.72, identical to my raw hazard read, and both sat 0.15 under a market
 that was right. Its price-informed `p_yes` 0.82 beat me (brier 0.0324
 versus 0.0484) and lost to the mid (0.0154). n=1 in the post-2026-09-14
 window; no paired v4 on this market.
+
+**First settled mech pair in the window (RETRO-20260921-1330, market
+1130012, UR gains most seats, outcome Yes).** Service 21, requests dated
+2026-09-17. Brier in question frame: market-aware `p_independent` 0.88 ->
+0.0144, market-aware `p_yes` 0.86 -> 0.0196, mid 0.755 -> 0.0600, own
+recorded 0.65 -> 0.1225, v4 blind 0.62 -> 0.1444, own pre-mech 0.59 ->
+0.1681. Market-aware beat the price, me and v4; the price pulled it 0.02
+the wrong way, and its lead over v4 came from retrieval (page bodies
+against snippets). I took about a quarter of the gap to a delivery with
+researchability 0.95, class R, `parse_tier` clause. Window tally:
+market-aware settled rows 2, settled pairs 1. No weighting rule at this n;
+re-read at 5 settled pairs.
 
 ## Record-time category tag is immutable — check it before recording (DEEP-2026-09-20)
 
