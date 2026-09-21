@@ -4973,6 +4973,33 @@ settled the same tick (No, -0.0236, tally only). The fit set is now S-A
 x3, Sweden x3 (SD >= 20, SD 18-20, M >= 20) and waits only for the Sep 20
 German rows. Full grading in RETRO-20260919-1925.
 
+**Sixth data point, first MV-election row and a paired CDU/AfD transfer:
+AfD 32-35% bracket (`53a8e01062fd`, Yes 0.17 vs mid 0.145, no-edge skip,
+declined specifically because the note flagged the eastern-German
+above-poll-mean risk as sd-fragile) settled 2026-09-21, No.** Poll mean
+36.67 (sd 2.2, four Sep10-17 polls), official AfD share 38.2%: +1.53pt,
+0.7 sd — above the poll mean, same direction as the two Sachsen-Anhalt
+rows (AfD, Grüne) and the SPD row above. The no-edge skip was the right
+call: a bet would have lost, and the fragile edge (0.033-0.062 across
+sd=2.0-2.5) was correctly held out under the existing rule. Same
+election, same night: the sibling CDU 11-14% bracket (`23e40bbbccc5`,
+still an open ledger bet, poll mean ~7 sd 2.2) shows an official CDU
+figure of 5.3% per the watch item — -1.7pt, -0.77 sd, the opposite sign
+from AfD's miss and close in magnitude. Read together this is not two
+independent misses but one transfer: CDU voters moving to AfD late
+enough that neither party's final-week poll mean fully captured it — the
+same shape as the Sweden SD-M pairing (rule 2 above), now seen in a
+second country/party pair. Generalising rule 2: a same-election transfer
+between an established and an insurgent party on the same side of the
+spectrum is not Sweden-specific; when researching a vote-share bracket
+for either party in a state/national election with a rising insurgent
+neighbour, check the neighbour's poll trend and expect the pair to miss
+in offsetting directions, not treat each bracket's poll mean as
+independent. The fit set is now S-A x3, Sweden x3, MV AfD x1, and still
+waits on MV CDU (ledger bet, UMA lag as usual for this class) and Berlin
+Linke (already settled, RETRO-20260921-1520) before the pre-registered sd
+fit runs. Full grading in RETRO-20260921-1614.
+
 ## Funnel pool_total: prose rule escalated to a mechanical check
 (DEEP-2026-08-24)
 
