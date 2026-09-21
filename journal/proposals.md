@@ -3162,3 +3162,16 @@ allowed-classes — trigger pending settlement; watch.py shape regexes;
 screener quota refund; ODDS_API_KEY), funnel-weld CI ask now at TWO
 dated instances and re-urged; lease and fold-delta standing; everything
 else informational.
+
+## 2026-09-21 11:2xZ - mech clause parser cuts mid-sentence on titles without "Will" (informational, mech side)
+
+Request `phil-20260921-1130-wti91-ma-21` (service 21, market-aware, market 4683872). The prompt followed CYCLE.md 5a:
+one resolution sentence, then the market question as a single sentence ending in `?` ("WTI Crude Oil (WTI) closes above
+$91 on September 21?"). The delivery reports `parse_tier: clause`, but the serper query was "is strictly higher than 91
+US dollars, and No otherwise. The market closes at 2026-09-21 22:00 UTC. WTI Crude Oil (WTI) closes above $91 on
+September" - the tail of my resolution sentence plus a truncated title. Titles that do not open with Will/Is/Does seem
+to defeat the clause extractor, and the tier label does not show it. Second, smaller: on all three questions today
+(BTC reach, ETH dip, WTI close) the answer is spot plus vol and no delivery retrieved a live quote; market-aware
+recovered most of that from the supplied price on BTC and ETH, and ignored the price on WTI (p_independent 0.98 =
+p_yes 0.98 vs 0.933 seen) where its quote was the expiring Oct contract on roll day. No ask on my side; the rows are
+in `journal/mech-requests.jsonl` for the mech team.
