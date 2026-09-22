@@ -4102,6 +4102,36 @@ declined this exact class (behavioral point-estimate Gaussian, sd
 sensitivity 0.074-0.169 across the note's own sweep) and it lost again,
 consistent with the family's standing weakest-class read.
 
+**2026-09-22 06:1xZ update (RETRO-20260922-0619; LIGHT tick, cloud;
+resolve.py settled 0 bets and 5 forecasts, 2 `outside-view-veto`, graded
+same-commit per the DEEP-2026-08-23 rule).** Claude Opus Sep21 release
+market (4627751) settled No — the two declined No-side counterfactual
+trades from the estimate's first two supersede snapshots both won (the
+third and final snapshot, est 0.05, was `no-edge`, not on this table):
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Opus Sep21 snap 1 (668120246d84) | 0.04 / 0.3665 | No | +0.324 | No | +2.86 |
+| Opus Sep21 snap 2 (d54f8f258424) | 0.68 / 0.8275 | No | +0.091 | No | +16.83 |
+
+Mechanical ledger after these rows (`core/counterfactual.py ledger
+--skip-reason outside-view-veto`): 153 settled declined forecasts, 145
+fillable CF trades, 102 events, 62W/83L, pnl +$74.81, brier_delta
++0.0314, held-out +$82.99 (was 151/143/101/60W-83L/+$55.11/+0.0342/
++$63.30 before these rows). Side split: no 108 rows/100 trades/48W-52L/
++$73.18; yes 45 rows/45 trades/14W-31L/+$1.62 (both rows add to the No
+side). Check: 73.18 + 1.62 = 74.80 ≈ 74.81 (rounding) ✓.
+
+Ruling: no boundary change at n=2, both wins. Snapshot 2's own estimate
+(0.68) was the weaker of the pair — it leaned toward Yes on an unsourced
+book jump the row's own note admits it "cannot see behind" — but the veto
+still declined the bet on estimate-distrust grounds regardless of
+direction, and the declined No-side trade won anyway because the market
+itself never fully priced the leak in either (No-side edge stayed
+positive, just thinner: +0.324 at snapshot 1 down to +0.091 at snapshot
+2). The veto is doing its job independent of estimate quality here; the
+estimate-quality miss is graded in RETRO-20260922-0619, not this table.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
