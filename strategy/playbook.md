@@ -4077,6 +4077,31 @@ bucket, not 28-31%. Net: the veto avoided nothing here (the market was
 right, the self-built Gaussian tails were not) — consistent with this
 family's standing weakest-class read, not a new failure mode.
 
+**2026-09-22 04:1xZ update (RETRO-20260922-0415; LIGHT tick, cloud;
+resolve.py settled 0 bets and 4 forecasts, 1 `outside-view-veto`, graded
+same-commit per the DEEP-2026-08-23 rule).** Berlin Grüne 14-17% of
+second votes, official Grüne share landed inside the bracket (Yes) — the
+declined No-side counterfactual trade lost:
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Berlin Grüne 14-17% (8601f47e8b85) | 0.50 / 0.625 | No | +0.120 | Yes | −5.00 |
+
+Mechanical ledger after this row (`core/counterfactual.py ledger
+--skip-reason outside-view-veto`): 151 settled declined forecasts, 143
+fillable CF trades, 101 events, 60W/83L, pnl +$55.11, brier_delta
++0.0342, held-out +$63.30 (was 150/142/100/60W-82L/+$60.11/+0.0337/
++$69.12 before this row). Side split: no 106 rows/98 trades/46W-52L/
++$53.49; yes 45 rows/45 trades/14W-31L/+$1.62 (row adds to the No side).
+Ruling: no boundary change at n=1. The row's own note put the No-side
+edge at 0.116 by hand; the tool computes 0.120 and auto-tags subclass
+`fact-finality` even though the note explicitly argues this is a
+self-modeled Gaussian bucket, not a fact-final case — a labeling
+mismatch worth a future reconcile pass, not acted on here. The veto
+declined this exact class (behavioral point-estimate Gaussian, sd
+sensitivity 0.074-0.169 across the note's own sweep) and it lost again,
+consistent with the family's standing weakest-class read.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
