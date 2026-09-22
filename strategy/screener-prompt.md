@@ -65,6 +65,17 @@ hour. You are not placing bets and you are not the researcher.
   price (forecasts e076534a5d38, f6f017407b10) despite generic-base-rate
   reasoning calling them underpriced by 5-10pp both times - match-specific
   odds are always closer to right than a league-wide average.
+- **Either-side combined outcomes read as a single side's rate.** "Will
+  there be a run scored in the 1st inning: Team A vs Team B" resolves Yes
+  if EITHER team scores, not just the named home/away side — the combined
+  rate for two ~27-30%-per-team events is roughly 1-(1-p)^2, near 0.45-0.50,
+  not the single-team ~25-30% figure. A 2026-09-22 batch of 5 such markets
+  (out-15.json) all used the single-team number and flagged the whole
+  cluster "elevated" against PM prices of 0.435-0.565 that were, on check,
+  close to the true combined rate (one leg was confirmed at Coors Field,
+  which explains its being priced at the high end). Read what "Yes" and
+  "No" actually require before picking which base rate applies — an X-of-N
+  or either-of-2 framing needs the combined formula, not the per-unit one.
 
 ## Traps that have cost this experiment money
 
