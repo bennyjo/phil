@@ -4132,6 +4132,40 @@ positive, just thinner: +0.324 at snapshot 1 down to +0.091 at snapshot
 2). The veto is doing its job independent of estimate quality here; the
 estimate-quality miss is graded in RETRO-20260922-0619, not this table.
 
+**2026-09-22 08:1xZ update (RETRO-20260922-0813; FULL cycle, cloud;
+resolve.py settled 0 bets and 3 forecasts, all 3 `outside-view-veto`,
+graded same-commit per the DEEP-2026-08-23 rule).** Resident Evil
+opening-weekend box office, three sibling brackets on the same event
+(e:956520) — actual 3-day opening landed in the 60-65m bracket. The
+declined No-side trade on 65-70m won; the declined Yes-side trade on
+55-60m and the declined No-side trade on 60-65m both lost:
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Resident Evil 55-60m (94f5d2c84c0f) | 0.48 / 0.283 | Yes | +0.174 | No | -5.00 |
+| Resident Evil 60-65m (9e900c404320) | 0.44 / 0.6255 | No | +0.131 | Yes | -5.00 |
+| Resident Evil 65-70m (299cd54171c9) | 0.03 / 0.0955 | No | +0.061 | No | +0.50 |
+
+Net this batch: **-$9.50** (1W/2L).
+
+Mechanical ledger after these rows (`core/counterfactual.py ledger
+--skip-reason outside-view-veto`): 156 settled declined forecasts, 148
+fillable CF trades, 103 events, 63W/85L, pnl +$65.31, brier_delta
++0.0328, held-out +$66.00 (was 153/145/102/62W-83L/+$74.81/+0.0314/
++$82.99 before these rows). Side split: no 110 rows/102 trades/49W-53L/
++$68.68 (adds the two No-side rows, net -$4.50); yes 46 rows/46 trades/
+14W-32L/-$3.38 (adds the one Yes-side row, -$5.00).
+
+Ruling: no boundary change at n=3. The model's own ladder (50-55m 0.05,
+55-60m 0.48, 60-65m 0.44, 65-70m 0.03) put the most weight one bracket
+below where the market and the actual outcome landed — the row's own
+note flagged this gap at record time ("the book sits one bracket above
+the trade press") and it played out exactly that way. Box-office's
+mechanical-ledger category line stays negative (13 rows, 6W/7L,
+-$21.60, brier_delta +0.0117) — this batch is the veto's rationale
+playing out as expected, not a new failure mode; the standing veto
+stays shut.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
