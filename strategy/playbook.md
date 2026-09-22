@@ -4166,6 +4166,40 @@ mechanical-ledger category line stays negative (13 rows, 6W/7L,
 playing out as expected, not a new failure mode; the standing veto
 stays shut.
 
+**2026-09-22 ~18:15Z update (FULL cycle, cloud; resolve.py settled 14
+forecasts, 2 `outside-view-veto`).** Both rows are the Trump x Greenland
+deal-by-Sep23 pair (market 4712116), `fact-finality` subclass (signing
+scheduled/expected during UNGA week but not yet an immutable fact at
+research time) — two separate forecasts on the same market at different
+times of day, not a supersession: the No-side row (935afbfc7d19,
+researched 2026-09-20 00:18Z, est No=0.40 vs mid 0.25) and the Yes-side
+row (a893f32972f0, researched 2026-09-20 12:18Z, est Yes=0.90 vs mid
+0.74). The deal was in fact signed before the Sep23 deadline: market
+resolved Yes.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Trump-Greenland Sep23 No (935afbfc7d19) | 0.40 / 0.25 | No | +0.140 | Yes | -5.00 |
+| Trump-Greenland Sep23 Yes (a893f32972f0) | 0.90 / 0.74 | Yes | +0.150 | Yes | +1.67 |
+
+Net this batch: **-$3.33** (1W/1L). Mechanical ledger after these rows
+(`core/counterfactual.py ledger --skip-reason outside-view-veto`): 158
+settled declined forecasts, 150 fillable CF trades, 104 events, 64W/86L,
+pnl +$61.97, brier_delta +0.0327, held-out +$62.67 (was 156/148/103/
+63W-85L/+$65.31/+0.0328/+$66.00 before these rows). Side split: no 111
+rows/103 trades/49W-54L/+$63.68 (adds the No-side row, -$5.00); yes 47
+rows/47 trades/15W-32L/-$1.71 (adds the Yes-side row, +$1.67).
+
+Ruling: no boundary change at n=2. Both rows are `fact-finality`
+subclass (37 rows, +$95.69, the ledger's single best-performing
+subclass) — this pair nets slightly negative (-$3.33) but sits well
+inside that subclass's noise. The Yes-side row is the more interesting
+one: the veto correctly followed its own rule (signing not yet an
+immutable fact at research time) on a trade that would have paid
+(edge 0.15, and it won) — the known, already-quantified cost of keeping
+this gate shut rather than a new failure mode. Full grading in
+RETRO-20260922-1815.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
