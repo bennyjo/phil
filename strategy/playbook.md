@@ -1993,6 +1993,23 @@ move as favorable or adverse.
      discount confidence well below what the range-based math implies, or
      require a catalyst check close to the actual close rather than hours
      before it.
+   - **Mirror case, close-above rows recorded hours ahead on a day that is
+     already moving (RETRO-20260922-0015).** `1753e8464def` (WTI closes
+     above $91 on Sep 21) estimated 0.92 at 11:21Z from a 14-day realized
+     daily sd (2.6%) with the price 2.8% above the barrier and 7 hours to
+     the settle. The day delivered about -8.5% (a 3-sd day by that window)
+     and printed a low 0.19 above the barrier; the 17:33Z supersede at 0.78,
+     scaled from the day's own hourly range, was the calibrated number and
+     matched the market. Rule: when the day's move already exceeds about
+     2 window-sds at record time, the multi-day window is stale for the
+     rest of that session. Scale the remaining-session sd from the larger
+     of the window sd and the day's own realized range, and shade further
+     when the move is directional toward the barrier. Together with the
+     DEEP-2026-08-06 bullet: neither "range so far" nor a quiet-day window
+     bounds a conflict-linked commodity on a moving day; take the wider
+     of the two, and prefer superseding close to the settle over a single
+     read hours out. Both rows won, so this is a calibration lesson
+     (own Brier 0.0064 vs market 0.0042 on the early row), not a P&L one.
 5. **Check the live book first** (`python3 strategy/tools/quote.py
    <clob_token_id>`, token ids are in scan output; if the sandbox blocks it,
    `curl -s "https://clob.polymarket.com/book?token_id=<id>" -o work/book_<x>.json`
