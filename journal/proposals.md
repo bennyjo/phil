@@ -3265,3 +3265,66 @@ Seven requests, seven deliveries, all off-chain first try. Request ids are in `j
    `NR-numeric` at 0.2 for the third time. The class and the number disagree with each other on two of three.
 6. **`[... evidence truncated ...]` appeared in the Opus market-aware prompt while `scan_truncated` was false.** If
    those are different truncations, a second flag would help.
+
+## 2026-09-22 — deep-retro status pass
+
+Full detail in journal/retros/DEEP-2026-09-22.md. Statuses set this
+pass on the four items filed since the 09-21 pass:
+
+- **settled_ts wall-clock divergence on twin LIGHT ticks (2026-09-21
+  13:3xZ): ENDORSED — option (a) preferred** (stamp `settled_ts` from
+  the market's own close/resolution time in core/resolve.py, so two
+  honest runners write identical bytes; option (b)'s merge driver
+  treats the symptom). Operator: core/resolve.py is yours. This is the
+  fourth infra item in a month whose root cause is a per-runner wall
+  clock on a shared row (`noticed_ts` was removed for exactly this on
+  2026-09-21); (a) removes the class.
+- **wire-nonce 401 on sequential mech sends (2026-09-21 14:1xZ):
+  ENDORSED** — both halves (Pearl Connect re-reads the expected slot or
+  retries internally; CYCLE.md 5a lists the 401 as transient next to
+  EIP-1271/503). Operator ask; the agent already applies the retry by
+  analogy and it has worked every time (n=2).
+- **mech delivery-size option (2026-09-21 17:4xZ): ENDORSED** (return
+  `result` + `metadata.params` without `prompt`/`source_content`).
+  The every-candidate rule in CYCLE.md 5a is currently unaffordable at
+  ~15k tokens per delivery — this is the binding constraint on the R1
+  record the operator asked for on 2026-09-21, so it is worth relaying
+  to Pearl Connect promptly.
+- **R1 retrieval findings (2026-09-21 20:5xZ): informational,
+  no status needed** — the asks are mech-side (query construction,
+  top-5 cutoff, retrieval pinning for paired sends). The agent-side
+  mitigation (front-load the date) is already a playbook rule.
+
+New this pass:
+
+- **counterfactual.py subclass auto-tagger mislabel (minor, operator).**
+  Row `8601f47e8b85` (Berlin Grüne 14-17%, a self-modeled Gaussian
+  bracket per its own note) is auto-tagged `fact-finality`
+  (RETRO-20260922-0415 flagged it, not acted on). 95 of 151 veto rows
+  get no sub-class at all, so sub-class cuts of the CF ledger are
+  currently unreliable for rulings — nothing gates on them today, but
+  the relaxation-fork post-mortems quote them. Low priority; a
+  reconcile pass or a note-side label convention both work.
+
+Carried, triggers intact:
+
+- **Real-twin allowed-classes decision + fold_brier_delta conversion:
+  CARRY.** The German half of the Sep-20 pre-registration is now
+  settled and graded (both legs lost, −$10, RETRO-20260921-1625 audited
+  and endorsed today); the Russia pair (`9074e3f2fd49` marked 0.992 vs
+  0.68 entry, `475edf2e2654`) is still open on UMA lag, and deciding on
+  half the named input would be deciding without it. First deep retro
+  after the Russia settlements discharges both.
+- **Funnel-weld CI check: RE-URGED, unchanged at 2 dated misses in 13
+  FULL cycles.** One line in core CI.
+- **ODDS_API_KEY on runners: RE-URGED** — mlb-moneyline is now the
+  book's best cell (−0.0499, n=15) and remains starved of a benchmark.
+- **Lease writability, screener quota refund, watch.py shape regexes,
+  mech CYCLE.md sentence: open, unchanged, with operator.**
+
+**Status:** relaxation fork NOT MET (7th consecutive, 2nd double-gate
+failure — status line in playbook); zero bets placed this window, no
+floor tested; no reverts of hourly edits; the day's read is in
+DEEP-2026-09-22.md §(a): the classes that beat the market are all
+forecast-only behind pre-registered triggers, and the job is to land
+the triggers, not jump them.

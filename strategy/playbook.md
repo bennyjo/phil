@@ -4188,6 +4188,24 @@ unprofitable. The AfD-MV win is exactly the row this pre-registration
 was built to withstand — a vivid single counterexample must not reopen
 a fork that the slice-level arithmetic is failing harder than ever.
 
+Status 2026-09-22 (DEEP): **NOT MET — second consecutive double-gate
+failure.** Slice now 151 rows / 143 CF trades / 101 events / +$55.11 /
+overall dBrier +0.0342 (adds the six German-election veto rows graded
+same-tick by the hourly cycles: Berlin SPD pair CF +$9.03, MV SPD pair
+CF −$10.00, Berlin Grüne CF −$5.00, plus the fresh event re-cluster).
+(1) fails: per-fold dBrier by the recipe (5 contiguous folds of 30/31):
+f0 +0.0093, f1 −0.0063, f2 +0.0841, f3 +0.0386, f4 +0.0449 — the two
+most recent folds both positive (boundaries shifted with the 6 new
+rows, which is why f2–f4 read differently from the 09-21 quote; same
+recipe). (2) fails: tool fold pnl [−8.19, +31.11, −43.96, +122.33,
+**−46.18**] (recipe's contiguous split agrees on the sign: f4 −60.37)
+— the newest fold still loses CF money. (3) holds: 101 events ≥ 40.
+Seventh consecutive NOT
+MET. The German veto cluster's vote-share rows are now settled and
+split 2W/3L as CF trades — the veto's weakest class (self-built
+poll-Gaussian brackets) stayed its weakest class through an election
+week that was the fork's best chance to open. The fork stays shut.
+
 If the bar is ever MET: do not loosen the veto wholesale. Propose a
 NARROW carve-out for the best-evidenced sub-class only (current
 candidate shape: No-side timeline theses of the "nothing announced"
@@ -5915,3 +5933,60 @@ handful of alien rows is enough to flip a small-n cell's sign.
 **Reading rule until further notice.** When quoting the `mlb-spreads`
 forecast cell, note it contains one NCAAF row (`32f25ca85db8`). Do not
 hand-edit journals to "fix" it — journals are core-written, full stop.
+
+## DEEP-2026-09-22: where the skill lives — the by-class ledger the next fortnight answers to
+
+All-time settled forecasts by skip_reason (own-side Brier vs the mid at
+record, n=846; bet rows use entry forecasts; cross-checked against
+`counterfactual.py` +0.0342 on the veto slice, same run):
+
+| class | n | dBrier |
+|---|---|---|
+| bet (entry forecasts) | 23 | **+0.080** |
+| outside-view-veto | 151 | +0.034 |
+| market-agrees | 122 | +0.006 |
+| no-edge | 429 | +0.002 (at-market by construction) |
+| category-bar | 29 | +0.002 |
+| unvalidated-method | 34 | **−0.013** |
+| wide-spread-veto | 16 | **−0.045** |
+
+And the bet book by placement era (n=41 settled): placed before Sep 1 —
+27 rows, −$31.67, dBrier +0.125; Sep 1–10 — 10 rows, +$34.65, +0.056
+(the P&L is one MLB moneyline outlier +$31.23); Sep 11+ — 4 rows,
+−$20.00, +0.083. Every era loses to the market; the improvement is real
+(the −1.0-ROI news/leaderboard/product-release rows are all pre-Sep)
+but no era has ever been ahead.
+
+**The structural fact:** the only two classes where own beats the
+market are both forecast-only by rule — the measured-vol touch family
+(inside unvalidated-method; pre-registered re-grade fires at the 6th
+settled measured row, splits reach/dip and near/far barrier) and the
+wide-spread-veto slice (barred by max_spread; n=16, small) — while the
+class that actually bets is the worst in the book. The conclusion is
+NOT to promote either slice today: both have pre-registered triggers,
+and a deep retro that jumps a trigger because the table looks tempting
+is the exact post-hoc move the fork discipline exists to prevent
+(2026-09-22's fork status, two consecutive double-gate failures, shows
+what jumping would cost). The conclusion is a priority ordering for
+research allocation until a trigger fires:
+
+1. Feed the touch-family counter its 6th measured row honestly (never
+   seek out rows to force the trigger — record every qualifying market
+   the scan already surfaces, at measured vol, unshaded).
+2. Keep election self-model bets behind the price-inside-range rule and
+   the centre stress test; the German week (bets −$10, veto CF rows
+   2W/3L, market better on ~14 of 14 settled German rows) is this
+   family's third strike as a betting class in three countries.
+3. The mlb-moneyline cell (−0.0499, n=15, best in the book) stays
+   starved until ODDS_API_KEY lands on a runner — an operator ask, not
+   a strategy choice; nothing to do here but keep the cell's n growing
+   on scan-surfaced games.
+
+Audited and endorsed this pass (details in DEEP-2026-09-22.md): the
+price-inside-the-model-range rule, the no-bet-against-the-poll-trend
+rule and momentum joint verdict, the sd floor 3.0/2.5 with the centre
+stress test, the managed-election centring note, the WTI stale-window
+rule, the touch-counter pinning with the shade drop (caveat: the
+re-grade tests the UNSHADED method — 3 of the 5 counted rows were
+recorded shaded, say so when grading), and the tennis consistency rule.
+Reverts: none.
