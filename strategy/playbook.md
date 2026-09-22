@@ -4200,6 +4200,72 @@ immutable fact at research time) on a trade that would have paid
 this gate shut rather than a new failure mode. Full grading in
 RETRO-20260922-1815.
 
+**2026-09-22 20:15Z update (FULL cycle, cloud; 3 `ai-model-release`
+veto rows settled — Claude Opus release markets, both resolved Yes,
+see RETRO-20260922-2015).**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Opus by-Sep30 first read (`b52006c6d15c`) | 0.70 / 0.805 | No | +0.100 | Yes | -5.00 |
+| Opus by-Sep30 re-check (`7f1358aa709a`) | 0.60 / 0.855 | No | +0.240 | Yes | -5.00 |
+| Opus exact-Sep22 re-check (`9ca6adf96fc8`) | 0.62 / 0.732 | No | +0.098 | Yes | -5.00 |
+
+Net this batch: **-$15.00** (0W/3L). Mechanical ledger after these rows
+(`core/counterfactual.py ledger --skip-reason outside-view-veto`): 161
+settled declined forecasts, 153 fillable CF trades, 106 events, 64W/89L,
+pnl +$46.97, brier_delta +0.0337, held-out +$39.84 (was 158/150/104/
+64W-86L/+$61.97/+0.0327/+$62.67 before these rows). Side split: no 114
+rows/106 trades/49W-57L/+$48.68 (adds these three No-side losses,
+-$15.00); yes 47 rows/47 trades/15W-32L/-$1.71 (unchanged).
+
+Ruling: no boundary change at n=3. Same shape as every other
+`ai-model-release` veto row in this table — model directionally right,
+market closer, veto correctly withheld the bet. The sibling wide-spread-
+veto row on the same event family (`3de604a7cf7a`, exact-Sep22 first
+read) is entered below with the same-cycle REPAIR batch. Full grading in
+RETRO-20260922-2015.
+
+**2026-09-22 20:15Z REPAIR + update (FULL cycle, cloud; one
+`wide-spread-veto` row from this cycle's `ai-model-release` settlements,
+plus two pre-existing gaps `core/counterfactual.py reconcile` surfaced
+while preparing this entry — neither caught by a prior retro nor by the
+reconcile tool's own check, which only scans `outside-view-veto`; see
+RETRO-20260922-2015 for how each was found).**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Opus exact-Sep22 first read (`3de604a7cf7a`, wide-spread-veto) | 0.48 / 0.6855 | No | +0.127 | Yes | -5.00 |
+| Berlin Linke 5-10% margin (`3723b83673c1`, wide-spread-veto, settled 2026-09-22T02:03:42Z, graded in RETRO-20260922-0211, flagged missing by the 10:25Z TRIGGERED cycle today) | 0.40 / 0.754 | No | +0.109 | Yes | -5.00 |
+| Lowe's GAAP EPS beat (`df7062f3e89d`, wide-spread-veto, settled 2026-08-19T15:21:17Z, graded in RETRO-20260819-1522, never entered since) | 0.62 / 0.595 | Yes | -0.260 | Yes | +0.68 |
+
+Net this batch: **-$9.32** (1W/2L, on rows spanning three different
+settlement dates). Mechanical ledger after these rows
+(`core/counterfactual.py ledger --skip-reason wide-spread-veto`): 17
+settled declined forecasts, 15 fillable CF trades, 2 refused, 8W/7L,
+pnl -$17.99, brier_delta -0.0327, held-out -$15.17 (was 15/13/2 refused/
+8W-5L/-$7.99/-0.0684/-$3.67 before the two No-side additions; the
+Lowe's row's pnl was always inside these totals — settled over a month
+before the 09-17 baseline above — so only its table row is new, not its
+contribution to the sums). Side split: no 9 rows/7 trades/2W-5L/-$17.74
+(adds the two new No-side losses, -$10.00, was 7/5/2W-3L/-$7.74);
+yes 8 rows/8 trades/6W-2L/-$0.25 (unchanged — Lowe's was already
+counted here).
+
+Ruling: no boundary change at n=3 across two unrelated events plus one
+documentation-only backfill. The Lowe's row is the interesting one on
+method, not P&L: the "modest apparent edge" the original research
+quoted was against the market's *mid* (0.595); the mechanical ledger
+fills at the actual best ask (0.88) on an incoherent, spread-blown book,
+which turns the same row negative (-0.260) — the veto's own reasoning
+("if this is genuine live news the architecture cannot win the race
+anyway") was right for a reason beyond the spread-gate mechanics: the
+apparent edge was a mid-price illusion. It won on Yes anyway (small,
++$0.68, priced by the bad ask it would have had to pay), which is a
+lucky fill outcome, not evidence the mid-based edge was ever real.
+Full grading in RETRO-20260922-2015; RETRO-20260922-0211 and
+RETRO-20260819-1522 (unmodified) hold the original narrative grading
+for the other two rows.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
