@@ -4266,6 +4266,27 @@ Full grading in RETRO-20260922-2015; RETRO-20260922-0211 and
 RETRO-20260819-1522 (unmodified) hold the original narrative grading
 for the other two rows.
 
+**2026-09-22 22:14Z update (LIGHT tick, cloud; 1 `outside-view-veto` row
+settled — GPT Luna release, see RETRO-20260922-2214).**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| GPT Luna release by-Sep22 (`328f88bd8da0`) | 0.45 / 0.7205 | No | +0.251 | Yes | -5.00 |
+
+Net this batch: **-$5.00** (0W/1L). Mechanical ledger after this row
+(`core/counterfactual.py ledger --skip-reason outside-view-veto`): 162
+settled declined forecasts, 154 fillable CF trades, 107 events, 64W/90L,
+pnl +$41.97, brier_delta +0.0349, held-out +$34.84 (was 161/153/106/
+64W-89L/+$46.97/+0.0337/+$39.84 before this row). Side split: no 115
+rows/107 trades/49W-58L/+$43.68 (adds this No-side loss, -$5.00); yes 47
+rows/47 trades/15W-32L/-$1.71 (unchanged).
+
+Ruling: no boundary change at n=1. Same shape as every other
+`ai-model-release` veto row in this table — model directionally right
+(real chance of a release today) but underweighted (0.45 vs a market at
+0.72 that turned out closer to right), veto correctly withheld the bet.
+Full grading in RETRO-20260922-2214.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
