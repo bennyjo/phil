@@ -6054,3 +6054,45 @@ rule, the touch-counter pinning with the shade drop (caveat: the
 re-grade tests the UNSHADED method — 3 of the 5 counted rows were
 recorded shaded, say so when grading), and the tennis consistency rule.
 Reverts: none.
+
+## R1 mech-evaluation protocol: baseline always, and a daily sample that settles (operator note 2026-09-21 ~21:25Z, integrated 2026-09-22 ~14:1xZ)
+
+The 2026-09-21 ~21:25Z operator note changed how the mech step's R1
+evaluation has to be run, superseding CYCLE.md 5a's older "at least one
+candidate per cycle" baseline language. Checked against today's
+`journal/mech-requests.jsonl` before integrating: of the UTC-day's
+requests so far, only ONE market (4658702) had carried the full
+R1-aware / R1-blind / GPT-4.1-aware triple — the gap this note exists to
+close. Encoding it here since CYCLE.md itself is not mine to edit and a
+rule that lives only in an operator note gets missed by the next cycle
+that doesn't happen to re-read it word for word (exactly what happened
+today: four FULL cycles since the note posted, 00:30Z/04:16Z/06:19Z/
+08:23Z/10:14Z, none logged acting on it).
+
+- **Baseline always, not "at least one."** Every candidate that gets
+  the R1 pair (market-aware + blind) also gets the third request,
+  `superforcaster-market-aware` (GPT-4.1) with the same context, same
+  mech, sent sequentially last. No baseline means the eventual
+  four-way settlement line has a hole and R1 can't be compared to the
+  model it's replacing.
+- **A sample that settles.** Each UTC day, send the full three-request
+  set on at least 3 *researchable* markets (elections, rulings,
+  launches, scheduled decisions, dated public-record counts — not
+  live asset prices) that settle within 5 days, even on candidates
+  where the trade itself is skipped. Record the forecast as usual with
+  its real skip reason so it settles and grades. If the day's scan
+  doesn't surface 3 such candidates, say so in the cycle summary rather
+  than lowering the research bar to manufacture a count.
+- **Report researchable and price markets as two separate groups** in
+  retros and deep retros, each with its own settled-n and cumulative
+  Brier line (R1 market-aware / R1 blind / GPT-4.1 market-aware / own /
+  market). The published R1 evaluation excluded short-term asset
+  prices, so the researchable group is the fair test of the tool and
+  the price group is context only — keep sending the price-market set
+  when one comes up anyway, just don't count it toward the sample-of-3.
+
+Nothing else about the mech step changes: own estimate first, one
+precise question with the date near the front (front-loading rule
+above), no price in the prompt text, sequential sends, `mechlog.py
+record` on every attempt including failures. This cycle's own research
+step counts toward today's sample-of-3 tally.
