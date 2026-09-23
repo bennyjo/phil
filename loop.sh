@@ -96,6 +96,44 @@ for i in $(seq 1 "$CYCLES"); do
     PHIL_LEASE=held-by-other
   fi
 
+  # Model per tick (operator, 2026-09-23): Opus 5.5 for any tick that may run
+  # FULL or TRIGGERED, Sonnet 5 for a tick CYCLE.md step 0/0b will run LIGHT.
+  # Pinned because an unpinned `claude -p` takes the account-level default,
+  # which follows the model last picked in any interactive session: from
+  # 2026-09-08 to 2026-09-21 that ran these cycles on Fable. The prediction
+  # uses only checks CYCLE.md applies itself, read after the same sync, and a
+  # failed check falls through to Opus, so a mistake costs money rather than
+  # running a FULL cycle on Sonnet. The collision guard is left to CYCLE.md:
+  # an operator commit landing between here and the session's own fetch
+  # would flip it, and the error would go the wrong way.
+  MODEL=claude-opus-5-5
+  MODEL_WHY="tick may run FULL"
+  if [ "$PHIL_LEASE" = "held-by-other" ]; then
+    MODEL=claude-sonnet-5
+    MODEL_WHY="LIGHT tick: lease held by the other runner"
+  elif python3 - <<'PY'
+import datetime as dt, json, re, sys
+now = dt.datetime.now(dt.timezone.utc)
+iso = lambda t: dt.datetime.fromisoformat(t.replace("Z", "+00:00"))
+s = json.load(open("strategy/schedule.json"))
+hold = s.get("next_full_cycle_after")
+if not hold or iso(hold) <= now:
+    sys.exit(1)
+# Count only the tick type in the first parenthesis: a LIGHT line can quote
+# "(FULL" further along, and overcounting is the error that runs FULL on Sonnet.
+full = 0
+for line in open("journal/cycles.log"):
+    m = re.match(r"(\S+Z) cycle done: [^(]*\(FULL", line)
+    if m and now - iso(m.group(1)) <= dt.timedelta(hours=24):
+        full += 1
+sys.exit(0 if full >= s["min_full_cycles_per_day"] else 1)
+PY
+  then
+    MODEL=claude-sonnet-5
+    MODEL_WHY="LIGHT tick: pacing hold with the daily FULL minimum met"
+  fi
+  echo "model: $MODEL ($MODEL_WHY)" >&2
+
   PROMPT="$(cat CYCLE.md)"
   if [ "$REAL_MODE" -eq 1 ]; then
     if [ "$PEARL_UP" -eq 1 ] \
@@ -111,7 +149,7 @@ for i in $(seq 1 "$CYCLES"); do
   # step 9 and its rebase path mandate exactly these commands, and a
   # permission-blocked "checkout -B" strands the cycle's commits on a
   # detached HEAD (2026-08-28).
-  CMD=(claude -p "$PROMPT"
+  CMD=(claude -p "$PROMPT" --model "$MODEL"
        --allowedTools "Read" "Glob" "Grep" "WebSearch" "WebFetch"
          "Edit" "Write" "Task"
          "Bash(python3 core/*)" "Bash(git add:*)" "Bash(git commit:*)"
