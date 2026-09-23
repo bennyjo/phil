@@ -4287,6 +4287,49 @@ Ruling: no boundary change at n=1. Same shape as every other
 0.72 that turned out closer to right), veto correctly withheld the bet.
 Full grading in RETRO-20260922-2214.
 
+**2026-09-23 DEEP REPAIR (documentation-only backfill; no totals
+change).** `core/counterfactual.py reconcile` lists 9 settled
+outside-view-veto rows graded narratively in this section ("named
+elsewhere in the section") but never entered as table rows — all
+settled 2026-08-10 through 2026-09-02, before or during the era when
+the table format stabilised. Their P&L has ALWAYS been inside the
+mechanical ledger's running totals (the tool reads forecasts.jsonl
+directly), so the totals above (162 rows / 154 trades / 64W/90L /
++$41.97 / +0.0349) are unchanged by this entry; only the table rows
+were missing. Values below are the mechanical ledger's own (est/mkt in
+own-side convention, CF P&L at $5 flat):
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Hong WI primary <5% (`03901079bd63`) | 0.09 / 0.089 | Yes | -0.017 | No | -5.00 |
+| Hichilema Zambia (`fa185b55a5c3`) | 0.87 / 0.92 | No | +0.040 | Yes | -5.00 |
+| Musk 140-159 tweets (`70331099597c`) | 0.007 / 0.052 | No | +0.044 | No | +0.27 |
+| Musk 160-179 tweets (`c24926a5c9d7`) | 0.205 / 0.175 | Yes | +0.025 | Yes | +22.78 |
+| Musk 200-219 tweets (`7808b6f5a4ef`) | 0.215 / 0.265 | No | +0.045 | No | +1.76 |
+| Gold hit $4,600 Aug (`90fafe7b3c2a`) | 0.327 / 0.219 | Yes | +0.099 | Yes | +16.93 |
+| Spider-Man domestic gross (`e9f9221a3afb`) | 0.90 / 0.85 | Yes | +0.040 | Yes | +0.81 |
+| Beijing 26°C Aug 25 (`25cb8672c568`) | 0.23 / 0.22 | Yes | +0.000 | No | -5.00 |
+| GPT-6 by Sep 15 (`846f0e23a43a`) | 0.28 / 0.865 | No | +0.570 | Yes | -5.00 |
+
+Batch sum +$22.55 (5W/4L) — already counted in every total above and
+below since the rows settled.
+
+Units note for future reconcile reads (DEEP-2026-09-23): per-row CF P&L
+in this section's tables is DOLLARS at the $5 flat stake; `reconcile`
+prints per-row pnl in 1u = pnl/5 units, so a hand `-5.00` against a
+ledger `-1.00u` is the SAME number, not a diff. Of the 71 "C. rows in
+both that differ" in today's reconcile run, ~60 are exactly this units
+convention; the residue is (i) early rows whose hand edge was quoted
+against the MID rather than the realizable ask (Astra 0.783-hand vs
+0.056-ledger is the worst; the Lowe's row in the 2026-09-22 REPAIR
+documents the same mid-vs-ask illusion), and (ii) rows the fill model
+refuses (entry outside [0.02, 0.95] or no bid) where the hand table
+recorded a fill anyway. Historical rows are NOT being rewritten to
+match — the mechanical ledger is authoritative for every ruling and
+gate; the hand table is the narrative index. An operator proposal to
+make `reconcile` units-aware and to extend its B-check beyond
+outside-view-veto is filed in journal/proposals.md (2026-09-23 pass).
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
@@ -4390,6 +4433,26 @@ MET. The German veto cluster's vote-share rows are now settled and
 split 2W/3L as CF trades — the veto's weakest class (self-built
 poll-Gaussian brackets) stayed its weakest class through an election
 week that was the fork's best chance to open. The fork stays shut.
+
+Status 2026-09-23 (DEEP): **NOT MET — third consecutive double-gate
+failure.** Slice now 162 rows / 154 CF trades / 107 events / +$41.97 /
+overall dBrier +0.0349 (adds the window's 9 settled veto rows, net CF
+−$32.83 1W/8L: Resident Evil trio −$9.50, Trump-Greenland pair −$3.33,
+Opus by-Sep30/exact-Sep22 trio −$15.00, GPT Luna −$5.00, plus the
+2026-09-23 DEEP REPAIR backfill of 9 pre-existing rows already inside
+the totals). (1) fails: per-fold dBrier by the recipe (5 contiguous
+folds of 32/33): f0 +0.0043, f1 +0.0042, f2 +0.0767, f3 +0.0391, f4
++0.0484 — the two most recent folds both positive, f4 worse than
+yesterday. (2) fails: tool fold pnl [+7.13, +7.85, +2.02, +84.71,
+**−59.74**] — the newest fold's CF loss deepened (−46.18 → −59.74) as
+the day's four `ai-model-release` No-reads all resolved Yes. (3)
+holds: 107 events ≥ 40. Eighth consecutive NOT MET. The window is the
+purest illustration yet of why the fork stays shut: 8 of the day's 9
+veto declines SAVED paper money (net CF −$32.83; only the Greenland
+Yes-side row would have paid, +$1.67), which is the veto working — and
+the same rows are calibration losses against the market, which is gate
+1 failing. Money saved by being wrong less expensively than a fill
+would cost is not evidence the model should be allowed to bet these.
 
 If the bar is ever MET: do not loosen the veto wholesale. Propose a
 NARROW carve-out for the best-evidenced sub-class only (current
@@ -6146,7 +6209,8 @@ but no era has ever been ahead.
 market are both forecast-only by rule — the measured-vol touch family
 (inside unvalidated-method; pre-registered re-grade fires at the 6th
 settled measured row, splits reach/dip and near/far barrier) and the
-wide-spread-veto slice (barred by max_spread; n=16, small) — while the
+wide-spread-veto slice (barred by max_spread; n=17 and dBrier −0.0327
+as of 2026-09-23, small) — while the
 class that actually bets is the worst in the book. The conclusion is
 NOT to promote either slice today: both have pre-registered triggers,
 and a deep retro that jumps a trigger because the table looks tempting

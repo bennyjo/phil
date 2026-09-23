@@ -3328,3 +3328,61 @@ floor tested; no reverts of hourly edits; the day's read is in
 DEEP-2026-09-22.md §(a): the classes that beat the market are all
 forecast-only behind pre-registered triggers, and the job is to land
 the triggers, not jump them.
+
+## 2026-09-23 — deep-retro status pass
+
+Full detail in journal/retros/DEEP-2026-09-23.md. No new proposals
+were filed by the hourly agent this window; the 2026-09-22 20:15Z
+retro's reconcile-drift flag was the one open handoff and is resolved
+as follows.
+
+New this pass:
+
+- **counterfactual.py reconcile is units-blind and B-check-narrow
+  (operator, core/counterfactual.py).** Evidence from today's full
+  run: (i) ~60 of its 71 "C. rows in both that differ" are the units
+  convention (hand tables record CF P&L in dollars at the $5 flat
+  stake; reconcile prints 1u = pnl/5 and diffs the raw numbers — hand
+  `-5.00` vs ledger `-1.00u` is the same value), which buries the ~10
+  genuine early-era mid-vs-ask edge quotes and fill-model refusals;
+  its "hand table -65.20u" totals line sums dollars as units and is
+  meaningless as printed. Ask: compare in one unit. (ii) The B-check
+  ("settled rows the hand table never entered") scans only
+  outside-view-veto — the two wide-spread-veto gaps repaired on
+  2026-09-22 (one dating to 2026-08-19) were invisible to it. Ask:
+  extend B to every skip_reason with a hand table. Agent-side half is
+  done: the 9 outside-view-veto B-list rows are backfilled
+  (documentation-only REPAIR, playbook, this commit; totals unchanged)
+  and the units convention is now written into the playbook CF
+  section so no future reader mistakes it for drift.
+
+Re-urged with new evidence:
+
+- **Funnel-weld CI check: THIRD dated instance.** The 2026-09-22
+  08:23Z FULL cycle scanned ("Screener 300/300 in 15 haiku batches",
+  cycles.log:1341) and wrote no strategy/funnel.jsonl row. Three
+  silent drops in ~15 FULL cycles; one CI line (every FULL cycle
+  commit must add a funnel row) closes the class.
+- **ODDS_API_KEY on runners:** unchanged; mlb-moneyline (−0.0499,
+  n=15) still the best cell in the book and still benchmark-starved
+  on cloud.
+
+Carried, triggers intact:
+
+- **Real-twin allowed-classes + fold_brier_delta conversion: CARRY.**
+  Russia pair (9074e3f2fd49, 475edf2e2654) still open on UMA lag,
+  marks 0.988/0.994. First deep retro after settlement discharges
+  both.
+- **settled_ts determinism (option a), wire-nonce 401 + CYCLE.md
+  sentence, mech delivery-size option: ENDORSED 2026-09-22,
+  unchanged, with operator/Pearl Connect.**
+- **Lease writability, screener quota refund, watch.py shape regexes,
+  subclass auto-tagger mislabel: open, unchanged, with operator.**
+
+**Status:** relaxation fork NOT MET (8th consecutive, 3rd double-gate
+failure; f4 CF pnl deepened to −$59.74 — status line in playbook);
+zero bets placed this window, no floor tested, zero settlement-grading
+misses; no reverts of hourly edits (the R1-protocol encoding and the
+NRFI either-side screener trap note were the window's best edits);
+touch-family 6th measured row lands within the week — the job is
+still to land the triggers, not jump them.
