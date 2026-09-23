@@ -2980,6 +2980,33 @@ one window, one vol input makes it ONE open decision, counted when its
 last rung settles (~Oct 1). Settled so far: LOW95 W and LOW90 W, both
 above market, dBrier sum -0.0660. Tally of settled decisions unchanged.
 
+**2026-09-23 15:0xZ RE-GRADE (RETRO-20260923-1500; 6th and 7th measured
+rows settled):** `820604783edf` (ETH dip $2,700, own 0.90 vs mid 0.94,
+gap 0.82%) and `c07c05bc24af` (BTC dip $85k, own 0.93 vs mid 0.9415, gap
+0.52%) both WON; both unshaded, measured Binance 30d vol, two assets so
+two decisions. Tally: 7 rows, 6 decisions, 5 informative (`fde4324641b4`
+carries no weight). Row Brier own 0.4935 vs market 0.6074 (own ahead
+0.114). Splits:
+- Dip (4 decisions): own 0.1993 vs mkt 0.2118, own ahead 0.0125, but the
+  market was closer on 3 of 4; `edd6af85d6a6` alone carries the lead.
+- Reach (1 decision, the BTC Sep 82.5k/85k pair, both shaded): own 0.2941
+  vs mkt 0.3956. One correlated decision in a rising month.
+- Far barrier (gap 10% or more): no counted rows. Untested.
+- Direction: own above market 3 times (2W/1L), below market 2 times
+  (both resolved Yes, market closer both times).
+Decision-weighted (sibling rows averaged): own 0.3464 vs mkt 0.4096, but
+only 2 of 5 informative decisions beat the market.
+**Ruling:** stays `unvalidated-method`, forecast-only, no bets. The
+aggregate lead rests on two decisions (`edd6af85d6a6` and the reach
+pair); the other three went to the market, and the far-barrier and
+multi-decision reach cells are empty. Pre-registered NOW, so the next
+grade cannot be post hoc: promote to a bettable edge class only if, at
+10 or more informative decisions, (a) decision-weighted Brier beats the
+market in BOTH the reach and the dip split with at least 3 decisions
+each, and (b) own beats the market on at least 60% of decisions. Until
+then keep recording every scan-surfaced qualifying row, unshaded, and
+keep splitting near/far barrier.
+
 Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
 (fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
 both settled this tick too, but both carry claimed edges ≤0.10 under a
@@ -6215,8 +6242,9 @@ but no era has ever been ahead.
 
 **The structural fact:** the only two classes where own beats the
 market are both forecast-only by rule — the measured-vol touch family
-(inside unvalidated-method; pre-registered re-grade fires at the 6th
-settled measured row, splits reach/dip and near/far barrier) and the
+(inside unvalidated-method; re-graded 2026-09-23 at 7 rows / 5
+informative decisions, stays forecast-only, next bar pre-registered at
+10 decisions, see the touch-family section) and the
 wide-spread-veto slice (barred by max_spread; n=17 and dBrier −0.0327
 as of 2026-09-23, small) — while the
 class that actually bets is the worst in the book. The conclusion is
