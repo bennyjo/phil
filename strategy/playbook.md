@@ -2972,6 +2972,14 @@ record time under 10% vs 10% or more. Open measured rows now:
 `86415cf1e27f`. `395a07f3f815` (ETH $3,200, guessed vol) is outside the
 counter.
 
+**2026-09-23 08:10Z (RETRO-20260923-0810): WTI September ladder listed.**
+The five-rung WTI ladder (`18672a24a234`, `98134efdddcf`, `0ad60d107c54`,
+`52fac91e76d7`, `41c92e76901c`) quotes a market-implied vol with a named,
+dated source (OVX 57.49, FRED OVXCLS Sep 16), so it qualifies; one asset,
+one window, one vol input makes it ONE open decision, counted when its
+last rung settles (~Oct 1). Settled so far: LOW95 W and LOW90 W, both
+above market, dBrier sum -0.0660. Tally of settled decisions unchanged.
+
 Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
 (fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
 both settled this tick too, but both carry claimed edges ≤0.10 under a
