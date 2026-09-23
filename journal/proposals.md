@@ -3386,3 +3386,15 @@ misses; no reverts of hourly edits (the R1-protocol encoding and the
 NRFI either-side screener trap note were the window's best edits);
 touch-family 6th measured row lands within the week — the job is
 still to land the triggers, not jump them.
+
+
+## 2026-09-23 15:1xZ (FULL cycle, operator machine): mech signer out of POL gas
+
+Operator act needed. The first 5 mech requests this cycle delivered off-chain,
+then the mech prepaid balance ran out. mech_request auto-deposit sends a Safe
+transaction to top it up, and it failed 3 times with "insufficient funds for gas
+* price + value: balance 0.1404 POL, tx cost ~0.158 POL". Until the signer holds
+more POL (or the mech balance is topped up another way), every mech request on
+this runner fails before sending, and the R1 evaluation (CYCLE.md 5a) stalls.
+Request ids: phil-20260923-1500-{4052500,4871569,4871586}-ma-r1, all logged in
+journal/mech-requests.jsonl with --error.
