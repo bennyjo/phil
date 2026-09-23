@@ -4322,6 +4322,27 @@ Ruling: no boundary change at n=1. Same shape as every other
 0.72 that turned out closer to right), veto correctly withheld the bet.
 Full grading in RETRO-20260922-2214.
 
+**2026-09-23 22:1xZ update (LIGHT tick, cloud; 1 `outside-view-veto` row
+settled — 30y Treasury hit 5.39%, see RETRO-20260923-2215).**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| 30y Treasury hit 5.39% Sep (`03f07792d701`) | 0.42 / 0.615 | No | +0.180 | Yes | -5.00 |
+
+Net this batch: **-$5.00** (0W/1L). Mechanical ledger after this row
+(`core/counterfactual.py ledger --skip-reason outside-view-veto`): 163
+settled declined forecasts, 155 fillable CF trades, 108 events, 64W/91L,
+pnl +$36.97, brier_delta +0.0358, held-out +$29.84 (was 162/154/107/
+64W-90L/+$41.97/+0.0349/+$34.84 before this row). Side split: no 116
+rows/108 trades/49W-59L/+$38.68 (adds this No-side loss, -$5.00); yes 47
+rows/47 trades/15W-32L/-$1.71 (unchanged). Check: 38.68 + (-1.71) = 36.97.
+
+Ruling: no boundary change at n=1. A self-modeled driftless touch read
+(close-only reflection) lost to a single-day +11bp 30y print on Sep 23
+(5.29 -> 5.40) that also hit the 10y 5.10 and 5y 4.90 rungs the same day
+— one rates-selloff event, not three independent confirmations. The veto
+correctly withheld the No bet. Full grading in RETRO-20260923-2215.
+
 **2026-09-23 DEEP REPAIR (documentation-only backfill; no totals
 change).** `core/counterfactual.py reconcile` lists 9 settled
 outside-view-veto rows graded narratively in this section ("named
