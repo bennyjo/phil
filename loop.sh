@@ -119,13 +119,20 @@ s = json.load(open("strategy/schedule.json"))
 hold = s.get("next_full_cycle_after")
 if not hold or iso(hold) <= now:
     sys.exit(1)
-# Count only the tick type in the first parenthesis: a LIGHT line can quote
-# "(FULL" further along, and overcounting is the error that runs FULL on Sonnet.
+# Count the tick type stated right after the cash figure, "cash $952.98
+# (FULL cycle, ...". A LIGHT line can quote "(FULL" further along, and
+# overcounting is the error that runs FULL on Sonnet.
+# A line whose timestamp does not parse is skipped: undercounting FULL
+# cycles errs towards Opus. cycles.log has hand-written lines such as
+# 2026-09-15T04:2xZ.
 full = 0
 for line in open("journal/cycles.log"):
-    m = re.match(r"(\S+Z) cycle done: [^(]*\(FULL", line)
-    if m and now - iso(m.group(1)) <= dt.timedelta(hours=24):
-        full += 1
+    m = re.match(r"(\S+Z) cycle done: .*?cash \$[\d,.]+ (?:-- )?\(FULL", line)
+    try:
+        if m and now - iso(m.group(1)) <= dt.timedelta(hours=24):
+            full += 1
+    except ValueError:
+        continue
 sys.exit(0 if full >= s["min_full_cycles_per_day"] else 1)
 PY
   then
