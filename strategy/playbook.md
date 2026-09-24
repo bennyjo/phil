@@ -4387,6 +4387,28 @@ unofficial itinerary lost to the market; the next-day supersede already
 corrected it on sourced logistics. The veto correctly withheld the No bet.
 Full grading in RETRO-20260924-0015.
 
+**2026-09-24 17:2xZ update (FULL cycle, operator machine; 2
+`outside-view-veto` rows settled on the Xi State Arrival utterance
+event, see RETRO-20260924-1729).**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Xi arrival "China" 5+ (`ec3c94c891d7`) | 0.62 / 0.475 | Yes | +0.130 | No | -5.00 |
+| Xi arrival "Ballroom" (`6302b86d1d9a`) | 0.85 / 0.735 (No) | No | +0.110 | No | +1.76 |
+
+Net this batch: **-$3.24** (1W/1L). Mechanical ledger after these rows
+(`core/counterfactual.py ledger --skip-reason outside-view-veto`): 166
+settled declined forecasts, 158 fillable CF trades, 111 events, 65W/93L,
+pnl +$28.73, brier_delta +0.0361, held-out +$17.83 (was 164/156/109/
+64W-92L/+$31.97/+0.0359/+$24.84). Side split: no 118 rows/110 trades/
+50W-60L/+$35.44 (adds Ballroom +$1.76); yes 48 rows/48 trades/15W-33L/
+-$6.71 (adds China 5+ -$5.00). Check: 35.44 + (-6.71) = 28.73.
+
+Ruling: no boundary change. The Yes-side block was correct (the estimate
+itself was wrong, see the count-threshold note in the utterance section);
+the No-side block on a 0/4 speaker-only base rate cost a small winner at
+an edge just over 0.10. One row each, too few to move the boundary.
+
 **2026-09-23 DEEP REPAIR (documentation-only backfill; no totals
 change).** `core/counterfactual.py reconcile` lists 9 settled
 outside-view-veto rows graded narratively in this section ("named
@@ -5326,6 +5348,18 @@ say-the-word bets are 0-for-4 lifetime (−$20, score.py), both
 post-gate losses root-caused to the whole-transcript counting bug the
 speaker-only method note has since fixed — the gate has not yet been
 tested with correct counts.
+
+**First test with correct counts (RETRO-20260924-1729, Xi State Arrival
+Sep 24).** Speaker-only 0/4 base rates held on all three absent-word
+rows ("Trump", Economy, Ballroom: 0 each in the 520-word speech), and
+the No bet `bee5cc45c8df` won (+$1.33; say-the-word bets 1-for-5). The
+miss was the count threshold: "China" 5+ (`ec3c94c891d7`, est 0.62)
+cited "met 3 of 3", but the only same-country analogue (Beijing toast,
+~600 words) sat exactly at 5, and the arrival speech said it 3 times.
+**Rule for N+ count markets:** scale each analogue's speaker-only count
+to the expected speech length (count per word x expected words) before
+comparing with N. When the nearest analogue sits at N or within 1 of it,
+cap the estimate at 0.50 unless a scheduled hook raises the rate.
 
 ## First bet in 13 days: the AfD Sachsen-Anhalt audit (DEEP-2026-08-24)
 
