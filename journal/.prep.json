@@ -1,5 +1,5 @@
 {
-  "work_dir": "reports/screener-work/20260924T013448Z",
+  "work_dir": "reports/screener-work/20260924T225433Z",
   "batch_count": 15,
   "batches": [
     {
@@ -94,35 +94,35 @@
     }
   ],
   "screened_pool": 300,
-  "candidates_in": 1076,
+  "candidates_in": 1120,
   "strata": {
     "closing_48h": {
-      "eligible": 145,
+      "eligible": 249,
       "selected": 80
     },
     "top_liquidity": {
-      "eligible": 325,
+      "eligible": 376,
       "selected": 120
     },
     "top_volume_24h": {
-      "eligible": 205,
+      "eligible": 256,
       "selected": 60
     },
     "random_tail": {
-      "eligible": 145,
+      "eligible": 196,
       "selected": 40
     }
   },
   "dropped_by_reason": {
-    "closing_48h_beyond_stratum_size": 65,
-    "top_liquidity_beyond_stratum_size": 205,
-    "top_volume_24h_beyond_stratum_size": 145,
-    "random_tail_beyond_stratum_size": 105,
+    "closing_48h_beyond_stratum_size": 169,
+    "top_liquidity_beyond_stratum_size": 256,
+    "top_volume_24h_beyond_stratum_size": 196,
+    "random_tail_beyond_stratum_size": 156,
     "filter:crypto_bracket": 5,
-    "filter:crypto_updown": 20,
-    "filter:line_constructed": 379,
-    "filter:mids_exactly_half": 8,
-    "filter:weather_temperature": 266
+    "filter:crypto_updown": 12,
+    "filter:line_constructed": 485,
+    "filter:mids_exactly_half": 7,
+    "filter:weather_temperature": 159
   },
   "filters": {
     "file": "strategy/screener-filters.json",
@@ -134,20 +134,20 @@
       "weather_temperature"
     ],
     "dropped_by_filter": {
-      "line_constructed": 379,
-      "crypto_updown": 20,
-      "mids_exactly_half": 8,
-      "crypto_bracket": 5,
-      "weather_temperature": 266
+      "line_constructed": 485,
+      "crypto_updown": 12,
+      "mids_exactly_half": 7,
+      "weather_temperature": 159,
+      "crypto_bracket": 5
     }
   },
-  "day_batches_used": 15,
+  "day_batches_used": 120,
   "day_batches_by_runner": {
-    "cloud": 0,
-    "operator": 15
+    "cloud": 15,
+    "operator": 105
   },
   "runner": "operator",
   "max_batches_per_day": 150,
   "prompt_rev": "76c0d9d12404facaedc6badc8f3ae957232e5c3f",
-  "subagent_prompt_template": "You are the screening tier of a prediction-market research pipeline. Work from the repository root. Do these three things, in order, and nothing else.\n\n1. Read reports/screener-work/20260924T013448Z/batch-NN.json. It holds {\"batch_id\", \"markets\", \"mids\"}; \"markets\" is the batch, one object per market.\n2. Read strategy/screener-prompt.md. That is the judgment brief - what counts as worth a researcher's next hour. Follow it.\n3. Use the Write tool to write a JSON array to reports/screener-work/20260924T013448Z/out-NN.json, one object per market in \"markets\", every market exactly once:\n[{\"market_id\": \"<id exactly as given>\", \"prob\": {\"<outcome name>\": <0-1>, ...}, \"confidence\": \"low\"|\"medium\"|\"high\", \"reason\": \"<one short line>\"}]\n\nRules:\n- Use the exact outcome names given for that market. Probabilities must be non-negative and sum to about 1.\n- You are NOT deciding trades. A downstream researcher spends real effort on the markets whose probabilities differ most from the market price, so be honestly calibrated and honestly uncertain - both a falsely confident number and a lazy echo of the market price waste that effort.\n- The prices in the file are stale mids. Do not copy them. If after thinking you genuinely agree with the price, say so with your own number and let the divergence be small.\n- Use only what you already know plus the market text. Do not browse, search or fetch. If resolving the question needs information you do not have, that is exactly what confidence \"low\" is for - say so in the reason.\n- confidence \"high\" means you would defend the number without further research.\n- Write the file. Do not print the array, do not summarise it, do not explain your reasoning. Your final message is one line: \"wrote out-NN.json, <n> markets\"."
+  "subagent_prompt_template": "You are the screening tier of a prediction-market research pipeline. Work from the repository root. Do these three things, in order, and nothing else.\n\n1. Read reports/screener-work/20260924T225433Z/batch-NN.json. It holds {\"batch_id\", \"markets\", \"mids\"}; \"markets\" is the batch, one object per market.\n2. Read strategy/screener-prompt.md. That is the judgment brief - what counts as worth a researcher's next hour. Follow it.\n3. Use the Write tool to write a JSON array to reports/screener-work/20260924T225433Z/out-NN.json, one object per market in \"markets\", every market exactly once:\n[{\"market_id\": \"<id exactly as given>\", \"prob\": {\"<outcome name>\": <0-1>, ...}, \"confidence\": \"low\"|\"medium\"|\"high\", \"reason\": \"<one short line>\"}]\n\nRules:\n- Use the exact outcome names given for that market. Probabilities must be non-negative and sum to about 1.\n- You are NOT deciding trades. A downstream researcher spends real effort on the markets whose probabilities differ most from the market price, so be honestly calibrated and honestly uncertain - both a falsely confident number and a lazy echo of the market price waste that effort.\n- The prices in the file are stale mids. Do not copy them. If after thinking you genuinely agree with the price, say so with your own number and let the divergence be small.\n- Use only what you already know plus the market text. Do not browse, search or fetch. If resolving the question needs information you do not have, that is exactly what confidence \"low\" is for - say so in the reason.\n- confidence \"high\" means you would defend the number without further research.\n- Write the file. Do not print the array, do not summarise it, do not explain your reasoning. Your final message is one line: \"wrote out-NN.json, <n> markets\"."
 }
