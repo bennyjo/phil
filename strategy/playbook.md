@@ -4409,6 +4409,27 @@ itself was wrong, see the count-threshold note in the utterance section);
 the No-side block on a 0/4 speaker-only base rate cost a small winner at
 an edge just over 0.10. One row each, too few to move the boundary.
 
+**2026-09-24 22:1xZ update (LIGHT tick, cloud; 2 `outside-view-veto`
+rows settled on the 30y Treasury Sep ladder, see RETRO-20260924-2213).**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| 30y Treasury hit 5.42% Sep (`7771a4b3b7ac`) | 0.33 / 0.245 | Yes | -0.040 | Yes | +8.51 |
+| 30y Treasury hit 5.45% Sep (`b8d163385f59`) | 0.20 / 0.106 | Yes | +0.090 | Yes | +40.45 |
+
+Net this batch: **+$48.96** (2W/0L). Mechanical ledger after these rows
+(`core/counterfactual.py ledger --skip-reason outside-view-veto`): 168
+settled declined forecasts, 160 fillable CF trades, 111 events, 67W/93L,
+pnl +$77.70, brier_delta +0.0340, held-out +$66.80 (was 166/158/111/
+65W-93L/+$28.73/+0.0361/+$17.83). Side split: no 118 rows/110 trades/
+50W-60L/+$35.44 (unchanged); yes 50 rows/50 trades/17W-33L/+$42.26 (adds
+both rows). Check: 35.44 + 42.26 = 77.70.
+
+Ruling: no boundary change. Both rows belong to the same rates-selloff
+event as the 5.39 No-side loss (`03f07792d701`). Events stay at 111, and
+the ladder family nets +$43.96 on one event. The dip-below-5.21 leg
+(`3e4351bdb5c6`) is still open.
+
 **2026-09-23 DEEP REPAIR (documentation-only backfill; no totals
 change).** `core/counterfactual.py reconcile` lists 9 settled
 outside-view-veto rows graded narratively in this section ("named
