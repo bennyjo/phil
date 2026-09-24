@@ -54,7 +54,8 @@
     "Amended 2026-09-15 20:2xZ (FULL cycle, cloud): pruned the Iran Sep7 ceasefire price-move entry (0ed1d77858d7 settled LOST this cycle, RETRO-20260915-2015).",
     "Amended 2026-09-17 11:2xZ (TRIGGERED cycle, cloud): pruned two watch.py-reported expired entries (FOMC Sep16 calendar, past window and already graded; Fed hike price_move 2252245, past expires). Also pruned the BoE calendar entry and its paired price_move (market 2661520) now that the decision is out (WebFetch-confirmed: held at 3.75pct, 6-3, same three hawks Pill/Greene/Mann as July -- matches the expected split exactly; PM now 0.0005/0.9995, fully resolved) -- forecast bc482ffb3606 still open pending official UMA settlement, grading deferred to the retro that settles it; no further watch value in either entry.",
     "Amended 2026-09-17 16:0xZ (FULL cycle, operator machine): added the core PCE YoY 3.3pct price move (new open position 8894592b953a, No @0.68) and calendar entries for the UMich final (Sep 25) and the BEA August PCE release (Sep 30).",
-    "Amended 2026-09-21 02:3xZ (TRIGGERED cycle, cloud): raised the core PCE (3938031) move_threshold 0.05 -> 0.10. Three fires on this exact key in three days (Sep18 15:22Z +0.070, Sep20 12:52Z -0.050, Sep21 02:37Z -0.065), each individually researched (WebSearch/WebFetch) and each confirmed no dated news catalyst -- the observed CLOB spread on this token has run 0.01-0.10 across the same window, i.e. within spread-noise range of the 0.05 threshold on a thin ($660 liquidity) book. 0.10 still catches a real consensus-forming move (a genuine settle-on-3.3 signal implies a much larger repricing toward the extremes) while filtering the bid/ask wobble this item has fired on three times running for zero bets."
+    "Amended 2026-09-21 02:3xZ (TRIGGERED cycle, cloud): raised the core PCE (3938031) move_threshold 0.05 -> 0.10. Three fires on this exact key in three days (Sep18 15:22Z +0.070, Sep20 12:52Z -0.050, Sep21 02:37Z -0.065), each individually researched (WebSearch/WebFetch) and each confirmed no dated news catalyst -- the observed CLOB spread on this token has run 0.01-0.10 across the same window, i.e. within spread-noise range of the 0.05 threshold on a thin ($660 liquidity) book. 0.10 still catches a real consensus-forming move (a genuine settle-on-3.3 signal implies a much larger repricing toward the extremes) while filtering the bid/ask wobble this item has fired on three times running for zero bets.",
+    "Amended 2026-09-24 07:4xZ (TRIGGERED cycle, cloud): pruned the SNB Sep24 calendar entry and its paired price_move (market 4443883) -- the decision is out (SNB's own press release, pre_20260924: policy rate held at 0%, matching the no-change Yes side exactly). No-side edge already exhausted pre-print (CLOB bid 0.999, no ask); nothing left to watch for on this market."
   ],
   "price_moves": [
     {
@@ -80,14 +81,6 @@
       "move_threshold": 0.05,
       "window_min": 60,
       "expires": "2026-09-25T04:00:00Z"
-    },
-    {
-      "market_id": "4443883",
-      "token_id": "44823521030235665325095619801947921774270389938522386846172915977769791983539",
-      "label": "Will the Swiss National Bank make no change to the SNB policy rate at the September meeting? (Yes; skipped no-edge 2026-09-12 at mid 0.885 vs own 0.90 (SNB Jun18 hold + mild inflation, no reliable 2026 poll found -- a genuine Reuters poll surfacing, or the mid dropping toward 0.85, both worth a re-check); decision Sep 24)",
-      "move_threshold": 0.05,
-      "window_min": 60,
-      "expires": "2026-09-25T00:00:00Z"
     },
     {
       "market_id": "3938031",
@@ -120,11 +113,6 @@
     "keywords": []
   },
   "calendar": [
-    {
-      "label": "SNB September 2026 policy rate decision ACTUAL PRINT - market 4443883 no-change Yes, forecast 406cf5d79a33 (supersedes cf76e5d0536c, own 0.965, no-edge, mid now 0.9965) -- market_id's own end_date (00:00Z Sep24) fired this watch ~7h before the real announcement (07:30 UTC / 09:30 CET per SNB's own quarterly-assessment slot, corroborated by tradingeconomics calendar + Newsquawk/DBS previews); grade the actual decision against both estimates when it lands. Every 'Reuters poll of economists' hit is still the same recycled 2025-09-22 article about the 2025-09-25 meeting (41 economists, 40 hold/1 cut) -- confirmed again by fetching it directly; no genuine dated-2026 poll with a vote split has ever surfaced, only 2026-dated analyst previews (Newsquawk, DBS/FXStreet) unanimously calling a hold with no dissent voiced.",
-      "fire_at": "2026-09-24T07:35:00Z",
-      "window_min": 60
-    },
     {
       "label": "UMich September 2026 FINAL sentiment (14:00Z) - market 4386146 bracket 46.0-48.9 Yes @0.605, forecast 3904e426ee6d (own 0.64, market-agrees; prelim 47.8) -- grade own revision-sd read (0.64) vs market (0.605) vs mech market-aware (0.80, ignored revision variance)",
       "fire_at": "2026-09-25T14:00:00Z",

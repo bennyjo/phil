@@ -1,7 +1,8 @@
 {
-  "last_fire_utc": "2026-09-24T05:23:02Z",
+  "last_fire_utc": "2026-09-24T07:37:35Z",
   "fired": {
     "cal:SNB September 2026 policy rate decision - market 4443883 no-change Yes @0.885, forecast cf76e5d0536c (own 0.90, no-edge, thin book $315 liquidity) -- grade the persistent-hold base rate against the actual print, and note if a genuine dated 2026 poll ever surfaces (this cycle's WebSearch kept returning a stale 2025-vintage recycled-headline poll, discarded)": "2026-09-24T00:23:04Z",
+    "cal:SNB September 2026 policy rate decision ACTUAL PRINT - market 4443883 no-change Yes, forecast 406cf5d79a33 (supersedes cf76e5d0536c, own 0.965, no-edge, mid now 0.9965) -- market_id's own end_date (00:00Z Sep24) fired this watch ~7h before the real announcement (07:30 UTC / 09:30 CET per SNB's own quarterly-assessment slot, corroborated by tradingeconomics calendar + Newsquawk/DBS previews); grade the actual decision against both estimates when it lands. Every 'Reuters poll of economists' hit is still the same recycled 2025-09-22 article about the 2025-09-25 meeting (41 economists, 40 hold/1 cut) -- confirmed again by fetching it directly; no genuine dated-2026 poll with a vote split has ever surfaced, only 2026-dated analyst previews (Newsquawk, DBS/FXStreet) unanimously calling a hold with no dissent voiced.": "2026-09-24T07:37:35Z",
     "newmarket:4836275": "2026-09-22T10:22:21Z",
     "newmarket:4869892": "2026-09-23T01:37:29Z",
     "newmarket:4874121": "2026-09-23T05:37:44Z",
