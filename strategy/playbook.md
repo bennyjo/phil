@@ -4343,6 +4343,27 @@ Ruling: no boundary change at n=1. A self-modeled driftless touch read
 — one rates-selloff event, not three independent confirmations. The veto
 correctly withheld the No bet. Full grading in RETRO-20260923-2215.
 
+**2026-09-24 00:1xZ update (LIGHT tick, cloud; 1 `outside-view-veto` row
+settled — Xi Jinping in US by Sep 23 resolved Yes, see
+RETRO-20260924-0015).**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Xi visit by Sep23 (`f5e8ad23ec2c`) | 0.75 / 0.895 | No | +0.140 | Yes | -5.00 |
+
+Net this batch: **-$5.00** (0W/1L). Mechanical ledger after this row
+(`core/counterfactual.py ledger --skip-reason outside-view-veto`): 164
+settled declined forecasts, 156 fillable CF trades, 109 events, 64W/92L,
+pnl +$31.97, brier_delta +0.0359, held-out +$24.84 (was 163/155/108/
+64W-91L/+$36.97/+0.0358/+$29.84 before this row). Side split: no 117
+rows/109 trades/49W-60L/+$33.68 (adds this No-side loss, -$5.00); yes 47
+rows/47 trades/15W-32L/-$1.71 (unchanged). Check: 33.68 + (-1.71) = 31.97.
+
+Ruling: no boundary change at n=1. A compounded arrival-day haircut on an
+unofficial itinerary lost to the market; the next-day supersede already
+corrected it on sourced logistics. The veto correctly withheld the No bet.
+Full grading in RETRO-20260924-0015.
+
 **2026-09-23 DEEP REPAIR (documentation-only backfill; no totals
 change).** `core/counterfactual.py reconcile` lists 9 settled
 outside-view-veto rows graded narratively in this section ("named
