@@ -3007,6 +3007,29 @@ each, and (b) own beats the market on at least 60% of decisions. Until
 then keep recording every scan-surfaced qualifying row, unshaded, and
 keep splitting near/far barrier.
 
+**2026-09-24 DEEP re-grade (8th and 9th measured rows; settled by the
+deep retro's own resolve run at ~04:3xZ, so no hourly retro graded
+them).** `6c1236ca11fe` (BTC dip $83k on Sep 23, own 0.24 vs mid
+0.2055) and `8a4bb9cfde9c` (ETH dip $2,600 on Sep 23, own 0.09 vs mid
+0.085) both LOST (no dip); both unshaded, measured Binance 30d vol, two
+assets so two decisions, both near-barrier dips (gap ~3%). Market closer
+on both (row dBrier +0.0154 / +0.0009). Tally: 9 rows, 7 informative
+decisions; own beats the market on **2 of 7**. Dip split: 6 decisions,
+own closer on 1. Direction pattern: own ABOVE market on all 4 intraday
+dip reads since 09-17 and the market was closer on 3 of them — the
+unshaded 30d-realized-vol reflection read slightly overstates same-day
+touch odds (n=4, pattern only, not a rule).
+**Bar arithmetic, stated so nobody grades it hopefully later:** at 10
+informative decisions the best possible own-closer count is 5/10 = 50%,
+below the 60% bar in (b). The 10-decision promotion is now unreachable;
+it would take 13 straight own-closer decisions to reach 60% at any n.
+**Ruling:** stays `unvalidated-method`, forecast-only, indefinitely. Keep
+recording scan-surfaced rows (cheap, and the WTI ladder decision is
+still open ~Oct 1), but do NOT spend research priority on generating new
+touch rows — priority 1 "feed the measured-row counter" (15:00Z
+2026-09-23 funnel note) is retired. The family matches the market; it
+does not beat it.
+
 Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
 (fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
 both settled this tick too, but both carry claimed edges ≤0.10 under a
@@ -4531,7 +4554,21 @@ the same rows are calibration losses against the market, which is gate
 1 failing. Money saved by being wrong less expensively than a fill
 would cost is not evidence the model should be allowed to bet these.
 
-If the bar is ever MET: do not loosen the veto wholesale. Propose a
+Status 2026-09-24 (DEEP): **NOT MET — fourth consecutive double-gate
+failure.** Slice 164 rows / 156 CF trades / 109 events / +$31.97 /
+overall dBrier +0.0359 (adds the 30y-Treasury 5.39% No-read
+`03f07792d701` −$5 and the Xi-by-Sep23 arrival-day row `f5e8ad23ec2c`
+−$5, both resolved Yes). (1) fails: per-fold dBrier by the recipe (5
+contiguous folds of 32/33): f0 +0.0043, f1 +0.0045, f2 +0.0563, f3
++0.0597, f4 +0.0538 — the last THREE folds (everything since
+2026-08-25) sit at +0.054 to +0.060, an order of magnitude worse than
+f0/f1; divergent reads have got worse, not better. (2) fails: tool fold
+pnl [+7.13, +7.85, +2.02, +84.71, **−69.74**]. (3) holds: 109 events.
+Ninth consecutive NOT MET. The window's two veto losses share the
+recurring shape: a "won't happen by the date" read against a market
+pricing the event likely (Treasury rung, Xi arrival — same family as
+the four `ai-model-release` No-reads on 09-22/23).
+ do not loosen the veto wholesale. Propose a
 NARROW carve-out for the best-evidenced sub-class only (current
 candidate shape: No-side timeline theses of the "nothing announced"
 kind), with a disagreement band, standard floors, one trade per event,
@@ -6297,9 +6334,11 @@ is the exact post-hoc move the fork discipline exists to prevent
 what jumping would cost). The conclusion is a priority ordering for
 research allocation until a trigger fires:
 
-1. Feed the touch-family counter its 6th measured row honestly (never
-   seek out rows to force the trigger — record every qualifying market
-   the scan already surfaces, at measured vol, unshaded).
+1. ~~Feed the touch-family counter its 6th measured row~~ RETIRED
+   DEEP-2026-09-24: at 7 informative decisions own is closer on 2, so
+   the pre-registered 60% bar is unreachable at 10 (see the touch-family
+   section). Record scan-surfaced touch rows only incidentally; do not
+   select them ahead of other candidates.
 2. Keep election self-model bets behind the price-inside-range rule and
    the centre stress test; the German week (bets −$10, veto CF rows
    2W/3L, market better on ~14 of 14 settled German rows) is this

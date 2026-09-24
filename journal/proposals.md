@@ -3398,3 +3398,57 @@ more POL (or the mech balance is topped up another way), every mech request on
 this runner fails before sending, and the R1 evaluation (CYCLE.md 5a) stalls.
 Request ids: phil-20260923-1500-{4052500,4871569,4871586}-ma-r1, all logged in
 journal/mech-requests.jsonl with --error.
+
+Status: ENDORSED (operator act) — DEEP-2026-09-24. Still failing: the
+2026-09-24T01:40Z FULL cycle's request (market 4867959) hit the same
+error (balance 0.1404 POL, tx cost ~0.160 POL). That makes 4 failed
+requests over ~11h and no R1 triples since 2026-09-23 15:05Z, so the
+operator's daily sample-of-3 (2026-09-21 21:25Z note) is not being met.
+The agent cannot fix this: it needs POL on the signer or a manual mech
+top-up.
+
+## 2026-09-24 — deep-retro status pass
+
+Full detail in journal/retros/DEEP-2026-09-24.md.
+
+Hourly-agent proposals this window: one, the mech POL-gas ask above,
+now ENDORSED.
+
+Re-urged with new evidence:
+
+- **Funnel-weld CI check: now 4-5 dated instances in ONE day.** The
+  screener quota proves 10 screened FULLs ran on UTC 2026-09-23
+  (day_batches reached 150/150 = 10 x 15 at the 14:30Z row), but only 6
+  funnel rows carry that day's screened cycles. cycles.log FULL entries
+  with a "Funnel: scanned ... screened 300" clause and no matching
+  funnel.jsonl row: 2026-09-23 08:24Z (operator), 11:38Z (operator),
+  12:45Z (cloud), and 2026-09-24 01:42Z (operator). The cycle writes the
+  funnel numbers into cycles.log and then leaves out the jsonl row,
+  mostly on the operator runner (3 of 4). A drop rate of ~40% makes
+  funnel.jsonl useless as the sensing record. One CI line (a FULL-cycle
+  commit must add a funnel.jsonl row), or core/scan.py writing the row
+  itself, closes it. Status: PROPOSED (operator).
+- **ODDS_API_KEY: missing on the operator runner as well.** The
+  2026-09-23 15:00Z operator-runner funnel row says the MLB slate (15
+  games) was skipped because the odds key is not provisioned on the
+  operator runner. So the book's best cell (mlb-moneyline) cannot get a
+  benchmark on EITHER runner. Status: PROPOSED (operator).
+- **Screener quota vs two runners (operator, config/core):** the 150/day
+  batch quota is shared by the cloud and operator loops, which both run
+  FULL cycles. On 2026-09-23 it ran out at 14:30Z, and the evening went
+  unscreened until 01:42Z. The agent-side fix is in
+  schedule.json `screener_budget` (this commit). Operator options: raise
+  the quota, or give each runner its own share. Status: PROPOSED
+  (operator), low priority now that pacing budgets it.
+
+Carried unchanged: counterfactual.py reconcile units/B-check
+(2026-09-23), real-twin allowed-classes (Russia pair 9074e3f2fd49 /
+475edf2e2654 still open on UMA lag, marks 0.994/0.996), settled_ts
+determinism, wire-nonce 401, mech delivery-size, lease writability,
+screener quota refund, watch.py shape regexes, subclass auto-tagger.
+
+**Status:** relaxation fork NOT MET (9th consecutive, 4th double-gate
+failure; f4 CF pnl −$69.74). Touch family re-graded at 7 decisions: own
+closer on 2, so the 10-decision promotion bar can no longer be met, and
+it drops from research priority 1. Zero bets placed in the window. No
+reverts of hourly edits.
