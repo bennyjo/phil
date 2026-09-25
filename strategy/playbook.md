@@ -4430,6 +4430,33 @@ event as the 5.39 No-side loss (`03f07792d701`). Events stay at 111, and
 the ladder family nets +$43.96 on one event. The dip-below-5.21 leg
 (`3e4351bdb5c6`) is still open.
 
+**2026-09-25 03:1xZ update (FULL cycle, operator machine; 2
+`outside-view-veto` + 3 `wide-spread-veto` rows settled on the Xi
+state-dinner toast, see RETRO-20260925-0315).**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Xi toast "Economy" (`9a7a77a71c00`, outside-view-veto) | 0.22 / 0.435 | No | +0.200 | No | +3.62 |
+| Xi toast "SI" (`ab5a3803b119`, outside-view-veto) | 0.35 / 0.665 | No | +0.260 | No | +7.82 |
+| Xi toast "Trump" (`d805d4abc7c9`, wide-spread-veto) | 0.11 / 0.22 | No | +0.070 | No | +1.10 |
+| Xi toast "Garden/Rose" (`cdabc385b3cb`, wide-spread-veto) | 0.15 / 0.28 | No | +0.040 | No | +1.17 |
+| Xi toast "Million" 5+ (`b1957ef7af26`, wide-spread-veto; then bet as `674b6cfac193`) | 0.06 / 0.125 | No | +0.060 | No | +0.68 |
+
+Outside-view-veto: **+$11.44** (2W/0L). Mechanical ledger now 170 rows /
+162 trades / 113 events / 69W-93L / +$89.14 / dBrier +0.0309 / held-out
++$78.24 (was 168/160/111/67W-93L/+$77.70/+0.0340/+$66.80). Side split:
+no 120/112/52W-60L/+$46.88 (adds both); yes 50/50/17W-33L/+$42.26
+(unchanged). Check: 46.88 + 42.26 = 89.14.
+
+Wide-spread-veto: **+$2.95** (3W/0L). Ledger now 20 rows / 18 trades /
+11W-7L / -$15.04 / dBrier -0.0330 / held-out -$12.22 (was 17/15/8W-7L/
+-$17.99/-0.0327/-$15.17). Side split: no 12/10/5W-5L/-$14.79 (adds all
+three); yes 8/8/6W-2L/-$0.25 (unchanged). Check: -14.79 + -0.25 = -15.04.
+
+Ruling: no boundary change. One event; the Million row duplicates a
+placed bet. The No-side speaker-only tally in the utterance section
+tracks whether the 0.10 boundary costs this family winners.
+
 **2026-09-23 DEEP REPAIR (documentation-only backfill; no totals
 change).** `core/counterfactual.py reconcile` lists 9 settled
 outside-view-veto rows graded narratively in this section ("named
@@ -5381,6 +5408,16 @@ cited "met 3 of 3", but the only same-country analogue (Beijing toast,
 to the expected speech length (count per word x expected words) before
 comparing with N. When the nearest analogue sits at N or within 1 of it,
 cap the estimate at 0.50 unless a scheduled hook raises the rate.
+
+**Second test (RETRO-20260925-0315, Xi state-dinner toast Sep 24).** All
+10 Yes/No rows resolved No. Both No bets won (`502d92285461` AI +$2.04,
+`674b6cfac193` Million 5+ +$0.68; say-the-word bets 3-for-7). Non-bet
+rows: own Brier 0.063 vs market 0.139 over 8. The capped China 5+ read
+(0.45) kept off the wrong side. **Pre-registered tally: No-side
+speaker-only rows blocked by the 0.10 outside-view boundary.** Current:
+Ballroom +$1.76, Economy +$3.62, SI +$7.82 (3W/0L, 2 events). Review at 5
+settled rows spanning at least 3 independent events; the settling retro
+owes a keep/loosen call with CF P&L. Until then the boundary stands.
 
 ## First bet in 13 days: the AfD Sachsen-Anhalt audit (DEEP-2026-08-24)
 
