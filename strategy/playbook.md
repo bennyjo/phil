@@ -5388,6 +5388,17 @@ edec04d6b96d (rolling-window count, unshaded-ish 0.85 vs 0.545, won,
 −0.185) is consistent. n is tiny; this is a recording discipline, not a
 betting change — the category bar stands.
 
+**2026-09-25 20:15Z retro (RETRO-20260925-2015): same discipline for
+resolver-series band families.** Democratic Senate odds (PMO hourly
+print) Sep 25 bands: the driftless normal on the resolver series
+(60-62 0.49 / 62-64 0.39) would have scored 0.414 over the 3 rows vs mid
+0.470; my blend with an empirical week-drift model (recorded 0.44/0.44)
+scored 0.510 and lost the mid (+0.040 family dBrier). The week drift had
+already reversed (Sep 23 spike, last 12h flat). Rule until graded on >=3
+independent events: record the driftless (random-walk, measured sd)
+model; a drift/momentum view is written as "drift view: X" in the note
+and not recorded. Forecast-only as before.
+
 ## Utterance-market base-rate gate (enacted DEEP-2026-09-12)
 
 A Yes-side BET on a say-the-word / trump-mention / vance-mention /
