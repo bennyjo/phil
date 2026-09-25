@@ -4638,7 +4638,24 @@ Ninth consecutive NOT MET. The window's two veto losses share the
 recurring shape: a "won't happen by the date" read against a market
 pricing the event likely (Treasury rung, Xi arrival — same family as
 the four `ai-model-release` No-reads on 09-22/23).
- do not loosen the veto wholesale. Propose a
+
+Status 2026-09-25 (DEEP): **NOT MET — fifth consecutive double-gate
+failure, but the newest fold improved.** Slice 170 rows / 162 CF trades
+/ 113 events / +$89.14 / overall dBrier +0.0309 (adds the window's 6
+rows: 30y 5.42/5.45 Yes +$48.96, Xi arrival China 5+ −$5.00 / Ballroom
++$1.76, Xi toast Economy +$3.62 / SI +$7.82; tool reproduced to the
+cent). (1) fails: per-fold dBrier by the recipe (5 contiguous folds of
+34): f0 −0.0035, f1 +0.0113, f2 +0.0589, f3 +0.0603, f4 **+0.0277**
+(was +0.0538) — f4 halved on two events (Xi summit day, one rates
+selloff), still positive. (2) fails: tool fold pnl [+10.90, −5.92,
++12.19, +72.37, **−0.40**]. (3) holds: 113 events. Tenth consecutive
+NOT MET. The +$57 CF jump in one day is longshot payoff variance
+(+$40.45 from one 0.106 fill on the 30y 5.45 rung), not calibration:
+read dBrier, not CF pnl. Note: 4 of 162 CF trades (net −$6.49,
+incl. `7771a4b3b7ac` +$8.51) had non-positive realizable edge at the
+ask and could never have been placed; immaterial to the verdict.
+
+If the bar is ever MET: do not loosen the veto wholesale. Propose a
 NARROW carve-out for the best-evidenced sub-class only (current
 candidate shape: No-side timeline theses of the "nothing announced"
 kind), with a disagreement band, standard floors, one trade per event,
@@ -5418,6 +5435,24 @@ speaker-only rows blocked by the 0.10 outside-view boundary.** Current:
 Ballroom +$1.76, Economy +$3.62, SI +$7.82 (3W/0L, 2 events). Review at 5
 settled rows spanning at least 3 independent events; the settling retro
 owes a keep/loosen call with CF P&L. Until then the boundary stands.
+
+**Scope sharpening (DEEP-2026-09-25).** "Independent event" for this
+tally means a distinct speaker-venue-DAY, not a distinct gamma event.
+The Xi arrival (14:00Z) and state-dinner toast (23:55Z) are two gamma
+events but one speaker, one venue class (scripted ceremonial), one
+speechwriting team, one day, so the current tally is 3 rows from ONE
+independent occasion, not two. The review needs rows from at least 3
+distinct days, including at least one non-ceremonial venue (presser,
+rally, interview), before a loosen call. Same count applies to the bet
+side: say-the-word bets are Yes 0W/4L (−$20.00: `2659709d25f9`,
+`e77eef5d06ad`, `5886cf8c42b7`, `3704ba650a69`) vs No 3W/0L (+$4.05:
+`bee5cc45c8df`, `502d92285461`, `674b6cfac193`, one occasion). The No
+wins paid $0.68-2.04 each at 0.71-0.88 asks, so ONE loss erases all
+three: break-even needs a win rate at or above the ask (~0.79), which
+three rows cannot show. Keep sizing flat and keep the event cap. No
+per-side rule change: the Yes losses have a diagnosed cause (thematic
+guesses pre-gate, speaker-only counting bug post-gate), and n is too
+small to call either side an edge.
 
 ## First bet in 13 days: the AfD Sachsen-Anhalt audit (DEEP-2026-08-24)
 

@@ -3452,3 +3452,41 @@ failure; f4 CF pnl −$69.74). Touch family re-graded at 7 decisions: own
 closer on 2, so the 10-decision promotion bar can no longer be met, and
 it drops from research priority 1. Zero bets placed in the window. No
 reverts of hourly edits.
+
+## 2026-09-25 — deep-retro status pass
+
+Full detail in journal/retros/DEEP-2026-09-25.md.
+
+Hourly-agent proposals this window: none new.
+
+Re-urged / escalated with new evidence:
+
+- **Mech + Pearl Connect: escalated from "out of POL gas" to "tools
+  absent".** Since the 2026-09-24 01:40Z failure, every operator-runner
+  FULL cycle (10:06Z, 13:25Z, 15:35Z, 17:35Z, 19:49Z, 23:10Z, 01:11Z,
+  03:24Z) logs "no pearl-connect mech tools in this session", and every
+  operator cycle runs in paper mode. No mech request has been attempted
+  for ~27h and none has delivered since 2026-09-23 15:05Z (~37h), so the
+  operator's daily R1 sample-of-3 has been missed two days running, and
+  no real twin can be placed either (real-ledger: zero fills, last row
+  2026-09-09). Operator act: restore the Pearl Connect MCP tools on the
+  operator runner (PEARL_CONNECT_STORE / .mcp.json), and fund the signer
+  with POL. Status: ENDORSED (operator act), priority raised.
+- **Funnel-weld CI check: 1 instance this window (was 4-5).** The
+  2026-09-24 10:06Z operator FULL logged "Funnel: scanned 1000, screened
+  300" in cycles.log with no funnel.jsonl row; the other 8 screened FULLs
+  in the window have rows. Better, still not closed by construction.
+  Status: PROPOSED (operator).
+- **ODDS_API_KEY on both runners:** unchanged, 4 `benchmark-unreachable`
+  skips this window. Status: PROPOSED (operator).
+
+Carried unchanged: screener quota vs two runners (low priority; the
+agent-side `screener_budget` rule worked this window, see retro),
+counterfactual.py reconcile units/B-check, real-twin allowed-classes
+(Russia pair still on UMA lag, marks 0.97/0.996), settled_ts
+determinism, wire-nonce 401, mech delivery-size, lease writability,
+screener quota refund, watch.py shape regexes, subclass auto-tagger.
+
+**Status:** relaxation fork NOT MET (10th consecutive, 5th double-gate
+failure; f4 dBrier +0.0277, f4 CF pnl −$0.40). 4 bets placed, 3 settled
+WON (+$4.05), 1 open. No reverts of hourly edits.
