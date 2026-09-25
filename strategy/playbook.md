@@ -1738,6 +1738,24 @@ multi-day vote with remote e-voting, the first print after the online
 votes are added front-loads them; carry it forward with the front-loaded
 model, not with an in-person day-1 ratio from a past cycle.
 
+**Regional-sweep roster-check note (RETRO-20260925-1432, same Russia
+Duma event, "United Russia wins every region" market).** Bet
+`9074e3f2fd49` (own 0.76 vs ask 0.68) WON, beating the market (dB
+-0.0448); the superseded first-pass forecast (own 0.62, market-agrees,
+dB +0.0184) had priced in a tail risk from the 4 regions UR lost the
+party-list plurality in during 2021 (Sakha, Mari El, Nenets AO,
+Khabarovsk) without checking whether those regions were even on this
+cycle's roster. The revision checked the actual 2026 39-region list and
+found none of the 4 on it — the roster instead skewed toward
+tightly-managed ethnic republics with a clean 2024/2025 sweep record —
+and that narrower, checked read is what beat the market. Method to reuse
+on the next regional/constituency-sweep market in a managed election:
+when a prior cycle's exceptions are the basis for this cycle's tail-risk
+estimate, check whether those exact regions/constituencies are in THIS
+cycle's roster before carrying the risk forward — a historical exception
+rate belongs to the specific units that produced it, not the country as
+a whole. n=1, confirmed instance of an underused check, not a new gate.
+
 **Exploration budget, Musk net-worth brackets (2026-08-19 04:xxZ, first
 test; ruling recorded here by DEEP-2026-08-19 — the 04:20Z cycle logged it
 only in funnel.jsonl/schedule.json, and rulings the pool re-check relies
