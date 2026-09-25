@@ -2998,6 +2998,17 @@ cost 0.070 (`423dd881047b`) and 0.015 (`bad4649e1e7a`) Brier, and a shaded
 row no longer tests the method the re-grade is about. A shade needs a
 row-specific reason in the note. Forecast-only ruling unchanged: no bets.
 
+**2026-09-25 22:13Z (RETRO-20260925-2213): an inferred open is not a
+measured input.** Single-stock touch rows record `touch.py` from the last
+close, or from an actually quoted premarket print. An open inferred from
+index futures x beta goes in the note as "shade view: X", never into
+est_prob. Evidence: PLTR HIGH $195 `a468e40297ae` recorded 0.74 (between
+0.678 from the close and 0.864 from an NQ-beta open), no touch, dBrier
++0.293 vs mid 0.505; the overlay alone cost 0.088. A shade grounded in a
+measured print (SPY LOW $760 `23a99c8fe4e8`, ES overnight + RTH-only
+window, 0.118 -> 0.08) helped by 0.0075. equity-touch now n=2, dBrier
++0.163: forecast-only, no bets.
+
 **2026-09-21 20:44Z update (RETRO-20260921-2044; far-barrier split added):**
 `8d1eb46b7c32` (ETH reach $2,800, own 0.25 vs mid 0.155) settled WON, dBrier
 -0.1515. Listed, NOT counted: its note sweeps sigma 50-90%, no measured
