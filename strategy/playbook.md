@@ -5152,6 +5152,16 @@ that 403'd), or (b) treating the market's own book as the prior and looking
 only for a genuine information edge on top of it, not a from-scratch
 distribution.
 
+*Sep 2026 settlement tally (RETRO-20260925-1612):* the recalled
+prelim-to-final revision model (prelim 47.8, sd ~1.45, 15/24 inside,
+unsourced) went 2/2 vs the mid on its first settled test: 46.0-48.9
+own 0.64 vs 0.605 won (dBrier -0.026), 43.0-45.9 own 0.13 vs 0.185
+lost-as-predicted (dBrier -0.017); final 48.1 (+0.3 revision). Sibling
+brackets of one print = effective n=1, so the ruling above stands:
+forecast-only, `unvalidated-method`, no bets. It grants nothing until a
+sourced revision history (ALFRED) backs the sd, or >=4 independent
+monthly prints of the recalled model beat the mid.
+
 **Exploration budget, one-off exhibition match via single-book WebSearch,
 first test (2026-08-16 11:18Z).** Named property: does a one-off exhibition
 fixture with no dedicated odds-api league feed still have a trustworthy
