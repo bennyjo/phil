@@ -1721,6 +1721,22 @@ in 340-354, below the 355 preliminary count. `71dc5127a964` (340-354, own
 0.055) LOST, dB -0.0014. The book's bracket prices beat my rough centre on
 the leg that mattered, which is what this rule predicts: without a sourced
 prior miss, the book is the centre.
+Turnout legs settled 2026-09-25 13:49Z (RETRO-20260925-1421): official
+turnout landed in 59-62 (preliminary 59.32). Bet `475edf2e2654` (62+ No,
+own 0.94, entry 0.883) WON +$0.66, but only by about 2.7 points: my entry
+centre (2021's 51.7 plus a reported 50 pct regional target) was 7 points
+low, and the same undershoot put the 59-62 bracket forecast
+`524586e795a1` (own 0.12 vs mid 0.152) behind the book, dB +0.0553. The
+mid-election re-check `3873d4b596bb` (own No 0.55 vs mid 0.828, dB
++0.1729) overreacted the other way: it read a day-1 print that already
+included the online votes as ordinary day-1 turnout. The front-loaded
+online-vote model (53-58) was the closest of the four. Rules: (1) the
+centring rule above applies to turnout too - the official figure sits
+above the pollster's and the officials' stated targets, so centre at the
+prior cycle's official figure plus the prior miss, not below it. (2) In a
+multi-day vote with remote e-voting, the first print after the online
+votes are added front-loads them; carry it forward with the front-loaded
+model, not with an in-person day-1 ratio from a past cycle.
 
 **Exploration budget, Musk net-worth brackets (2026-08-19 04:xxZ, first
 test; ruling recorded here by DEEP-2026-08-19 — the 04:20Z cycle logged it
