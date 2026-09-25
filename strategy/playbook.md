@@ -4457,6 +4457,25 @@ Ruling: no boundary change. One event; the Million row duplicates a
 placed bet. The No-side speaker-only tally in the utterance section
 tracks whether the 0.10 boundary costs this family winners.
 
+**2026-09-25 06:44Z update (LIGHT tick, cloud; 1 `outside-view-veto` row
+settled, Xi state-dinner toast "Melania," see RETRO-20260925-0644.)**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Xi toast "Melania" (`5ee6e91cd3d2`) | 0.83 / 0.68 | Yes | +0.110 | Yes | +1.94 |
+
+Net this batch: **+$1.94** (1W/0L). Mechanical ledger after this row
+(`core/counterfactual.py ledger --skip-reason outside-view-veto`): 171
+rows / 163 trades / 114 events / 70W-93L / +$91.08 / dBrier +0.0303 /
+held-out +$85.20 (was 170/162/113/69W-93L/+$89.14/+0.0309/+$78.24). Side
+split: no 120/112/52W-60L/+$46.88 (unchanged); yes 51/51/18W-33L/+$44.20
+(adds this row). Check: 46.88 + 44.20 = 91.08.
+
+Ruling: no boundary change. Same speaker-only Melania base rate family as
+the arrival-toast row (`8b059c23c86a`, also won); the veto keeps declining
+a real edge on a small-n base rate that keeps paying off, but n=2 same-day
+same-family rows is not independent evidence for loosening it.
+
 **2026-09-23 DEEP REPAIR (documentation-only backfill; no totals
 change).** `core/counterfactual.py reconcile` lists 9 settled
 outside-view-veto rows graded narratively in this section ("named
