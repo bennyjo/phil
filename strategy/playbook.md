@@ -5374,6 +5374,20 @@ DEEP-2026-08-18), no forecast recorded (never-invent-an-estimate rule).
 Added to schedule.json watch_items alongside the JOLTS/ISM Manufacturing
 cluster for a ~Aug 28-29 re-check.
 
+**2026-09-25 18:12Z retro (RETRO-20260925-1812): record the UNSHADED
+bootstrap on countable-metric rows.** The Musk Sep 18-25 weekly settled
+in 200-219; across 8 snapshot rows (one event) own was behind the mid by
++0.123 Brier, almost all from two rows where the raw xtracker_boot output
+was shaded on a short-run slowdown: 431d16dbbd6f (bootstrap 0.50-0.525,
+recorded 0.40, dBrier +0.134) and 4b1aec60bfc7 (aligned 0.273, recorded
+0.30, +0.046). Rows that followed the bootstrap gained. Rule until graded
+on >=3 independent events: est_prob = the bootstrap output (aligned
+windows when n>=20, else all windows); a recency or burst shade is
+written in the note as "shade view: X" and not recorded. Ted Cruz
+edec04d6b96d (rolling-window count, unshaded-ish 0.85 vs 0.545, won,
+−0.185) is consistent. n is tiny; this is a recording discipline, not a
+betting change — the category bar stands.
+
 ## Utterance-market base-rate gate (enacted DEEP-2026-09-12)
 
 A Yes-side BET on a say-the-word / trump-mention / vance-mention /
