@@ -4476,6 +4476,24 @@ the arrival-toast row (`8b059c23c86a`, also won); the veto keeps declining
 a real edge on a small-n base rate that keeps paying off, but n=2 same-day
 same-family rows is not independent evidence for loosening it.
 
+**2026-09-25 07:48Z update (FULL cycle, operator machine; 1
+`outside-view-veto` row settled, Xi state-dinner toast "Ballroom," see
+RETRO-20260925-0748.)**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Xi toast "Ballroom" (`f0790f007a85`) | 0.15 / 0.315 | No | +0.140 | Yes | -5.00 |
+
+Net this batch: **-$5.00** (0W/1L). Mechanical ledger after this row:
+172 rows / 164 trades / 115 events / 70W-94L / +$86.08 / dBrier +0.0316 /
+held-out +$80.20 (was 171/163/114/70W-93L/+$91.08/+0.0303/+$85.20). Side
+split: no 121/113/52W-61L/+$41.88 (adds this row); yes 51/51/18W-33L/
++$44.20 (unchanged). Check: 41.88 + 44.20 = 86.08.
+
+Ruling: no boundary change. The veto did its job: it kept a $5 loss off
+the ledger. See the utterance section for the tally and the topical-word
+analogue rule.
+
 **2026-09-23 DEEP REPAIR (documentation-only backfill; no totals
 change).** `core/counterfactual.py reconcile` lists 9 settled
 outside-view-veto rows graded narratively in this section ("named
@@ -5472,6 +5490,19 @@ three rows cannot show. Keep sizing flat and keep the event cap. No
 per-side rule change: the Yes losses have a diagnosed cause (thematic
 guesses pre-gate, speaker-only counting bug post-gate), and n is too
 small to call either side an edge.
+
+**Third settlement, first No-side loss (RETRO-20260925-0748).** The
+state-dinner "Ballroom" row (`f0790f007a85`, own 0.15 vs mid 0.315,
+blocked at edge 0.14) resolved Yes. The veto saved $5.00, which is the
+"one loss erases three" case above arriving on the fourth row. Tally
+now: Ballroom-arrival +$1.76, Economy +$3.62, SI +$7.82, Ballroom-dinner
+-$5.00 (3W/1L, +$8.20, still ONE speaker-venue-day). The boundary
+stands. **Rule, topical words:** when the word only became topical after
+some of the analogues (the ballroom build started in 2025, so Macron
+2018, Morrison 2019 and Beijing 2017 could not mention it), count only
+the post-topic analogues for the base rate and state that n. Here that
+was 0/2 (Charles Apr 2026, Beijing May 2026), Laplace 0.25, not the
+0/5 the note implied. The market's 0.315 sat nearer that honest read.
 
 ## First bet in 13 days: the AfD Sachsen-Anhalt audit (DEEP-2026-08-24)
 
