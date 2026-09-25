@@ -1715,6 +1715,12 @@ upside tail wider than the downside; if I cannot source the prior miss, the
 book's bracket prices are the better centre and the row is `market-agrees`.
 n=2 elections, one country: a centring rule for this family, not a betting
 licence.
+Settled 2026-09-25 11:42Z (RETRO-20260925-1207): the final UR total landed
+in 340-354, below the 355 preliminary count. `71dc5127a964` (340-354, own
+0.15 vs mid 0.24) WON, dB +0.1449; `4c8153f75a72` (355+, own 0.04 vs mid
+0.055) LOST, dB -0.0014. The book's bracket prices beat my rough centre on
+the leg that mattered, which is what this rule predicts: without a sourced
+prior miss, the book is the centre.
 
 **Exploration budget, Musk net-worth brackets (2026-08-19 04:xxZ, first
 test; ruling recorded here by DEEP-2026-08-19 — the 04:20Z cycle logged it
@@ -3029,6 +3035,23 @@ still open ~Oct 1), but do NOT spend research priority on generating new
 touch rows — priority 1 "feed the measured-row counter" (15:00Z
 2026-09-23 funnel note) is retired. The family matches the market; it
 does not beat it.
+
+**2026-09-25 12:0xZ tally (RETRO-20260925-1207; 10th and 11th measured
+rows).** `4cf126698087` (SOL reach $120 Sep, own 0.83 vs mid 0.808, gap
+2.2%, CoinGecko 31d vol) and `e9398115e4ad` (BTC reach $85k from Sep 23,
+own 0.91 vs mid 0.83, gap 0.60%, Binance 30d vol) both WON, both
+unshaded, own closer on both (dB -0.0080 / -0.0208). Two assets, and the
+BTC market has its own window (created Sep 23), so two decisions. Tally:
+11 rows, 9 informative decisions, own closer on 4 of 9. Reach split: 3
+decisions, own closer on all 3; dip split: 6 decisions, own closer on 1.
+All three reach wins came in a rising month and all near-barrier, so the
+split is the pattern to watch, not a licence. Bar arithmetic corrected:
+the "13 straight" figure above was computed at 2 of 7. At 4 of 9, four
+more own-closer decisions in a row reach 8/13 = 62%, so criterion (b) is
+reachable again; criterion (a) still needs the dip split to beat the
+market on decision-weighted Brier. Ruling unchanged: forecast-only
+"indefinitely" stands until a deep retro re-grades against the full
+pre-registered bar, and a reach-only slice never re-opens it.
 
 Excluded per the sub-boundary taxonomy (DEEP-2026-08-15): Zambia
 (fa185b55a5c3, edge 0.06) and Musk wk 200-219 (7808b6f5a4ef, edge 0.045)
