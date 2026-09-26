@@ -5410,6 +5410,22 @@ independent events: record the driftless (random-walk, measured sd)
 model; a drift/momentum view is written as "drift view: X" in the note
 and not recorded. Forecast-only as before.
 
+**2026-09-26 00:1xZ retro (RETRO-20260926-0015): an unexplained
+near-certain LIQUID book beats the xtracker API count.** Trump Truth
+Social Sep 18-25: at 12:13Z the API `cumulative` was 93 with 3h46m left,
+and the live Sep 22-29 tracking later showed only ~1 post in 12-16Z — yet
+the event resolved 100-119. The 80-99 leg sat at 0.003/0.009 on $10.5k
+liquidity; I recorded 0.85 (c5737eab7350, dBrier +0.72) and 0.15 on
+100-119 (512b4f987fa9, +0.70), writing "reason not visible to me" in
+both notes. The market was pricing a resolving "Post Counter" figure the
+API cumulative did not show (backfill / count-definition gap). Rule: on
+a countable-metric row, when a sibling with liquidity >= $1k prices a
+bracket < 0.02 or > 0.98 against my API/bootstrap read and I cannot name
+the reason, record est_prob within 0.10 of that liquid mid and write the
+model read as "api view: X" in the note. A 0.6-ish mid (last week's
+0.93-vs-0.63 win) is disagreement, not certainty — the rule does not
+touch it. n=1 event; recording discipline, category bar unchanged.
+
 ## Utterance-market base-rate gate (enacted DEEP-2026-09-12)
 
 A Yes-side BET on a say-the-word / trump-mention / vance-mention /
