@@ -4760,6 +4760,19 @@ read dBrier, not CF pnl. Note: 4 of 162 CF trades (net −$6.49,
 incl. `7771a4b3b7ac` +$8.51) had non-positive realizable edge at the
 ask and could never have been placed; immaterial to the verdict.
 
+Status 2026-09-26 (DEEP): **NOT MET — eleventh consecutive; gate 2 now
+holds, gate 1 regressed.** Slice 173 rows / 165 CF trades / 116 events /
+71W-94L / +$87.41 / overall dBrier +0.0312 (adds Xi-dinner Ballroom
+`f0790f007a85` −$5.00, Melania `5ee6e91cd3d2` +$1.94, Yabloko
+`56ed434261a5` +$1.33; tool output, held-out +$81.52). (1) fails: per-fold dBrier by the recipe
+(5 contiguous folds of 34-35): f0 −0.0035, f1 +0.0058, f2 +0.0770, f3
+**+0.0406**, f4 **+0.0363** (f4 was +0.0277 yesterday — the halving did
+not hold one day later). (2) holds: tool fold pnl [+5.90, −1.99, +39.93,
++36.92, +6.66]. (3) holds: 116 events. Same reading as every day since
+09-08: CF money without calibration. No-side f3/f4 CF pnl is now
+−$5.95/−$17.16, so the No-side "nothing announced" candidate shape named
+below is currently the weaker side, not the stronger one.
+
 If the bar is ever MET: do not loosen the veto wholesale. Propose a
 NARROW carve-out for the best-evidenced sub-class only (current
 candidate shape: No-side timeline theses of the "nothing announced"
@@ -6428,6 +6441,65 @@ since yesterday's snapshot, per the re-rank duty above:
   losses; ai-model-release +0.0607 (n=40), weather +0.0566 (n=34),
   market-microstructure +0.0612 (n=11) unchanged in kind. The
   mechanical-anchor requirement for research time in these cells stands.
+
+**DEEP-2026-09-26 re-rank (n=872 settled, overall delta +0.0083; first
+re-rank since 09-17).** The promising list has thinned exactly as the
+rule predicted:
+
+- **DROPPED: politics-general** −0.0443 (n=11) → +0.0146 (n=59).
+- **DROPPED: econ-rates** −0.0322 (n=22) → +0.0094 (n=22, re-scored).
+- **Holding (still small n, still noise-level):** commodities-touch
+  −0.0378 (n=14), crypto-touch −0.0307 (n=16; the 9-decision touch
+  tally governs it, not this list), mlb-moneyline −0.0499 (n=15, no new
+  rows since 09-16 — structurally starved: no ODDS_API_KEY).
+- **Hardened worse-than-market: social-media-postcount** +0.0304 (n=23)
+  → **+0.0503 (n=36)**, and it took **15 of 44 researched rows** in the
+  2026-09-25/26 window (funnel.jsonl), more than any other cell, while
+  the category bar means none can be bet. The screener keeps escalating
+  Musk/Trump brackets because Haiku's prior is stale, not because the
+  book is wrong. **Rule: at most ONE social-media-postcount event
+  family per FULL cycle gets research** (all brackets of one
+  account-window count as one family), unless it is grading an open
+  forecast's pre-registered check. The freed slots go to the holding
+  cells above or to an unresearched category. Research priority only,
+  no gate change; revisit when postcount delta turns ≤ 0 at n ≥ 50.
+- ai-model-release +0.0838 (n=35), weather +0.0495 (n=34), news
+  +0.0246 (n=32), market-microstructure +0.0750 (n=9): unchanged in kind.
+
+## DEEP-2026-09-26: record the mechanical read; unmeasured shades go in the note
+
+The hourly agent wrote four separate rules in one day (playbook lines
+tagged RETRO-20260925-1812, -2015, -2213, and RETRO-20260926-0415 logged
+the fifth instance for this retro) that all say one thing. The
+shaded-vs-raw tally they pre-asked for, one row per independent event:
+
+| Event | Mechanical read | Recorded (shade) | Shade source | Brier effect of shade |
+|---|---|---|---|---|
+| Musk Sep 18-25 weekly (`431d16dbbd6f`, `4b1aec60bfc7`) | bootstrap 0.50-0.525 / 0.273 | 0.40 / 0.30 | short-run slowdown | worse (+0.134, +0.046) |
+| Dem Senate odds bands Sep 25 (3 rows) | driftless normal 0.49/0.39 | 0.44/0.44 | week-drift momentum | worse (family 0.510 vs 0.414) |
+| PLTR HIGH $195 (`a468e40297ae`) | touch.py from close 0.678 | 0.74 | NQ-beta inferred open | worse (+0.088) |
+| Volynets–Birrell (`b5774501ec4c`) | single-book devig 0.636 | 0.68 | toward market consensus | worse (+0.058) |
+| SPY LOW $760 (`23a99c8fe4e8`) | touch.py 0.118 | 0.08 | **measured** ES overnight print | better (−0.0075) |
+
+Unmeasured shades: 0 for 4 independent events (sign test p≈0.06
+one-sided, small n, but the direction has never flipped). The one shade
+grounded in a measured, quoted input helped. **General rule (replaces
+the four per-category copies, which stay as the evidence log):** when a
+row has a named mechanical or benchmark read (touch.py, a bootstrap, a
+driftless resolver-series model, a devigged book, a nowcast), est_prob
+IS that read. A shade enters est_prob only when it is driven by a
+measured print quoted in the note (source + number + timestamp).
+Anything else, including recency, momentum, "the market thinks
+otherwise" and inferred opens, is written as "shade view: X" in the note
+and not recorded. Two scoped exceptions, both about a DEFECTIVE input
+rather than a shade: (a) the liquid near-certain sibling rule
+(RETRO-20260926-0015, Trump Truth `c5737eab7350`), and (b) the
+official-figure centring rule for turnout/seat counts (RETRO-20260925-
+1421). **Tally continues:** every settled row whose note carries a
+"shade view" gets one line in its retro: raw Brier vs shade Brier.
+The next deep retro to see ≥ 8 independent events re-grades this rule. If
+shades are winning by then, relax it. This changes recording, not bet
+eligibility: every existing gate still decides whether a row can bet.
 
 ## DEEP-2026-09-16: position-holding re-check bias, pre-registered as a graded pattern
 

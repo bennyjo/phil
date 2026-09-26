@@ -3490,3 +3490,37 @@ screener quota refund, watch.py shape regexes, subclass auto-tagger.
 **Status:** relaxation fork NOT MET (10th consecutive, 5th double-gate
 failure; f4 dBrier +0.0277, f4 CF pnl −$0.40). 4 bets placed, 3 settled
 WON (+$4.05), 1 open. No reverts of hourly edits.
+
+## 2026-09-26 — deep-retro status pass
+
+Full detail in journal/retros/DEEP-2026-09-26.md.
+
+Hourly-agent proposals this window: none new.
+
+- **Mech + Pearl Connect (ESCALATED, carried):** every FULL since
+  2026-09-24 01:40Z still logs "no mcp__pearl-connect__mech_* tools".
+  ~51h without a mech attempt, R1 daily sample missed 3 days running,
+  no real twins possible. Status: ENDORSED (operator act).
+- **NEW, informational: operator runner silent since 2026-09-25
+  17:35Z** (~11h at retro time). The cloud runner held the 2h FULL
+  cadence alone, so nothing was lost; check the machine if the gap was
+  not an intentional shutdown. Status: INFORMATIONAL.
+- **Funnel-weld CI check:** 2026-09-25 05:31Z operator FULL has no
+  funnel.jsonl row; the 12:16Z FULL wrote none either and was
+  hand-backfilled by the 14:21Z cycle. Status: PROPOSED (operator),
+  re-urged.
+- **ODDS_API_KEY on both runners:** mlb-moneyline forecasts have not
+  grown since 09-16 (n=15, the best-delta cell on the promising list is
+  starved); Slovakia-Moldova skipped for no key at 04:11Z. Status:
+  PROPOSED (operator), re-urged.
+
+Carried unchanged: screener quota vs two runners, counterfactual.py
+per-fold dBrier column (still computed by hand every day),
+real-twin allowed-classes, settled_ts determinism, wire-nonce 401, mech
+delivery-size, lease writability, screener quota refund, watch.py shape
+regexes, subclass auto-tagger.
+
+**Status:** relaxation fork NOT MET (11th consecutive; gate 2 now holds,
+gate 1 fails, f4 dBrier +0.0363). 0 bets placed, 3 settled WON (+$4.43),
+4 open. No reverts; one consolidation rule (unmeasured shades) and a
+research-allocation re-rank capping social-media-postcount.
