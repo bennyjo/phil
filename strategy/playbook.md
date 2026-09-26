@@ -6480,9 +6480,11 @@ shaded-vs-raw tally they pre-asked for, one row per independent event:
 | PLTR HIGH $195 (`a468e40297ae`) | touch.py from close 0.678 | 0.74 | NQ-beta inferred open | worse (+0.088) |
 | Volynets–Birrell (`b5774501ec4c`) | single-book devig 0.636 | 0.68 | toward market consensus | worse (+0.058) |
 | SPY LOW $760 (`23a99c8fe4e8`) | touch.py 0.118 | 0.08 | **measured** ES overnight print | better (−0.0075) |
+| Bondar–Ruse (`8785a067de69`, added RETRO-20260926-0615) | single-book devig 0.591 | 0.60 | toward market consensus | worse (+0.011) |
 
 Unmeasured shades: 0 for 4 independent events (sign test p≈0.06
-one-sided, small n, but the direction has never flipped). The one shade
+one-sided, small n, but the direction has never flipped). Update
+RETRO-20260926-0615: 0 for 5 (p≈0.03 one-sided). The one shade
 grounded in a measured, quoted input helped. **General rule (replaces
 the four per-category copies, which stay as the evidence log):** when a
 row has a named mechanical or benchmark read (touch.py, a bootstrap, a
