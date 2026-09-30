@@ -7225,3 +7225,24 @@ carrying it AND the labeller no longer depends on retro layout (proposal
 "subclass auto-tagger"). Retros that grade a countable-metric row must
 keep other veto ids more than 600 characters away from the sub-class name,
 or name the other rows' sub-class explicitly next to their ids.
+
+## 2026-09-30 23:16Z update: Silver LOW $60 miss — an inferred cross-feed breach is not a measured input (RETRO-20260930-2316)
+
+`ef278b9158f5` (commodities-touch, forecast-only): `touch.py` on measured
+CBOE VXSLV vol put the barrier at 0.71. The row then added +0.1 because a
+Kitco bid quote (59.98, a different venue) sat below the $60 barrier ~4h
+before close, reasoning the market's actual resolution feed (Pyth XAGUSD)
+"already printed <=60" and the market (mid 0.55-0.58) hadn't caught up
+yet. Outcome: No — Pyth's spot never touched $60; own brier 0.5184 vs
+market 0.3025 (+0.2159, the worst row in the family this batch).
+`commodities-touch` is n=16 now (crossed the ~15 floor), aggregate
+brier_delta -0.0301 (still net ahead of market), so no gate change, but
+the failure shape is a repeat of the 2026-09-25 rule ("an inferred open is
+not a measured input", PLTR `a468e40297ae`): a plausible cross-source
+inference got written into `est_prob` instead of staying a note caveat.
+
+**Rule:** a touch estimate may claim a barrier has already been breached
+only on the market's own named resolution feed (or a feed the market's
+rules explicitly treat as equivalent) — never a different venue's bid/ask
+or a headline that doesn't name the resolution source. Any such read goes
+in the note as a caveat only, never added to `est_prob`.
