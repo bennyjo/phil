@@ -7177,3 +7177,18 @@ it is the first settlement in the "fading a >0.90 consensus" family (July
 twin losses, RETRO-20260731-1912/2211) to go the other way — the declined
 No bet would have won big instead of losing — but n is still 1 for this
 exact market and far below the ~15-settlement floor for acting on it.
+
+## 2026-09-30 20:1xZ: valid-vote thresholds need valid-vote poll shares (FULL cycle, operator machine)
+
+Forecast 4e52c227a60f (Flavio Bolsonaro >=39% of the VALID vote, Brazil
+first round) put the mean at 37.6 from RAW poll shares and got 0.45. Brazilian
+polls report shares of all respondents, including 6-15% blank, null and
+undecided. The resolver divides by valid votes only. Converted, the same
+pollsters sit at 38-44 (mean ~40), and the row is now e6afa32bb249 at 0.84.
+Rule: when a market's threshold is a share of valid votes (or of votes cast
+for candidates), convert each poll with share / (100 - blank - null -
+undecided) before comparing, and state the conversion in the note. Swedish
+and German polls already publish party shares on a valid-vote basis; most
+Latin American pollsters do not. Grade at the Oct 4 settlement: the raw row
+and the converted row sit on opposite sides of the mid (0.88), so the outcome
+scores the method error directly.
