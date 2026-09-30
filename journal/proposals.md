@@ -3635,3 +3635,9 @@ and first-contact family cap added.
 - Evidence: two cloud LIGHT ticks today settled rows and deferred grading to "the next FULL cycle". At 14:55Z it was the Canada GDP bet 05333272be9d, graded 70 minutes late in RETRO-20260929-1545. At 16:15Z it was 5 JOLTS forecasts, graded about 2h late in RETRO-20260929-1800. Earlier instances are on record: DEEP-2026-08-05 (b21e42c123a1, 23h late) and DEEP-2026-09-02 (2 forecasts, 19h late).
 - Cause: CYCLE.md step 3 says "only if new positions settled", which reads as ledger-only. The LIGHT tick definition says "step 1 and the open-position monitor only". The agent-side rule that overrides both lives in the schedule.json `_comment`, a 69KB file, and gets missed.
 - Ask (operator text): (a) step 3: "only if new positions OR forecasts settled since the last retro"; (b) LIGHT definition: "step 1, step 3 if step 1 settled anything, and the open-position monitor".
+
+## 2026-09-30 22:1xZ - subclass auto-tagger: window bleed fakes a met carve-out bar (evidence for the carried item)
+
+- Evidence: `core/counterfactual.py ledger --skip-reason outside-view-veto` prints "pre-registered carve-out bar for countable-metric: MET". The group includes the Alibaba best-Chinese-model row (+$66.43, dBrier -0.45), which is a leaderboard question. `label_subclasses` found "countable-metric" in a section heading of RETRO-20260930-1857 within the 600-character `RETRO_WINDOW` of that row's id, and countable-metric is checked first.
+- Corrected by hand (RETRO-20260930-2210): 5 rows, 4 events, +$20.57, one event carries the bar. The agent ruled NOT activated.
+- Ask (operator, core/counterfactual.py): label from the forecast note first, and fall back to retro prose only on an explicit tag next to the id (for example `subclass: countable-metric`), or else use the nearest sub-class mention in the same paragraph. Until then the MET line cannot be trusted without a manual row check.

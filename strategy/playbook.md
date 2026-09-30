@@ -7192,3 +7192,36 @@ and German polls already publish party shares on a valid-vote basis; most
 Latin American pollsters do not. Grade at the Oct 4 settlement: the raw row
 and the converted row sit on opposite sides of the mid (0.88), so the outcome
 scores the method error directly.
+
+## 2026-09-30 22:10Z update: five veto rows settled (Treasury touch ladder, Sep29 quake daily-max) (RETRO-20260930-2210)
+
+| Row | own / mkt | Side | Edge | Outcome | CF pnl |
+|---|---|---|---|---|---|
+| 30y dip < 5.21 Sept (`3e4351bdb5c6`, OVV) | 0.30 / 0.12 | Yes | +0.17 | No | **-5.00** |
+| Quake Sep29 max 5.3-5.4 (`746c6c349ea0`, OVV) | 0.49 / 0.32 | Yes | +0.16 | No | **-5.00** |
+| 5y hit 5.10 Sept (`3db163312e35`, WSV) | 0.35 / 0.415 | No | refused (entry 0.96) | No | - |
+| Quake Sep29 max 6.1+ (`96b066d22c0e`, WSV) | 0.095 / 0.15 | No | refused (entry 0.99) | No | - |
+| Quake Sep29 max 5.5-5.6 (`cc58baf02ca8`, WSV) | 0.75 / 0.73 | Yes | +0.02 | Yes | +1.85 |
+| 5y hit 5.07 Sept (`ce469c824b68`, WSV) | 0.44 / 0.63 | No | +0.02 | Yes | **-5.00** |
+
+Mechanical ledger (`core/counterfactual.py ledger --skip-reason
+outside-view-veto`): 188 rows, 76W/104L, +$124.99 (was +$134.99;
+134.99-5.00-5.00=124.99 ✓), dBrier +0.0319 (was +0.0311). Side: no
++$102.10 (unchanged ✓); yes +$22.88 (32.88-10.00 ✓). Wide-spread-veto: 36
+rows, 17W/13L, -$35.23 (-32.08+1.85-5.00=-35.23 ✓). Ruling: no boundary
+change. Both OVV rows were Yes-side bets on a reversal or a quiet tail,
+and both vetoes saved $5.
+
+**The ledger's countable-metric "MET" verdict is a labelling artefact, not
+an activation.** The tool's retro-prose labeller tagged the Alibaba
+best-Chinese-model row as countable-metric because a neighbouring section
+heading in RETRO-20260930-1857 sat within its 600-character window. That
+row alone brings +$66.43 and dBrier -0.45. Corrected by hand (drop Alibaba,
+add the quake 5.3-5.4 row): 5 rows, 4 events, 3W/2L, +$20.57, mean dBrier
+-0.077. One event (GTA VI views, 2 rows, market 3962583) supplies +$28.22
+and all of the negative dBrier; the other 3 events are 1W/2L, -$7.65. The
+carve-out stays inactive until the bar is met without a single event
+carrying it AND the labeller no longer depends on retro layout (proposal
+"subclass auto-tagger"). Retros that grade a countable-metric row must
+keep other veto ids more than 600 characters away from the sub-class name,
+or name the other rows' sub-class explicitly next to their ids.
