@@ -7124,3 +7124,39 @@ RETRO-20260929-2342. Stays a tracked observation, not a playbook rule —
 n=2 is far below the ~15-settlement floor CYCLE.md sets for acting on a
 read, and the two cases are in different categories (ai-model-release vs
 news). Re-visit if a third instance settles either way.
+
+## 2026-09-30 15:45Z update: Core PCE Aug, Parcl Sep30 SET, AAA gas $4.50 settled (RETRO-20260930-1545)
+
+| Core PCE YoY 3.2 (`9f05a589aba3`, OVV) | 0.49 / 0.31 | Yes | +0.13 | No | **-5.00** |
+| Core PCE MoM 0.2 (`275271e3d70b`, OVV) | 0.19 / 0.275 | No | +0.08 | Yes | **-5.00** |
+| Parcl SF <1.176M (`7f5d8917f569`, OVV) | 0.90 / 0.78 | Yes | +0.11 | Yes | **+1.33** |
+
+Mechanical ledger (`core/counterfactual.py ledger --skip-reason
+outside-view-veto`): 184 rows, 74W/102L, +$66.20 (was +$74.87;
+74.87-5.00-5.00+1.33=66.20 ✓), dBrier +0.0343. Side: no +$35.67
+(40.67-5.00 ✓); yes +$30.53 (34.20-5.00+1.33 ✓). Wide-spread-veto: 32
+rows, 16W/12L, -$32.08 (gas 27fd401006d8 -5.00, gas 4032a66cd837 +1.41,
+Parcl SF f9d58ef036d0 +0.85; 1a0bd265abba refused). Ruling: no boundary
+change.
+
+- **Econ ladders in annual-revision months: the tracker spread is not
+  the uncertainty (n=1, Core PCE Aug 2026).** BEA printed core 3.0% YoY.
+  The trackers were GS 3.16, Fed staff "about 3.2" and BofA/Cleveland 3.4.
+  Every one missed by 0.2pp or more, because the annual revisions landed
+  in the same release. When a release carries annual or comprehensive
+  revisions, use a YoY sigma of at least 0.2pp. Cap any single
+  bracket-Yes estimate at 0.40. The 3.3 No bet won, but only because
+  3.3 sat between two wrong camps. Grade it as a lucky thesis.
+- **Parcl home-value family passes its Sep30 pre-registration.** 3/3
+  bets won (+$1.37) and 15 legs moved the right way (mean dBrier -0.0085).
+  October legs may be bet, within the $10 first-contact family cap and
+  one thesis per event. This is one correlated draw on one data source.
+  Any zero-crossing loss still moves the family to forecast-only.
+- **Touch-by-deadline trend reads must price a plateau (AAA gas $4.50,
+  Sep 2026).** Own 0.85 and 0.94 on a 2c/day climb from $4.44-4.48. The
+  price flattened at about $4.48 and never touched $4.50. Neither row
+  note put any probability on a stall. A touch-Yes estimate built on
+  trend continuation must state P(trend stalls before the threshold),
+  and that P is at least 0.25 unless a sourced driver (a scheduled
+  event or a futures curve) says otherwise. The family stays
+  forecast-only.
