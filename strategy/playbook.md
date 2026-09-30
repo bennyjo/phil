@@ -7160,3 +7160,20 @@ change.
   and that P is at least 0.25 unless a sourced driver (a scheduled
   event or a futures curve) says otherwise. The family stays
   forecast-only.
+
+## 2026-09-30 18:57Z update: two `outside-view-veto` rows settled (Alibaba best Chinese AI model, Musk 40-64 tweets) (RETRO-20260930-1857)
+
+| Alibaba best Chinese AI model (`f41e0b09f084`, OVV, supersedes `1e0944b4f952`) | 0.65 / 0.935 | No | +0.29 | No | **+66.43** |
+| Musk 40-64 tweets Sep28-30 (`16af5b16fa0c`, OVV) | 0.85 / 0.675 | Yes | +0.18 | Yes | **+2.35** |
+
+Mechanical ledger (`core/counterfactual.py ledger --skip-reason
+outside-view-veto`): 186 rows, 76W/102L, +$134.99 (was +$66.20;
+66.20+66.43+2.35=134.98, rounding ✓), dBrier +0.0311 (was +0.0343). Side:
+no +$102.10 (35.67+66.43=102.10 ✓); yes +$32.88 (30.53+2.35=32.88 ✓).
+Ruling: no boundary change — both are single new rows in already-populated
+groups (ai-leaderboard n=1 event overall; countable-metric carve-out bar
+still not met per RETRO-20260930-1857). The Alibaba row is notable because
+it is the first settlement in the "fading a >0.90 consensus" family (July
+twin losses, RETRO-20260731-1912/2211) to go the other way — the declined
+No bet would have won big instead of losing — but n is still 1 for this
+exact market and far below the ~15-settlement floor for acting on it.
