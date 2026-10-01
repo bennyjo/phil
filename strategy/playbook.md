@@ -7268,3 +7268,39 @@ only on the market's own named resolution feed (or a feed the market's
 rules explicitly treat as equivalent) — never a different venue's bid/ask
 or a headline that doesn't name the resolution source. Any such read goes
 in the note as a caveat only, never added to `est_prob`.
+
+## 2026-10-01 08:3xZ update: NVIDIA backfill + four outside-view-veto rows + one wide-spread-veto row settled (LIGHT tick, RETRO-20261001-0836)
+
+**Backfill:** `ce1f37ed95c0` NVIDIA-largest-company settled 2026-09-30
+22:05Z and was graded narratively in RETRO-20260930-2316, but the
+same-commit table duty (DEEP-2026-08-23) was missed. Entered here
+alongside this tick's own batch.
+
+| Row | own/mkt | Side | Edge | Result | CF pnl |
+|---|---|---|---|---|---|
+| NVIDIA largest co (`ce1f37ed95c0`, OVV, backfill) | 0.78/0.914 | No | +0.134 | Yes | **-5.00** |
+| OpenAI Millennium #2 (`de704a0f5b47`, OVV) | 0.99/0.875 | No | +0.110 | No | **+0.68** |
+| AI lab Millennium #2 (`61e11058ff43`, OVV) | 0.98/0.855 | No | +0.120 | No | **+0.81** |
+| OpenAI Millennium #2 re-check (`1e6152a33dff`, OVV) | 0.22/0.115 | Yes | +0.100 | No | **-5.00** |
+| Saudi Oil Pipeline restarts (`a194b68a39cd`, OVV) | 0.85/0.67 | Yes | +0.170 | No | **-5.00** |
+| Machado enters Venezuela (`53ea2024db78`, WSV) | 0.12/0.225 | No | +0.070 | No | **+1.17** |
+
+Mechanical ledger (`core/counterfactual.py ledger --skip-reason
+outside-view-veto`): 193 rows, 78W/107L, +$111.48 (was
+188/76W-104L/+124.99; 124.99-5.00+0.68+0.81-5.00-5.00=111.48 check), dBrier
++0.0327 (was +0.0319). Side split: No +$98.60 (was +$102.10,
+102.10-5.00+0.68+0.81=98.59≈98.60 check); Yes +$12.88 (was +$22.88,
+22.88-5.00-5.00=12.88 check). Wide-spread-veto: 37 rows, 18W/13L, -$34.06
+(was 36/17W-13L/-35.23; -35.23+1.17=-34.06 check), dBrier -0.0011.
+
+Ruling: no boundary change. Both Millennium-solution sibling markets
+(OpenAI-specific and AI-lab-general) resolved No as the base-rate read
+expected. NVIDIA's single loss is a reminder that a 0.78 own-estimate is
+not automatically safe once the market has moved to 0.914: the realizable
+edge flips to the side the recorded outcome label doesn't name.
+`core/counterfactual.py reconcile` also surfaced 14 further pre-2026-10-01
+outside-view-veto rows graded narratively in their retros but never
+entered as table rows here (a formatting debt, not a new loss), plus a
+parser-reported mismatch against this table's own last stated running
+total. Logged in `journal/proposals.md` for a dedicated backfill pass
+rather than hand-fixed piecemeal here.
