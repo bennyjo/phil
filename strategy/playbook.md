@@ -7304,3 +7304,20 @@ entered as table rows here (a formatting debt, not a new loss), plus a
 parser-reported mismatch against this table's own last stated running
 total. Logged in `journal/proposals.md` for a dedicated backfill pass
 rather than hand-fixed piecemeal here.
+
+## 2026-10-01 09:39Z update: one outside-view-veto row settled (FULL tick, RETRO-20261001-0939)
+
+| Row | own/mkt | Side | Edge | Result | CF pnl |
+|---|---|---|---|---|---|
+| NK exactly 2 tests Sep (`71aef6acf4eb`, OVV) | 0.47/0.32 | Yes | +0.140 | Yes | **+10.15** |
+
+Mechanical ledger (`core/counterfactual.py ledger --skip-reason
+outside-view-veto`): 194 rows, 79W/107L, +$121.63 (was
+193/78W-107L/+111.48; 111.48+10.15=121.63 check), dBrier +0.0316 (was
++0.0327). Side split: No +$98.60 (unchanged); Yes +$23.03 (was +$12.88,
+12.88+10.15=23.03 check).
+
+Ruling: no boundary change. The NK count family (4+, exactly 3, exactly
+2) landed own-closer on all three legs, but it is one draw on a
+first-use Poisson rate; the count model stays `unvalidated-method`
+until it grades on at least five independent months or families.
