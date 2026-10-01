@@ -7321,3 +7321,22 @@ Ruling: no boundary change. The NK count family (4+, exactly 3, exactly
 2) landed own-closer on all three legs, but it is one draw on a
 first-use Poisson rate; the count model stays `unvalidated-method`
 until it grades on at least five independent months or families.
+
+## 2026-10-01 19:18Z update: one wide-spread-veto row settled + one backfill (FULL tick, RETRO-20261001-1918)
+
+**Backfill:** `a7a4bdb5c92f` Iran Sanctions EO settled on the 11:51Z
+LIGHT tick and was graded narratively in RETRO-20261001-1151 without
+the same-commit table row (DEEP-2026-08-23). Entered here.
+
+| Row | own/mkt | Side | Edge | Result | CF pnl |
+|---|---|---|---|---|---|
+| Iran Sanctions EO Sep30 (`a7a4bdb5c92f`, WSV, backfill) | 0.04/0.215 | No | +0.040 | No | **+0.43** |
+| Kraken NPM HIGH 13B Sep30 (`cb37130b62a6`, WSV) | 0.02/0.209 | No | - | No | refused (no bid at record) |
+
+Mechanical ledger (`core/counterfactual.py ledger --skip-reason
+wide-spread-veto`): 39 rows, 32 trd, 7 refused, 19W/13L, -$33.62 (was
+37/18W-13L/-34.06; -34.06+0.43=-33.63, 0.01 rounding), dBrier -0.0033
+(was -0.0011). Side split (question frame): No -$28.97 over 19 trd.
+
+Ruling: no boundary change. Both rows were thin-book spread-artifact
+mids ($26 and $330 liquidity) where the veto cost little either way.
