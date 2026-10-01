@@ -7340,3 +7340,19 @@ wide-spread-veto`): 39 rows, 32 trd, 7 refused, 19W/13L, -$33.62 (was
 
 Ruling: no boundary change. Both rows were thin-book spread-artifact
 mids ($26 and $330 liquidity) where the veto cost little either way.
+
+## 2026-10-01 23:36Z update: two `wide-spread-veto` rows settled, both refused (LIGHT tick, RETRO-20261001-2336)
+
+| Row | own/mkt | Side | Edge | Result | CF pnl |
+|---|---|---|---|---|---|
+| Biggest earthquake Sep30, 5.3-5.4 (`0112790db6f8`, WSV) | 0.01/0.079 | Yes | -0.003 | No | refused (entry 0.013, outside [0.02, 0.95]) |
+| Stripe NPM LOW $155B by Sep30 (`7607dc6c9caa`, WSV) | 0.01/0.101 | No | - | No | refused (no bid at record) |
+
+Mechanical ledger (`core/counterfactual.py ledger --skip-reason
+wide-spread-veto`): 41 rows, 32 trd, 9 refused, 19W/13L, -$33.62
+(unchanged -- both new rows are refused, not fillable), dBrier -0.0033
+(unchanged).
+
+Ruling: no boundary change. Both rows were unfillable (price outside the
+[0.02, 0.95] band / no bid at record), so neither adds a trade to the
+ledger -- the veto's cost is zero on these two by construction.
