@@ -3134,6 +3134,28 @@ market on decision-weighted Brier. Ruling unchanged: forecast-only
 "indefinitely" stands until a deep retro re-grades against the full
 pre-registered bar, and a reach-only slice never re-opens it.
 
+**2026-10-01 04:45Z tally (RETRO-20261001-0445; September month-end
+batch plus three ungraded Sep 21-27 weekly rows).** 15 new decisions,
+own closer on 8. Running: **12 of 24 (50%)**; reach 7 of 12, dip 4 of 11,
+far barrier 5 of 5 (first counted far rows). Counting choices, fixed
+for later grades: one asset + one record time + one vol input is one
+decision even when the rungs point opposite ways (ETH reach $3,200 + dip
+$2,500 is one far decision, left out of the reach/dip split); a mid
+from a placeholder book (bid 0.01, spread 0.14 or more: DOGE $0.15 and
+$0.20, XRP $2.80) carries no weight. Every row resolved No in a
+range-bound month-end, so the split is one draw: own above the mid lost
+7 of 7 (all near barriers, 3-9 day windows, 30d vol 0.41-0.69 while the
+quoted 6d realized was ~0.2), own below the mid won 8 of 8. Bar (b) now
+needs 6 straight own-closer decisions. Ruling unchanged: forecast-only.
+**Pre-registered test (not a rule):** every near-barrier (gap under 10%)
+touch row with a window of 10 days or less also quotes `touch.py` at
+the 7-day realized vol in its note; est_prob stays at the 30-day read
+unless a row-specific reason is written. The next re-grade scores the
+30d read against the 7d read on those rows. Hypothesis: the 30-day
+window lags a quieter regime, so above-mid near reads overstate touch
+odds (7 of 7 here, 3 of 4 in DEEP-2026-09-24, Silver and Gold month-end
+LOW rows in RETRO-20260930-2316 and RETRO-20261001-0020).
+
 **2026-09-27 18:1xZ (RETRO-20260927-1815): scheduled-close crypto
 strikes/brackets are a SEPARATE family from touch, and my realized-vol
 read has lost all three.** `ed46e73085f3` (BTC $76-78k Sep 12, own 0.53 vs
