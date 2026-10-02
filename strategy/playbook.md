@@ -7430,3 +7430,27 @@ climb, market right), Tesla (Oct 2, multi-day climb on a liquid book,
 market right). Split to watch: sudden jump versus gradual multi-day
 drift on a liquid book. Still a tracked observation, not a rule, until
 it has far more settlements.
+
+## 2026-10-02 18:57Z update: one `outside-view-veto` and one `wide-spread-veto` row settled, post-count pair graded (FULL tick, RETRO-20261002-1857)
+
+| Row | own/mkt | Side | Edge | Result | CF pnl |
+|---|---|---|---|---|---|
+| Musk 220-239 tweets Sep25-Oct2 (`89733920b201`, OVV) | 0.56/0.345 | Yes | +0.21 | Yes | **+9.28** |
+| Trump 200+ Truth Social Sep25-Oct2 (`50d4af915a81`, WSV, superseded) | 0.55/0.425 | Yes | -0.05 at ask 0.60 | No | **-5.00** |
+
+OVV ledger: 198 rows, 81W/109L, +$130.20 (was +$120.92; 120.92+9.28),
+dBrier +0.0293 (was +0.0307). Side split: Yes +$32.31, No +$97.88.
+WSV ledger: 43 rows, 34 trd, 9 refused, 20W/14L, -$35.69 (was -$30.69),
+dBrier -0.0050 (was -0.0080). Side split: Yes -$6.72 over 15 trd, No
+-$28.97 over 19 trd. Ruling: no boundary change on either.
+
+**Unshaded post-count bootstrap (RETRO-20260925-1812), two more
+independent events.** Musk Sep25-Oct2 (all windows 0.56, won, -0.235)
+and Trump Sep25-Oct2 200+ (all windows 0.414, lost, +0.069): latest
+rows net -0.167 vs the mid. The rule stands. Watch item: the Trump miss
+came with a visible slowdown (16 posts in the 15h before record) that
+only the aligned windows (0.333, n=6) carried. If two more independent
+events miss the same way, revisit "all windows when aligned n<20".
+
+**Label slip:** `89733920b201` (Musk tweets) was recorded as
+`countable-metric`; tweet counts are `social-media-postcount`.
