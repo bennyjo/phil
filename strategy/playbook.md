@@ -7356,3 +7356,19 @@ wide-spread-veto`): 41 rows, 32 trd, 9 refused, 19W/13L, -$33.62
 Ruling: no boundary change. Both rows were unfillable (price outside the
 [0.02, 0.95] band / no bid at record), so neither adds a trade to the
 ledger -- the veto's cost is zero on these two by construction.
+
+## 2026-10-02 00:41Z update: one `wide-spread-veto` row settled, fillable (FULL tick, RETRO-20261002-0041)
+
+| Row | own/mkt | Side | Edge | Result | CF pnl |
+|---|---|---|---|---|---|
+| Trump "Made in America" at Peterbilt Oct1 (`486cacf5edf4`, WSV) | 0.85/0.53 | Yes | +0.22 | Yes | **+2.94** |
+
+Mechanical ledger (`core/counterfactual.py ledger --skip-reason
+wide-spread-veto`): 42 rows, 33 trd, 9 refused, 20W/13L, -$30.69
+(was -$33.62; +2.94, 0.01 rounding), dBrier -0.0080 (was -0.0033).
+Side split (question frame): Yes -$1.72 over 14 trd, No -$28.97 over
+19 trd.
+
+Ruling: no boundary change. The veto lost $2.94 here, but the Yes side
+is near break-even over 14 trades and the 0.85 estimate cited a
+sibling phrase's hit count, not its own.
