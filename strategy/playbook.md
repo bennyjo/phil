@@ -5757,6 +5757,14 @@ the post-topic analogues for the base rate and state that n. Here that
 was 0/2 (Charles Apr 2026, Beijing May 2026), Laplace 0.25, not the
 0/5 the note implied. The market's 0.315 sat nearer that honest read.
 
+**Fresh checkpoint, first qualifying row (RETRO-20261002-1753).** Steelers-
+Browns "Roughing The Passer" (`3f36290e3d3b`, unvalidated-method, own 0.25
+vs ask 0.09, edge 0.16 — rationale had only a leaguewide penalty-flag rate,
+no quoted per-speaker transcript frequency for this broadcast crew) settled
+**Yes**, so the blocked edge would have won. First NEW row toward the
+DEEP-2026-09-17 checkpoint (counting had been empty since then). Tally: 1
+of 5. Too small to act; keep the gate, keep logging qualifying rows here.
+
 ## First bet in 13 days: the AfD Sachsen-Anhalt audit (DEEP-2026-08-24)
 
 The 2026-08-24 03:11Z cycle placed de95e5168de3 ($5 No @0.66, edge 0.05,
