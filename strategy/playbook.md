@@ -1829,6 +1829,15 @@ different rate basis, not necessarily a conflict, but unverified either
 way). Revisit only if the Bonbast API or an equivalent verifiable feed is
 confirmed reachable.
 
+**Drift before vol (RETRO-20261002-1545).** Forecast `7a016098059f` (USD
+2.2M-2.5M IRR on Sep 30) recorded 0.90 from a zero-mean ~1.5%/day walk
+around 2.34M. The rate had risen ~+0.45%/day for the prior month (2.10M
+Aug 31 to 2.34M Sep 24) and settled in 2.5M-2.8M. A currency in a
+sanctions or war depreciation trend is not a zero-mean walk: fit the
+recent drift from at least two dated free-market prints, shift the
+center by drift x days to the deadline, then apply vol. With drift that
+row is ~0.80, not 0.90.
+
 ## Open-position monitoring (DEEP-2026-08-02)
 
 Positions are held to resolution — never exited — but their live prices
@@ -7383,3 +7392,33 @@ Side split (question frame): Yes -$1.72 over 14 trd, No -$28.97 over
 Ruling: no boundary change. The veto lost $2.94 here, but the Yes side
 is near break-even over 14 trades and the 0.85 estimate cited a
 sibling phrase's hit count, not its own.
+
+## 2026-10-02 15:45Z update: two `outside-view-veto` rows settled (Tesla Q3 deliveries) + Musk backfill (FULL tick, RETRO-20261002-1545)
+
+**Backfill:** `a6a6ed8790b0` Musk Sep25-Oct2 200-219 tweets settled on
+the 11:03Z LIGHT tick; RETRO-20261002-1103 graded it but said the table
+was unchanged. Declined OVV forecasts are this table, so it is entered
+here.
+
+| Row | own/mkt | Side | Edge | Result | CF pnl |
+|---|---|---|---|---|---|
+| Musk 200-219 tweets (`a6a6ed8790b0`, OVV, backfill) | 0.38/0.655 | No | +0.27 | No | **+9.29** |
+| Tesla Q3 475k-500k (`a3ef8fda3cc9`, OVV, superseded) | 0.47/0.60 | No | +0.12 | Yes | **-5.00** |
+| Tesla Q3 475k-500k (`6fa8dd2218cf`, OVV) | 0.70/0.905 | No | +0.19 | Yes | **-5.00** |
+
+Mechanical ledger (`core/counterfactual.py ledger --skip-reason
+outside-view-veto`): 197 rows, 80W/109L, +$120.92 (was
+194/79W-107L/+$121.63; 121.63+9.29-10.00=120.92 check), dBrier +0.0307
+(was +0.0316). Side split: No +$97.88 (was +$98.60; 98.60+9.29-10.00 =
+97.89, 0.01 rounding); Yes +$23.03 (unchanged).
+
+Ruling: no boundary change. The veto saved $10 on the two Tesla rows.
+
+**Unexplained-move tracking, n=3 (2-for-3 market right).** The Tesla
+book climbed 0.22 (Sep 28) to 0.93 (Oct 2) with no source found; actual
+486,532 landed in the bracket. Tally: Opus (Sep 21, sudden jump that
+reversed, discounting right), Trump renames AI (Sep 29, multi-day
+climb, market right), Tesla (Oct 2, multi-day climb on a liquid book,
+market right). Split to watch: sudden jump versus gradual multi-day
+drift on a liquid book. Still a tracked observation, not a rule, until
+it has far more settlements.
