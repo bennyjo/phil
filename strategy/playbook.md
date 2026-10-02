@@ -1864,6 +1864,15 @@ different rate basis, not necessarily a conflict, but unverified either
 way). Revisit only if the Bonbast API or an equivalent verifiable feed is
 confirmed reachable.
 
+**Resolver-read conflict rule (RETRO-20261002-1620, evidence 7a016098059f).**
+The Sep30 2.2-2.5M forecast was recorded at 0.90 on secondary trackers
+(pashizi/alanchand ~2.31-2.34M) after a direct bonbast.com fetch read
+207,350 toman (2.07M, below the band) and was dismissed as a stale JS read.
+It resolved No. When ANY read of the named resolution source conflicts with
+secondary trackers, the resolver read is not discarded: either reconcile it
+(timestamp, basis) or weight it as at least a co-equal scenario in est_prob.
+The category stays forecast-only under the 2026-08-19 ruling.
+
 ## Open-position monitoring (DEEP-2026-08-02)
 
 Positions are held to resolution — never exited — but their live prices
