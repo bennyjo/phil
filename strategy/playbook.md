@@ -3078,6 +3078,18 @@ cost 0.070 (`423dd881047b`) and 0.015 (`bad4649e1e7a`) Brier, and a shaded
 row no longer tests the method the re-grade is about. A shade needs a
 row-specific reason in the note. Forecast-only ruling unchanged: no bets.
 
+**2026-10-02 22:15Z (RETRO-20261002-2215): tally.** GOOGL HIGH $360
+`142619e6dbae` (0.28 vs mid 0.345) and AAPL HIGH $340 `d7e66de49d0c` (0.22 vs
+0.255) both settled no-touch and beat the mid (-0.041, -0.017).
+equity-touch is now n=8, dBrier +0.0173: still forecast-only. The GOOGL row
+blended in the 0.75x-vol reading and gave a row-specific reason (the
+premarket print was stale). It helped this once (n=1), so the
+no-default-shade rule stands. Stale-mid rule (any single-stock row): when
+the live CLOB book contradicts gamma's bestBid/ask mid by 0.10 or more, the
+note records the live mid explicitly ("live mid X"). Evidence: the GOOGL
+$340-345 close band `8de7ff599222` was graded against a stale 0.725 while
+the live book was 0.36/0.74.
+
 **2026-09-25 22:13Z (RETRO-20260925-2213): an inferred open is not a
 measured input.** Single-stock touch rows record `touch.py` from the last
 close, or from an actually quoted premarket print. An open inferred from
