@@ -3147,6 +3147,17 @@ range-bound month-end, so the split is one draw: own above the mid lost
 7 of 7 (all near barriers, 3-9 day windows, 30d vol 0.41-0.69 while the
 quoted 6d realized was ~0.2), own below the mid won 8 of 8. Bar (b) now
 needs 6 straight own-closer decisions. Ruling unchanged: forecast-only.
+
+**2026-10-02 05:03Z tally (RETRO-20261002-0503; 2 more measured
+decisions).** `afc6b3e66078` (BTC dip $83k Oct 1, own 0.47 vs mid 0.64,
+gap -1.05%, window 18.2h) LOST and `bcf51c6612b2` (BTC reach $86k Sep
+28-Oct 4, own 0.40 vs mid 0.355, gap +2.53%, window 3.76d) WON; both
+near-barrier, both recorded at the 7-day regime-lag read, both own closer
+(dip brier 0.2209 vs mkt 0.4096; reach brier 0.36 vs mkt 0.416). Running:
+**14 of 26 (53.8%)**; reach 8/13 (61.5%), dip 5/12 (41.7%), far barrier
+unchanged 5/5. Criterion (b) (60% bar) still not met. Criterion (a) still
+not met — dip split still below 50% own-closer. Ruling unchanged:
+forecast-only.
 **Pre-registered test (not a rule):** every near-barrier (gap under 10%)
 touch row with a window of 10 days or less also quotes `touch.py` at
 the 7-day realized vol in its note; est_prob stays at the 30-day read
