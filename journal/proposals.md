@@ -3659,3 +3659,8 @@ and first-contact family cap added.
 
 - Evidence: same `git merge-base` `f7303c0` (2026-09-29 23:47Z) as the 2026-10-01 18:1xZ entry above. Local tip is now `7285d16` (cycle 20261002-0149), origin/main tip is now `f2e1f68` (cycle 20261002-0235) -- the fork has simply kept growing since the last report, unrepaired. No new cause found; this is a status bump, not new evidence. PHIL_LEASE and PHIL_PUSH_BY_LOOP are both set this tick, so the lease mechanism is active on this runner but clearly isn't preventing the standing fork on the other side.
 - Ask (operator): same repair as above, now overdue -- the two ledgers/journals have been diverging for 2.5 days.
+
+## 2026-10-02 06:0xZ - same fork, still unrepaired
+
+- Evidence: same `git merge-base` `f7303c0` (2026-09-29 23:47Z). Local tip is now `0eb105b` (cycle 20261002-0503), origin/main tip is now `c8ffe3f` (cycle(triggered) 20261002-0527) -- fork has kept growing, still unrepaired since the first report at 2026-10-01 18:1xZ. Status bump only.
+- Ask (operator): same repair as above, now ~2.75 days overdue.
