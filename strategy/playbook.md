@@ -7325,3 +7325,19 @@ resolved No.
   dBrier +0.334) was the day's worst forecast, and the veto kept the
   No-side trade off the ledger. On the lifetime score.py dedup the OVV
   bucket is n=157, dBrier +0.042, so the veto stays.
+
+## Postcount late-window reads and skip labels (RETRO-20261002-1815)
+
+- Trump TS Sep25-Oct2: the 10:18Z supersede pair (xtracker count 191,
+  hourly bootstrap of the posts still needed, ~5h left) beat the mid by
+  ~0.06 per leg (net -0.124 dBrier). The 08:19Z pair, same method with
+  7.7h left, was +0.05. One event, so the bar stands (cell n=44, +0.0323;
+  revisit bar is <= 0 at n >= 50).
+- From now on a postcount note whose estimate rests on a live tracker
+  count with < 8h left starts with `late-window:`, so the deep retro can
+  split tracker-anchored late reads from early-week bracket guesses
+  before the n=50 review.
+- Both 10:18Z rows had ask-edge >= min_edge and were declined only by the
+  bar but were recorded `no-edge`. Per DEEP-2026-08-15 they are
+  `category-bar`. A postcount row with ask-edge >= min_edge always gets
+  `category-bar`. Counterfactual for the pair: +$4.39 (correlated legs).
