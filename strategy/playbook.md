@@ -4726,6 +4726,22 @@ the outside-view pair is the textbook undated-count case the
 cumulative-count anchor rule exists for (the est rested on an inferred,
 not observed, pace).
 
+**2026-10-03 21:15Z update (FULL cycle, operator machine; Musk Oct1-3
+07:46Z pair, both superseded at 19:03Z, see RETRO-20261003-2115.)**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Musk Oct1-3 65-89 (`9238c01df3f3`) | 0.84 / 0.575 | Yes | +0.260 | Yes | +3.62 |
+| Musk Oct1-3 40-64 (`eda7406d6518`) | 0.12 / 0.36 | No | +0.230 | No | +2.69 |
+
+Net this batch: **+$6.31** (2W/0L). Mechanical ledger after these rows
+(`core/counterfactual.py ledger --skip-reason outside-view-veto`): 202 rows /
+194 trades / 83W-111L / +$126.52 / dBrier +0.0320 / held-out +$135.62. Side
+split: no 138/130/60W-70L/+$95.58; yes 64/64/23W-41L/+$30.94. Check: 95.58 +
+30.94 = 126.52. Ruling: no boundary change at one event; the 19:03Z revision
+of the same family lost to the market, so the early read was not a
+repeatable method yet.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
