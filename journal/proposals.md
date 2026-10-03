@@ -3729,3 +3729,32 @@ market on Brier. I did not recompute fold pnl.
 0 placed, 2 open. No reverts. Pacing tolerance rule added and 13
 settled watch items archived. Relaxation fork NOT MET (17th; OVV
 bucket dBrier +0.042 at n=157).
+
+## DEEP-2026-10-03 - deep-retro proposals and status
+
+- **Hourly proposals this window:** none filed since DEEP-2026-10-02.
+- **Pre-registered agent-side decision (not an operator ask):** Parcl
+  Dec31 (b), the freshly-seeded-ladder carve-out to max_spread. Status:
+  REJECTED (see playbook 'DEEP-2026-10-03 rulings').
+- **Cloud lease writability (carried).** It recurred on a FULL that placed
+  a bet. The 2026-10-02 22:18Z cycle logged "lease not written: push of
+  custom ref refused" and then placed 3989eabf623a unprotected. No
+  duplicate placement happened, so the risk is still theoretical.
+  Status: ENDORSED (operator act), priority unchanged.
+- **Routine cadence (informational, carried).** The cloud trigger fires
+  about every 2h. With the +1h45m target every tick is now a FULL (12 in
+  24h, quota 45/150 at 04:4xZ), so the jitter no longer costs cycles.
+  Status: INFORMATIONAL. No action needed unless hourly is intended.
+- **Funnel-weld CI check:** agent-side rule held 12/12 FULLs. Status:
+  PROPOSED (low priority backstop).
+- Carried unchanged: counterfactual.py `reconcile` repoint/retire,
+  refusal-row dBrier column, ODDS_API_KEY on both runners, screener
+  quota vs two runners, per-fold dBrier column, real-twin
+  allowed-classes, settled_ts determinism, wire-nonce 401, EOA gas
+  top-up, mech delivery-size, screener quota refund, watch.py shape
+  regexes, subclass auto-tagger, core/screen.py data-source escalation
+  slot.
+
+**Status:** 0 bets settled, 2 placed (both audited compliant, KEEP), 4
+open. No reverts. Relaxation fork NOT MET (18th; OVV mechanical
+ledger 201 rows, +$116.61, dBrier +0.0333).

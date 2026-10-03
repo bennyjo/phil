@@ -7389,3 +7389,60 @@ resolved No.
   bar but were recorded `no-edge`. Per DEEP-2026-08-15 they are
   `category-bar`. A postcount row with ask-edge >= min_edge always gets
   `category-bar`. Counterfactual for the pair: +$4.39 (correlated legs).
+
+## DEEP-2026-10-03 rulings
+
+- **Zero-crossing legs are mechanical tail reads, not judgment estimates
+  (ambiguity closed).** 3989eabf623a (Parcl NYC >= $510K Dec31, Yes @0.24,
+  est 0.98, claimed edge 0.74) was placed under the Parcl Dec31 watch
+  item's pre-registered rule (a). The outside-view veto (> 0.10) is
+  written for judgment estimates, and the mechanical-econ carve-out caps
+  econ prints at 0.20. Neither says what happens to an empirical-tail
+  read with zero historical crossings. Ruling: a Parcl zero-crossing leg
+  is exempt from the > 0.10 veto when ALL of these hold: (1) the market
+  description names the Parcl Labs index/ID already resolver-matched (the
+  5/5 NYC check) and is quoted in the rationale; (2) the required move is
+  >= 1.5x the worst horizon-matched 2020-26 move (NYC: -24% needed vs
+  -11.9% worst, so 2.0x); (3) the book spread is <= max_spread 0.06;
+  (4) est_prob is capped at 0.98, because the residual risk is
+  resolution or methodology change, not the index path; (5) the $10
+  family cap holds. 3989eabf623a meets all five. I verified the gamma
+  description on 2026-10-03: Parcl_ID 5372594, x1000 sq ft. Verdict:
+  KEEP. The existing kill switch stands: any zero-crossing loss sends
+  the family forecast-only. Other validated feeds (USGS, PortWatch) do
+  NOT inherit this exemption. Each needs its own resolver-matched
+  zero-crossing record first.
+- **Parcl Dec31 pre-registration (b), freshly-seeded-ladder carve-out to
+  max_spread: REJECTED.** Three reasons. The one leg that met the
+  zero-crossing standard (NYC) already traded on a <= 0.06 book, so the
+  carve-out would have bought nothing. The other 7 vetoed legs fail the
+  zero-crossing test on their own merits: Chicago >= 327K needs only
+  -4.2%, and SF/Dallas depend on momentum, which the agent's own
+  22:3xZ re-quote correctly kept forecast-only. And Parcl has n=1 settled
+  family decision (Sep 30 trio, +$1.37), too thin to loosen a hard rule.
+  Re-open only if a leg meeting conditions (1), (2), (4) and (5) above
+  sits on a book with spread > 0.06. Even then the most it may use is
+  the existing min_edge_wide_book 0.30 floor, logged as a spread exception.
+- **PortWatch weekly-sum bet 9b7c41da79ac: KEEP, one leg only until it
+  settles.** It is compliant (edge 0.07, spread 0.01, $5 within the $10
+  family cap, weekly-sum resolver match 2/2). The structural weakness is
+  information timing. When the bet was placed, 0 of the 7 window days
+  were published (the feed lags about 3 days), while a $20.8k book can
+  watch live AIS. The 2026-09-30 note already flagged that the book's
+  skew may carry AIS information. Until this leg settles (Oct 4-7), no
+  second PortWatch leg. **Pre-registered:** if the week's sum lands >= 190,
+  the direction the book skewed (210-229 priced 0.09 vs model 0.04), then
+  PortWatch bets require >= 3 published in-window days. If it lands in
+  170-189 or below, no restriction. Either way this is one event, so
+  grade the method, not just the P&L.
+- **Pacing fix confirmed.** The +1h45m target (DEEP-2026-10-02) took the
+  window from 4 FULLs to 12. Every FULL committed a funnel row
+  (06:22Z backfilled, 08:13Z through 04:11Z). Keep.
+- **Hourly recording rules this window: all KEEP.** These are the
+  resolver-read conflict rule (7a016098059f), the stale-mid rule
+  (8de7ff599222 was graded at 0.725 vs a live 0.36/0.74 book, the window's
+  largest dBrier +0.227 and a benchmark artefact rather than an estimation
+  miss), the box-office press-centre rule (07bfb21eee33), the
+  spot-through-barrier "shade view" rule, and the postcount `late-window:`
+  and `category-bar` labels. Each is a recording or labelling fix with
+  cited rows. None moves a betting boundary.
