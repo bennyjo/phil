@@ -4409,6 +4409,19 @@ mechanical-ledger category line stays negative (13 rows, 6W/7L,
 playing out as expected, not a new failure mode; the standing veto
 stays shut.
 
+**Box-office press-centre rule (RETRO-20261003-0015, evidence
+`07bfb21eee33`).** Primetime 19-22M was recorded at 0.82 on a 20.0M press
+centre with sd 1.0M; the note flagged a front-loaded opening (Fri incl
+previews 32% of the weekend) and a book at 0.65/0.72 below the press, and
+kept the shaded ~0.72 view unrecorded. Actuals landed at $18.83M, below
+even the studio's $19.2M Sunday estimate. This is the second box-office
+bracket where the book beat the trade-press centre (Spider-Man above).
+Rule: when Fri-incl-previews share is >= 30% or the book sits below the
+press centre, centre on the LOWEST credible press figure, use sd >= 1.5M,
+and record that as est_prob. A shade written in the note but not recorded
+is the honest estimate left out. Box-office forecasts n=26, mean dBrier
++0.0117. The category stays a standing no-bet self-model.
+
 **2026-09-22 ~18:15Z update (FULL cycle, cloud; resolve.py settled 14
 forecasts, 2 `outside-view-veto`).** Both rows are the Trump x Greenland
 deal-by-Sep23 pair (market 4712116), `fact-finality` subclass (signing
