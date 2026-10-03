@@ -4788,6 +4788,29 @@ restarted but no qualifying official statement; no second Millennium
 claim) - the veto kept both off the ledger. The two No-side wins are
 near-certain-No rows with thin payoff.
 
+**2026-10-03 04:15Z update (FULL cycle, cloud; 1 row settled this tick +
+7 backfilled rows settled 10-01 08:35Z..10-02 22:42Z that no retro
+tabled; see RETRO-20261003-0415).**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| NK exactly 2 tests Sep (`71aef6acf4eb`) | 0.47 / 0.32 | Yes | +0.140 | Yes | +10.15 |
+| Saint-Martin win Oct1 (`76946f6b4f07`) | 0.38 / 0.775 | No | +0.390 | Yes | -5.00 |
+| Trump Durant "SI" (`25fc1343e0cd`) | 0.68 / 0.79 | No | +0.100 | No | +17.73 |
+| Tesla Q3 475-500k first read (`a3ef8fda3cc9`) | 0.47 / 0.60 | No | +0.120 | Yes | -5.00 |
+| Tesla Q3 475-500k re-check (`e55366022abe`) | 0.68 / 0.91 | No | +0.220 | Yes | -5.00 |
+| Tesla Q3 450-475k (`94aba235a75e`) | 0.20 / 0.051 | Yes | +0.130 | No | -5.00 |
+| Primetime 19-22m (`07bfb21eee33`) | 0.82 / 0.685 | Yes | +0.100 | No | -5.00 |
+| Trump AL rally "SI" No (`a04a2faf502b`) | 0.79 / 0.665 (No token) | No | +0.100 | No | +2.25 |
+
+Net these rows: **+$5.13** (3W/5L). Mechanical ledger now 201 rows / 193
+trades / 81W-112L / +$116.61 / dBrier +0.0333 / held-out +$125.71 (was
+193/185/78W-107L/+$111.48). Side split (question frame): no 138/130/
+60W-70L/+$103.57; yes 63/63/21W-42L/+$13.03. Check: 103.57 + 13.03 =
+116.60 (rounding) ~ 116.61. Ruling: no boundary change; Trump
+speaker-only rally "SI" is 2/2 not-said against mids 0.79/0.665, a
+utterance-gate note, not a veto change at n=2 events.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
