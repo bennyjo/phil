@@ -799,6 +799,10 @@ guard.
    minutes go to independent-benchmark candidates (econ prints, polls,
    countable metrics) — the only stream that generates scoreable
    disagreements (see Forecast ledger, below).
+   2026-10-03 20:1xZ (RETRO-20261003-2015): three more clean-feed rows
+   settled (ND-UNC ncaaf 7-book devig, UNL Croatia-England BTTS Poisson,
+   UNL Belarus 3-book devig) netting dBrier -0.0181 vs mid, all within
+   0.02 of the book; the null holds, no edge-floor change.
    **Cap tightened DEEP-2026-08-13: at most ONE sports devig confirmation
    sweep per WEEK per feed, as a drift spot-check.** The daily cap's own
    evidence condition is met and exhausted: mlb-spreads settled forecast
