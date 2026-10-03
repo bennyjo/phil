@@ -5699,6 +5699,13 @@ fine-grained sibling ladder centred at 152-154K; recorded 0.85 vs mid
 (liq ~$150), so outside the rule's liquidity test; treat a tight sibling
 ladder that centres just past the line as the same signal for RECORDING
 only (no bets on thin books).
+**2026-10-03 18:1xZ (RETRO-20261003-1815): the 0.05 band held.** Three
+in-band rows settled with the book: Musk Oct 1-3 65-89 (a98114f67572)
+0.86 vs mid 0.89 Yes, dBrier +0.0075; 90-114 (9a21ff819fcc) 0.07 vs 0.10
+No, -0.0051; MrBeast Gaming wk1 30-35M (7bc5d1522090) 0.85 vs 0.89 Yes,
++0.0104. Net +0.0128 over 3 rows, versus +0.20-class misses when I
+recorded the visible counter. No change: keep the 0.05 band; the
+residual is the price of staying honest about an unnamed reason.
 
 ## Utterance-market base-rate gate (enacted DEEP-2026-09-12)
 
