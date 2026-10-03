@@ -4811,6 +4811,19 @@ trades / 81W-112L / +$116.61 / dBrier +0.0333 / held-out +$125.71 (was
 speaker-only rally "SI" is 2/2 not-said against mids 0.79/0.665, a
 utterance-gate note, not a veto change at n=2 events.
 
+**2026-10-03 08:1xZ update (FULL cycle, cloud; 1 `wide-spread-veto` row
+settled 07:13Z, superseded but kept by counterfactual.py; see
+RETRO-20261003-0815).**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| AAA gas <$3.75 any state Sep30 first read (`0bee87f8d628`, wide-spread-veto, superseded) | 0.03 / 0.24 | No | +0.030 | No | +0.32 |
+
+Net: **+$0.32** (1W/0L). Mechanical wide-spread-veto line now 42 rows /
+35 trades / 21W-14L / -$35.49 / dBrier -0.0092 (commodities-touch
+4/3/2W-1L/-$3.27). Ruling: none; sub-min_edge No at 0.94, the veto cost
+a thin win only.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
