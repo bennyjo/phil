@@ -3664,3 +3664,18 @@ and first-contact family cap added.
 
 - Evidence: same `git merge-base` `f7303c0` (2026-09-29 23:47Z). Local tip is now `0eb105b` (cycle 20261002-0503), origin/main tip is now `c8ffe3f` (cycle(triggered) 20261002-0527) -- fork has kept growing, still unrepaired since the first report at 2026-10-01 18:1xZ. Status bump only.
 - Ask (operator): same repair as above, now ~2.75 days overdue.
+
+## 2026-10-03 - Open bet past its end date with no resolution (operator)
+
+- Evidence: ledger row e746d7e1ba99 (Andersson "next PM of Sweden", No, entry
+  0.21, $5) has end_date 2026-09-13T00:00Z and is still open on 2026-10-03,
+  about 20 days later. resolve.py reports it as still open each cycle.
+- Public reporting (Euronews and The Star, 2026-09-28) says Andersson gave up
+  forming a government and Kristersson was next, so the outcome looks
+  determined. The gap seems to be the official resolution source, not the
+  market.
+- Cause (protected path): core/resolve.py has no path that settles a bet whose
+  end date passed without an official resolution. The position ties up cash and
+  will keep showing as open in the monitor.
+- Ask (operator): decide how a past-end-date market with no official resolution
+  should settle (e.g. a timeout or manual settle). The agent cannot change this.
