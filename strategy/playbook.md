@@ -4824,6 +4824,19 @@ Net: **+$0.32** (1W/0L). Mechanical wide-spread-veto line now 42 rows /
 4/3/2W-1L/-$3.27). Ruling: none; sub-min_edge No at 0.94, the veto cost
 a thin win only.
 
+**2026-10-03 14:1xZ update (FULL cycle, cloud; 1 `outside-view-veto` row
+settled; see RETRO-20261003-1415).**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| HITS Encore 150k+ (`18a992d6d83a`) | 0.85 / 0.95 | No | +0.070 | Yes | -5.00 |
+
+Net: **-$5.00** (0W/1L). Mechanical outside-view-veto line now 202 rows /
+194 trades / 81W-113L / +$111.61 / dBrier +0.0332 / held-out +$120.71
+(was 201/193/81W-112L/+$116.61). Side split: no 139/131/60W-71L/+$98.57;
+yes 63/63/21W-42L/+$13.03. Check: 98.57 + 13.03 = 111.60 ~ 111.61.
+Ruling: none; the veto avoided a loss against a book that knew the number.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
@@ -5679,6 +5692,13 @@ touch it. n=1 event; recording discipline, category bar unchanged.
 recorded 0.06, resolved No (65-89 won). The book beat the visible counter
 again; the residual +0.003 dBrier was all tolerance. Tightened: record
 within 0.05 (not 0.10) of the liquid mid when the reason is not nameable.
+**2026-10-03 14:15Z (RETRO-20261003-1415): 3/3 events.** HITS Encore
+150k+ (18a992d6d83a): projections centred on the line (view 0.55), but a
+fine-grained sibling ladder centred at 152-154K; recorded 0.85 vs mid
+0.95, resolved Yes, dBrier +0.020 (would be +0.200 at 0.55). Thin book
+(liq ~$150), so outside the rule's liquidity test; treat a tight sibling
+ladder that centres just past the line as the same signal for RECORDING
+only (no bets on thin books).
 
 ## Utterance-market base-rate gate (enacted DEEP-2026-09-12)
 
