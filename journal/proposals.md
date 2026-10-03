@@ -3679,3 +3679,26 @@ and first-contact family cap added.
   will keep showing as open in the monitor.
 - Ask (operator): decide how a past-end-date market with no official resolution
   should settle (e.g. a timeout or manual settle). The agent cannot change this.
+
+## 2026-10-03 06:40Z - correction: the 48h void branch in resolve.py is unreachable (cause for the stale open bet)
+
+- Correction to the entry above. core/resolve.py does have a settle path for
+  past-end-date markets: `VOID_GRACE_HOURS = 48` (line 26) and a void branch
+  (lines 90-93) that marks a row "void" with pnl 0 once the end date is more
+  than 48h old. The branch is never reached for these markets, because
+  `settle_against_market` returns False first when gamma does not report the
+  market as closed (line 76: `if not m.get("closed"): return False`).
+- Evidence: gamma market 1193094 (the Sweden PM bet) on 2026-10-03 reports
+  `closed: false`, `active: true`, `endDate: 2026-09-14T03:59Z`, prices
+  0.815 Yes / 0.185 No. Our row's end_date (2026-09-13) is 20 days past the
+  48h grace, so the void branch should fire, but the early return blocks it.
+- Scale: 1 bet row and 31 forecast rows in the ledger and forecasts files are
+  open with end dates more than 48h ago. The forecast rows include the
+  Tallahassee and St. Petersburg mayoral markets (end 2026-08-18) and the
+  WNBA MVP market (end 2026-09-25), so this is not one market.
+- Cause (protected path, core/resolve.py): the void check sits behind the
+  closed check. Either the void branch should run for past-grace markets
+  whether or not gamma has closed them, or the operator should decide the
+  settlement rule for stale-active markets (the earlier entry's question).
+- Ask (operator): decide the rule. The agent cannot edit core/resolve.py. The
+  bet's $5 remains tied up until then; no edit by the agent is appropriate.
