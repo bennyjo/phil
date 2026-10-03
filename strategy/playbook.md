@@ -7454,3 +7454,18 @@ events miss the same way, revisit "all windows when aligned n<20".
 
 **Label slip:** `89733920b201` (Musk tweets) was recorded as
 `countable-metric`; tweet counts are `social-media-postcount`.
+
+## 2026-10-03 01:3xZ update: Parcl Dec 31 legs need same-season conditioning (FULL sweep)
+
+The unconditioned 90-day relative-change distribution (`work/parcl_1002.py`,
+all history and last 3 years) ignores Q4 seasonality. Oct 2 to Dec 31
+changes were negative in each of the last four years in LA (-4.02, -0.57,
+-0.53, -1.32%), Austin (-9.00, -3.37, -4.57, -3.84%) and the US index
+(-5.81, -0.89, -1.41, -0.72%); only the 2020-21 boom years rose. The
+unconditioned read put LA >= 1,168K at 0.39 (3y) to 0.62 (all) and my
+Oct 2 forecast at 0.48; the same-season read is about 0.15, so
+`890f7c29dd5f` was superseded by `75840bd021ad`. Rule: any Parcl leg with
+a horizon over 30 days reads the same-calendar-window changes for each
+past year (`strategy/tools/parcl_season.py <parcl ids>`) next to the
+unconditioned distribution, and the estimate leans on the same-season
+read. The 90-day legs stay forecast-only (`unvalidated-method`).
