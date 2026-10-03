@@ -5674,6 +5674,11 @@ the reason, record est_prob within 0.10 of that liquid mid and write the
 model read as "api view: X" in the note. A 0.6-ish mid (last week's
 0.93-vs-0.63 win) is disagreement, not certainty — the rule does not
 touch it. n=1 event; recording discipline, category bar unchanged.
+**2026-10-03 update (RETRO-20261003-1015): n=2/2.** Musk Oct 1-3 40-64
+(595329022cd0): xtracker 62 at 02:15Z vs liquid ($30k) 40-64 at 0.0165;
+recorded 0.06, resolved No (65-89 won). The book beat the visible counter
+again; the residual +0.003 dBrier was all tolerance. Tightened: record
+within 0.05 (not 0.10) of the liquid mid when the reason is not nameable.
 
 ## Utterance-market base-rate gate (enacted DEEP-2026-09-12)
 
