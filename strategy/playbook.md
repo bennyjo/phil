@@ -7257,7 +7257,13 @@ family forecast-only.
   - Unexplained price moves against a public-record-search estimate:
     **tracked observation, 1-for-2, not a rule.** The Sep 21 Opus case:
     discounting the move was right. The Sep 29 Trump-renames-AI chain
-    e22fb0445ebe: the market was right. Re-visit at the third instance.
+    e22fb0445ebe: the market was right. Third instance (RETRO-20261004-0215):
+    Trump-Milei Sep meeting, mid fell 0.775->0.605 with no sourced cause,
+    I shaded only 0.75->0.66 (5df207771b03) and it resolved Yes: discounting
+    was right (dBrier -0.040 vs mid). Now 2-for-3 for discounting. Re-visit
+    result: keep it an observation, n=3 is too small for a rule, but a
+    partial shade (hold most of the sourced read, move <= half way) has
+    not lost in the three cases; prefer it over full deference.
 - **Funnel row is not optional on a FULL cycle.** Two of the seven FULL
   cycles in the Sep 29 window wrote "Funnel: screened 300, escalated 15"
   into cycles.log but committed no `strategy/funnel.jsonl` row: 41b031e
