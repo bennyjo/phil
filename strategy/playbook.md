@@ -803,6 +803,12 @@ guard.
    settled (ND-UNC ncaaf 7-book devig, UNL Croatia-England BTTS Poisson,
    UNL Belarus 3-book devig) netting dBrier -0.0181 vs mid, all within
    0.02 of the book; the null holds, no edge-floor change.
+   2026-10-04 04:1xZ (RETRO-20261004-0415): Miami-Clemson ncaaf 9-book
+   devig settled dBrier -0.0044 vs mid; null holds again. Book-less BTTS
+   Poisson self-model is 1-1 vs mid (Den Bosch lost, Argentina-BFA won);
+   on Argentina-BFA the haiku 0.18 divergence I dismissed scored better
+   than both - track whether screener divergences on strong-favourite
+   BTTS rows keep beating the self-model before trusting either (n=1).
    **Cap tightened DEEP-2026-08-13: at most ONE sports devig confirmation
    sweep per WEEK per feed, as a drift spot-check.** The daily cap's own
    evidence condition is met and exhausted: mlb-spreads settled forecast
