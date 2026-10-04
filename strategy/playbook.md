@@ -7507,3 +7507,54 @@ resolved No.
   spot-through-barrier "shade view" rule, and the postcount `late-window:`
   and `category-bar` labels. Each is a recording or labelling fix with
   cited rows. None moves a betting boundary.
+
+## DEEP-2026-10-04 rulings
+
+- **b05a47dabf33 (Lula < 44% valid, R1 2026-10-04, $5 Yes @0.24, own
+  0.33, claimed edge 0.09): DISCIPLINE VIOLATION, graded now and
+  independent of tonight's result.** It breaks two written rules:
+  (1) *Price-inside-the-model-range* (RETRO-20260921-0633). The note's
+  own defensible inputs are mean 44.8 (all 8 final polls) or 45.5
+  (big-two), and an sd in 1.5-2.5. They give P(<44) of 0.16-0.37
+  (44.8: 0.30/0.345/0.37; 45.5: 0.16/0.23/0.27). With the -1.6 2022
+  Lula poll overstatement the note cites but did not apply, the range
+  is 0.52-0.66. The ask 0.24 sits INSIDE the range, so the "edge" is
+  an input choice (`no-edge`). Forecast 5a99241c0780 also failed to
+  quote a range, which the rule requires. (2) *Label consistency.* The
+  Brazil family was declined `outside-view-veto` on 2026-09-21 for
+  exactly this reason: "no sourced/validated SD for Brazilian
+  elections". The 2026-10-04 note says the sd is "convention ... n=1
+  history, not a sourced consensus-miss series". Nothing settled in
+  between validated the method, so a decline on a method stays a
+  decline until a settled row validates it. Recording 0.33 when the
+  model's central read was 0.345 also put the claimed edge at 0.09,
+  just under the 0.10 veto boundary. Boundary-hugging is not itself a
+  breach, but the pattern is worth watching. **Do not count tonight's
+  result as evidence either way:** a WIN does not validate the
+  convention-sd Gaussian (n=1), and a LOSS is graded as a method error,
+  not variance. No second leg on this event (the watch item already says
+  this). Stake is within all caps ($5 of $10 event cap, spread 0.02), so
+  the breach is a method breach, not a cap breach.
+- **Sharpened (vote-share ladders):** a Gaussian over an election
+  vote-share bracket counts as a validated method only when its sd comes
+  from a final-poll-vs-result error series of at least 3 prior elections
+  in that country/office (quoted with sources in the note). Anything
+  less is `unvalidated-method`, forecast-only, whatever the claimed
+  edge. The AfD Sachsen-Anhalt carve-out precedent (de95e5168de3) stays
+  valid because its probability came from a published seat model, not
+  from a self-chosen sd.
+- **Hourly edits this window: all KEEP** (they are observational and
+  move no betting boundary). These are the clean-feed null updates
+  (RETRO-20261003-2015, RETRO-20261004-0415), the AAA-gas and HITS Encore
+  counterfactual table rows, the liquid-certainty 0.05 band (3 in-band
+  rows net +0.0128 dBrier, small and honest), and the "discounting
+  unexplained mid moves" observation (now 2-for-3, correctly kept as an
+  observation at n=3). On the BTTS self-model vs the screener's haiku
+  divergence (n=1 each way): insufficient data, keep tracking.
+- **Pacing count command v5** (schedule.json notes). The v4 command
+  matched only the literal `(FULL cycle`. Log lines drifted to `(FULL,`
+  and `| FULL`, so v4 printed 1 for the 24h to 2026-10-04T04:40Z while
+  the true count was 10. That is a fail-safe undercount, but the
+  guardrail was blind. v5 classifies on whichever of `FULL`/`LIGHT`
+  appears first and prints 10 on the same window, which matches a hand
+  count (10 FULL, 2 LIGHT, 2 TRIGGERED).

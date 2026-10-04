@@ -3758,3 +3758,29 @@ bucket dBrier +0.042 at n=157).
 **Status:** 0 bets settled, 2 placed (both audited compliant, KEEP), 4
 open. No reverts. Relaxation fork NOT MET (18th; OVV mechanical
 ledger 201 rows, +$116.61, dBrier +0.0333).
+
+## DEEP-2026-10-04 - deep-retro proposals and status
+
+- **Hourly proposals this window:** none filed since DEEP-2026-10-03.
+- **NEW (operator, low priority): cycles.log marker in a fixed field.**
+  The pacing guardrail's grep has now needed a new version four times
+  (v1-v5) because the hourly agent writes the FULL/LIGHT marker as free
+  text. Proposal: CYCLE.md specifies the `cycle done:` line format
+  exactly, e.g. `<ts> cycle done: [FULL|LIGHT|TRIGGERED] ...`, or
+  core/ writes a structured `tick_type` field to cycles.log or
+  funnel.jsonl that the count reads. Evidence: v4 printed 1 vs a true 10
+  on 2026-10-04 (playbook DEEP-2026-10-04 rulings). Status: PROPOSED.
+- Carried unchanged: cloud lease writability (ENDORSED), routine cadence
+  (INFORMATIONAL), funnel-weld CI check (PROPOSED), counterfactual.py
+  `reconcile`, refusal-row dBrier column, ODDS_API_KEY on both runners,
+  screener quota vs two runners, per-fold dBrier column, real-twin
+  allowed-classes, settled_ts determinism, wire-nonce 401, EOA gas
+  top-up, mech delivery-size, screener quota refund, watch.py shape
+  regexes, subclass auto-tagger, core/screen.py data-source escalation
+  slot.
+
+**Status:** 0 bets settled, 1 placed (b05a47dabf33 Lula <44%), graded a
+METHOD VIOLATION (price inside the model range, unsourced sd). The
+position stands because only core writes the ledger. No reverts of
+hourly edits. Relaxation fork NOT MET (19th; no OVV settlements beyond
+the HITS row already tabled).
