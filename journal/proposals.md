@@ -3629,6 +3629,7 @@ and first-contact family cap added.
 - Off-chain R1 market-aware request phil-20260929-0512-airename-r1aware (mech id 2357e3b9...011d, service 21) was accepted, then not delivered in the 300s wait or one 240s mech_result poll.
 - The next two sequential off-chain sends on service 21 got HTTP 401 "wire nonce below sender's next expected slot". The undelivered request may hold the slot.
 - The legacy_on_chain fallback was not tried: the agent EOA was last logged at 0.1404 POL against ~0.13-0.16 POL per tx. Operator act still open: send ~0.5 POL to the agent EOA, and check whether the undelivered request was paid.
+- **Status (DEEP-2026-09-30):** ENDORSED as evidence. It adds to the open EOA-gas (~0.5 POL to the agent EOA) and wire-nonce 401 items. No new ask. The R1 daily sample has now missed 8 days.
 
 ## 2026-09-29 18:0xZ - LIGHT ticks defer forecast-settlement grading: CYCLE.md step 3 and the LIGHT definition read as permitting it
 
@@ -3751,3 +3752,182 @@ and first-contact family cap added.
   when the ask is null, and whether the skip label is derived from the same price.
   One row is not a pattern; count how many `market-agrees` rows have a gap above
   0.05 before changing anything.
+
+- **Status (DEEP-2026-09-30):** ENDORSED (operator, CYCLE.md). The diagnosis is right. The overriding rule lives in a 69KB schedule.json `_comment` and in a playbook whose default Read stops at line 2,000 of 7,100, so the rules that matter are the ones cycles miss. Both proposed wordings are minimal and correct. Interim agent-side restatement: playbook "DEEP-2026-09-30 rulings".
+
+## DEEP-2026-09-30 - deep-retro proposals and status
+
+- **Hourly proposals this window (2):** both ENDORSED. See the Status
+  lines above.
+- **NEW (operator, CI/core, strengthens the carried funnel-weld item):**
+  2 of 7 FULL cycles on Sep 29 committed screener rows but no funnel row:
+  41b031e (15:51Z cloud) and d43503c (18:35Z operator). cycles.log
+  claimed "Funnel: screened 300" both times. The mechanical check is:
+  a commit that appends >=1 row to journal/screener.jsonl must also
+  append a row to strategy/funnel.jsonl. That fits core/validate.py or
+  the ci.yml boundary step. Agent-side interim: the playbook ruling
+  "Funnel row is not optional".
+- **NEW (operator, core/counterfactual.py, low priority):** `reconcile`
+  parses the hand-kept OVV table from strategy/playbook.md, which pins a
+  134KB section in the file every FULL cycle reads. The mechanical
+  `ledger` has superseded the table (today: hand -15.60u vs ledger
+  +14.97u, a 21-trade gap that nobody acts on). Proposal: point
+  `PLAYBOOK` at a frozen copy (e.g. strategy/playbook-archive.md, where
+  the section would move) or retire `reconcile`. Once that lands, the
+  deep retro can move the 134KB section out of the live file. Status:
+  PROPOSED.
+- Carried unchanged: refusal-row dBrier column, funnel-weld CI check,
+  ODDS_API_KEY on both runners, screener quota vs two runners, per-fold
+  dBrier column, real-twin allowed-classes, settled_ts determinism,
+  wire-nonce 401, EOA gas top-up, mech delivery-size, lease writability,
+  screener quota refund, watch.py shape regexes, subclass auto-tagger,
+  core/screen.py data-source escalation slot (conditional on the 10-06
+  sweep test).
+
+**Status:** relaxation fork NOT MET (15th). 2 bets settled (Canada GDP
+WON +3.77, RBA LOST -5.00), 0 placed, 5 open. No reverts. Playbook
+reading note and CF-arithmetic-to-retro rule added, 7 sections archived.
+
+## DEEP-2026-10-01 - deep-retro proposals and status
+
+- **Hourly proposals this window:** none filed since DEEP-2026-09-30.
+- **STRENGTHENED (operator, CI/core): funnel-weld check.** This is the
+  third instance in three days: f3bf184 (2026-10-01 04:25Z FULL, cloud)
+  appended 300 screener rows, placed bet 50d06b8745c2, and committed no
+  `strategy/funnel.jsonl` row. That follows 41b031e and d43503c on Sep
+  29. The agent-side rule did not hold for even one day. It sat at
+  playbook line ~7,090, and a reminder is now also in the top-of-file
+  reading note. A prose rule has now failed 3 times in 3 days, so the
+  mechanical check (a commit that appends to journal/screener.jsonl
+  must append to strategy/funnel.jsonl, in core/validate.py or the
+  ci.yml boundary step) is the fix. The deep retro backfilled the
+  missing row, flagged `backfilled_by`. Status: PROPOSED (priority
+  raised).
+- Carried unchanged: counterfactual.py `reconcile` repoint/retire,
+  refusal-row dBrier column, ODDS_API_KEY on both runners, screener
+  quota vs two runners, per-fold dBrier column, real-twin
+  allowed-classes, settled_ts determinism, wire-nonce 401, EOA gas
+  top-up, mech delivery-size, lease writability, screener quota refund,
+  watch.py shape regexes, subclass auto-tagger, core/screen.py
+  data-source escalation slot. That last item is now unconditional: the
+  10-06 sweep test was met by USGS bet 9a2944acc280.
+
+**Status:** 4 bets settled this window, all WON (PCE No, Parcl
+NYC/Chicago/LA, +$3.72 total). 2 placed (USGS '7' Yes, Peterbilt
+'Manufacturing' Yes), 3 open. No reverts. One funnel row backfilled.
+Relaxation fork NOT MET (16th). On the mechanical ledger after
+RETRO-20260930-1615, the outside-view-veto is 176 trades, +$66.20, and
+dBrier +0.0343, so the vetoed estimates are still worse than the
+market on Brier. I did not recompute fold pnl.
+
+## DEEP-2026-10-02 - deep-retro proposals and status
+
+- **Hourly proposals this window:** none filed since DEEP-2026-10-01.
+- **Funnel-weld CI check:** the agent-side rule held on 4/4 FULLs today
+  (08:25Z, 14:40Z, 20:15Z, 02:15Z), after 3 misses in the 3 days
+  before. Status: PROPOSED (priority lowered; still worth having as a
+  backstop).
+- **NEW (operator, routine cadence, informational):** the cloud routine
+  fires about every 2h with a few minutes of jitter, not hourly as
+  CLAUDE.md says. That jitter turned 4 intended FULLs into LIGHTs in
+  24h. The agent-side fix is in schedule.json, but if the hourly
+  cadence is intended, the trigger may be throttled. Status:
+  INFORMATIONAL.
+- Carried unchanged: counterfactual.py `reconcile` repoint/retire,
+  refusal-row dBrier column, ODDS_API_KEY on both runners, screener
+  quota vs two runners, per-fold dBrier column, real-twin
+  allowed-classes, settled_ts determinism, wire-nonce 401, EOA gas
+  top-up, mech delivery-size, lease writability (every cloud LIGHT tick
+  today logged "push refused, proceeding unprotected"), screener quota
+  refund, watch.py shape regexes, subclass auto-tagger, core/screen.py
+  data-source escalation slot.
+
+**Status:** 1 bet settled (Peterbilt 'Manufacturing' Yes WON +$1.10),
+0 placed, 2 open. No reverts. Pacing tolerance rule added and 13
+settled watch items archived. Relaxation fork NOT MET (17th; OVV
+bucket dBrier +0.042 at n=157).
+
+## DEEP-2026-10-03 - deep-retro proposals and status
+
+- **Hourly proposals this window:** none filed since DEEP-2026-10-02.
+- **Pre-registered agent-side decision (not an operator ask):** Parcl
+  Dec31 (b), the freshly-seeded-ladder carve-out to max_spread. Status:
+  REJECTED (see playbook 'DEEP-2026-10-03 rulings').
+- **Cloud lease writability (carried).** It recurred on a FULL that placed
+  a bet. The 2026-10-02 22:18Z cycle logged "lease not written: push of
+  custom ref refused" and then placed 3989eabf623a unprotected. No
+  duplicate placement happened, so the risk is still theoretical.
+  Status: ENDORSED (operator act), priority unchanged.
+- **Routine cadence (informational, carried).** The cloud trigger fires
+  about every 2h. With the +1h45m target every tick is now a FULL (12 in
+  24h, quota 45/150 at 04:4xZ), so the jitter no longer costs cycles.
+  Status: INFORMATIONAL. No action needed unless hourly is intended.
+- **Funnel-weld CI check:** agent-side rule held 12/12 FULLs. Status:
+  PROPOSED (low priority backstop).
+- Carried unchanged: counterfactual.py `reconcile` repoint/retire,
+  refusal-row dBrier column, ODDS_API_KEY on both runners, screener
+  quota vs two runners, per-fold dBrier column, real-twin
+  allowed-classes, settled_ts determinism, wire-nonce 401, EOA gas
+  top-up, mech delivery-size, screener quota refund, watch.py shape
+  regexes, subclass auto-tagger, core/screen.py data-source escalation
+  slot.
+
+**Status:** 0 bets settled, 2 placed (both audited compliant, KEEP), 4
+open. No reverts. Relaxation fork NOT MET (18th; OVV mechanical
+ledger 201 rows, +$116.61, dBrier +0.0333).
+
+## DEEP-2026-10-04 - deep-retro proposals and status
+
+- **Hourly proposals this window:** none filed since DEEP-2026-10-03.
+- **NEW (operator, low priority): cycles.log marker in a fixed field.**
+  The pacing guardrail's grep has now needed a new version four times
+  (v1-v5) because the hourly agent writes the FULL/LIGHT marker as free
+  text. Proposal: CYCLE.md specifies the `cycle done:` line format
+  exactly, e.g. `<ts> cycle done: [FULL|LIGHT|TRIGGERED] ...`, or
+  core/ writes a structured `tick_type` field to cycles.log or
+  funnel.jsonl that the count reads. Evidence: v4 printed 1 vs a true 10
+  on 2026-10-04 (playbook DEEP-2026-10-04 rulings). Status: PROPOSED.
+- Carried unchanged: cloud lease writability (ENDORSED), routine cadence
+  (INFORMATIONAL), funnel-weld CI check (PROPOSED), counterfactual.py
+  `reconcile`, refusal-row dBrier column, ODDS_API_KEY on both runners,
+  screener quota vs two runners, per-fold dBrier column, real-twin
+  allowed-classes, settled_ts determinism, wire-nonce 401, EOA gas
+  top-up, mech delivery-size, screener quota refund, watch.py shape
+  regexes, subclass auto-tagger, core/screen.py data-source escalation
+  slot.
+
+**Status:** 0 bets settled, 1 placed (b05a47dabf33 Lula <44%), graded a
+METHOD VIOLATION (price inside the model range, unsourced sd). The
+position stands because only core writes the ledger. No reverts of
+hourly edits. Relaxation fork NOT MET (19th; no OVV settlements beyond
+the HITS row already tabled).
+
+## DEEP-2026-10-05 - deep-retro proposals and status
+
+- **Hourly proposals this window:** none filed since DEEP-2026-10-04.
+- **Funnel-weld CI check (PROPOSED, carried): new evidence, priority
+  raised.** On 2026-10-04, cycles.log has 8 FULL lines and
+  strategy/funnel.jsonl has 4 cloud rows. The 06:35, 08:18, 10:17 and
+  22:24Z FULLs screened 280-300 markets each but wrote no row.
+  core/screen_value.py consumes these rows. A CI or core check that
+  fails a cycle commit whose cycles.log line says FULL or TRIGGERED
+  without a same-timestamp funnel row would stop the drift. The playbook
+  rule (DEEP-2026-10-05) is the agent-side mitigation only. Status:
+  PROPOSED.
+- **cycles.log fixed tick_type field (PROPOSED, DEEP-2026-10-04):**
+  reinforced. Pacing count v5 now also counts TRIGGERED lines as FULL
+  (7 vs a true 6+1).
+- Carried unchanged: cloud lease writability (ENDORSED; the push of
+  the lease ref was still refused at 10-04 06:35Z and later), routine
+  cadence (INFORMATIONAL), counterfactual.py `reconcile`, refusal-row
+  dBrier column, ODDS_API_KEY on both runners, screener quota vs two
+  runners, per-fold dBrier column, real-twin allowed-classes, settled_ts
+  determinism, wire-nonce 401, EOA gas top-up, mech delivery-size,
+  screener quota refund, watch.py shape regexes, subclass auto-tagger,
+  core/screen.py data-source escalation slot.
+
+**Status:** 0 bets settled (2 awaiting UMA on near-certain losses:
+b05a47dabf33, 9a2944acc280). No reverts of hourly edits. Relaxation fork not
+re-evaluated in full today. Its only new input is b350, an OVV row where
+the veto avoided a CF -$5.00, so the input points away from relaxation:
+NOT MET (20th).
