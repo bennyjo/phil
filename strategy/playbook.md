@@ -4763,6 +4763,41 @@ have won. The older, since-superseded forecast on the same market
 table duty) settled the same tick at the same loss-avoided shape, two
 minutes earlier per settled_ts. Full narrative in RETRO-20261005-0403.
 
+**2026-10-05 0527Z update (FULL cycle, operator machine; seven Brazil R1
+family veto rows settled, see RETRO-20261005-0527.)**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Brazil Lula by 5-10 (`7ae14fb4b36e`) | 0.35 / 0.12 | Yes | +0.220 | No | -5.00 |
+| Brazil Flávio >=39 valid (`4e52c227a60f`) | 0.45 / 0.85 | No | +0.390 | Yes | -5.00 |
+| Brazil Lula 2nd (`b350adc7e95c`) | 0.15 / 0.2815 | No | +0.131 | Yes | -5.00 |
+| Brazil Lula by <5 (`0137c5dd7495`) | 0.50 / 0.585 | No | +0.080 | No | +6.90 |
+| Brazil Flávio >=39 valid (`e6afa32bb249`) | 0.84 / 0.88 | No | +0.030 | Yes | -5.00 |
+| Brazil Lula 2nd (`9f0ee045afca`) | 0.45 / 0.3795 | Yes | +0.063 | Yes | +7.90 |
+| Brazil Lula by <5 (`1c876ec5d358`) | 0.42 / 0.475 | No | +0.050 | No | +4.45 |
+
+Net this batch: **-$0.75** (3W/4L). Mechanical ledger after these rows: 210
+rows / 202 trades / 87W-115L / +$133.93 / dBrier +0.0321 / held-out
++$141.93 (was 203/195/84W-111L/+$134.67). Side split: no 144/136/63W-73L/
++$100.07; yes 66/66/24W-42L/+$33.86. Check: 100.07 + 33.86 = 133.93.
+Ruling: no boundary change at one event. The four losses are all Sep 21-30
+reads (raw-share and incoherent-sibling errors); the three wins are the
+Sep 30 to Oct 3 reads from one stated margin distribution.
+
+## 2026-10-05 05:27Z: one distribution per event (RETRO-20261005-0527)
+
+Brazil R1: `1d98458aef28` (Sep 21) put Lula most votes at 0.65, and
+`b350adc7e95c` (Sep 23) put Lula 2nd at 0.15, which implies Lula 1st near
+0.85. The polls did not move 20 points between them. b350 scored the worst
+Brier of the 11-row family (0.7225 vs market 0.5162). The Oct 3 family came
+from one margin distribution, was coherent, and beat the market on every
+row. Rule: when I forecast two or more legs of one event (winner,
+runner-up, margin brackets, share thresholds), write one distribution in
+the note (for example, margin mean and sd, share mean and sd) and derive
+every leg from it. Before recording, check that complementary legs sum to
+about 1 and nested legs are ordered. A new leg that implies a different
+distribution supersedes the older open siblings in the same cycle.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
