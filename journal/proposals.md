@@ -3725,3 +3725,12 @@ and first-contact family cap added.
   (forecasts union by id preferring settled rows) but the watch
   items/price-moves/schedule.json/playbook/proposals three-way merges will
   be much larger this time.
+
+## 2026-10-05 09:1xZ - Andersson row still open, unchanged (LIGHT tick)
+
+- Evidence: `e746d7e1ba99` (market 1193094) on Gamma at 09:1xZ: `closed=false`,
+  `umaResolutionStatus` null, `endDate` 2026-09-14T03:59Z, outcomePrices
+  Yes 0.805 / No 0.195. The CLOB book for the held No token is empty.
+  The cause is the one above (resolve.py gates the void branch on `closed`).
+- Ask (operator): same decision as the 2026-10-03 entries. Nothing new for
+  the agent to do; the position stays open until that decision lands.
