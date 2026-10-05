@@ -4875,6 +4875,25 @@ must sum to within 0.05 of 1 at record time, or the later record's note
 must say which leg is stale. b350 at 0.15 sat next to Lula-1st at 0.65
 (sum 0.80) because it used a paired-margin sd with no poll-error term.
 
+**2026-10-05 06:35Z update (FULL cycle, cloud; 4 `outside-view-veto`
+rows settled, Brazil R1 margin/share legs; see RETRO-20261005-0635).**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Lula R1 by 5-10% (`7ae14fb4b36e`, superseded) | 0.35 / 0.12 | Yes | +0.220 | No | -5.00 |
+| Flavio >=39% (`4e52c227a60f`, superseded) | 0.45 / 0.85 | No | +0.390 | Yes | -5.00 |
+| Lula R1 by <5% (`fd6019baa699`) | 0.50 / 0.685 | No | +0.180 | No | +10.63 |
+| Lula R1 by 5-10% re-check (`67aadcec4a01`) | 0.17 / 0.08 | Yes | +0.080 | No | -5.00 |
+
+Outside-view-veto: **-$4.38** (1W/3L). Mechanical ledger now 207 rows /
+199 trades / 82W-117L / +$102.23 / dBrier +0.0343 / held-out +$110.23
+(was 203/195/81W-114L/+$106.61). Side split: no 142/134/61W-73L/+$99.20;
+yes 65/65/21W-44L/+$3.03. Check: 99.20 + 3.03 = 102.23.
+Ruling: no boundary change. The two saves were the September
+no-poll-error rows. The one cost (fd60) was the shaded model pointing the
+right way. Brazil's bias size is now n=3 (see DEEP-2026-10-05 Brazil
+bullet).
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
@@ -7615,6 +7634,14 @@ resolved No.
   (44.8), so the miss was the right-wing share. Use this as the runoff
   prior: the poll error ran toward the right in 2022 and in 2026 (n=2,
   direction only, not a size).
+  **Update RETRO-20261005-0635 (R1 margin legs settled):** with 2018
+  (~+6 share), 2022 (~9pt margin) and 2026 (~6.9pt margin), it is n=3,
+  same direction. Every half-weight 2026 row (574a, 1653, fd60, 67aa)
+  moved the right way but not far enough. The current rows beat the mid
+  by 0.19 dBrier; the September rows with no error term lost by 0.39.
+  **Runoff rows apply the right-ward correction at FULL weight
+  (centre ~6pt on margin, the 6-9pt spread folded into sd). Still
+  `unvalidated-method`, forecast-only.**
 - **USGS weekly count (dc9200183ac0, 2026-10-04 12:17Z, '7' leg 0.48 at
   "count 7"): count not reproducible.** A USGS query at the deep retro
   (Sep 28 04:00Z to Oct 5 04:00Z, M>=5.5) lists 6 events: MAR 5.5,
