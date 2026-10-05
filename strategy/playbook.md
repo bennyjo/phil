@@ -7586,3 +7586,63 @@ resolved No.
   guardrail was blind. v5 classifies on whichever of `FULL`/`LIGHT`
   appears first and prints 10 on the same window, which matches a hand
   count (10 FULL, 2 LIGHT, 2 TRIGGERED).
+
+## DEEP-2026-10-05 rulings
+
+- **No bet settled since DEEP-2026-10-04.** Totals are unchanged: n=55,
+  26W, -$4.33, dBrier +0.0725, z -3.57. Two open bets are certain or
+  near-certain losses, still awaiting UMA: b05a47dabf33 (Lula <44%,
+  final 45.16, mid 0.01) and 9a2944acc280 (USGS '7', mid 0.03). Once
+  they settle, the totals move to n=57 and about -$14.3.
+- **tse_count.py (new tool, hourly 2026-10-04): KEEP, first grade
+  logged.** At 64.8% of sections, the municipality-weighted projection
+  gave L44.84 / F47.26. The TSE final was L45.16 / F47.03, so the error
+  was -0.32 / +0.23pt. The raw count at the same moment (L42.77 /
+  F49.11) was off by 2.4 / 2.1pt. This is n=1. The tool is now a
+  validated *count-projection* method for Brazil only after it is
+  graded on the Oct 25 runoff count too. Until then, it may inform
+  forecasts but not a bet on its own.
+- **Complementary-legs rule (hourly RETRO-20261005-0415): KEEP,
+  sharpened.** b350adc7e95c (Lula 2nd, 0.15, +0.2063 dBrier against us)
+  and 1d98/574a (Lula 1st, 0.65/0.70) summed to 0.80. Root cause: the
+  paired-margin sd came from house dispersion only. That is the same
+  defect as b05a47dabf33 (convention sd). One rule covers both. **Any
+  election sd must include a historical final-poll-error term (DEEP-
+  2026-10-04 rule), and every leg of one event must be derived from the
+  same distribution.** Brazil 2026 adds a data point: final polls
+  overstated the Lula-Flavio margin by about 6.9pt (Datafolha +5 →
+  result -1.9). Lula's own share (45.16) landed near the poll average
+  (44.8), so the miss was the right-wing share. Use this as the runoff
+  prior: the poll error ran toward the right in 2022 and in 2026 (n=2,
+  direction only, not a size).
+- **USGS weekly count (dc9200183ac0, 2026-10-04 12:17Z, '7' leg 0.48 at
+  "count 7"): count not reproducible.** A USGS query at the deep retro
+  (Sep 28 04:00Z to Oct 5 04:00Z, M>=5.5) lists 6 events: MAR 5.5,
+  Yonakuni 5.6, Tamarindo 5.6, Vilyuchinsk 5.8, Tambolaka 5.9, Volcano
+  Is. 5.5 mb. The likeliest explanation is a downward revision of a
+  preliminary magnitude (Banda Aceh is now 5.3 mww), because the book
+  (0.45/0.48) also priced count 7 at that time. The 04:15Z retro
+  reported "6" without noticing that 12:17Z had said 7. **Rule: a
+  validated-feed count note must list the counted event ids or
+  times+mags, so a later tick can diff them. A count that includes an
+  event within 0.1 of the threshold on a preliminary `mb`/`ml`
+  magnitude carries explicit revision risk (start at 0.10 per such
+  event, n=1 calibration) in the probability.** The held bet was
+  entered at count 2, so this did not cause the loss. Treat the loss
+  as variance.
+- **Funnel rows missing (discipline, record-keeping).** On 2026-10-04,
+  cycles.log has 8 FULL lines but strategy/funnel.jsonl has 4 cloud
+  rows. Missing: 06:35/08:18/10:17/22:24Z, all of which screened per
+  their cycles.log text. 10-02 and 10-03 had 10 each. core/screen_value.py
+  reads these rows, so screener-value analysis is silently thinned.
+  **Every FULL and TRIGGERED cycle appends its funnel row before the
+  commit. The cycle commit is not done without it.** It belongs in the
+  operator funnel-weld CI proposal (proposals DEEP-2026-10-05).
+- **Pacing:** budget-aware deferral rule added to schedule.json notes
+  (2 screened FULLs forfeited on 10-04). See the evidence there.
+- **Discovery:** unchanged. pool_total fell from 941 (10-04 12:13Z) to
+  763 (10-05 02:35Z), mostly `liquid-multiday` 117 → 35. That is one
+  sample, taken just after a weekend's events cleared the 50k-volume
+  floor. If liquid-multiday stays below 60 on 3 consecutive weekday
+  FULLs, a deep retro should test lowering volume_num_min. Insufficient
+  data today.

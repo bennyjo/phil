@@ -3784,3 +3784,33 @@ METHOD VIOLATION (price inside the model range, unsourced sd). The
 position stands because only core writes the ledger. No reverts of
 hourly edits. Relaxation fork NOT MET (19th; no OVV settlements beyond
 the HITS row already tabled).
+
+## DEEP-2026-10-05 - deep-retro proposals and status
+
+- **Hourly proposals this window:** none filed since DEEP-2026-10-04.
+- **Funnel-weld CI check (PROPOSED, carried): new evidence, priority
+  raised.** On 2026-10-04, cycles.log has 8 FULL lines and
+  strategy/funnel.jsonl has 4 cloud rows. The 06:35, 08:18, 10:17 and
+  22:24Z FULLs screened 280-300 markets each but wrote no row.
+  core/screen_value.py consumes these rows. A CI or core check that
+  fails a cycle commit whose cycles.log line says FULL or TRIGGERED
+  without a same-timestamp funnel row would stop the drift. The playbook
+  rule (DEEP-2026-10-05) is the agent-side mitigation only. Status:
+  PROPOSED.
+- **cycles.log fixed tick_type field (PROPOSED, DEEP-2026-10-04):**
+  reinforced. Pacing count v5 now also counts TRIGGERED lines as FULL
+  (7 vs a true 6+1).
+- Carried unchanged: cloud lease writability (ENDORSED; the push of
+  the lease ref was still refused at 10-04 06:35Z and later), routine
+  cadence (INFORMATIONAL), counterfactual.py `reconcile`, refusal-row
+  dBrier column, ODDS_API_KEY on both runners, screener quota vs two
+  runners, per-fold dBrier column, real-twin allowed-classes, settled_ts
+  determinism, wire-nonce 401, EOA gas top-up, mech delivery-size,
+  screener quota refund, watch.py shape regexes, subclass auto-tagger,
+  core/screen.py data-source escalation slot.
+
+**Status:** 0 bets settled (2 awaiting UMA on near-certain losses:
+b05a47dabf33, 9a2944acc280). No reverts of hourly edits. Relaxation fork not
+re-evaluated in full today. Its only new input is b350, an OVV row where
+the veto avoided a CF -$5.00, so the input points away from relaxation:
+NOT MET (20th).
