@@ -4894,6 +4894,24 @@ no-poll-error rows. The one cost (fd60) was the shaded model pointing the
 right way. Brazil's bias size is now n=3 (see DEEP-2026-10-05 Brazil
 bullet).
 
+**2026-10-05 08:15Z update (LIGHT tick, cloud; 3 `outside-view-veto`
+rows settled, Brazil R1 place legs; see RETRO-20261005-0815).**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Flavio 2nd in R1 (`22d7ab1cf2f3`, superseded) | 0.85 / 0.72 | Yes | +0.120 | No | -5.00 |
+| Flavio 2nd in R1 (`d14cf5e0ef5b`) | 0.70 / 0.745 | No | +0.040 | No | +14.23 |
+| Santos 3rd in R1 (`d9afc1d38343`) | 0.45 / 0.605 | No | +0.150 | No | +7.50 |
+
+Outside-view-veto: **+$16.73** (2W/1L). Mechanical ledger now 210 rows /
+202 trades / 84W-118L / +$118.96 / dBrier +0.0337 (recomputed over all 210
+settled OVV forecast rows; held-out not recomputed on this LIGHT tick)
+(was 207/199/82W-117L/+$102.23). Side split: no 144/136/63W-73L/+$120.93;
+yes 66/66/21W-45L/-$1.97. Check: 120.93 - 1.97 = 118.96.
+Ruling: no boundary change. The saved row was the September
+no-poll-error leg. The two costs were October bias-shaded legs whose
+method is still `unvalidated-method` (n=3).
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
