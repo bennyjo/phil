@@ -4784,6 +4784,20 @@ Ruling: no boundary change at one event. The four losses are all Sep 21-30
 reads (raw-share and incoherent-sibling errors); the three wins are the
 Sep 30 to Oct 3 reads from one stated margin distribution.
 
+**Backfill (same 05:27Z cycle; reconcile.py flagged three settled veto rows
+that no retro tabled. The mechanical totals above already count them.)**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| "Primetime" OW 19-22m (`07bfb21eee33`, OVV) | 0.82 / 0.685 | Yes | +0.100 | No | -5.00 |
+| ChatGPT exactly 2 outages Sep (`fe02bf0c9670`, OVV) | 0.15 / 0.915 | No | +0.720 | Yes | -5.00 |
+| Gas < $3.75 any state Sep 30 (`0bee87f8d628`, WSV) | 0.03 / 0.24 | No | +0.030 | No | +0.32 |
+
+Wide-spread-veto mechanical ledger now (`core/counterfactual.py ledger
+--skip-reason wide-spread-veto`): 44 rows / 35 trades / 21W-14L / -$35.37 /
+dBrier -0.0061. Ruling: no change; both OVV misses are the veto working
+(the ChatGPT row's 0.15 was the largest claimed edge of the window and lost).
+
 ## 2026-10-05 05:27Z: one distribution per event (RETRO-20261005-0527)
 
 Brazil R1: `1d98458aef28` (Sep 21) put Lula most votes at 0.65, and
