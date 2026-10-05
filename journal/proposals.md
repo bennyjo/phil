@@ -3734,3 +3734,20 @@ and first-contact family cap added.
   The cause is the one above (resolve.py gates the void branch on `closed`).
 - Ask (operator): same decision as the 2026-10-03 entries. Nothing new for
   the agent to do; the position stays open until that decision lands.
+
+## 2026-10-05 16:53Z - forecast price recorded as bid only; skip label vs gap (LIGHT tick)
+
+- Evidence: forecast `2f88c34c6f9a` (Digger, Rotten Tomatoes >= 51, market 5157641)
+  recorded `best_bid_at_record` 0.80, `best_ask_at_record` null,
+  `market_prob_at_record` 0.80, with est 0.92 and skip reason `market-agrees`.
+  The 15:51Z cycle log describes the same market as "market-agrees 0.92".
+  Settled Yes, Brier vs recorded 0.80 is 0.040 against 0.0064 for the estimate.
+  See `journal/retros/RETRO-20261005-1653.md`.
+- Cause (unverified): forecast recording takes the bid when the ask is null, so
+  the scored "market" is not a mid on thin books. The 0.12 gap also sits under a
+  `market-agrees` label, which implies the recorded price was not the one the
+  cycle compared against.
+- Ask (operator): check `core/forecast.py` for how `market_prob_at_record` is set
+  when the ask is null, and whether the skip label is derived from the same price.
+  One row is not a pattern; count how many `market-agrees` rows have a gap above
+  0.05 before changing anything.
