@@ -4473,6 +4473,13 @@ press centre, centre on the LOWEST credible press figure, use sd >= 1.5M,
 and record that as est_prob. A shade written in the note but not recorded
 is the honest estimate left out. Box-office forecasts n=26, mean dBrier
 +0.0117. The category stays a standing no-bet self-model.
+Tally (RETRO-20261005-2210): post-rule rows 4 (2 events), net dBrier
+-0.59. Verity OW 30-32M/32-34M beat the book by -0.40/-0.21 (actual
+32-34M, at the press centre; the book over-priced the front-loaded low
+end). RE weekend-3 12-13M lost +0.049 at sd 0.6M. On weekend 3 or
+later, when press and the Fri multiple agree inside one bracket, use
+sd <= 0.4M. Box-office n=32, mean dBrier -0.0083. Still no-bet; review
+at 6 post-rule events.
 
 **2026-09-22 ~18:15Z update (FULL cycle, cloud; resolve.py settled 14
 forecasts, 2 `outside-view-veto`).** Both rows are the Trump x Greenland
