@@ -4742,6 +4742,27 @@ split: no 138/130/60W-70L/+$95.58; yes 64/64/23W-41L/+$30.94. Check: 95.58 +
 of the same family lost to the market, so the early read was not a
 repeatable method yet.
 
+**2026-10-05 0403Z update (LIGHT tick, operator machine; Brazil R1 "Lula
+most votes" re-forecast settled, see RETRO-20261005-0403.)**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Brazil R1 Lula most votes (`a37c2c7b10f9`) | 0.55 / 0.625 | No | +0.070 | No | +8.16 |
+
+Net this batch: **+$8.16** (1W/0L). Mechanical ledger after this row
+(`core/counterfactual.py ledger --skip-reason outside-view-veto`): 203 rows /
+195 trades / 84W-111L / +$134.67 / dBrier +0.0314 / held-out +$143.78 (was
+202/194/83W-111L/+$126.52/+0.0320/+$135.62 before this row). Side split: no
+139/131/61W-70L/+$103.73 (adds this win); yes 64/64/23W-41L/+$30.94
+(unchanged). Check: 103.73 + 30.94 = 134.67. Ruling: no boundary change at
+n=1 — the veto correctly shaded below an overconfident market mid (own
+0.55 vs mkt 0.625) on a plurality call the market itself also got wrong in
+direction relative to the final count, so the No-side fill at 0.38 would
+have won. The older, since-superseded forecast on the same market
+(`1d98458aef28`, est 0.65, skip_reason `category-bar` — not a veto, no
+table duty) settled the same tick at the same loss-avoided shape, two
+minutes earlier per settled_ts. Full narrative in RETRO-20261005-0403.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork

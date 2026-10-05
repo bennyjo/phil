@@ -3702,3 +3702,26 @@ and first-contact family cap added.
   settlement rule for stale-active markets (the earlier entry's question).
 - Ask (operator): decide the rule. The agent cannot edit core/resolve.py. The
   bet's $5 remains tied up until then; no edit by the agent is appropriate.
+
+## 2026-10-05 02:5xZ - same fork, still unrepaired, now ~5.9 days and 80-100+ commits each side
+
+- Evidence: same `git merge-base` `f7303c0` (2026-09-29 23:47:44Z) as every
+  entry above since 2026-10-01 18:1xZ. Local tip is now `2005f85` (cycle
+  20261005-0250, 86 commits since merge-base), origin/main tip is now
+  `9a90d7f` (cycle 20261005-0236, 100 commits since merge-base). Last status
+  bump was 2026-10-02 06:0xZ at ~2.75 days / ~50 commits each side; the fork
+  has more than doubled in size since then with no repair in between. No new
+  cause found beyond the 2026-09-18 21:46Z entry (lease is write-protected
+  from the cloud side, loop.sh never auto-merges) -- status bump only, but
+  the gap between bumps (3 days) is itself a signal that per-cycle status
+  bumps are not getting operator attention fast enough to matter.
+- Ask (operator): same repair as the 2026-10-01 18:1xZ entry, now severely
+  overdue. Two independent ledgers/journals have been forecasting, betting,
+  and retro-ing against different histories for almost 6 days; any
+  cross-side calibration or category stats computed from only one side's
+  journal are missing roughly half the settled evidence from this window.
+  Given how large the merge has grown, the forecasts-union script from the
+  2026-09-18/21 repairs (`phil-local-loop-setup` notes) should still work
+  (forecasts union by id preferring settled rows) but the watch
+  items/price-moves/schedule.json/playbook/proposals three-way merges will
+  be much larger this time.
