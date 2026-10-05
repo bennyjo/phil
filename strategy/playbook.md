@@ -4847,6 +4847,34 @@ Net: **-$5.00** (0W/1L). Mechanical outside-view-veto line now 202 rows /
 yes 63/63/21W-42L/+$13.03. Check: 98.57 + 13.03 = 111.60 ~ 111.61.
 Ruling: none; the veto avoided a loss against a book that knew the number.
 
+**2026-10-05 04:15Z update (LIGHT tick, cloud; 1 `outside-view-veto` +
+1 `wide-spread-veto` row settled, plus backfill of `10c3cd2794fa`, which
+was settled 10-04 12:58Z and graded in RETRO-20261004-1415 but never
+tabled; see RETRO-20261005-0415).**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Lula 2nd in R1 (`b350adc7e95c`) | 0.15 / 0.2815 | No | +0.131 | Yes | -5.00 |
+| AI czar by Oct3 (`10c3cd2794fa`, wide-spread-veto, backfill) | 0.15 / 0.405 | No | +0.040 | No | +1.17 |
+| AI czar by Oct4 (`b4e00071d4ed`, wide-spread-veto) | 0.28 / 0.21 | Yes | +0.060 | Yes | +17.73 |
+
+Outside-view-veto: **-$5.00** (0W/1L). Mechanical ledger now 203 rows /
+195 trades / 81W-114L / +$106.61 / dBrier +0.0340 / held-out +$115.71
+(was 202/194/81W-113L/+$111.61). Side split: no 140/132/60W-72L/+$93.57;
+yes 63/63/21W-42L/+$13.03. Check: 93.57 + 13.03 = 106.60 ~ 106.61.
+Wide-spread-veto: **+$18.90** (2W/0L). Ledger now 44 rows / 37 trades /
+23W-14L / -$16.59 / dBrier -0.0144 (was 42/35/21W-14L/-$35.49). Side
+split: no 27/23/13W-10L/-$29.66; yes 17/14/10W-4L/+$13.07. Check:
+-29.66 + 13.07 = -16.59.
+
+Ruling: no boundary change. Both wide-spread rows were sub-floor edges
+(0.04, 0.06) on a $791 book, so the veto behaved as designed. New
+family-consistency rule from the b350 miss: complementary legs of one
+event (e.g. "X finishes 1st" / "X finishes 2nd" in a two-horse race)
+must sum to within 0.05 of 1 at record time, or the later record's note
+must say which leg is stale. b350 at 0.15 sat next to Lula-1st at 0.65
+(sum 0.80) because it used a paired-margin sd with no poll-error term.
+
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
 The veto on judgment estimates with claimed edge > 0.10 stays. This fork
