@@ -4814,6 +4814,22 @@ Net this batch: **+$0.20** (1W/1L). Mechanical ledger after these rows
 pair (mirror of the Lula-2nd leg that resolved Yes) is the loss; the Santos
 3rd pair is the win.
 
+**2026-10-05 1017Z update (FULL cycle, operator machine; two Brazil R1 share-leg veto rows settled, see RETRO-20261005-1017.)**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Brazil Lula >=44 valid (`467f58b0ad62`, superseded) | 0.62 / 0.715 | No | +0.080 | Yes | -5.00 |
+| Brazil Flávio 45-48 valid (`77ea98a905f9`) | 0.78 / 0.885 | No | +0.090 | Yes | -5.00 |
+
+Net this batch: **-$10.00** (0W/2L), so the veto saved $10. Mechanical
+ledger after these rows (`core/counterfactual.py ledger --skip-reason
+outside-view-veto`): 214 rows / 206 trades / 88W-118L / +$124.14 / dBrier
++0.0327 / held-out +$132.14 (was 212/204/88W-116L/+$134.14). Side split:
+no 147/139/64W-75L/+$95.28; yes 67/67/24W-43L/+$28.86. Check: 95.28 +
+28.86 = 124.14. Ruling: no boundary change. Both rows sat 0.08-0.09 below
+the book on self-built models (PT-share poll correction; live-count drift
+model), and the book was right both times.
+
 ## 2026-10-05 05:27Z: one distribution per event (RETRO-20261005-0527)
 
 Brazil R1: `1d98458aef28` (Sep 21) put Lula most votes at 0.65, and
@@ -4827,6 +4843,25 @@ the note (for example, margin mean and sd, share mean and sd) and derive
 every leg from it. Before recording, check that complementary legs sum to
 about 1 and nested legs are ordered. A new leg that implies a different
 distribution supersedes the older open siblings in the same cycle.
+
+**Brazil R1 grading data (RETRO-20261005-1017; certified count 99.97%:
+Flávio 47.05, Lula 45.14 valid).** Use these numbers for the Oct 25
+runoff family. Both are n=1 and stay `unvalidated-method`.
+
+- Poll error split by candidate. The final Datafolha and Quaest valid
+  means were Lula 45.5, Flávio 43.5. Lula missed by -0.4 and Flávio by
+  +3.5. The right-ward miss came from the minor candidates (polled about
+  9-10 combined, Cury 2.89 + Santos 2.24 at the count), not from the PT
+  share. PT-share final-poll error is now -1.6, -2.6, -0.4 (2014, 2022,
+  2026; mean -1.5). In a multi-candidate round, put the right-ward
+  correction on the right candidate's share. Do not take it out of the PT
+  share beyond that mean.
+- Live-count drift. At 27.9% counted, the per-state extrapolation gave
+  F48.78/L43.24. The final was F47.05/L45.14, so the projection missed
+  1.7-1.9 points of late Lula-ward drift. The linear-drift continuation
+  (F46.1/L45.8) overshot. The final sat at about 0.6-0.7 of linear drift.
+  Before any live-count bet, use a drift sd of at least 1.5 points at
+  about 30% counted.
 
 ## Outside-view-veto relaxation fork (pre-registered, DEEP-2026-09-08, per operator note 2026-09-07 ~20:50Z)
 
