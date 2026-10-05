@@ -4798,6 +4798,22 @@ Wide-spread-veto mechanical ledger now (`core/counterfactual.py ledger
 dBrier -0.0061. Ruling: no change; both OVV misses are the veto working
 (the ChatGPT row's 0.15 was the largest claimed edge of the window and lost).
 
+**2026-10-05 0752Z update (LIGHT tick, operator machine; two Brazil R1 veto rows settled, see RETRO-20261005-0752.)**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Brazil Flávio 2nd (`22d7ab1cf2f3`, superseded) | 0.85 / 0.72 | Yes | +0.120 | No | -5.00 |
+| Brazil Renan Santos 3rd (`c9e0968700d5`) | 0.45 / 0.515 | No | +0.060 | No | +5.20 |
+
+Net this batch: **+$0.20** (1W/1L). Mechanical ledger after these rows
+(`core/counterfactual.py ledger --skip-reason outside-view-veto`): 212 rows /
+204 trades / 88W-116L / +$134.14 / dBrier +0.0325 / held-out +$142.14 (was
+210/202/87W-115L/+$133.93/+0.0321/+$141.93 before these rows). Side split: no
+137/137/64W-73L/+$105.28; yes 67/67/24W-43L/+$28.86. Check: 105.28 + 28.86 =
+134.14. Ruling: no boundary change at one election night. The Flávio 2nd
+pair (mirror of the Lula-2nd leg that resolved Yes) is the loss; the Santos
+3rd pair is the win.
+
 ## 2026-10-05 05:27Z: one distribution per event (RETRO-20261005-0527)
 
 Brazil R1: `1d98458aef28` (Sep 21) put Lula most votes at 0.65, and
