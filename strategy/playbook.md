@@ -7691,3 +7691,26 @@ resolved No.
   floor. If liquid-multiday stays below 60 on 3 consecutive weekday
   FULLs, a deep retro should test lowering volume_num_min. Insufficient
   data today.
+
+## RETRO-20261005-2015 ruling
+
+- **USGS preliminary-magnitude revision risk applies to daily-max
+  ladders too, and is larger than 0.10 per event (n=2).** The Oct 4
+  daily-max forecast `4ea5508aaf4c` (5.5-5.6 Yes 0.90, book 0.91/0.93)
+  rested on one event: Volcano Is. 11:12Z, M5.5 **mb**. USGS later
+  revised it to M5.1, so the max became 5.1 and "under 5.3" won.
+  dBrier -0.036 (the book was just as wrong). This is the second
+  preliminary near-threshold magnitude revised DOWN in a week, after
+  the Banda Aceh event (now 5.3 mww) in the DEEP-2026-10-05 count note.
+  Both revisions went down, by 0.2 or more. The same Volcano Is.
+  downgrade drops the Sep 28-Oct 4 weekly count from 6 to 5. That
+  changes nothing for `9a2944acc280` ('7', already an expected loss).
+  **Rule: when a ladder or count outcome depends on an event whose
+  magnitude is still a preliminary `mb`/`ml` (not `mww`), and the
+  bucket boundary is within 0.3 of it, give at least 0.20 per such
+  event to the outcome where it is revised away. The 0.10 in the
+  DEEP-2026-10-05 count rule is raised to match. Check `magType` in
+  the USGS CSV and write it in the note.** Calibration stays thin
+  (n=2 downgrades, plus 0 observed upgrades). The next deep retro
+  should sample a week of M5.3-5.7 mb events to estimate the real
+  revision rate.
