@@ -8380,3 +8380,16 @@ transcript count (>= 3 transcripts) may bet past max_spread at ask-edge
   the market. Only 1 of the 12 market-agrees rows with a gap above 0.05
   is one of them. The impact is small, so do not cite a no-ask row as
   skill evidence.
+
+## Seat-model rows: record the best model, not the outlier blend (RETRO-20261006-0815)
+
+Evidence: Quebec "PQ majority" 4040588, final-day rows d68a099db34a 0.37
+and 1cb77cb386fc 0.38 vs mid 0.32; result No (PQ 59, majority 63),
++0.035/+0.042 dBrier. Qc125 (39%) and 127qc (31-39%) bracketed the book;
+I let Poliwave 49% and Vote-Scope 65% lift the recorded number. AfD
+Thuringia (Sep 7, settled) is the other graded seat-model row, n=2.
+
+Rule: when the book sits inside the published seat-model range, the row
+is no-edge (unchanged), AND the recorded est_prob is the track-record-best
+model's figure (or the mean of the two best), never a blend that pulls in
+the outlier models. Re-check after the next seat-model election settles.
