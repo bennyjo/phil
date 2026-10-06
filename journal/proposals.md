@@ -3931,3 +3931,77 @@ b05a47dabf33, 9a2944acc280). No reverts of hourly edits. Relaxation fork not
 re-evaluated in full today. Its only new input is b350, an OVV row where
 the veto avoided a CF -$5.00, so the input points away from relaxation:
 NOT MET (20th).
+
+## DEEP-2026-10-06 - deep-retro proposals and status
+
+Hourly entries filed since DEEP-2026-10-05:
+
+- **Main fork (entries 2026-10-01 18:1xZ, 10-02 02:5xZ, 10-02 06:0xZ,
+  10-05 02:5xZ): RESOLVED.** The operator merged it in 409a6ad (2026-10-05
+  22:24Z, 126 local / 142 remote commits). This session started shallow
+  (HEAD 6dcd45c). After `fetch --unshallow`, local and origin/main were
+  identical (0/0), so there was no divergence.
+- **Void branch unreachable (2026-10-03, 10-03 06:40Z) and Andersson row
+  still open (10-05 09:1xZ): REJECTED as a void; position stays open.**
+  The diagnosis is right: resolve.py returns before the 48h void when
+  gamma says `closed: false`. But the remedy would score wrongly here.
+  e746d7e1ba99 is open because its event (the next PM taking office) has
+  not happened. The market's end date was nominal, and the book is live
+  (mid 0.195, MTM -$0.36). Voiding at pnl 0 would delete a position the
+  market is actively pricing, and on other rows it would turn marked
+  losses into zeros. That flatters a record already at z -3.48. A void
+  should apply only when gamma or UMA marks a market cancelled or
+  invalid. Narrower ask (operator): have score.py `open_mtm` flag rows
+  more than 14 days past end_date, so they stay visible without being
+  settled.
+- **Forecast price recorded as bid when the ask is null (10-05 16:53Z):
+  ENDORSED, low priority.** It affects 17 of 1,687 rows (all of them
+  record market = bid). Only 1 of the 12 market-agrees rows with a gap
+  above 0.05 is one of them. Ask (operator, core/forecast.py): when the
+  ask is null, record `market_prob_at_record` as null, or as the last
+  trade with a flag, and have score.py exclude those rows from forecast
+  dBrier.
+- **Counterfactual reconcile backlog (10-01 08:3xZ): RESOLVED.** The
+  hourly backfill landed at 2026-10-06 02:11Z. It is superseded by
+  today's retirement of the hand table as a per-settlement duty
+  (playbook DEEP-2026-10-06).
+- **Subclass auto-tagger window bleed (09-30 22:1xZ): carried,
+  PROPOSED.**
+
+New operator proposals (DEEP-2026-10-06):
+
+- **P1: let the frozen hand table leave playbook.md (core/counterfactual.py).**
+  playbook.md is 527KB / 8,382 lines. The section "Outside-view veto:
+  settled counterfactual ledger" alone is about 2,430 lines, and
+  `reconcile` hard-codes `PLAYBOOK` plus that section header, exiting
+  if it is missing. So the agent cannot archive the table without
+  breaking a core tool. Ask: make reconcile read
+  `strategy/archive/counterfactual-hand-table.md` when it exists, or
+  drop reconcile now that the hand table is retired. Then the next deep
+  retro moves the table out. A further ask: a CYCLE.md sentence that
+  playbook.md is read by section (grep the headers), not end to end.
+  The file is far past a cycle's reading budget. The DEEP-2026-09-30
+  status already noted that the default Read stops at line 2,000.
+- **P2: two runners overspent the shared screener quota on 2026-10-05.**
+  funnel.jsonl 23:11Z (operator) records 195/150 batches (cloud 120,
+  operator 75). Cloud and operator cycles also ran 3 minutes apart
+  (cycles 20261005-2212 operator and 20261005-2215 cloud). That is the
+  same no-lease condition that produced the 09-29 fork, so the fork
+  can come back. Ask: enforce the runner lease (the cloud-lease
+  writability item, ENDORSED since 09-18), or give each runner its own
+  quota share.
+- Carried unchanged: funnel-weld CI check (PROPOSED, priority raised
+  10-05; every cloud FULL since then has a row. Operator-side rows exist
+  for 10-05 10:17/15:50/19:04/23:11Z, but whether the 13:38Z and 22:12Z
+  operator lines were FULLs cannot be told without a tick_type field, which
+  is the next item), cycles.log tick_type field, refusal-row dBrier column,
+  ODDS_API_KEY on both runners, per-fold dBrier column (the deep retro
+  computes it by hand again today), real-twin allowed classes,
+  wire-nonce 401, EOA gas top-up, mech delivery size, screener quota
+  refund, watch.py shape regexes, core/screen.py data-source slot.
+
+**Status:** 0 bets settled, 0 placed (about 48h without a placement,
+audited: the gates working, not avoidance). Relaxation fork NOT MET
+(21st; f3 +0.050 / f4 +0.006). No reverts of hourly edits.
+risk.json notes compacted from 27KB to 2KB, and 3 closed
+schedule.json watch items pruned (19.7KB).

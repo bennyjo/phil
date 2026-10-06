@@ -8297,3 +8297,86 @@ category). Below the n~15 bar. When it reaches 15 fillable trades, the
 next deep retro decides whether say-the-word rows with a speaker-only
 transcript count (>= 3 transcripts) may bet past max_spread at ask-edge
 >= 0.10. Kill: if dBrier on the slice turns >= 0 before n=15, drop it.
+
+## DEEP-2026-10-06 rulings
+
+- **Bets: n=57, 28W, -$1.98, dBrier +0.0691, z -3.48.** Nothing has
+  settled since 10-04, and resolve.py reports 7 open. Since 2026-09-01
+  the record is n=30, 19W (20.7 expected by our estimates, 18.3 by the
+  market), +$29.69, dBrier +0.019. Two longshot wins (66131e6b8f76
+  +$40.05, 09fc471ceec1 +$20.00) make up more than all of that P&L. **No
+  bet edge class beats the market at a usable n.** min_edge 0.04 was
+  revisited at n>=50 as pre-registered and kept (risk.json sizing_notes).
+- **Zero placements since 10-04 04:18Z (about 48h; 11 cloud FULLs since 10-05, plus operator FULLs) is the
+  gates working, not avoidance.** Each FULL screened 300 markets,
+  escalated 15 and recorded forecasts. Every skip carries a label.
+  Mechanical ledger (`core/counterfactual.py ledger`), all declined rows:
+  1,233 fillable trades, +$265, dBrier +0.0055. That is at market. Its
+  positive P&L comes from longshots, not calibration.
+- **OVV relaxation fork: NOT MET (21st).** 230 rows, 155 events (gate 3
+  holds), fold pnl f3 +$18.30 / f4 +$50.90 (gate 2 holds). Per-fold
+  dBrier by the recipe is f0 +0.005, f1 +0.055, f2 +0.029, f3 +0.050,
+  f4 +0.006. The two latest folds are both positive, so gate 1 fails. f4
+  is the closest to zero it has been. The veto stays.
+- **The last 24h of forecasts were the best day on record, and it is
+  still not a bar move.** 53 rows settled, net dBrier -1.381 (mean
+  -0.026). They cluster in about 5 events: Brazil R1, the Nebraska
+  rally, Verity box office, Musk Oct 3-5, Grenada. That makes the
+  effective n about 5, not 53. Vetoed rows since 09-29 (OVV, WSV,
+  unvalidated, category-bar; n=51) are 29W at a median fill of 0.35, CF
+  +$121. Without the top 3 rows that is +$35. Over the whole of September
+  the same slice is +$189, and without the top 3 it is -$8. **The recent
+  run is real, but it is short and clustered.** Re-check at DEEP-2026-10-13:
+  if the veto slices' f4 dBrier is still negative with >= 25 new events,
+  re-run the fork. Do not loosen anything before then.
+- **say-the-word is the strongest forecast-side signal, so watch it
+  first.** counterfactual.py by category: 90 rows / 68 events, dBrier
+  -0.026, CF +$82, last two folds +$59 / +$42. The bet ledger is n=9,
+  dBrier +0.031, -$13.75, from the pre-transcript-method era. The
+  pre-registered WSV say-the-word review (n>=15 fillable trades) stays
+  the only door. **Add to every say-the-word forecast note:
+  `method=transcript-count(k/n)`, `method=market-series(k/n)` or
+  `method=judgment`.** That lets the review isolate the method that is
+  winning rather than the category.
+- **The hand-kept counterfactual table is retired as a per-settlement
+  duty.** This supersedes the DEEP-2026-08-23 same-commit table rule and
+  the DEEP-2026-09-02 append discipline. `core/counterfactual.py` is
+  authoritative (the 2026-10-06 04:15Z update already said so). The
+  table section has reached 2,400+ lines, and this file grew 651 lines in
+  the 10-05→10-06 window. At 527KB it is far past what a cycle can read.
+  **From now on, a settled veto row goes in the retro only, with its
+  `counterfactual.py ledger --rows` numbers. The playbook gets a ruling
+  only when a rule changes.** `reconcile` will list new ledger rows as
+  "never entered in the hand table". That is expected and is not a
+  backlog. The section header stays, because reconcile parses it.
+  Moving the frozen table to an archive file is an operator proposal
+  (DEEP-2026-10-06).
+- **Sensing audit (owed since 10-03), done.** discovery.py's four
+  queries are all ranked by liquidity or volume. That makes the pool
+  query-shaped, and thin multi-day markets (vol < 50k, liq < 20k, ending
+  more than 36h out) are structurally invisible. The question is
+  whether that hides edge. On 758 settled forecasts with
+  liquidity_at_record, dBrier by liquidity bucket is: <2k +0.006±0.008
+  (n=249), 2-10k -0.002±0.009, 10-20k +0.013±0.012, 20-100k
+  +0.010±0.004, >100k -0.006±0.003. **No bucket shows edge, and thin
+  books are not where we win.** The liquid-multiday trigger (3 weekday
+  FULLs under 60) was MET on 10-05 (35/46/52/42), so I tested it. A live
+  gamma pull for 168h, endDate order, gives 52 markets at
+  volume_num_min 50k, 139 at 20k and 265 at 10k. The extra markets are
+  mainly Musk tweet brackets, BTC/ETH, ATP/WTA, esports and
+  daily-temperature markets. Those families are already reached by
+  active-today/by-liquidity, are at market (crypto-touch, tennis) or
+  are barred or negative (social-media-postcount, weather). **discovery.py
+  unchanged.** Re-open this if a category with a negative forecast-side
+  dBrier at n>=30 turns out to be mostly under the 50k floor.
+- **Biggest misses (24h).** 4e52c227a60f Flávio >=39% (0.45 vs 0.85,
+  Yes, +0.280) was a reasoning error: the same missing poll-error term
+  that the DEEP-2026-10-05 one-distribution rule already fixes, so no
+  new rule. 5b84cae6b47f Egg (+0.230) was also reasoning: a short base
+  rate, already fixed by the 04:15Z market-series rule. Grenada was
+  variance.
+- **Price recording when the ask is null (hourly proposal 10-05
+  16:53Z):** 17 of 1,687 forecast rows have no ask and record the bid as
+  the market. Only 1 of the 12 market-agrees rows with a gap above 0.05
+  is one of them. The impact is small, so do not cite a no-ask row as
+  skill evidence.
