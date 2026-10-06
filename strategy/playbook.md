@@ -8062,6 +8062,19 @@ read. The 90-day legs stay forecast-only (`unvalidated-method`).
   bar but were recorded `no-edge`. Per DEEP-2026-08-15 they are
   `category-bar`. A postcount row with ask-edge >= min_edge always gets
   `category-bar`. Counterfactual for the pair: +$4.39 (correlated legs).
+- **Ongoing-silence conditioning (RETRO-20261006-1815).** Musk wk
+  Sep29-Oct6 finished at 207: zero posts from 11:56Z Oct5 to the 15:59Z
+  close (~28h). At 23:15Z Oct5 (12h of silence already showing) the
+  all-windows xtracker bootstrap still gave 220-239 0.748 / 200-219 0.081
+  (6c1b45515f06 +0.187, b0e5f59c692d +0.279 vs mid, both superseded at
+  12:37Z by a silence-aware 0.82 on 200-219). An unconditional sliding-
+  window bootstrap treats the live gap as if it were over. Rule: when the
+  current zero-post run is longer than any gap inside the bootstrap's
+  source series, the all-windows bootstrap is NOT the recorded estimate -
+  condition on the gap (only windows that start after a gap of comparable
+  length, or an explicit P(dormant through close) component written in
+  the note), and if neither has n >= 5 the row is `unvalidated-method`.
+  n=1 event; re-grade at 3 silence-state events.
 
 ## DEEP-2026-10-03 rulings
 
