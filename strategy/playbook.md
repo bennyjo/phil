@@ -4942,6 +4942,24 @@ the book's Bia 0.82 was right. reconcile.py still lists 12 older
 veto/wide-spread rows (Sep 28 - Oct 1) missing from this hand table: a
 backlog for the next deep retro, not graded on this LIGHT tick.
 
+**2026-10-06 0211Z backfill (FULL cycle, cloud; reconcile.py's 11-row Sep 26 - Oct 1 veto backlog, see RETRO-20261006-0211.)** Edges and P&L are `core/counterfactual.py ledger --rows` at the recorded book ($5 flat); the mechanical totals already counted these rows.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| "Heart of the Beast" OW bracket (`cec5bff18abf`, OVV) | 0.40 / 0.76 | No | +0.350 | No | +15.00 |
+| "Forgotten Island" OW <13m (`bb60348ab311`, OVV) | 0.90 / 0.7525 | Yes | +0.145 | No | -5.00 |
+| LGD -1.5 vs Xtreme (`c0ad4f0ec92d`, OVV) | 0.25 / 0.355 | No | +0.080 | No | +2.46 |
+| 10y hits 5.25% Sep (`a41e6e996b85`, WSV) | 0.46 / 0.65 | No | -0.020 | Yes | -5.00 |
+| Burleson MLB RBI lead (`18a43357718b`, WSV) | 0.93 / 0.73 | Yes | +0.040 | Yes | +0.62 |
+| PinkPantheress Best Dance (`e4564b71ab49`, WSV) | 0.30 / 0.37 | No | -0.020 | No | +1.94 |
+| MrBeast Gaming 26.75-27.5M (`ba4ad02817d3`, WSV) | 0.85 / 0.875 | No | -0.030 | Yes | -5.00 |
+| AI 1530 Arena by Sep 30 (`a93c997dbdf5`, WSV) | 0.93 / 0.891 | Yes | -0.022 | Yes | non-trade (entry 0.952) |
+| WTI > $90 Sep 30 (`853c6998ca45`, WSV) | 0.88 / 0.925 | No | -0.010 | Yes | -5.00 |
+| ISM Mfg 55.0-55.9 Sep (`4b0493d215d6`, WSV) | 0.283 / 0.395 | No | +0.077 | No | +2.81 |
+| Iran sanctions EO by Sep 30 (`e9bfda300d68`, WSV) | 0.04 / 0.215 | No | +0.040 | No | +0.43 |
+
+OVV backfill net **+$12.46** (2W/1L); WSV backfill net **-$9.20** (4W/3L, 1 non-trade). Mechanical ledgers now: OVV 226 rows / 218 trades / 93W-125L / +$141.47 (unchanged, these rows were already counted); WSV 51 rows / 41 trades / 25W-16L / -$23.22, side split no 31/25/14W-11L/-$34.23, yes 20/16/11W-5L/+$11.01; check -34.23 + 11.01 = -23.22. Ruling: no boundary change. Five of the eight WSV rows had a non-positive realizable edge at the ask, so the spread veto mostly blocked trades min_edge would have blocked anyway.
+
 ## 2026-10-05 05:27Z: one distribution per event (RETRO-20261005-0527)
 
 Brazil R1: `1d98458aef28` (Sep 21) put Lula most votes at 0.65, and
