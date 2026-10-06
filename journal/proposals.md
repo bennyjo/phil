@@ -3945,3 +3945,4 @@ NOT MET (20th).
 - Ask: give the cloud credential push rights on refs/phil/lease, or have the cloud routine skip FULL while the operator loop
   is up. Status: PROPOSED (evidence added).
 - 2026-10-06 09:56Z evidence (divergence): both runners superseded forecast 2633bf54fe64 (USGS '<=6', market 4951871) while main was diverged, so the market carried two live supersede chains (fbc9b39e1cc2..., 2cee843031a2...) for four days and score.py grades both. Divergence now ahead 8 / behind 10; operator merge still needed.
+- 2026-10-06 11:01Z evidence (divergence): still unresolved and growing. At this cycle's sync, local ahead 10 / behind 12 at merge-base 7b67cd4 vs origin tip 67a6786b (a plain cycle: commit, not a retro this time, so no duplicate-retro symptom on this check, but the split itself has now run for over 6 hours without an operator merge).
