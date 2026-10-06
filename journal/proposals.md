@@ -3931,3 +3931,16 @@ b05a47dabf33, 9a2944acc280). No reverts of hourly edits. Relaxation fork not
 re-evaluated in full today. Its only new input is b350, an OVV row where
 the veto avoided a CF -$5.00, so the input points away from relaxation:
 NOT MET (20th).
+
+## 2026-10-06 05:33Z - runner divergence again (cloud lease writability, ENDORSED, new evidence)
+
+- Local main and origin/main diverged at merge base 7b67cd4: local ahead 2, behind 6. The operator runner (PHIL_LEASE=acquired)
+  and the cloud runner both ran a FULL cycle at 04:24Z / 04:25Z and both wrote a retro on the same DF Senate settlements
+  (local RETRO-20261006-0016, cloud RETRO-20261006-0019). The cloud cannot write refs/phil/lease, so the operator lease
+  cannot see it, and the tip guard misses a cycle still in flight.
+- The agent session cannot merge (git merge needs approval), so this cycle continued on local state per CYCLE.md step 0.
+  Both sides edit strategy/playbook.md, journal/forecasts.jsonl and strategy/schedule.json, so loop.sh's rebase will likely
+  stop; an operator merge is needed (the 2026-09-21 recipe: union forecasts by id preferring settled rows, keep both
+  playbook sides, keep cloud schedule.json).
+- Ask: give the cloud credential push rights on refs/phil/lease, or have the cloud routine skip FULL while the operator loop
+  is up. Status: PROPOSED (evidence added).
