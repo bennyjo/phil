@@ -8120,6 +8120,10 @@ read. The 90-day legs stay forecast-only (`unvalidated-method`).
   PortWatch bets require >= 3 published in-window days. If it lands in
   170-189 or below, no restriction. Either way this is one event, so
   grade the method, not just the P&L.
+  **SETTLED 2026-10-06 (RETRO-20261006-1535):** week sum 207 -> 190-209,
+  bet 9b7c41da79ac lost -$5.00 on 170-189. The sum is >= 190, so the rule
+  is ACTIVE: PortWatch bets need >= 3 published in-window days (the entry
+  had 0 of 7). Weekly-sum resolver match is now 3/3.
 - **Pacing fix confirmed.** The +1h45m target (DEEP-2026-10-02) took the
   window from 4 FULLs to 12. Every FULL committed a funnel row
   (06:22Z backfilled, 08:13Z through 04:11Z). Keep.
