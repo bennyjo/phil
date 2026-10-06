@@ -8075,6 +8075,14 @@ read. The 90-day legs stay forecast-only (`unvalidated-method`).
   length, or an explicit P(dormant through close) component written in
   the note), and if neither has n >= 5 the row is `unvalidated-method`.
   n=1 event; re-grade at 3 silence-state events.
+- **Streaming weekly-views ladders (RETRO-20261006-2215).** Netflix #1
+  global show wk Sep28-Oct4 landed in 6-9M; my self-built wk3/wk2 decay
+  prior (0.5-0.65 off a 14.5M wk2) gave P(>=9M) ~0.25 vs the ladder's 9-12M
+  bid 0.014 (d464b1156ed9 own 0.72 / mid 0.9365, dBrier +0.074; OVV kept a
+  -$5 CF off the ledger). Rule: a decay-prior estimate on a Tudum weekly
+  bracket is `unvalidated-method` until the prior is back-tested on >= 3
+  past Tudum weeks of the same title shape; until then the adjacent-leg
+  bids are the outside view to beat. n=1.
 
 ## DEEP-2026-10-03 rulings
 
