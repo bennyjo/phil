@@ -4480,6 +4480,15 @@ end). RE weekend-3 12-13M lost +0.049 at sd 0.6M. On weekend 3 or
 later, when press and the Fri multiple agree inside one bracket, use
 sd <= 0.4M. Box-office n=32, mean dBrier -0.0083. Still no-bet; review
 at 6 post-rule events.
+Tally (RETRO-20261006-0016): Digger OW <9M (`837ebfc5d863`) recorded 0.55
+vs mid 0.92, WON (actual ~$8.0M, Variety), dBrier +0.196. The rule was
+misapplied: the note centred on "lowest credible ~9.5M", but the lowest
+credible figure on file was BOT's 7.5M floor, and Fri incl previews was
+~50% of the press weekend. "Lowest credible" means the lowest figure any
+listed source gives, not the lowest of the Fri-night projections. When
+Fri incl previews is >= 40%, the Fri-night weekend projection ran ~20%
+high (10M vs 8M). Post-rule rows 5 (3 events), net dBrier -0.39.
+Box-office n=33, mean dBrier -0.0021. Still no-bet.
 
 **2026-09-22 ~18:15Z update (FULL cycle, cloud; resolve.py settled 14
 forecasts, 2 `outside-view-veto`).** Both rows are the Trump x Greenland
@@ -4923,6 +4932,23 @@ no 147/139/64W-75L/+$95.28; yes 67/67/24W-43L/+$28.86. Check: 95.28 +
 28.86 = 124.14. Ruling: no boundary change. Both rows sat 0.08-0.09 below
 the book on self-built models (PT-share poll correction; live-count drift
 model), and the book was right both times.
+
+**2026-10-06 0016Z update (FULL cycle, operator machine; two DF Senate
+2nd-place veto rows settled, see RETRO-20261006-0016.)**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| DF Senate Bia Kicis 2nd (`5810b4aba221`) | 0.65 / 0.8245 | No | +0.170 | Yes | -5.00 |
+| DF Senate Leila 2nd (`87034354d243`) | 0.31 / 0.125 | Yes | +0.180 | No | -5.00 |
+
+Net this batch: **-$10.00** (0W/2L), so the veto saved $10. Mechanical
+ledger after these rows: 226 rows / 218 trades / 93W-125L / +$141.47 /
+dBrier +0.0309 / held-out +$148.91. Side split: no 156/148/69W-79L/
++$127.61; yes 70/70/24W-46L/+$13.86. Check: 127.61 + 13.86 = 141.47.
+Ruling: no boundary change. Both rows applied a half-weight left-ward
+poll correction against the bolsonarista DF electorate, and the book's
+right-ward read was correct. This is the second Brazil R1 batch where a
+self-built poll correction lost to the book.
 
 ## 2026-10-05 05:27Z: one distribution per event (RETRO-20261005-0527)
 
