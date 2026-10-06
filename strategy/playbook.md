@@ -7625,6 +7625,13 @@ information I cannot see. Grade that skew at settlement. The list is now
 Parcl, USGS M5.5+, PortWatch chokepoint MA. Hormuz uses the same layer
 but the zero-transit rows are min-touch on daily counts, not the MA, so
 the match check does not carry over to them.
+**Hormuz zero-transit settled No (RETRO-20261006-1738).** Four rows, net
+dBrier +0.046. The September rows (0.20-0.22) leaned on "high-variance"
+counts and sat above the book. The Sep 29 row used the regime's per-day
+zero rate (1 in about 80 days, mean 3.8, variance 4.3) times the days
+left, gave 0.10, and beat the book. For daily-count min-touch rows, start
+from the empirical per-day zero rate of the current regime, not from a
+dispersion read. n=1 settlement: forecast-only, no bet on this method.
 
 ## Forecast hygiene: supersede the stale sibling in the same cycle (2026-09-30 18:15Z, LIGHT retro)
 
