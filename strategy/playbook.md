@@ -8112,7 +8112,8 @@ read. The 90-day legs stay forecast-only (`unvalidated-method`).
   190-209 (book-skew direction), 9b7c41da79ac lost -$5. From now on a
   PortWatch weekly-sum or MA bet needs >= 3 published in-window days in
   the feed at placement; with fewer, record forecasts only (skip label
-  `no-edge` or `unvalidated-method` as fits, never a veto label).
+  `feed-days-gate` when the leg clears min_edge, else `no-edge`; never a
+  veto label, so the gate gets its own counterfactual slice).
   The family's first settlement is in, so the $10 first-contact cap
   lapses; the normal $10 per-event cap still applies.
 - **Pacing fix confirmed.** The +1h45m target (DEEP-2026-10-02) took the
