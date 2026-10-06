@@ -8108,6 +8108,13 @@ read. The 90-day legs stay forecast-only (`unvalidated-method`).
   PortWatch bets require >= 3 published in-window days. If it lands in
   170-189 or below, no restriction. Either way this is one event, so
   grade the method, not just the P&L.
+  **TRIGGERED 2026-10-06 (RETRO-20261006-1615):** the week resolved
+  190-209 (book-skew direction), 9b7c41da79ac lost -$5. From now on a
+  PortWatch weekly-sum or MA bet needs >= 3 published in-window days in
+  the feed at placement; with fewer, record forecasts only (skip label
+  `no-edge` or `unvalidated-method` as fits, never a veto label).
+  The family's first settlement is in, so the $10 first-contact cap
+  lapses; the normal $10 per-event cap still applies.
 - **Pacing fix confirmed.** The +1h45m target (DEEP-2026-10-02) took the
   window from 4 FULLs to 12. Every FULL committed a funnel row
   (06:22Z backfilled, 08:13Z through 04:11Z). Keep.
