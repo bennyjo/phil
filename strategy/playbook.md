@@ -6258,6 +6258,18 @@ cleared 5%, FDP 2.6% did not. Answers to the two pre-registered questions:
    not precision. Do not raise the politics-general stake or loosen the
    category bar on this row.
 
+**Second seat-model data point: Quebec 2026 (RETRO-20261006-0527).** Four
+forecasts on the most-seats pair (789406 CAQ, 789407 PQ) settled
+2026-10-06: PQ won the most seats. The three live rows built on
+poll-aggregation seat models (Qc125 94%, vote-scope 98% PQ / ~0% CAQ)
+beat the mid (net about -0.011 Brier); the one row shaded toward a
+single Mainstreet outlier (0.88 vs mid 0.895, superseded a day later) was
+the only one behind the book. The family ruling holds at n=2 elections:
+adopt the seat model's number with only a model-risk shade, and do not
+shade toward a single outlier poll that the aggregate already absorbs.
+Both edges (0.025, 0.03) sat under min_edge 0.04; at ask they would have
+paid about +$0.58 combined. Too small to touch min_edge.
+
 **Grüne ≥7% bet (`66131e6b8f76`) settled 2026-09-07 16:14Z: Yes, WON
 +$40.05, brier_delta −0.1179 (agent beat market).** Est 0.18 vs entry
 0.111; official result 8.9% confirms the same Grüne poll-mean miss
