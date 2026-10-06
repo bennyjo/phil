@@ -6270,6 +6270,20 @@ shade toward a single outlier poll that the aggregate already absorbs.
 Both edges (0.025, 0.03) sat under min_edge 0.04; at ask they would have
 paid about +$0.58 combined. Too small to touch min_edge.
 
+**Watch item: majority-threshold conversion is a distinct task from
+most-seats (RETRO-20261006-0748, n=1, no rule change.)** Same Quebec
+election, different market: "PQ wins a majority" (needs ~63-64 of 127
+seats). Final forecast 0.38 equal(ish)-weighted two tight seat models
+(Qc125 39%, 127qc 31-39%, both median ~62 seats - short of a majority)
+against two looser outliers (Poliwave 49%, Vote-Scope 65%), landing
+above the market's 0.32-0.35. Actual: No (consistent with the tight
+models' own median). The most-seats family ruling above is unaffected -
+it is about plurality, not crossing a specific seat count. For a
+majority/threshold bracket, weight toward the models whose own seat
+median clears or misses the threshold cleanly rather than equal-weighting
+every model's self-reported majority%; watch for recurrence before
+changing min_edge or writing a firm rule.
+
 **Grüne ≥7% bet (`66131e6b8f76`) settled 2026-09-07 16:14Z: Yes, WON
 +$40.05, brier_delta −0.1179 (agent beat market).** Est 0.18 vs entry
 0.111; official result 8.9% confirms the same Grüne poll-mean miss
