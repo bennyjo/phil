@@ -8257,3 +8257,43 @@ read. The 90-day legs stay forecast-only (`unvalidated-method`).
   (n=2 downgrades, plus 0 observed upgrades). The next deep retro
   should sample a week of M5.3-5.7 mb events to estimate the real
   revision rate.
+
+## 2026-10-06 04:15Z update: Nebraska rally say-the-word set + Grenada settled (FULL tick, RETRO-20261006-0415)
+
+| Row | own/mkt | Side | Edge | Result | CF pnl |
+|---|---|---|---|---|---|
+| Grenada win v Bonaire (`321fa9da9ea9`, OVV) | 0.60/0.695 | No | +0.090 | No | **+11.13** |
+| Trump NE "Data Center" (`30efc6ceefdd`, OVV) | 0.35/0.67 | No | +0.300 | No | **+9.29** |
+| Trump NE "Egg" 19:04Z (`5b84cae6b47f`, OVV) | 0.40/0.64 | No | +0.190 | Yes | **-5.00** |
+| Trump NE "Egg" 20:19Z (`3b69bfef36a4`, OVV) | 0.74/0.605 | Yes | +0.120 | Yes | **+3.06** |
+| Trump NE "Tax" 25+ (`c3803f656959`, WSV) | 0.58/0.355 | Yes | +0.130 | Yes | **+6.11** |
+| Trump NE "Independent" 20:19Z (`4e4a0c06f526`, WSV) | 0.85/0.76 | Yes | +0.040 | Yes | **+1.17** |
+
+Mechanical ledger (`core/counterfactual.py ledger`): OVV 230 rows, 222
+trd, 96W/126L, +$159.95, dBrier +0.0291; side split No +$143.02 (151
+trd), Yes +$16.92 (71 trd). WSV 53 rows, 43 trd, 10 refused, 27W/16L,
+-$15.94, dBrier -0.0171; side split No -$34.23, Yes +$18.29. These are
+the tool's totals, not hand re-sums (the hand table is known to diverge,
+see reconcile; the tool is authoritative).
+
+Ruling: no boundary change. Two say-the-word method notes from this set
+(evidence: RETRO-20261006-0415):
+
+1. **Recurring-theme words: use the resolved same-word market series.**
+   For a word the speaker returns to across events (Egg, Tariff, etc.),
+   the series of resolved Polymarket markets for that same word at
+   comparable events is the base rate of record when it is longer than
+   the transcript sample. Egg: 3-transcript Laplace 0.40 lost (+0.230);
+   the 6-event resolved-market series 0.74 won (-0.088).
+2. **A re-record needs a new fact.** Data Center 0/3 transcripts gave
+   0.35 (won, -0.326); the 20:19Z re-record moved to 0.60 at the mid
+   with no new transcript or event fact and was worse. If nothing new
+   was learned, do not re-record; if a re-record moves toward the mid,
+   name the fact that moved it in the note.
+
+**Pre-registered: WSV say-the-word review.** The WSV say-the-word slice
+is 10 trades 9W/1L +$18.91 dBrier -0.120 (counterfactual.py by
+category). Below the n~15 bar. When it reaches 15 fillable trades, the
+next deep retro decides whether say-the-word rows with a speaker-only
+transcript count (>= 3 transcripts) may bet past max_spread at ask-edge
+>= 0.10. Kill: if dBrier on the slice turns >= 0 before n=15, drop it.
