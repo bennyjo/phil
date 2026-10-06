@@ -4924,6 +4924,24 @@ no 147/139/64W-75L/+$95.28; yes 67/67/24W-43L/+$28.86. Check: 95.28 +
 the book on self-built models (PT-share poll correction; live-count drift
 model), and the book was right both times.
 
+**2026-10-06 0019Z update (LIGHT tick, cloud; DF Senate 2nd-place veto pair settled, see RETRO-20261006-0019.)**
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| DF Senate Bia Kicis 2nd (`5810b4aba221`) | 0.65 / 0.8245 | No | +0.170 | Yes | -5.00 |
+| DF Senate Leila do Volei 2nd (`87034354d243`) | 0.31 / 0.125 | Yes | +0.180 | No | -5.00 |
+
+Net this batch: **-$10.00** (0W/2L), so the veto saved $10. Mechanical
+ledger after these rows (`core/counterfactual.py ledger --skip-reason
+outside-view-veto`): 226 rows / 218 trades / 93W-125L / +$141.47 / dBrier
++0.0309 / held-out +$148.91. Side split: no 156/148/69W-79L/+$127.61; yes
+70/70/24W-46L/+$13.86. Check: 127.61 + 13.86 = 141.47. Ruling: no boundary
+change. Both rows were one self-built read (half-weight on a right-wing
+consolidation story against three polls that had Leila level or ahead), and
+the book's Bia 0.82 was right. reconcile.py still lists 12 older
+veto/wide-spread rows (Sep 28 - Oct 1) missing from this hand table: a
+backlog for the next deep retro, not graded on this LIGHT tick.
+
 ## 2026-10-05 05:27Z: one distribution per event (RETRO-20261005-0527)
 
 Brazil R1: `1d98458aef28` (Sep 21) put Lula most votes at 0.65, and
