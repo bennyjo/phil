@@ -7226,6 +7226,10 @@ still negative and n=3; no change. Revisit at 10 settled rows.
 Update RETRO-20261001-1015: +1, Russia-Ukraine meeting by Sep30
 `a0a3361a49c1` 0.08 vs 0.13, resolved No, own closer (dBrier -0.0105),
 CF +$0.68. Now 4 settled, CF 3W/1L, -$0.55. No change.
+Update RETRO-20261006-1230: +1, Saudi pipeline by Oct15 `3d73de289a35`
+0.22 vs 0.335, resolved Yes (flows back to normal per Bloomberg Oct 5),
+book closer (dBrier +0.173), CF -$5.00. Now 5 settled, CF 3W/2L, -$5.55,
+dBrier +0.045. The bar kept a losing No off the ledger. No change.
 
 **Re-open condition.** Rows skipped under this bar are graded as their own
 slice at each deep retro. When 10 have settled, lift the bar if their
@@ -8393,3 +8397,11 @@ Rule: when the book sits inside the published seat-model range, the row
 is no-edge (unchanged), AND the recorded est_prob is the track-record-best
 model's figure (or the mean of the two best), never a blend that pulls in
 the outlier models. Re-check after the next seat-model election settles.
+
+Scope (RETRO-20261006-1230): this applies to province/seat-total rows.
+On RIDING-level rows, a single riding projection is noisier and the book
+prices incumbency: Jean-Lesage QS incumbent `0b2580bbd7bf` recorded 0.65
+near Qc125's 54% vs book 0.76, held (+0.065 dBrier; PQ sibling +0.025).
+Do not shade below the book on one riding projection when an incumbent
+holds the seat; record at or near the mid unless a second model agrees.
+n=1.
