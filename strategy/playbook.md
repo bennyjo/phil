@@ -8283,3 +8283,7 @@ read. The 90-day legs stay forecast-only (`unvalidated-method`).
   the threshold) may move a forecast with the 0.20 revision weight.
   They never create a bet's edge. n=3 revisions in one week, all down
   (Banda Aceh, Volcano Is., dc9200183ac0 count 7 to 5).
+  RETRO-20261006-0956: the 0.20 weight paid on the other side of the
+  same event. `0f8f5b9bfebc` ('<=6' at count 6, 0.31 vs mid 0.275)
+  shaded up for the Banda Aceh `mb` downgrade and won (-0.050). Keep
+  applying the weight to forecasts in both directions.

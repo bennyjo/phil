@@ -3944,3 +3944,4 @@ NOT MET (20th).
   playbook sides, keep cloud schedule.json).
 - Ask: give the cloud credential push rights on refs/phil/lease, or have the cloud routine skip FULL while the operator loop
   is up. Status: PROPOSED (evidence added).
+- 2026-10-06 09:56Z evidence (divergence): both runners superseded forecast 2633bf54fe64 (USGS '<=6', market 4951871) while main was diverged, so the market carried two live supersede chains (fbc9b39e1cc2..., 2cee843031a2...) for four days and score.py grades both. Divergence now ahead 8 / behind 10; operator merge still needed.
