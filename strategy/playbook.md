@@ -8273,3 +8273,13 @@ read. The 90-day legs stay forecast-only (`unvalidated-method`).
   (n=2 downgrades, plus 0 observed upgrades). The next deep retro
   should sample a week of M5.3-5.7 mb events to estimate the real
   revision rate.
+- **RETRO-20261006-0851: a USGS count or daily-max BET needs its edge
+  on reviewed `mww` events alone.** The Sep 28-Oct 4 week ended at 5.
+  d5cfa982fa21 ('7' @0.31, own 0.36) counted 6, but Banda Aceh was
+  later revised to 5.3 mww, so the true count was 5 and the edge was
+  not there. The book priced the same preliminary count, so an edge
+  built on a preliminary near-threshold event is mostly fake. Such
+  events (`status` automatic, or `magType` not `mww`, within 0.3 of
+  the threshold) may move a forecast with the 0.20 revision weight.
+  They never create a bet's edge. n=3 revisions in one week, all down
+  (Banda Aceh, Volcano Is., dc9200183ac0 count 7 to 5).
