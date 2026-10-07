@@ -7753,6 +7753,16 @@ resolved No.
   4 legs lost to the market, with mass on hold and 50+bp and too little
   on the modal 25bp. That is one event. No rule; record it and look for
   a second central-bank ladder with the same shape before acting.
+  Second ladder, RBI Oct (RETRO-20261007-0917): 25bp hike to 5.50. Modal
+  leg under-weighted again (own 0.75 vs mid 0.80, +0.0225) and hold
+  over-weighted (0.21 vs 0.18, +0.0117), the BanRep shape on those two
+  legs. The 50+ tail went the other way: the numeric Reuters poll (no
+  50bp camp) put it at 0.07 vs mid 0.15, and that leg won (bet
+  b949dc0cf6c4 +$0.78, forecast -0.0166). **Rule (2 of 2 ladders): on a
+  central-bank ladder, record the modal leg at no less than the mid
+  unless a numeric survey or a dated official signal puts it lower; a
+  qualitative "some see the next meeting" read does not.** Fading the
+  far tail stays allowed when a numeric poll has no camp there.
 - **USGS daily-max ladder, in-progress Poisson: first settled event
   (RETRO-20261001-2015).** Sep 30 ladder (c7cceb5a2381, 603ce1291e65,
   e879bdcdfa8c, 1150efff6222): observed max 5.6 with 3.7h left, 365d
