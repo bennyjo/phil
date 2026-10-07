@@ -8355,15 +8355,17 @@ read. The 90-day legs stay forecast-only (`unvalidated-method`).
 - **A riding or district leg that leans on an aggregator's riding
   projection against the book gets half the gap, not all of it (n=5
   rows, one election).** Quebec Oct 5, five riding rows recorded on
-  Qc125 riding numbers. Where Qc125 and the book disagreed on the
-  leader's odds, the book won twice: Hochelaga-Maisonneuve, QS
-  incumbent Leduc (`2d634083dd78`, 0.75 vs 0.87, Leduc won, dBrier
-  +0.046), and Saint-Henri-Sainte-Anne, PLQ challenger Clermont over
-  the QS incumbent (`0cdee07f6243`, 0.56 vs 0.70, Clermont won,
-  +0.104). The book was right in both directions, so this is not an
-  incumbency effect: it read local races better than a province swing
-  applied to the last result. I beat it once (Tanguay `a3314a17c247`,
-  0.82 vs 0.69, -0.064). The five rows net +0.041 against the book.
+  Qc125 riding numbers. In two ridings Qc125 and the book named the
+  same leader, the book was more confident, and I sided with Qc125:
+  Hochelaga-Maisonneuve, QS incumbent Leduc (`2d634083dd78`, Qc125
+  0.65, own 0.75, book 0.87, Leduc won, dBrier +0.046), and
+  Saint-Henri-Sainte-Anne, PLQ challenger Clermont over the QS
+  incumbent (`0cdee07f6243`, Qc125 0.55, own 0.56, book 0.70, Clermont
+  won, +0.104). One leader was the incumbent and one was not, so this
+  is not an incumbency effect: Qc125's riding odds were too flat. I
+  beat the book once, by being MORE confident than it on the agreed
+  leader (Tanguay `a3314a17c247`, 0.82 vs 0.69, -0.064). The five rows
+  net +0.041 against the book.
   Rule: with no riding-level evidence (a local poll, a named
   defection, a scandal), record the book plus half the aggregator's
   gap, and skip as `market-agrees` when that falls under min_edge.
