@@ -8016,7 +8016,13 @@ reversed, discounting right), Trump renames AI (Sep 29, multi-day
 climb, market right), Tesla (Oct 2, multi-day climb on a liquid book,
 market right). Split to watch: sudden jump versus gradual multi-day
 drift on a liquid book. Still a tracked observation, not a rule, until
-it has far more settlements.
+it has far more settlements. **n=4 (RETRO-20261007-2215): Haiku 4.6+ by
+Oct 7 (`d603bfb03fc2`, WSV), sudden 0.10->0.80 jump on a ~$750 book with
+no public release at my check, ~11.5h before a same-day cutoff; I held
+0.55, it resolved Yes (dBrier +0.164). Tally 3-for-4 market right;
+sudden-jump split 1-1. On a by-date release market, a sudden jump plus
+the same-day-deadline timing rule above means re-check near the cutoff
+or record near the market, not a mid-session discount.**
 
 ## 2026-10-02 18:57Z update: one `outside-view-veto` and one `wide-spread-veto` row settled, post-count pair graded (FULL tick, RETRO-20261002-1857)
 
