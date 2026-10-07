@@ -4950,6 +4950,57 @@ poll correction against the bolsonarista DF electorate, and the book's
 right-ward read was correct. This is the second Brazil R1 batch where a
 self-built poll correction lost to the book.
 
+**2026-10-07 04:1xZ update (FULL cycle, operator machine; 4 veto rows
+settled this tick, plus 21 settled veto rows that no local retro tabled,
+found by `strategy/tools/reconcile.py` once its funnel crash was fixed;
+see RETRO-20261007-0410.)** Rows settled after the 0016Z update are new
+to the mechanical totals; the five rows settled Sep 28-29 were already
+inside them.
+
+| Row | est vs mkt | Side | Realizable edge | Result | CF P&L |
+|---|---|---|---|---|---|
+| Hormuz 0 transits by Oct 31 first read (`d910eebe71cd`, OVV, superseded) | 0.38 / 0.21 | Yes | +0.150 | Yes | +16.74 |
+| Lula 44-47% R1 (`a342eb964026`, OVV) | 0.79 / 0.885 | No | +0.080 | Yes | -5.00 |
+| CAQ fewer than 1 seat (`607c62b57829`, OVV) | 0.40 / 0.11 | Yes | +0.260 | Yes | +30.71 |
+| Grenada win Oct 5 (`321fa9da9ea9`, OVV) | 0.60 / 0.695 | No | +0.090 | No | +11.13 |
+| Netflix #1 show 6-9M (`d464b1156ed9`, OVV) | 0.72 / 0.9365 | No | +0.190 | Yes | -5.00 |
+| Trump NE rally "Data Center" (`30efc6ceefdd`, OVV) | 0.35 / 0.67 | No | +0.300 | No | +9.29 |
+| Trump NE rally "Egg" first read (`5b84cae6b47f`, OVV) | 0.40 / 0.64 | No | +0.190 | Yes | -5.00 |
+| Trump NE rally "Egg" re-check (`3b69bfef36a4`, OVV) | 0.74 / 0.605 | Yes | +0.120 | Yes | +3.06 |
+| Heart of the Beast OW (`cec5bff18abf`, OVV, backfill Sep 28) | 0.40 / 0.76 | No | +0.350 | No | +15.00 |
+| Forgotten Island OW (`bb60348ab311`, OVV, backfill Sep 28) | 0.90 / 0.7525 | Yes | +0.145 | No | -5.00 |
+| LGD -1.5 vs Xtreme (`c0ad4f0ec92d`, OVV, backfill Sep 29) | 0.25 / 0.355 | No | +0.080 | Xtreme | +2.46 |
+| Saint-François Tanguay (`a3314a17c247`, WSV) | 0.82 / 0.69 | Yes | +0.060 | Yes | +1.58 |
+| Hochelaga-Maisonneuve Leduc (`2d634083dd78`, WSV) | 0.75 / 0.87 | No | +0.090 | Yes | -5.00 |
+| Saint-Henri-Sainte-Anne Clermont (`0cdee07f6243`, WSV) | 0.56 / 0.70 | No | +0.100 | Yes | -5.00 |
+| Bab el-Mandeb 190-209 (`d380a0c3a741`, WSV) | 0.36 / 0.37 | No | -0.060 | Yes | -5.00 |
+| Trump NE rally "Tax" 25+ (`c3803f656959`, WSV) | 0.58 / 0.355 | Yes | +0.130 | Yes | +6.11 |
+| Trump NE rally "Independent" (`4e4a0c06f526`, WSV) | 0.85 / 0.76 | Yes | +0.040 | Yes | +1.17 |
+| 10y 5.25% Sep (`a41e6e996b85`, WSV, superseded, backfill Sep 29) | 0.46 / 0.65 | No | -0.020 | Yes | -5.00 |
+| Burleson RBI lead (`18a43357718b`, WSV, backfill Sep 28) | 0.93 / 0.73 | Yes | +0.040 | Yes | +0.62 |
+| Stateside award (`e4564b71ab49`, WSV, backfill Sep 28) | 0.30 / 0.37 | No | -0.020 | No | +1.94 |
+| MrBeast Gaming 26.75-27M (`ba4ad02817d3`, WSV, backfill Oct 1) | 0.85 / 0.875 | No | -0.030 | Yes | -5.00 |
+| AI Arena 1530 by Sep 30 (`a93c997dbdf5`, WSV, backfill Oct 1) | 0.93 / 0.891 | Yes | -0.022 | Yes | refused (entry 0.952) |
+| WTI above $90 Sep 30 (`853c6998ca45`, WSV, backfill Oct 1) | 0.88 / 0.925 | No | -0.010 | Yes | -5.00 |
+| ISM PMI 55.0-55.9 Sep (`4b0493d215d6`, WSV, backfill Oct 1) | 0.283 / 0.395 | No | +0.077 | No | +2.81 |
+| Iran sanctions EO by Sep 30 (`e9bfda300d68`, WSV, backfill Oct 1) | 0.04 / 0.215 | No | +0.040 | No | +0.43 |
+
+Outside-view-veto: these 11 rows net **+$68.39** (7W/4L); the 8 settled
+after the 0016Z update add +$55.93. Mechanical ledger now 234 rows / 226
+trades / 98W-128L / +$197.40 / dBrier +0.0261 / held-out +$204.35 (was
+226/218/93W-125L/+$141.47). Side split: no 161/153/71W-82L/+$133.02; yes
+73/73/27W-46L/+$64.38. Check: 133.02 + 64.38 = 197.40.
+Wide-spread-veto: these 14 rows net **-$15.34** (7W/6L, 1 refused).
+Mechanical ledger now 57 rows / 47 trades / 28W-19L / -$29.36 / dBrier
+-0.0141 / held-out -$19.10. Side split: no 34/28/14W-14L/-$49.23; yes
+23/19/14W-5L/+$19.87. Check: -49.23 + 19.87 = -29.36.
+Ruling: no boundary change. The OVV line's CF P&L keeps rising on
+longshot Yes wins (CAQ 0 seats +30.71, Hormuz +16.74), but its dBrier
+stays positive (+0.0261): the vetoed beliefs are still worse-calibrated
+than the book, so the operator's gnhf-run-4 verdict stands. The WSV line
+is the opposite (beliefs better than the mid, CF P&L negative), and n=47
+trades is still too thin to move the spread boundary.
+
 ## 2026-10-05 05:27Z: one distribution per event (RETRO-20261005-0527)
 
 Brazil R1: `1d98458aef28` (Sep 21) put Lula most votes at 0.65, and
@@ -8298,3 +8349,21 @@ read. The 90-day legs stay forecast-only (`unvalidated-method`).
   same event. `0f8f5b9bfebc` ('<=6' at count 6, 0.31 vs mid 0.275)
   shaded up for the Banda Aceh `mb` downgrade and won (-0.050). Keep
   applying the weight to forecasts in both directions.
+
+## RETRO-20261007-0410 ruling: riding-level aggregator vs the book
+
+- **A riding or district leg that leans on an aggregator's riding
+  projection against the book gets half the gap, not all of it (n=5
+  rows, one election).** Quebec Oct 5, five riding rows recorded on
+  Qc125 riding numbers. Where Qc125 and the book disagreed on the
+  leader's odds, the book won twice: Hochelaga-Maisonneuve, QS
+  incumbent Leduc (`2d634083dd78`, 0.75 vs 0.87, Leduc won, dBrier
+  +0.046), and Saint-Henri-Sainte-Anne, PLQ challenger Clermont over
+  the QS incumbent (`0cdee07f6243`, 0.56 vs 0.70, Clermont won,
+  +0.104). The book was right in both directions, so this is not an
+  incumbency effect: it read local races better than a province swing
+  applied to the last result. I beat it once (Tanguay `a3314a17c247`,
+  0.82 vs 0.69, -0.064). The five rows net +0.041 against the book.
+  Rule: with no riding-level evidence (a local poll, a named
+  defection, a scandal), record the book plus half the aggregator's
+  gap, and skip as `market-agrees` when that falls under min_edge.

@@ -136,7 +136,19 @@ def main():
                 schema_gaps.append(
                     f"funnel {entry.get('cycle')} missing pool_total"
                 )
-        for cand in entry.get("researched", []):
+        researched = entry.get("researched", [])
+        if not isinstance(researched, list) or not all(
+            isinstance(c, dict) for c in researched
+        ):
+            # 2026-10-07: two hand-built finish scripts json.dumps'd the
+            # researched list into a string, which crashed this loop and
+            # hid 25 untabled veto rows for a day. Report, never crash.
+            schema_gaps.append(
+                f"funnel {entry.get('cycle')} researched is not a list of "
+                "objects (stringified?)"
+            )
+            continue
+        for cand in researched:
             fid = cand.get("forecast_id")
             if fid:
                 funnel_ids.append(str(fid))
