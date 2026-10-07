@@ -8502,6 +8502,12 @@ one riding projection stays barred.
   price 0.12 -> 0.31 (+0.19), so the second entry added exposure without
   adding edge. Write both deltas in the re-entry rationale; if our move
   is not larger than the price move, do not re-enter.
+  **Update 2026-10-07 10:3xZ (FULL, cloud):** core/ledger.py now rejects
+  any second position on the same market+outcome ('already have an open
+  position on this market+outcome') - the USGS Oct5-11 '<=6' re-entry
+  (own +0.07 vs ask +0.04, which passed the deltas test) was refused.
+  Same-bracket re-entry is therefore impossible; record the updated
+  view as a forecast labelled `position-held` and do not attempt `place`.
 - **OVV longshot slice, 24h:** two more vetoed longshots won:
   607c62b57829 (CAQ <1 seat, 0.40 vs 0.11, -0.432) and d910eebe71cd
   (Hormuz zero-transit by Oct 31, 0.38 vs 0.21, -0.240). Excluding those
