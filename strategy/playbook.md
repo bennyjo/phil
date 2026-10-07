@@ -8449,3 +8449,53 @@ riding-level rows AT the mid unless a second independent riding model
 agrees with the shade; a shade on Qc125 alone is capped at half the
 Qc125-vs-mid gap. n=7 (one election), revisit at the next riding-level
 election.
+
+Sharpened (DEEP-2026-10-07): the last sentence above contradicted itself
+("AT the mid" and "capped at half the gap"). The operative rule is this.
+A riding-level row on one projection alone is recorded at most half the
+projection-vs-mid gap away from the mid, and it is always skip-labelled
+`no-edge` (never a bet). With a second independent riding model on the
+same side, record the mean of the two. Evidence is the same n=7: the
+three PQ-led rows that beat the book were small shades (-0.109 net), so
+zeroing them out loses information the half-gap cap keeps. A bet on
+one riding projection stays barred.
+
+## DEEP-2026-10-07 rulings
+
+- **USGS weekly count, regime weight (pre-registered).** Bet
+  38f9c08d4804 (<=6, Oct5-11, ask 0.35, own 0.41) gets its edge only from
+  weighting the recent 5-week low regime (~0.9/d) over the 365d rate
+  (1.32/d). At the count when it was placed (2 after 1.77d), plain
+  Poisson on the 365d rate gives P(<=6) ~0.17, the low regime ~0.49, and
+  an even mix ~0.33, which is the book. So the claimed edge IS the regime
+  weight. The family's forecasts are the most consistent signal we have
+  (n=34 live rows, net -0.368, mean -0.011), but the bets are 2W/2L,
+  -$8.13, dBrier +0.004 (at market). Rule: every USGS weekly-count row
+  writes the two component probabilities (365d rate, recent-regime rate)
+  and the weight in its note. After 3 more settled weeks, if the
+  regime-weighted rows do not beat the 365d-only figure in summed dBrier,
+  the recent-regime weight is capped at 0.5 for bets. Until then the bet
+  side is unchanged.
+- **Validated-feed bets 0/3 since 09-30** (9a2944acc280, d5cfa982fa21,
+  9b7c41da79ac; -$15). Each loss has its own named cause, and both are
+  now covered by a rule: two mb->mww downgrades took the USGS '7' count
+  from 7 to 5 (0.20 per-event revision rule, RETRO-20261005-2015), and
+  PortWatch was placed on partial feed days (>=3 in-window days gate,
+  RETRO-20261006-1615). n=3 is insufficient to judge the family. No
+  change beyond those two rules.
+- **Same-bracket doubling.** 9a2944acc280 and d5cfa982fa21 were the same
+  outcome on the same market (USGS '7', Sep28-Oct4), at 0.12 and then
+  0.31, for $10 total. That is within max_stake_per_event_usd, so it
+  breaks no rule. But a re-entry on the same bracket needs a NEW fact
+  that moves our probability more than the price has moved since the
+  first entry. Here our probability moved 0.16 -> 0.36 (+0.20) and the
+  price 0.12 -> 0.31 (+0.19), so the second entry added exposure without
+  adding edge. Write both deltas in the re-entry rationale; if our move
+  is not larger than the price move, do not re-enter.
+- **OVV longshot slice, 24h:** two more vetoed longshots won:
+  607c62b57829 (CAQ <1 seat, 0.40 vs 0.11, -0.432) and d910eebe71cd
+  (Hormuz zero-transit by Oct 31, 0.38 vs 0.21, -0.240). Excluding those
+  two, the day's 64 live forecast rows ran +0.50 (behind the book).
+  Logged for the pre-registered DEEP-2026-10-13 fork check. Two clustered
+  longshots do not justify loosening the veto early.
+

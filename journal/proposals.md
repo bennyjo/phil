@@ -4005,3 +4005,16 @@ audited: the gates working, not avoidance). Relaxation fork NOT MET
 (21st; f3 +0.050 / f4 +0.006). No reverts of hourly edits.
 risk.json notes compacted from 27KB to 2KB, and 3 closed
 schedule.json watch items pruned (19.7KB).
+
+## DEEP-2026-10-07 - deep-retro proposals and status
+
+- **No hourly entries filed since DEEP-2026-10-06.** Every earlier entry
+  carries a Status, and those statuses are unchanged.
+- **Stale open e746d7e1ba99 (Andersson), now 24 days past end_date:**
+  the DEEP-2026-10-06 ruling stands. No void. Operator ask: flag rows
+  more than 14 days past end_date in score.py `open_mtm`.
+- **P1 (frozen hand table out of the playbook): still PROPOSED.**
+  playbook.md is 536KB.
+- **P2 (runner quota split): still PROPOSED, low urgency.** The operator
+  quota file has been idle since 10-05, and the overspend has not
+  recurred.
