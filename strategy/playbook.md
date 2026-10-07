@@ -8434,3 +8434,18 @@ near Qc125's 54% vs book 0.76, held (+0.065 dBrier; PQ sibling +0.025).
 Do not shade below the book on one riding projection when an incumbent
 holds the seat; record at or near the mid unless a second model agrees.
 n=1.
+
+Graded (RETRO-20261007-0015, all 7 Quebec riding rows now settled): net
++0.130 dBrier vs the mid. The four rows in ridings where QS was a top-two
+contender all lost to the book (Jean-Lesage 0b2580bbd7bf +0.065 /
+06a3d6fec317 +0.025, Hochelaga 2d634083dd78 +0.046, Saint-Henri
+0cdee07f6243 +0.104; net +0.239) in BOTH directions (Qc125 under-rated
+QS incumbents that held and over-rated the one that lost), so it is not
+an incumbency effect; the three PQ-led rows beat it (Saint-Francois
+a3314a17c247 -0.064 / 45918dc94a98 -0.012, Louis-Hebert c5b708870431
+-0.033; net -0.109). Rule, replacing the incumbent-only scope above: a
+single riding projection (Qc125 or similar) is not an edge source. Record
+riding-level rows AT the mid unless a second independent riding model
+agrees with the shade; a shade on Qc125 alone is capped at half the
+Qc125-vs-mid gap. n=7 (one election), revisit at the next riding-level
+election.
