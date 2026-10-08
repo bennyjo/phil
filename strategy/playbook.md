@@ -8746,3 +8746,30 @@ veto was not the binding gate.
 - **Haiku sudden-jump note (n=4): KEEP.** It records near the market or
   re-checks near cutoff; it cannot create a bet.
 
+
+## 2026-10-08 14:20Z update: TX rally / Musk / PEP veto rows settled (FULL tick, RETRO-20261008-1420)
+
+| Row | own/mkt | Side | Edge | Result | CF pnl |
+|---|---|---|---|---|---|
+| Musk Oct5-7 <40 (`a17f658eef54`, OVV, superseded) | 0.52/0.575 | No | +0.050 | No | **+6.63** |
+| Musk Oct5-7 <40 (`7a60de0b5d33`, OVV, superseded) | 0.76/0.71 | Yes | +0.040 | No | -5.00 |
+| Trump TX "Data Center" (`a39826fe4c4f`, OVV) | 0.42/0.565 | No | +0.120 | No | **+5.87** |
+| Trump TX "Gulf of America" (`1a4a4d0f0ec8`, OVV) | 0.50/0.695 | No | +0.150 | Yes | -5.00 |
+| Trump TX "1776" (`4b4fbbe5dea1`, OVV) | 0.60/0.895 | No | +0.250 | Yes | -5.00 |
+| PEP beat (`791f6d9d1bbb`, OVV) | 0.62/0.825 | No | +0.190 | Yes | -5.00 |
+| Trump TX "Fascism" (`c11f064720f9`, WSV) | 0.20/0.355 | No | +0.080 | Yes | -5.00 |
+| Trump TX "Mental Institution" (`f51c6e816257`, WSV) | 0.65/0.79 | No | +0.020 | No | **+10.15** |
+| Trump TX "Alamo" (`232b304e2f22`, WSV) | 0.55/0.455 | Yes | -0.030 | Yes | +3.62 |
+| Trump TX "Cartel" (`d71d861b9512`, WSV) | 0.40/0.495 | No | -0.030 | Yes | -5.00 |
+
+Mechanical ledger (`core/counterfactual.py ledger`): OVV 241 rows, 233
+trd, 100W/133L, +$184.90, dBrier +0.0269 (was 235 rows, +$192.40). WSV
+66 rows, 56 trd, 10 refused, 31W/25L, -$40.59, dBrier -0.0030 (was 62
+rows, -$44.36). Tool totals, not hand re-sums.
+
+Ruling: no boundary change. The three largest live OVV fades (Gulf of
+America, 1776, PEP; all fading a mid >= 0.69) lost; the veto saved $15.
+- **Venue-local words tally (rule above): n=4, 4/4 for the rule.** Gulf of
+  America (TX, faded 0.50 vs 0.695, lost, dBrier +0.157) and Alamo (TX,
+  recorded above the mid, won, -0.095) join Egg and Toyota. Re-grade at
+  n=5 unchanged.
