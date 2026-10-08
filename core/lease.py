@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Runner lease: one FULL cycle at a time across Phil's runners.
+"""Runner lease: one cycle at a time across Phil's runners.
 
 PROTECTED CORE - the trading agent must not edit files under core/.
 
@@ -11,59 +11,91 @@ same minute cannot see each other. On 2026-09-04 00:16Z both runners scanned,
 both ran 15 Haiku batches, both researched the NFP bracket and both decided
 to trade the same leg (journal/proposals.md, "collision-guard gap").
 
-The lease is a ref on origin, refs/phil/lease, pointing at an empty commit
-whose message is one JSON line: {"runner", "started", "ttl_s"}. It lives on
-the remote and not in any working tree, so both runners see it within a
-fetch. A runner that finds a fresh lease held by the other runner runs a
-LIGHT tick (CYCLE.md step 0); the holder releases the lease after its push.
-A run that dies mid-cycle leaves a lease that expires on its own after
-`ttl_s`, so nothing can wedge the other runner for longer than one cycle.
+Where it lives (operator, 2026-10-08): journal/lease.json on origin's main.
+The first lease was a custom ref, refs/phil/lease, and the cloud credential
+cannot push custom refs (HTTP 403 since 2026-09-06) while it pushes main on
+every cycle, so every cloud cycle ran unprotected. Main forked (an operator
+merge of a 126/142-commit fork on 2026-10-05, the next fork 52 minutes
+later), the shared screener quota ran to 195/150 batches, and the operator
+runner placed d5cfa982fa21 on top of the open 9a2944acc280 (DEEP-2026-10-08
+P3). Any credential that can push main can write this file.
 
-Atomicity comes from git, not from us: `acquire` pushes with
---force-with-lease pinned to the exact sha it observed (or to "absent"), so
-two runners racing for a free lease cannot both win - the second push is
-rejected and reports "acquired": false. `release` deletes with the same
-pin, so a runner can only release the lease it holds.
+The file holds one JSON object: {"runner", "started", "ttl_s"} while held,
+{"runner": null, "released_by", "released"} once released; a missing file
+is free too. acquire and release each push one commit that changes nothing
+but this file, as a plain fast-forward push to main. Origin applies a push
+only while main still points where the pusher saw it, so of two runners
+racing for a free lease exactly one push lands; the loser re-reads and
+yields.
+
+acquire builds its commit on the local HEAD and fast-forwards HEAD onto it,
+so the cycle starts from the commit that took the lease. It needs HEAD to
+contain origin/main: a runner whose main is behind or diverged trades on a
+stale ledger. ledger.py's duplicate-position guard missed d5cfa982fa21
+because the operator runner's diverged main did not have 9a2944acc280.
+release builds its commit on origin/main and leaves the local branch alone,
+so it works whatever the cycle's own push did; the next sync fast-forwards
+over it.
+
+A runner that does not get the lease skips the tick; it does not run a LIGHT
+one. A LIGHT tick still settles and commits ledger and forecast rows, which
+are not union-merged (.gitattributes), so a LIGHT tick next to the holder's
+cycle makes one of the two pushes conflict and fork main. The holder's own
+cycle settles and monitors, so the skipped tick loses nothing. That covers
+both refusals: held by the other runner (exit 3) and not written (exit 4:
+origin unreachable, the push refused, or local main behind or diverged). A
+runner that cannot write the lease could not publish its cycle either, since
+both are pushes to main. A run that dies mid-cycle leaves a lease that
+expires on its own after `ttl_s`, so nothing wedges the other runner for
+longer than one cycle.
 
 Runner identity is core/screen.py's runner_id(): $PHIL_RUNNER, else
 "operator" when loop.sh's PHIL_PUSH_BY_LOOP is set, else "cloud". On the
 operator machine loop.sh acquires and releases in the interactive shell
 (the keyring is unlocked there; a push from inside `claude -p` hangs), and
-tells the cycle agent the verdict through PHIL_LEASE. In the cloud the
-cycle agent runs acquire and release itself.
+tells the cycle agent through PHIL_LEASE. In the cloud the cycle agent runs
+acquire and release itself.
 
 Usage:
   python3 core/lease.py check                # never writes; prints JSON
-  python3 core/lease.py acquire [--ttl S]    # exit 0 acquired, 3 held by other
-  python3 core/lease.py release              # exit 0 released or not ours
-Every subcommand prints one JSON object. No origin remote, a fetch that
-fails, or a push that origin refuses (the cloud credential returns HTTP 403
-on custom refs, 2026-09-06) all report "acquired": true with "written":
-false and a "reason" - the lease cannot protect a runner that cannot reach
-or write origin, and it must never block one either. A runner that can
-only read still honours a lease the other runner wrote. Nothing here
-touches journal/ or strategy/.
+  python3 core/lease.py acquire [--ttl S]    # exit 0 acquired, 3 held by other, 4 not written
+  python3 core/lease.py release              # exit 0 released or not ours, 1 push failed
+Every subcommand prints one JSON object. Without an origin remote there is
+no shared main to protect, so acquire reports "acquired": true with
+"written": false. Nothing here writes any file but journal/lease.json.
 """
 import argparse
 import datetime as dt
 import json
+import os
 import pathlib
 import subprocess
 import sys
+import tempfile
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import screen  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-LEASE_REF = "refs/phil/lease"
-LOCAL_REF = "refs/phil/lease-remote"
+LEASE_FILE = "journal/lease.json"
+MAIN = "refs/heads/main"
+REMOTE_MAIN = "refs/remotes/origin/main"
 DEFAULT_TTL_S = 50 * 60
-EMPTY_TREE = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+RELEASE_ATTEMPTS = 3
 
 
-def git(*args, check=True):
+def git(*args, check=True, input=None, env=None):
     return subprocess.run(["git", *args], cwd=ROOT, capture_output=True,
-                          text=True, check=check, timeout=120)
+                          text=True, check=check, timeout=120, input=input,
+                          env=env)
+
+
+def last_line(proc, fallback):
+    """The line of git's stderr that says what failed, without the hints."""
+    lines = [ln.strip() for ln in proc.stderr.splitlines()
+             if ln.strip() and not ln.startswith("hint:")]
+    rejected = [ln for ln in lines if "rejected]" in ln]
+    return (rejected or lines or [fallback])[-1]
 
 
 def has_origin():
@@ -74,44 +106,79 @@ def now():
     return dt.datetime.now(dt.timezone.utc)
 
 
-def read_remote():
-    """(sha, payload) of the remote lease, (None, None) when free.
+def fetch_main():
+    """origin/main's sha after a fresh fetch.
 
-    Raises RuntimeError when origin cannot be reached, which callers turn
-    into the fail-open verdict documented above.
+    Raises RuntimeError when origin cannot be reached; acquire turns that
+    into a refusal, since a runner that cannot reach origin cannot publish.
     """
-    ls = git("ls-remote", "--exit-code", "origin", LEASE_REF, check=False)
-    if ls.returncode == 2:
-        return None, None
-    if ls.returncode != 0:
-        raise RuntimeError(ls.stderr.strip() or "ls-remote failed")
-    sha = ls.stdout.split()[0]
-    fetched = git("fetch", "--no-tags", "origin", f"+{LEASE_REF}:{LOCAL_REF}",
-                  check=False)
+    fetched = git("fetch", "--no-tags", "--quiet", "origin",
+                  f"+{MAIN}:{REMOTE_MAIN}", check=False)
     if fetched.returncode != 0:
-        raise RuntimeError(fetched.stderr.strip() or "fetch failed")
-    body = git("log", "-1", "--format=%B", LOCAL_REF).stdout.strip()
+        raise RuntimeError(last_line(fetched, "fetch failed"))
+    return git("rev-parse", REMOTE_MAIN).stdout.strip()
+
+
+def read_lease(rev):
+    """The lease payload at `rev`; {} (free) when absent or unreadable."""
+    shown = git("show", f"{rev}:{LEASE_FILE}", check=False)
     try:
-        payload = json.loads(body.splitlines()[0])
-    except (json.JSONDecodeError, IndexError):
+        payload = json.loads(shown.stdout) if shown.returncode == 0 else {}
+    except json.JSONDecodeError:
         payload = {}
-    return sha, payload
+    return payload if isinstance(payload, dict) else {}
 
 
-def describe(sha, payload, me):
-    if sha is None:
+def describe(payload, me):
+    runner = payload.get("runner")
+    if not runner:
         return {"held": False, "mine": False, "fresh": False, "runner": None,
-                "age_s": None, "sha": None}
+                "age_s": None}
     try:
         started = dt.datetime.fromisoformat(str(payload.get("started")).replace("Z", "+00:00"))
         age = int((now() - started).total_seconds())
     except (TypeError, ValueError):
         age = None
-    ttl = int(payload.get("ttl_s") or DEFAULT_TTL_S)
-    fresh = age is not None and 0 <= age < ttl
-    runner = payload.get("runner")
+    try:
+        ttl = int(payload.get("ttl_s", DEFAULT_TTL_S))
+    except (TypeError, ValueError):
+        ttl = DEFAULT_TTL_S
+    # abs(): the two runners' clocks differ, so a lease read a moment after
+    # it was taken can look a second or two old in the future.
+    fresh = age is not None and abs(age) < ttl
     return {"held": True, "mine": runner == me, "fresh": fresh,
-            "runner": runner, "age_s": age, "ttl_s": ttl, "sha": sha}
+            "runner": runner, "age_s": age, "ttl_s": ttl}
+
+
+def held_by_other(d):
+    return d["held"] and d["fresh"] and not d["mine"]
+
+
+def is_ancestor(a, b):
+    return git("merge-base", "--is-ancestor", a, b, check=False).returncode == 0
+
+
+def lease_commit(parent, payload, message):
+    """A commit on `parent` whose only change is the lease file holding `payload`.
+
+    Built through a throwaway index, so the working tree and the real index
+    stay untouched until the push has landed.
+    """
+    blob = git("hash-object", "-w", "--stdin",
+               input=json.dumps(payload) + "\n").stdout.strip()
+    with tempfile.TemporaryDirectory() as tmp:
+        env = {**os.environ, "GIT_INDEX_FILE": os.path.join(tmp, "index")}
+        git("read-tree", parent, env=env)
+        git("update-index", "--add", "--cacheinfo",
+            f"100644,{blob},{LEASE_FILE}", env=env)
+        tree = git("write-tree", env=env).stdout.strip()
+    return git("commit-tree", tree, "-p", parent, "-m", message).stdout.strip()
+
+
+def push(commit):
+    """(ok, error). Origin rejects the push unless main is still an ancestor."""
+    pushed = git("push", "--quiet", "origin", f"{commit}:{MAIN}", check=False)
+    return pushed.returncode == 0, last_line(pushed, "push rejected")
 
 
 def out(obj, code=0):
@@ -119,85 +186,95 @@ def out(obj, code=0):
     return code
 
 
+def refuse(me, reason):
+    return out({"acquired": False, "written": False, "me": me, "reason": reason}, 4)
+
+
 def cmd_check(args):
     me = screen.runner_id()
     if not has_origin():
-        return out({"held": False, "mine": False, "fresh": False, "runner": None,
-                    "age_s": None, "sha": None, "reason": "no remote", "me": me})
+        return out(dict(describe({}, me), reason="no remote", me=me))
     try:
-        sha, payload = read_remote()
+        base = fetch_main()
     except RuntimeError as e:
-        return out({"held": False, "mine": False, "fresh": False, "runner": None,
-                    "age_s": None, "sha": None, "reason": f"unreachable: {e}", "me": me})
-    d = describe(sha, payload, me)
-    d["me"] = me
-    return out(d)
+        return out(dict(describe({}, me), reason=f"unreachable: {e}", me=me))
+    return out(dict(describe(read_lease(base), me), me=me, main=base))
 
 
 def cmd_acquire(args):
     me = screen.runner_id()
     if not has_origin():
-        return out({"acquired": True, "reason": "no remote", "me": me})
+        return out({"acquired": True, "written": False, "reason": "no remote", "me": me})
     try:
-        sha, payload = read_remote()
+        base = fetch_main()
     except RuntimeError as e:
-        return out({"acquired": True, "reason": f"unreachable: {e}", "me": me})
-    d = describe(sha, payload, me)
-    if d["held"] and d["fresh"] and not d["mine"]:
-        d.update(acquired=False, me=me,
-                 reason=f"held by {d['runner']} for {d['age_s']}s of {d['ttl_s']}s")
-        return out(d, 3)
+        return refuse(me, f"origin unreachable: {e}")
+    d = describe(read_lease(base), me)
+    if held_by_other(d):
+        return out(dict(d, acquired=False, me=me,
+                        reason=f"held by {d['runner']} for {d['age_s']}s of {d['ttl_s']}s"), 3)
+    head = git("rev-parse", "HEAD").stdout.strip()
+    if not is_ancestor(base, head):
+        where = "behind" if is_ancestor(head, base) else "diverged from"
+        return refuse(me, f"local HEAD is {where} origin/main {base[:12]}; "
+                          "a runner on a stale ledger must not cycle")
+    if git("status", "--porcelain", "--", LEASE_FILE).stdout.strip():
+        return refuse(me, f"{LEASE_FILE} has local changes")
     payload = {"runner": me, "started": screen.iso(now()), "ttl_s": args.ttl}
-    commit = git("commit-tree", EMPTY_TREE, "-m", json.dumps(payload)).stdout.strip()
-    expect = f"{LEASE_REF}:{sha}" if sha else f"{LEASE_REF}:"
-    pushed = git("push", "--quiet", f"--force-with-lease={expect}", "origin",
-                 f"{commit}:{LEASE_REF}", check=False)
-    if pushed.returncode != 0:
-        # Two different failures land here and they get opposite verdicts.
-        # Re-read the remote: if the lease is now held fresh by the other
-        # runner, we lost the race and yield. If it is still absent (or
-        # unchanged), the push itself was refused - on 2026-09-06 the cloud
-        # credential returned HTTP 403 on every push to refs/phil/lease while
-        # branch pushes worked, and treating that as "lost the race" demoted
-        # every cloud cycle to LIGHT. A lease this runner cannot write cannot
-        # protect anyone, so that case fails OPEN: proceed, say so.
-        err = (pushed.stderr.strip().splitlines() or ["push rejected"])[-1]
+    try:
+        commit = lease_commit(head, payload, f"lease: {me} acquired")
+    except subprocess.CalledProcessError as e:
+        return refuse(me, f"could not build the lease commit: {e.stderr.strip()}")
+    ok, err = push(commit)
+    if not ok:
+        # Either the other runner's lease landed first (lost the race) or
+        # origin refused the write. Re-read to say which; neither may cycle.
         try:
-            sha2, payload2 = read_remote()
-            d2 = describe(sha2, payload2, me)
+            d2 = describe(read_lease(fetch_main()), me)
         except RuntimeError:
-            d2 = describe(None, None, me)
-        if d2["held"] and d2["fresh"] and not d2["mine"] and d2["sha"] != sha:
-            d2.update(acquired=False, me=me, reason=f"lost the race: {err}")
-            return out(d2, 3)
-        d2.update(acquired=True, me=me, written=False,
-                  reason=f"push refused, lease not written, proceeding unprotected: {err}")
-        return out(d2)
-    return out({"acquired": True, "written": True, "me": me, "sha": commit,
-                "started": payload["started"], "ttl_s": args.ttl,
-                "replaced": d["runner"] if d["held"] else None})
+            d2 = describe({}, me)
+        if held_by_other(d2):
+            return out(dict(d2, acquired=False, me=me, reason=f"lost the race: {err}"), 3)
+        return refuse(me, f"push refused: {err}")
+    result = {"acquired": True, "written": True, "me": me, "sha": commit,
+              "started": payload["started"], "ttl_s": args.ttl,
+              "replaced": d["runner"]}
+    merged = git("merge", "--ff-only", "--quiet", commit, check=False)
+    if merged.returncode != 0:
+        # Harmless for exclusion: the cycle's push rebases over the commit.
+        result["warning"] = ("lease is on origin but HEAD was not fast-forwarded: "
+                             + last_line(merged, "merge failed"))
+    return out(result)
 
 
 def cmd_release(args):
     me = screen.runner_id()
     if not has_origin():
         return out({"released": False, "reason": "no remote", "me": me})
-    try:
-        sha, payload = read_remote()
-    except RuntimeError as e:
-        return out({"released": False, "reason": f"unreachable: {e}", "me": me})
-    d = describe(sha, payload, me)
-    if not d["held"]:
-        return out({"released": False, "reason": "no lease held", "me": me})
-    if not d["mine"]:
-        return out({"released": False, "reason": f"held by {d['runner']}, not ours",
-                    "me": me, "runner": d["runner"], "age_s": d["age_s"]})
-    pushed = git("push", "--quiet", f"--force-with-lease={LEASE_REF}:{sha}", "origin",
-                 f":{LEASE_REF}", check=False)
-    if pushed.returncode != 0:
-        return out({"released": False, "me": me, "reason":
-                    (pushed.stderr.strip().splitlines() or ["push rejected"])[-1]}, 1)
-    return out({"released": True, "me": me, "sha": sha, "age_s": d["age_s"]})
+    err = "push rejected"
+    for _ in range(RELEASE_ATTEMPTS):
+        try:
+            base = fetch_main()
+        except RuntimeError as e:
+            return out({"released": False, "me": me, "reason": f"unreachable: {e}"}, 1)
+        d = describe(read_lease(base), me)
+        if not d["held"]:
+            return out({"released": False, "reason": "no lease held", "me": me})
+        if not d["mine"]:
+            return out({"released": False, "reason": f"held by {d['runner']}, not ours",
+                        "me": me, "runner": d["runner"], "age_s": d["age_s"]})
+        payload = {"runner": None, "released_by": me, "released": screen.iso(now())}
+        try:
+            commit = lease_commit(base, payload, f"lease: {me} released")
+        except subprocess.CalledProcessError as e:
+            return out({"released": False, "me": me,
+                        "reason": f"could not build the release commit: {e.stderr.strip()}"}, 1)
+        ok, err = push(commit)
+        if ok:
+            return out({"released": True, "me": me, "sha": commit, "age_s": d["age_s"]})
+        # Main moved between the fetch and the push (a triggered cycle, the
+        # deep retro): rebuild on the new tip and try again.
+    return out({"released": False, "me": me, "reason": err}, 1)
 
 
 def main():

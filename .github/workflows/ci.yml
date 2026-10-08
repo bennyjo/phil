@@ -20,6 +20,8 @@ jobs:
           python-version: "3.12"
       - name: Config, caps, ledger and Python sources are sane
         run: python3 core/validate.py
+      - name: Runner lease excludes two simulated runners (local bare remote)
+        run: python3 core/test_lease.py -v
       - name: Score report parses the real ledger (offline)
         run: python3 core/score.py --json --skip-mtm > /dev/null
       - name: Lint — bug-class rules only (syntax errors, undefined names)

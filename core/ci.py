@@ -2,9 +2,10 @@
 """Report the CI verdict for the latest pushed commits (read-only probe).
 
 PROTECTED (operator-owned). Queries GitHub's public check-runs API for
-origin/main's tip, falling back one commit when the tip's checks have not
-completed yet, and prints a single JSON line. It must never crash a cycle:
-any network or parsing trouble degrades to {"status": "unknown"}.
+origin/main's newest commit that is not a runner-lease commit, falling back
+one such commit when its checks have not completed yet, and prints a single
+JSON line. It must never crash a cycle: any network or parsing trouble
+degrades to {"status": "unknown"}.
 
 Usage:  python3 core/ci.py
 Output: {"sha": "...", "ref": "...", "status": "success|failure|pending|none|unknown",
@@ -49,8 +50,13 @@ def main():
     out = {"status": "unknown"}
     try:
         slug = repo_slug()
-        for ref in ("origin/main", "origin/main~1"):
-            sha = sh("git", "rev-parse", ref)
+        # core/lease.py pushes a lease: commit before and after every cycle,
+        # and its checks only vouch for a push holding journal/lease.json.
+        shas = sh("git", "log", "-2", "--first-parent", "--format=%H",
+                  "--invert-grep", "--grep=^lease: ", "origin/main").split()
+        for sha in shas:
+            n = sh("git", "rev-list", "--count", "--first-parent", f"{sha}..origin/main")
+            ref = "origin/main" if n == "0" else f"origin/main~{n}"
             runs = check_runs(slug, sha)
             if not runs:
                 out = {"sha": sha, "ref": ref, "status": "none"}
