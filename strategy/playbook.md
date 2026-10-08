@@ -8091,6 +8091,13 @@ read. The 90-day legs stay forecast-only (`unvalidated-method`).
   length, or an explicit P(dormant through close) component written in
   the note), and if neither has n >= 5 the row is `unvalidated-method`.
   n=1 event; re-grade at 3 silence-state events.
+  Event #2 (RETRO-20261008-0815): Musk wk Oct2-9 86772af248a9 kept a
+  w0.15 dormant component after posting had resumed (gap 2h at record
+  time) -> 120-139 at 0.10 vs mid 0.01, resolved No early, dBrier +0.0099.
+  The dormant weight follows the LIVE gap: once posts resume, drop it to
+  the base rate of a fresh long silence (write that rate in the note) -
+  do not carry the previous gap's regime. 2/3 events; postcount n=51 at
+  +0.0316, bar stands (revisit condition <= 0 at n >= 50 not met).
 - **Streaming weekly-views ladders (RETRO-20261006-2215).** Netflix #1
   global show wk Sep28-Oct4 landed in 6-9M; my self-built wk3/wk2 decay
   prior (0.5-0.65 off a 14.5M wk2) gave P(>=9M) ~0.25 vs the ladder's 9-12M
