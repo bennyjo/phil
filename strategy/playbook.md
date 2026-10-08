@@ -8541,3 +8541,17 @@ Ruling: no boundary change; all four vetoes saved the stake. Say-the-word
 note for the next deep retro (n=2, Egg + Toyota): a word tied to the host
 venue's local industry should not be anchored on the rally-only transcript
 base; the market's venue read beat it both times.
+
+## 2026-10-08 04:15Z update: Trump TX "Job" 20+ WSV row settled (FULL tick, RETRO-20261008-0415)
+
+| Row | own/mkt | Side | Edge | Result | CF pnl |
+|---|---|---|---|---|---|
+| Trump TX "Job" 20+ (`db77ca9f1b92`, WSV) | 0.50/0.555 | No | +0.000 | No | **+5.00** |
+
+Mechanical ledger (`core/counterfactual.py ledger`): OVV 235 rows, 227
+trd, 98W/129L, +$192.40, dBrier +0.0264 (unchanged). WSV 62 rows, 52 trd,
+10 refused, 29W/23L, -$44.36, dBrier -0.0037; side split No -$64.23 (33
+trd), Yes +$19.87 (19 trd). Tool totals, not hand re-sums.
+
+Ruling: no boundary change; the row had zero edge at the No ask, so the
+veto was not the binding gate.
