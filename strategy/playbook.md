@@ -8209,6 +8209,18 @@ read. The 90-day legs stay forecast-only (`unvalidated-method`).
   the base rate of a fresh long silence (write that rate in the note) -
   do not carry the previous gap's regime. 2/3 events; postcount n=51 at
   +0.0316, bar stands (revisit condition <= 0 at n >= 50 not met).
+- **Thin upper tail in judgment mixtures (RETRO-20261008-2220).** Musk wk
+  Oct2-9: the 22:18Z Oct6 mixture (cum 102, quiet w0.15 N(20,10) + active
+  w0.85 N(82,22) over 65.7h) put 220+ at 0.045; every bracket through
+  240-259 resolved No early on Oct 8, i.e. >= 158 more posts in ~48h. The
+  Oct7 row f8e7b337fbbf had already seen the adjacent Oct5-7 book imply
+  the xtracker counter trails the resolver by 29+ posts. Rules: (a) a
+  `method=judgment-mixture` note states P(top open bracket) and the
+  source series' max observed 48h count next to the remaining-time
+  window, so retros can grade the tail; (b) when an adjacent window's
+  book implies the live counter is off by >= 20 posts, any row anchored
+  on that counter is `unvalidated-method` until the counter re-agrees.
+  n=1 tail failure; re-grade at 3 events. Bar unchanged.
 - **Streaming weekly-views ladders (RETRO-20261006-2215).** Netflix #1
   global show wk Sep28-Oct4 landed in 6-9M; my self-built wk3/wk2 decay
   prior (0.5-0.65 off a 14.5M wk2) gave P(>=9M) ~0.25 vs the ladder's 9-12M
