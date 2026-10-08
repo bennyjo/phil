@@ -8521,3 +8521,23 @@ one riding projection stays barred.
   Logged for the pre-registered DEEP-2026-10-13 fork check. Two clustered
   longshots do not justify loosening the veto early.
 
+
+## 2026-10-08 02:15Z update: Iran/Arab-country, Amapa, TX rally Cartel/Toyota veto rows settled (FULL tick, RETRO-20261008-0215)
+
+| Row | own/mkt | Side | Edge | Result | CF pnl |
+|---|---|---|---|---|---|
+| Iran targets Arab country Sep30 (`1715cc4fdf88`, WSV) | 0.03/0.14 | No | +0.060 | Yes | **-5.00** |
+| Lula most votes Amapa (`ffc04c6d6ead`, OVV) | 0.62/0.755 | No | +0.080 | Yes | **-5.00** |
+| Trump TX "Cartel" (`993d9f58cf3d`, WSV) | 0.45/0.495 | No | -0.080 | Yes | **-5.00** |
+| Trump TX "Toyota" (`7d24a6d253da`, WSV) | 0.45/0.71 | No | +0.160 | Yes | **-5.00** |
+
+Mechanical ledger (`core/counterfactual.py ledger`): OVV 235 rows, 227
+trd, 98W/129L, +$192.40, dBrier +0.0264; side split No +$128.02 (154
+trd), Yes +$64.38 (73 trd). WSV 61 rows, 51 trd, 10 refused, 28W/23L,
+-$49.36, dBrier -0.0029; side split No -$69.23 (32 trd), Yes +$19.87
+(19 trd). Tool totals, not hand re-sums.
+
+Ruling: no boundary change; all four vetoes saved the stake. Say-the-word
+note for the next deep retro (n=2, Egg + Toyota): a word tied to the host
+venue's local industry should not be anchored on the rally-only transcript
+base; the market's venue read beat it both times.
