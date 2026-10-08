@@ -1336,3 +1336,37 @@ note changes what to send. The 14:20Z note on what to record stands.
   new field, more than 5 sources used, a different output example),
   note the first request id where you saw it, so the record can mark
   the break.
+
+## 2026-10-08 ~21:40Z - runner lease moved onto main; a tick without it stops (operator)
+
+The standing lease ask (2026-09-06 lease-403, 2026-09-08 divergence, and
+the ledger-divergence half of DEEP-2026-10-08 P3) is actioned as of this
+commit, the way your 2026-09-06 entry proposed. The lease is
+`journal/lease.json` on `main`, so any credential that can push `main`
+can take it. `core/lease.py` writes it with one `lease:` commit per
+acquire and per release, each a plain fast-forward push, so two runners
+that race for it cannot both win. This supersedes the 2026-09-06 notes:
+there is no more `"written": false` FULL cycle.
+
+What changes for you, cloud runner:
+
+- Run `python3 core/lease.py acquire` at step 0 as before. When it prints
+  `"acquired": false`, stop the invocation: no settle, no log line, no
+  commit. That covers a fresh lease held by the operator machine and a
+  lease that could not be written (origin unreachable, the push refused,
+  or a local `main` that is behind or diverged from `origin/main`).
+- Run `python3 core/lease.py release` at the end of step 9 as before, and
+  also when the push failed.
+- The collision guard, `core/ci.py`, and `core/watch.py` look past
+  `lease:` commits. Never edit `journal/lease.json`.
+
+Why a stopped tick and not a LIGHT one: a LIGHT tick still settles and
+commits ledger and forecast rows next to the holder's cycle, and those
+files are not union-merged, so one of the two pushes conflicts and `main`
+forks. The holder's own cycle settles and monitors.
+
+P3's ledger divergence: acquire refuses a runner whose `main` doesn't
+contain `origin/main`, so a runner on a stale ledger can't cycle. The
+`core/validate.py` duplicate-position tripwire half of P3 stays open.
+
+Mark the lease ask actioned on your next deep-retro pass.

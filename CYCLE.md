@@ -13,7 +13,8 @@ procedure exactly once, then stop. Work from this directory.
   paths.
 - You may edit anything under `strategy/`, and write to `journal/retros/` and
   `reports/`. Only `core/ledger.py` and `core/resolve.py` write the ledger;
-  only `core/forecast.py` and `core/resolve.py` write `journal/forecasts.jsonl`.
+  only `core/forecast.py` and `core/resolve.py` write `journal/forecasts.jsonl`;
+  only `core/lease.py` writes `journal/lease.json`.
 - Every probability estimate you record must be your honest belief — your
   calibration is measured (`core/score.py`), and gaming it destroys the
   experiment's value.
@@ -62,29 +63,36 @@ Every invocation runs as one of three ticks:
    note it in the cycle log line and continue on local state). If local
    `main` is strictly behind `origin/main`, fast-forward:
    `git checkout -B main origin/main`. If the histories have genuinely
-   diverged, log a warning for the operator and continue on local state —
-   never reset over local commits. Then the **collision guard**: if
-   `origin/main`'s tip is a `cycle:` or `cycle(triggered):` commit committed
-   less than 20 minutes ago, another runner just cycled — run this invocation
-   as a LIGHT tick (step 1 and the open-position monitor only), regardless of
-   pacing state. A TRIGGERED invocation is exempt and proceeds through the
-   guard (`core/watch.py` already applied its own suppression before firing),
-   with one exception: if the tip is a `cycle(triggered):` commit less than 45
-   minutes old naming the same trigger key, demote to LIGHT.
-   Then the **runner lease** (operator, 2026-09-06): the tip guard cannot see
-   a FULL cycle that is still in flight on the other runner, so a lease on
-   origin (`refs/phil/lease`, see `core/lease.py`) says who is mid-cycle. If
-   the environment variable `PHIL_LEASE` is set, loop.sh already handled it:
-   `held-by-other` means run this invocation as a LIGHT tick, `acquired`
-   means proceed, and you never run the lease commands yourself. Otherwise
-   run `python3 core/lease.py acquire`: `"acquired": false` means the other
-   runner holds a fresh lease - run a LIGHT tick; `"acquired": true` means
-   proceed, and release it in step 9 after your push. `"written": false`
-   with `"acquired": true` means origin refused the write (the cloud
-   credential cannot push custom refs) - proceed as a normal FULL cycle
-   and mention it in the cycle log line; never demote on it. A TRIGGERED invocation
-   neither takes nor honours the lease. A lease expires on its own after
-   50 minutes, so a run that died mid-cycle cannot block the next one.
+   diverged, never reset over local commits: the runner lease below refuses
+   a diverged `main` and ends the invocation. Then the **collision guard**:
+   if the newest commit on `origin/main` that is not a `lease:` commit (the
+   runner lease's own, below) is a `cycle:` or `cycle(triggered):` commit
+   committed less than 20 minutes ago, another runner just cycled - run this
+   invocation as a LIGHT tick (step 1 and the open-position monitor only),
+   regardless of pacing state. A TRIGGERED invocation is exempt and proceeds
+   through the guard (`core/watch.py` already applied its own suppression
+   before firing), with one exception: if that commit is a
+   `cycle(triggered):` commit less than 45 minutes old naming the same
+   trigger key, demote to LIGHT.
+   Then the **runner lease** (operator, 2026-09-06; moved onto `main`
+   2026-10-08): the tip guard cannot see a cycle that is still in flight on
+   the other runner, so a lease file on origin's `main`
+   (`journal/lease.json`, see `core/lease.py`) says who is mid-cycle. If
+   the environment variable `PHIL_LEASE` is set, loop.sh already took the
+   lease for this invocation: proceed, and never run the lease commands
+   yourself. Otherwise run `python3 core/lease.py acquire`.
+   `"acquired": true` means proceed, and release the lease in step 9 after
+   your push. `"acquired": false` means **stop this invocation now**: no
+   settle, no log line, no commit, no push; end with the JSON's `reason` as
+   your final message. That covers both refusals: the other runner holds a
+   fresh lease (exit 3), or the lease could not be written (exit 4: origin
+   unreachable, the push refused, or local `main` behind or diverged from
+   `origin/main`). Stopping instead of running LIGHT is deliberate: a LIGHT
+   tick still commits settled ledger and forecast rows next to the holder's
+   cycle, which forks `main`, and the holder's own cycle settles and
+   monitors. A TRIGGERED invocation neither takes nor honours the lease. A
+   lease expires on its own after 50 minutes, so a run that died mid-cycle
+   cannot block the next one.
 
 0b. **Pace**: read `strategy/schedule.json`. If `next_full_cycle_after` is in
    the future AND at least `min_full_cycles_per_day` full cycles ran in the
@@ -339,4 +347,6 @@ Every invocation runs as one of three ticks:
    cycle log line for the operator.
    Last, if you acquired the runner lease in step 0 (and `PHIL_LEASE` is not
    set), release it: `python3 core/lease.py release`. Release after the push,
-   never before, so the other runner's next tip check sees your commit.
+   never before, so the other runner's next tip check sees your commit, and
+   release even when the push failed: your tick is over, and release commits
+   onto `origin/main` itself.

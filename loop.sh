@@ -83,17 +83,17 @@ for i in $(seq 1 "$CYCLES"); do
     fi
   fi
 
-  # Runner lease (core/lease.py): one FULL cycle at a time across the cloud
+  # Runner lease (core/lease.py): one cycle at a time across the cloud
   # routine and this loop. Taken here, in the interactive shell where the
-  # keyring is unlocked, and released after the push below. The verdict
-  # reaches CYCLE.md step 0 through PHIL_LEASE; a LIGHT tick still settles
-  # and monitors, it just does not scan or research.
-  PHIL_LEASE=acquired
-  if PHIL_PUSH_BY_LOOP=1 python3 core/lease.py acquire >/dev/null; then
-    :
-  elif [ "$?" -eq 3 ]; then
-    echo "runner lease held by the other runner — this cycle runs as a LIGHT tick" >&2
-    PHIL_LEASE=held-by-other
+  # keyring is unlocked, and released after the push below; PHIL_LEASE tells
+  # CYCLE.md step 0 it is already taken. Without the lease (the other runner
+  # holds it, or it could not be written) the whole tick is skipped, not run
+  # LIGHT: a LIGHT tick still commits settled rows next to the holder's
+  # cycle, and that is how main forks. lease.py's docstring has the why.
+  if ! LEASE="$(PHIL_PUSH_BY_LOOP=1 python3 core/lease.py acquire)"; then
+    echo "WARNING: runner lease not taken - skipping this tick: $LEASE" >&2
+    [ "$i" -lt "$CYCLES" ] && sleep $((SLEEP_MIN * 60))
+    continue
   fi
 
   # Model per tick (operator, 2026-09-23): Opus 5.5 for any tick that may run
@@ -108,10 +108,7 @@ for i in $(seq 1 "$CYCLES"); do
   # would flip it, and the error would go the wrong way.
   MODEL=claude-opus-5-5
   MODEL_WHY="tick may run FULL"
-  if [ "$PHIL_LEASE" = "held-by-other" ]; then
-    MODEL=claude-sonnet-5
-    MODEL_WHY="LIGHT tick: lease held by the other runner"
-  elif python3 - <<'PY'
+  if python3 - <<'PY'
 import datetime as dt, json, re, sys
 now = dt.datetime.now(dt.timezone.utc)
 iso = lambda t: dt.datetime.fromisoformat(t.replace("Z", "+00:00"))
@@ -186,7 +183,7 @@ PY
   # stray credential lookup fail fast instead of hanging on a keyring prompt
   # no headless session can answer; GIT_EDITOR stops `git rebase --continue`
   # from opening an editor and blocking forever.
-  PHIL_PUSH_BY_LOOP=1 PHIL_LEASE="$PHIL_LEASE" \
+  PHIL_PUSH_BY_LOOP=1 PHIL_LEASE=acquired \
   GIT_TERMINAL_PROMPT=0 GIT_ASKPASS=/usr/bin/true GIT_EDITOR=true \
     "${CMD[@]}" || echo "cycle $i failed; continuing"
 
@@ -226,12 +223,10 @@ PY
     fi
   fi
 
-  # Release the runner lease after the push (release only deletes a lease
-  # this runner holds, so a held-by-other tick is a no-op here).
-  if [ "$PHIL_LEASE" = "acquired" ]; then
-    PHIL_PUSH_BY_LOOP=1 python3 core/lease.py release >/dev/null \
-      || echo "WARNING: could not release the runner lease — it expires on its own" >&2
-  fi
+  # Release the runner lease after the push, even a failed one: the tick is
+  # over either way, and release commits onto origin/main, not onto HEAD.
+  PHIL_PUSH_BY_LOOP=1 python3 core/lease.py release >/dev/null \
+    || echo "WARNING: could not release the runner lease - it expires on its own" >&2
 
   [ "$i" -lt "$CYCLES" ] && sleep $((SLEEP_MIN * 60))
 done

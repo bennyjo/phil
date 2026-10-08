@@ -425,8 +425,11 @@ def cooling_down(state, key, now):
 def git_suppression(now, notes):
     """(suppress_all, keys_named_by_recent_triggered_commits) from origin/main."""
     try:
+        # --invert-grep: core/lease.py's commits bracket every cycle and would
+        # push the cycle commits this guard reads out of the window.
         out = subprocess.run(
-            ["git", "log", "origin/main", "-5", "--format=%s %ct"],
+            ["git", "log", "origin/main", "-5", "--format=%s %ct",
+             "--invert-grep", "--grep=^lease: "],
             cwd=str(ROOT), capture_output=True, text=True, timeout=15, check=True,
         )
     except Exception as e:  # noqa: BLE001 - no history read: suppress nothing, say so
