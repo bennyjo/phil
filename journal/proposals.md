@@ -3947,3 +3947,113 @@ NOT MET (20th).
 - 2026-10-06 09:56Z evidence (divergence): both runners superseded forecast 2633bf54fe64 (USGS '<=6', market 4951871) while main was diverged, so the market carried two live supersede chains (fbc9b39e1cc2..., 2cee843031a2...) for four days and score.py grades both. Divergence now ahead 8 / behind 10; operator merge still needed.
 - 2026-10-06 11:01Z evidence (divergence): still unresolved and growing. At this cycle's sync, local ahead 10 / behind 12 at merge-base 7b67cd4 vs origin tip 67a6786b (a plain cycle: commit, not a retro this time, so no duplicate-retro symptom on this check, but the split itself has now run for over 6 hours without an operator merge).
 - 2026-10-06 18:48Z evidence (divergence): still diverged (local 20 ahead, origin 19 ahead, merge-base 7b67cd4). Local-only Musk rows (5750, 30db, 9709, 001c, c48c, 6610) and Khamenei 9cd4 were settled here while origin graded the same Musk week in RETRO-20261006-1815, so the operator merge will see two retros on one market. Local playbook also lacks origin's "Ongoing-silence conditioning" rule (5726253) until the merge. Status: PROPOSED (evidence added).
+
+## DEEP-2026-10-06 - deep-retro proposals and status
+
+Hourly entries filed since DEEP-2026-10-05:
+
+- **Main fork (entries 2026-10-01 18:1xZ, 10-02 02:5xZ, 10-02 06:0xZ,
+  10-05 02:5xZ): RESOLVED.** The operator merged it in 409a6ad (2026-10-05
+  22:24Z, 126 local / 142 remote commits). This session started shallow
+  (HEAD 6dcd45c). After `fetch --unshallow`, local and origin/main were
+  identical (0/0), so there was no divergence.
+- **Void branch unreachable (2026-10-03, 10-03 06:40Z) and Andersson row
+  still open (10-05 09:1xZ): REJECTED as a void; position stays open.**
+  The diagnosis is right: resolve.py returns before the 48h void when
+  gamma says `closed: false`. But the remedy would score wrongly here.
+  e746d7e1ba99 is open because its event (the next PM taking office) has
+  not happened. The market's end date was nominal, and the book is live
+  (mid 0.195, MTM -$0.36). Voiding at pnl 0 would delete a position the
+  market is actively pricing, and on other rows it would turn marked
+  losses into zeros. That flatters a record already at z -3.48. A void
+  should apply only when gamma or UMA marks a market cancelled or
+  invalid. Narrower ask (operator): have score.py `open_mtm` flag rows
+  more than 14 days past end_date, so they stay visible without being
+  settled.
+- **Forecast price recorded as bid when the ask is null (10-05 16:53Z):
+  ENDORSED, low priority.** It affects 17 of 1,687 rows (all of them
+  record market = bid). Only 1 of the 12 market-agrees rows with a gap
+  above 0.05 is one of them. Ask (operator, core/forecast.py): when the
+  ask is null, record `market_prob_at_record` as null, or as the last
+  trade with a flag, and have score.py exclude those rows from forecast
+  dBrier.
+- **Counterfactual reconcile backlog (10-01 08:3xZ): RESOLVED.** The
+  hourly backfill landed at 2026-10-06 02:11Z. It is superseded by
+  today's retirement of the hand table as a per-settlement duty
+  (playbook DEEP-2026-10-06).
+- **Subclass auto-tagger window bleed (09-30 22:1xZ): carried,
+  PROPOSED.**
+
+New operator proposals (DEEP-2026-10-06):
+
+- **P1: let the frozen hand table leave playbook.md (core/counterfactual.py).**
+  playbook.md is 527KB / 8,382 lines. The section "Outside-view veto:
+  settled counterfactual ledger" alone is about 2,430 lines, and
+  `reconcile` hard-codes `PLAYBOOK` plus that section header, exiting
+  if it is missing. So the agent cannot archive the table without
+  breaking a core tool. Ask: make reconcile read
+  `strategy/archive/counterfactual-hand-table.md` when it exists, or
+  drop reconcile now that the hand table is retired. Then the next deep
+  retro moves the table out. A further ask: a CYCLE.md sentence that
+  playbook.md is read by section (grep the headers), not end to end.
+  The file is far past a cycle's reading budget. The DEEP-2026-09-30
+  status already noted that the default Read stops at line 2,000.
+- **P2: two runners overspent the shared screener quota on 2026-10-05.**
+  funnel.jsonl 23:11Z (operator) records 195/150 batches (cloud 120,
+  operator 75). Cloud and operator cycles also ran 3 minutes apart
+  (cycles 20261005-2212 operator and 20261005-2215 cloud). That is the
+  same no-lease condition that produced the 09-29 fork, so the fork
+  can come back. Ask: enforce the runner lease (the cloud-lease
+  writability item, ENDORSED since 09-18), or give each runner its own
+  quota share.
+- Carried unchanged: funnel-weld CI check (PROPOSED, priority raised
+  10-05; every cloud FULL since then has a row. Operator-side rows exist
+  for 10-05 10:17/15:50/19:04/23:11Z, but whether the 13:38Z and 22:12Z
+  operator lines were FULLs cannot be told without a tick_type field, which
+  is the next item), cycles.log tick_type field, refusal-row dBrier column,
+  ODDS_API_KEY on both runners, per-fold dBrier column (the deep retro
+  computes it by hand again today), real-twin allowed classes,
+  wire-nonce 401, EOA gas top-up, mech delivery size, screener quota
+  refund, watch.py shape regexes, core/screen.py data-source slot.
+
+**Status:** 0 bets settled, 0 placed (about 48h without a placement,
+audited: the gates working, not avoidance). Relaxation fork NOT MET
+(21st; f3 +0.050 / f4 +0.006). No reverts of hourly edits.
+risk.json notes compacted from 27KB to 2KB, and 3 closed
+schedule.json watch items pruned (19.7KB).
+
+## DEEP-2026-10-07 - deep-retro proposals and status
+
+- **No hourly entries filed since DEEP-2026-10-06.** Every earlier entry
+  carries a Status, and those statuses are unchanged.
+- **Stale open e746d7e1ba99 (Andersson), now 24 days past end_date:**
+  the DEEP-2026-10-06 ruling stands. No void. Operator ask: flag rows
+  more than 14 days past end_date in score.py `open_mtm`.
+- **P1 (frozen hand table out of the playbook): still PROPOSED.**
+  playbook.md is 536KB.
+- **P2 (runner quota split): still PROPOSED, low urgency.** The operator
+  quota file has been idle since 10-05, and the overspend has not
+  recurred.
+
+## DEEP-2026-10-08 - deep-retro proposals and status
+
+- **No new hourly entries since DEEP-2026-10-06.** Every earlier entry
+  carries a Status, and those statuses are unchanged.
+- **P1 (frozen hand table out of the playbook): still PROPOSED.**
+  playbook.md is 543KB.
+- **P2 (runner quota split): still PROPOSED, low urgency.**
+- **P3 (NEW, operator, core/validate.py + loop.sh): duplicate open
+  position tripwire.** d5cfa982fa21 (10-04 01:36Z, operator runner) was
+  placed on the same market+outcome as 9a2944acc280 (market 4951873,
+  Yes), which was still open. The guard at `core/ledger.py:78` missed it
+  because the operator's local ledger lacked the cloud row. The two
+  runners logged different cash that hour: cloud $975.67, operator
+  $986.92. The ask has two parts:
+  - (a) validate.py should fail CI when two ledger rows share
+    market_id+outcome and the second row's ts falls before the first
+    row's settled_ts.
+  - (b) loop.sh should refuse step-6 placement when local main is
+    behind origin/main after the sync.
+
+  Cost so far: one extra $5 loss, which stayed within the event cap.
+  Status: PROPOSED.
