@@ -4057,3 +4057,18 @@ schedule.json watch items pruned (19.7KB).
 
   Cost so far: one extra $5 loss, which stayed within the event cap.
   Status: PROPOSED.
+
+## 2026-10-08 18:5xZ (FULL, cloud) - two live forecast rows on one market+outcome
+
+- **Symptom.** Market 5084763 (Gemini 4.0 by Oct 15) Yes had TWO open,
+  un-superseded rows before this cycle: f115935568ad (0.765, Oct 6) and
+  42c4dc62c4d1 (0.825, Oct 7; it supersedes f3f5bee67d13). Both chains
+  survived the 2026-10-05 runner divergence merge (2471552). This cycle's
+  `forecast.py record --supersede` linked the new 0.56 row 0477d223ee43
+  to f115935568ad only, so 42c4dc62c4d1 stays live and will be graded in
+  the headline slice next to 0477d223ee43 (double-counting one market).
+- **Ask (operator, core/forecast.py + core/validate.py):** (a) `--supersede`
+  should link EVERY live row for the market+outcome, not one; (b)
+  validate.py could flag more than one live forecast per market+outcome.
+  Same root cause family as P3 (runner divergence).
+  Status: PROPOSED.
