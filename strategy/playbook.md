@@ -8508,8 +8508,11 @@ one riding projection stays barred.
   price 0.12 -> 0.31 (+0.19), so the second entry added exposure without
   adding edge. Write both deltas in the re-entry rationale; if our move
   is not larger than the price move, do not re-enter.
-  **Update 2026-10-07 10:3xZ (FULL, cloud):** core/ledger.py now rejects
-  any second position on the same market+outcome ('already have an open
+  **Update 2026-10-07 10:3xZ (FULL, cloud):** core/ledger.py rejects
+  any second OPEN position on the same market+outcome (the guard dates
+  from the scaffold, not new; DEEP-2026-10-08: d5cfa982fa21 slipped past
+  it only because the operator runner's local ledger lacked 9a2944acc280
+  on 10-04) ('already have an open
   position on this market+outcome') - the USGS Oct5-11 '<=6' re-entry
   (own +0.07 vs ask +0.04, which passed the deltas test) was refused.
   Same-bracket re-entry is therefore impossible; record the updated
@@ -8555,3 +8558,38 @@ trd), Yes +$19.87 (19 trd). Tool totals, not hand re-sums.
 
 Ruling: no boundary change; the row had zero edge at the No ask, so the
 veto was not the binding gate.
+
+## DEEP-2026-10-08 rulings
+
+- **Validated-feed sweep: KEPT, PortWatch leg made conditional.** The
+  retirement test (owed since DEEP-2026-10-06) was "retire if no leg
+  outside the Parcl set shows ask-edge >= min_edge". It is NOT met:
+  USGS Oct5-11 <=6 showed ask-edge 0.06 and was placed (38f9c08d4804,
+  entry 0.35, mid 0.52 now, unsettled). So the sweep stays until
+  38f9c08d4804 settles and is graded under the DEEP-2026-10-07 regime
+  pre-registration. But the last two PortWatch rotations (10-07 06:4xZ,
+  20:2xZ) read a Mandeb layer stuck at Oct 4 and produced nothing. Rule:
+  rotate USGS <-> Parcl; take the PortWatch leg only when its layer's
+  last published date has advanced since the previous PortWatch read
+  (one cheap check, logged), otherwise skip straight to the next family.
+- **Say-the-word, venue-local words (n=2, Egg + Toyota; RETRO-20261008-0215):
+  ADOPTED as a recording rule, not a bet rule.** A word tied to the host
+  venue's local industry or landmarks is recorded at no less than the
+  mid unless a transcript from a prior rally AT THAT VENUE/STATE gives a
+  rate. Reason this is safe at n=2: it only stops a fade; it never
+  creates a bet. Evidence: 7d24a6d253da Toyota (0.45 vs 0.71, Yes,
+  dBrier +0.218). Re-grade at n=5.
+- **24h forecast stream:** 25 live rows settled since DEEP-2026-10-07,
+  net dBrier **+0.712** (behind the book). The wide-spread-veto rows
+  alone are +0.573 (n=5: Toyota +0.218, Iran-Arab 1715cc4fdf88 +0.201,
+  Haiku d603bfb03fc2 +0.164); market-agrees rows -0.026 (n=7). The day's
+  pattern: the larger our disagreement with the book, the worse we did,
+  and every one of those rows was kept off the ledger by a gate. That is
+  the gates working. It is also the opposite of the sign the OVV
+  relaxation fork needs; log it for the DEEP-2026-10-13 check.
+- **RBI modal-leg rule (2 of 2 ladders): KEEP.** bc70aa63a6f0 (modal at
+  0.75 vs 0.80, won, +0.023) and 5b2e769d7bf6 (hold 0.21 vs 0.18, lost,
+  +0.012) both point the same way; the rule is mechanical.
+- **Haiku sudden-jump note (n=4): KEEP.** It records near the market or
+  re-checks near cutoff; it cannot create a bet.
+

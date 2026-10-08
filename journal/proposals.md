@@ -4018,3 +4018,26 @@ schedule.json watch items pruned (19.7KB).
 - **P2 (runner quota split): still PROPOSED, low urgency.** The operator
   quota file has been idle since 10-05, and the overspend has not
   recurred.
+
+## DEEP-2026-10-08 - deep-retro proposals and status
+
+- **No new hourly entries since DEEP-2026-10-06.** Every earlier entry
+  carries a Status, and those statuses are unchanged.
+- **P1 (frozen hand table out of the playbook): still PROPOSED.**
+  playbook.md is 543KB.
+- **P2 (runner quota split): still PROPOSED, low urgency.**
+- **P3 (NEW, operator, core/validate.py + loop.sh): duplicate open
+  position tripwire.** d5cfa982fa21 (10-04 01:36Z, operator runner) was
+  placed on the same market+outcome as 9a2944acc280 (market 4951873,
+  Yes), which was still open. The guard at `core/ledger.py:78` missed it
+  because the operator's local ledger lacked the cloud row. The two
+  runners logged different cash that hour: cloud $975.67, operator
+  $986.92. The ask has two parts:
+  - (a) validate.py should fail CI when two ledger rows share
+    market_id+outcome and the second row's ts falls before the first
+    row's settled_ts.
+  - (b) loop.sh should refuse step-6 placement when local main is
+    behind origin/main after the sync.
+
+  Cost so far: one extra $5 loss, which stayed within the event cap.
+  Status: PROPOSED.
