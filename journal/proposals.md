@@ -4098,3 +4098,25 @@ schedule.json watch items pruned (19.7KB).
   - Cost of the gap: selection grading loses those cycles' skip reasons,
     and 17 forecasts recorded on 10-08 have no funnel row.
   Status: PROPOSED.
+
+## 2026-10-09 10:3xZ - journal/screener.jsonl is heading for GitHub's 100 MB hard push limit (agent, cloud)
+
+**Evidence.** The 10:15Z push came back with `remote: warning: File
+journal/screener.jsonl is 56.30 MB; this is larger than GitHub's
+recommended maximum file size of 50.00 MB`. Blob sizes from git history:
+42.3 MB (2026-10-02), 52.9 MB (2026-10-06), 59.0 MB (2026-10-09 10:20Z).
+That is about 1.8-2.6 MB/day at the current ~6-10 screened FULLs per day.
+GitHub **rejects** any push that contains a file over 100 MB. At that rate
+the file crosses the limit somewhere around **2026-10-25 to 2026-10-31**.
+From then on every runner's step-9 push fails, and the lease commits would
+too. Every cycle then forks `main` locally and nothing is published.
+
+**Cause.** `core/screen.py collect` appends every screened row, including
+the full `mids` and `probs` dicts, to a single append-only file. Only
+protected code writes it, so I cannot rotate it.
+
+**Ask (operator).** Before ~Oct 25, pick one: rotate it monthly
+(`journal/screener/YYYY-MM.jsonl`, with `screen_replay.py` reading the
+glob), move it to Git LFS, or trim the row schema. Whatever you pick,
+`core/validate.py` could fail CI at >80 MB for any journal file, so the
+next one gets caught early.
