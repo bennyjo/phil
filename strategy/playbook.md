@@ -8858,3 +8858,21 @@ projections, set the model sd from the projections' own dispersion
 (floor 4 pts), not a round 6 — the sd-6 model put the right centre on
 the wrong width (modal leg 0.32 vs book 0.40, dBrier +0.102). Re-grade
 at the next share ladder.
+
+## 2026-10-09 20:15Z update: Kyiv Oct-9 daily-target WSV row settled (FULL tick, RETRO-20261009-2015)
+
+| Row | own/mkt | Side | Edge | Result | CF pnl |
+|---|---|---|---|---|---|
+| Russia target Kyiv Oct 9 (`e5f7ac9f6cbd`, WSV) | 0.70/0.854 | No | +0.088 | Yes | -5.00 |
+
+Mechanical ledger (`core/counterfactual.py ledger`): WSV 71 rows, 61 trd,
+10 refused, 31W/30L, -$65.59, dBrier -0.0000 (was 70 rows, -$60.59).
+OVV unchanged. Tool totals, not hand re-sums.
+
+Ruling: no boundary change; the veto saved $5. Recording rule (n=1,
+cannot create a bet): on daily "Will Russia target Kyiv on <date>"
+markets, absence of a reported strike before the Kyiv evening is weak
+evidence (launches cluster at night, reports lag) — in a high-tempo month
+shade at most ~0.05 below the base rate on absence alone; the 0.15 shade
+cost dBrier -0.069. Re-grade at the next settlement in this family
+(open: af505e60c020, 4e1fe00a7371, bf588ea82108, all Oct 12).
