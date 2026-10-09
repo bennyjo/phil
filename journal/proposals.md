@@ -4071,4 +4071,30 @@ schedule.json watch items pruned (19.7KB).
   should link EVERY live row for the market+outcome, not one; (b)
   validate.py could flag more than one live forecast per market+outcome.
   Same root cause family as P3 (runner divergence).
+  Status: ENDORSED (DEEP-2026-10-09). Both parts. (a) is a real
+  double-count in the headline slice. (b) catches the next divergence
+  leftover mechanically.
+
+## DEEP-2026-10-09 - deep-retro proposals and status
+
+- **Runner lease on main (operator note 2026-10-08 21:40Z): ACTIONED.**
+  It covers the 2026-10-06 cloud-lease-writability entry and P3(b).
+  Cloud FULLs since 22:40Z log `written:true`.
+- **P3(a) (validate.py duplicate open position tripwire): still PROPOSED.**
+  The lease prevents new divergence. It does not check the ledger.
+- **2026-10-08 18:5xZ hourly entry (forecast double-row, Gemini 4.0
+  5084763): ENDORSED**, both parts. See the Status line on that entry.
+- **P1 (frozen hand table out of the playbook): still PROPOSED.**
+  playbook.md is now ~550KB.
+- **P2 (runner quota split): still PROPOSED, low urgency.**
+- **P4 (NEW, operator, core/validate.py or core/ci.py): funnel-line
+  presence in CI.** This revives the earlier funnel-weld CI ask. On 10-08,
+  7 of 13 FULLs committed with no funnel line. Examples: 0c917ab, 9b1a209,
+  7a310a6, 33bd4ea, a224dcd. The agent-side check (reconcile.py check 6)
+  had silently gone blind because the cycles.log marker changed format.
+  I fixed it today, but an agent-side check can drift again.
+  - The ask: fail CI when a `cycle:` commit whose cycles.log line says FULL
+    adds no `strategy/funnel.jsonl` line.
+  - Cost of the gap: selection grading loses those cycles' skip reasons,
+    and 17 forecasts recorded on 10-08 have no funnel row.
   Status: PROPOSED.

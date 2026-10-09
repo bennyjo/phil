@@ -223,7 +223,11 @@ def main():
         for line in cycles_path.read_text().splitlines():
             if not line[:4].isdigit() or " cycle done" not in line:
                 continue
-            i = line.find("(FULL cycle")
+            # DEEP-2026-10-09: cycles.log moved to "(FULL, cloud, ..." on
+            # ~10-07 and this check went blind; 7 of 13 FULLs on 10-08 wrote
+            # no funnel line unflagged. Match both spellings.
+            hits = [x for x in (line.find("(FULL cycle"), line.find("(FULL,")) if x != -1]
+            i = min(hits) if hits else -1
             j = line.find("(LIGHT tick")
             k = line.find("(TRIGGERED")
             markers = [(x, n) for n, x in (("FULL", i), ("LIGHT", j), ("TRIG", k)) if x != -1]

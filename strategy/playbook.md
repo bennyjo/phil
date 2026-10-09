@@ -8785,3 +8785,41 @@ America, 1776, PEP; all fading a mid >= 0.69) lost; the veto saved $15.
   America (TX, faded 0.50 vs 0.695, lost, dBrier +0.157) and Alamo (TX,
   recorded above the mid, won, -0.095) join Egg and Toyota. Re-grade at
   n=5 unchanged.
+
+## DEEP-2026-10-09 rulings
+
+- **Funnel weld broke again: 7 of 13 FULLs on 10-08 wrote no funnel line**
+  (04:18, 06:52, 08:21, 10:30, 18:20, 20:25, 22:40Z; their commits, e.g.
+  0c917ab, 33bd4ea, a224dcd, touch no `strategy/funnel.jsonl`). The
+  funnel facts went into cycles.log prose instead. `reconcile.py` check 6
+  was blind because it matched only `(FULL cycle`, and cycles.log now
+  writes `(FULL, cloud, ...`. Fixed: it matches both spellings, and it now
+  flags the six in-window misses. The rule is unchanged. Before any FULL
+  commit, run `python3 strategy/tools/reconcile.py` and confirm `tail -1
+  strategy/funnel.jsonl` carries this cycle's ts. A FULL commit while
+  check 6 flags THIS cycle is a discipline violation. The other gaps it
+  prints from earlier ticks are history; do not backfill them by hand.
+- **Pacing pointer.** Every cloud FULL logs "pacing pointer stale -> FULL"
+  and leaves `next_full_cycle_after` at 10-06 02:20Z. Running FULL every
+  tick is legal. The contract is that each FULL either advances the
+  pointer or says why not. I advanced it to now. Advance it on each FULL
+  (set it to the cycle ts when no skip is justified).
+- **Hourly edits in b50af47..5a559b6:**
+  - TX-rally veto table, venue-local tally 4/4: KEEP.
+  - Musk dormant-weight event #2 (follow the LIVE gap): KEEP.
+  - Thin-upper-tail rules (a) record P(top bracket) and the max 48h count,
+    (b) an off-by->=20 counter makes a row `unvalidated-method`: KEEP. They
+    are cheap and only move rows toward the book. n=1 tail failure.
+  - reconcile.py stringified-researched guard: KEEP.
+  - schedule.json housekeeping (d49d7465b094 archived): KEEP.
+  None reverted.
+- **Blend trend, watch only.** score.py `blend_sweep` w_opt (the market's
+  weight) has fallen from 0.77 at n=935 (DEEP-09-30) to 0.64 at n=1370.
+  At w=0.6 the blend beats the market by -0.0017 overall and -0.0041 on
+  the n=465 disagreement rows. Our estimates now add information, but only
+  as a ~35% shrink toward the mid. The arithmetic for bets: a raw gap g is
+  worth about 0.36g. Clearing min_edge 0.04 needs g >= ~0.11, and that is
+  where the OVV veto sits. That is why placements are ~0 at current
+  gates, and it is not a reason to loosen either gate. Re-read w_opt at
+  each deep retro. If it falls below 0.5 at n >= 1500, propose recording
+  `est` as the 0.5 blend.
