@@ -8166,6 +8166,10 @@ rows net -0.167 vs the mid. The rule stands. Watch item: the Trump miss
 came with a visible slowdown (16 posts in the 15h before record) that
 only the aligned windows (0.333, n=6) carried. If two more independent
 events miss the same way, revisit "all windows when aligned n<20".
+**Tally (RETRO-20261009-1815): 1 of 2.** Trump Oct2-9 28h-out pair
+(8839a85fa21a 0.58 / d51845662a3e 0.37, all windows) lost the mid by
++0.051 net while the written drift view (0.85/0.12, last 48h 8-9/day)
+would have won by ~0.22. One more such miss triggers the revisit.
 
 **Label slip:** `89733920b201` (Musk tweets) was recorded as
 `countable-metric`; tweet counts are `social-media-postcount`.
