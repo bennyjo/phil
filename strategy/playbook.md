@@ -8834,3 +8834,23 @@ America, 1776, PEP; all fading a mid >= 0.69) lost; the veto saved $15.
   gates, and it is not a reason to loosen either gate. Re-read w_opt at
   each deep retro. If it falls below 0.5 at n >= 1500, propose recording
   `est` as the 0.5 blend.
+
+## 2026-10-09 14:30Z update: Holborn & St Pancras Green-share WSV ladder settled (FULL tick, RETRO-20261009-1430)
+
+| Row | own/mkt | Side | Edge | Result | CF pnl |
+|---|---|---|---|---|---|
+| Holborn Grn 35-40 (`07bd55f592fd`, WSV) | 0.15/0.075 | Yes | +0.030 | No | -5.00 |
+| Holborn Grn 30-35 (`2a7809f09927`, WSV) | 0.32/0.40 | No | -0.050 | Yes | -5.00 |
+| Holborn Grn 25-30 (`817e680fd58f`, WSV) | 0.30/0.29 | Yes | -0.190 | No | -5.00 |
+
+Mechanical ledger (`core/counterfactual.py ledger`): WSV 70 rows, 60 trd,
+10 refused, 31W/29L, -$60.59, dBrier -0.0010 (was 66 rows, -$40.59; the
+fourth new row is 306eb6a66967, graded in RETRO-20261009-1015). OVV
+unchanged. Tool totals, not hand re-sums.
+
+Ruling: no boundary change; the veto saved $15. Recording rule (n=1,
+cannot create a bet): on a vote-share ladder with several independent
+projections, set the model sd from the projections' own dispersion
+(floor 4 pts), not a round 6 — the sd-6 model put the right centre on
+the wrong width (modal leg 0.32 vs book 0.40, dBrier +0.102). Re-grade
+at the next share ladder.
