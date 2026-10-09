@@ -8134,6 +8134,17 @@ no public release at my check, ~11.5h before a same-day cutoff; I held
 sudden-jump split 1-1. On a by-date release market, a sudden jump plus
 the same-day-deadline timing rule above means re-check near the cutoff
 or record near the market, not a mid-session discount.**
+**n=5 (RETRO-20261009-1240): Kuleba Nobel Peace (`637034`), sudden
+0.055->0.25 climb in the ~9h before a sealed 09:00Z committee
+announcement, no source; I shaded 0.05->0.10->0.15 toward it, Navi Pillay
+won (net dBrier -0.066 on 4 Nobel rows, but each shade toward the move
+cost Brier vs my prior). Tally 3-for-5 market right. Sudden-jump split
+now 2-1 discount-right, and the one market-right sudden jump (Haiku) was
+a by-date release whose event could already have happened. Observation
+to test, not yet a rule: on a SEALED-decision market (committee/jury
+announcement, outcome not knowable before the reveal), hold the prior
+instead of shading toward an unsourced late jump. Still no fade bet
+(n=5 << 15).**
 
 ## 2026-10-02 18:57Z update: one `outside-view-veto` and one `wide-spread-veto` row settled, post-count pair graded (FULL tick, RETRO-20261002-1857)
 
