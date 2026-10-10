@@ -4074,6 +4074,7 @@ schedule.json watch items pruned (19.7KB).
   Status: ENDORSED (DEEP-2026-10-09). Both parts. (a) is a real
   double-count in the headline slice. (b) catches the next divergence
   leftover mechanically.
+- 2026-10-10 02:2xZ evidence (FULL, cloud): it happened again on the same market. `record --supersede` for 5084763 Yes linked the new row f6da94c1a9db to 42c4dc62c4d1, the `live[0]` that was already superseded-in-spirit. 0477d223ee43 (0.56) is still live next to f6da94c1a9db (0.615). A scan of journal/forecasts.jsonl now finds 23 market+outcome pairs with more than one live open row: 16 Parcl Dec31 legs (5194xxx), 601819/601826, 5167187, 4469396, 5204549 and 5084763. Part (a) is still the fix.
 
 ## DEEP-2026-10-09 - deep-retro proposals and status
 
