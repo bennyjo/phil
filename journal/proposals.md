@@ -4121,3 +4121,30 @@ protected code writes it, so I cannot rotate it.
 glob), move it to Git LFS, or trim the row schema. Whatever you pick,
 `core/validate.py` could fail CI at >80 MB for any journal file, so the
 next one gets caught early.
+
+**Status (DEEP-2026-10-10): ENDORSED, priority HIGH, operator act.** The
+growth figure is updated: 60.1 MB at 10-10 04:18Z, up from 59.0 MB at
+10-09 10:20Z. That is ~1.5 MB/day at the current pace and ~2.5 MB/day on
+heavy days, so the file crosses 100 MB around 2026-10-26 to 2026-11-05.
+Any of the three remedies works. The >80 MB CI tripwire is worth adding
+whichever one you pick.
+
+## DEEP-2026-10-10 - deep-retro proposals and status
+
+- **P4 (funnel-line presence check): ESCALATED to the top operator
+  ask.** The 10-09 fix to reconcile.py check 6 made detection work (it
+  flags all 4 new misses). Prevention did not improve: 4 of 12 FULLs
+  still committed without a funnel line, and 0 of 14 cycle log lines
+  mention reconcile.py, so the hourly agent never runs it. Prose rules in
+  a 565KB playbook have now failed on 10-01, 10-08 and 10-09/10. Cheapest
+  fix: one line in CYCLE.md step 9, "run `python3
+  strategy/tools/reconcile.py`; on FAIL for this cycle, fix before
+  commit". Stronger fix: the CI check. Either one would do.
+  Status: PROPOSED (escalated).
+- **Screener.jsonl 100 MB limit (2026-10-09 hourly entry): ENDORSED,
+  HIGH.** See the Status line on that entry. Deadline ~Oct 26-Nov 5.
+- **P3(a) (duplicate open position tripwire): still PROPOSED.**
+- **P1 (frozen hand table out of the playbook): still PROPOSED.** The
+  playbook is now 565KB, which is part of why the top-of-file rules get
+  missed.
+- **P2 (runner quota split): still PROPOSED, low urgency.**

@@ -14,10 +14,21 @@ the last 7 days. Those sit at the end of the file. Settled narrative
 lives in `strategy/playbook-archive.md`. You do not need to read it
 per cycle.
 
-**Before committing a FULL cycle (DEEP-2026-10-01):** `tail -1
-strategy/funnel.jsonl` must show this cycle's timestamp. Three FULL
-cycles in three days committed 300 screener rows and no funnel row
-(41b031e, d43503c, f3bf184). The third one placed a bet.
+**Before committing ANY cycle that screened or recorded a forecast
+(DEEP-2026-10-01, hardened DEEP-2026-10-10) — run these two commands and
+paste both outputs into the cycles.log line:**
+
+    tail -1 strategy/funnel.jsonl | cut -c1-40     # must show THIS cycle's ts
+    python3 strategy/tools/reconcile.py | tail -1   # quote it literally
+
+If the first does not show this cycle's ts, write the funnel line NOW
+(the pool/screened/escalated numbers you were about to put in cycles.log
+prose belong in `strategy/funnel.jsonl`, not in the log). Record: 41b031e,
+d43503c, f3bf184 (10-01); 7 of 13 FULLs on 10-08; 4 of 12 on 10-09/10
+(10:21, 12:47, 18:21, 00:19Z) — and **0 of 14 cycle log lines in that
+window mention reconcile.py at all**. Every one of those misses wrote the
+funnel numbers into cycles.log instead. The data exists; it is being put
+in the wrong file.
 
 ## Thesis
 
@@ -8897,3 +8908,41 @@ of the mid and write the tracker-literal read as "api view: X" in the
 note — regardless of the sibling's liquidity. Shading toward a counter I
 have already explained away cost dBrier +0.129 here. Re-grade at the
 next postcount settlement where the counter and the book disagree.
+
+## DEEP-2026-10-10 rulings
+
+- **Funnel weld: still failing, and reconcile.py is never run.** 4 of 12
+  FULLs since DEEP-10-09 committed with no `strategy/funnel.jsonl` line
+  (10-09 10:21, 12:47, 18:21; 10-10 00:19Z). Their funnel facts sit in
+  cycles.log prose ("funnel: pool 1117, screened 299, escalated 15..."),
+  so this is a wrong-file habit, not missing data. 0 of the 14 cycle log
+  lines in the window mention reconcile.py, so the DEEP-08-22 token rule
+  is a dead letter. Today `reconcile.py` prints FAIL with 18 gaps (14
+  forecasts with no funnel row, 4 FULLs). The agent-side lever left is
+  placement: the two-command pre-commit block is now at the top of this
+  file. The real fix is operator-side (P4: CI, or one line in CYCLE.md
+  step 9). Do not hand-backfill the 4 misses; they are history.
+- **Hourly edits in 2b591c1..570162c: all KEEP.**
+  - Sealed-decision "hold the prior vs unsourced late jump" (Kuleba
+    Nobel, RETRO-20261009-1240): KEEP as an observation. n=5, no bet.
+  - Trump all-windows revisit tally 1 of 2 (RETRO-20261009-1815): KEEP.
+  - Vote-share ladder sd from projection dispersion (Holborn,
+    RETRO-20261009-1430): KEEP, n=1 recording rule.
+  - Kyiv daily-target absence shade cap ~0.05 (RETRO-20261009-2015): KEEP,
+    n=1 recording rule. Re-grade with the three Oct 12 rows.
+  - "Book beats visible counter" extended to named capture gaps
+    (Zelenskyy 029d793933c6, dBrier +0.129; RETRO-20261010-0015): KEEP.
+    It is the 4th event of one failure mode and only moves rows toward
+    the book.
+  - schedule.json: the pointer now advances every FULL, as the DEEP-10-09
+    contract asked. Pacing is honest. No deferrals.
+- **WSV veto keeps paying.** Mechanical counterfactual: 72 rows, 31W/31L,
+  -$70.59 had they traded, dBrier +0.0018. In the last 24h three WSV rows
+  (029d793933c6, 2a7809f09927, e5f7ac9f6cbd) cost +0.30 Brier vs the book
+  and would have lost $15. No boundary change.
+- **Blend watch:** w_opt 0.638 at n=1403 (0.64 at n=1370). Flat. The
+  trigger (w_opt < 0.5 at n >= 1500) is not met.
+- **Benchmark note:** the 24h forecast stream's best row, Tampa tornado
+  1a394ea666f9 (0.96 vs mid 0.512, -0.237), was recorded against a
+  0.035/0.989 book with $21 of liquidity. The mid is meaningless there.
+  Do not count it as skill.
