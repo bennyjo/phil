@@ -8876,3 +8876,24 @@ evidence (launches cluster at night, reports lag) — in a high-tempo month
 shade at most ~0.05 below the base rate on absence alone; the 0.15 shade
 cost dBrier -0.069. Re-grade at the next settlement in this family
 (open: af505e60c020, 4e1fe00a7371, bf588ea82108, all Oct 12).
+
+## 2026-10-10 00:15Z update: Zelenskyy Oct 2-9 80-99 WSV row settled (FULL tick, RETRO-20261010-0015)
+
+| Row | own/mkt | Side | Edge | Result | CF pnl |
+|---|---|---|---|---|---|
+| Zelenskyy X posts Oct 2-9 80-99 (`029d793933c6`, WSV) | 0.60/0.825 | No | +0.200 | Yes | -5.00 |
+
+Mechanical ledger (`core/counterfactual.py ledger`): WSV 72 rows, 62 trd,
+31W/31L, -$70.59, dBrier +0.0018 (was 71 rows, -$65.59). OVV unchanged.
+Tool totals, not hand re-sums.
+
+Ruling: no boundary change; the veto saved $5. **Extension of the
+"book beats visible counter" rule (4th event; Trump TS Sep18-25, Musk
+Oct1-3, Musk Oct2-9 tail, Zelenskyy Oct2-9):** when my own note
+diagnoses WHY the tracker counter is wrong (capture gap, missing
+language twins, import lag, backfill) and the resolution rules name a
+fallback source the book is visibly pricing, record est_prob within 0.10
+of the mid and write the tracker-literal read as "api view: X" in the
+note — regardless of the sibling's liquidity. Shading toward a counter I
+have already explained away cost dBrier +0.129 here. Re-grade at the
+next postcount settlement where the counter and the book disagree.
