@@ -83,6 +83,10 @@ def cmd_place(args, entries):
     if m.get("closed"):
         sys.exit("REJECTED: market is closed")
     tokens = pmapi.market_tokens(m)
+    if tokens is None:
+        sys.exit(f"REJECTED: no usable CLOB token ids (Gamma version "
+                 f"{pmapi.market_version(m)!r}; supported: "
+                 f"{sorted(pmapi.SUPPORTED_VERSIONS)})")
     if args.outcome not in tokens:
         sys.exit(f"REJECTED: outcome {args.outcome!r} not in {list(tokens)}")
     bid, ask = pmapi.best_prices(tokens[args.outcome])

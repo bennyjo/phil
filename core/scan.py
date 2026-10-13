@@ -20,6 +20,7 @@ Usage: python3 core/scan.py [--hours 168] [--min-volume-24h 0] [--limit 400]
 Output: JSON lines, one candidate market per line.
 """
 import argparse
+import collections
 import datetime as dt
 import json
 import pathlib
@@ -31,6 +32,8 @@ import pmapi  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 PROTECTED = json.loads((ROOT / "config" / "protected.json").read_text())
+# Gamma version -> markets keep() skipped for lack of usable token ids.
+UNSUPPORTED = collections.Counter()
 
 
 def utcnow():
@@ -92,6 +95,11 @@ def keep(m, seen, banned, args):
     # skip effectively-decided markets (in-play blowouts, resolved-in-waiting)
     if max(prices) > PROTECTED["max_entry_price"] or min(prices) < PROTECTED["min_entry_price"]:
         return None
+    # A Protocol V2 market or unusable ids: skip it rather than crash the scan.
+    token_ids = pmapi.token_ids(m)
+    if token_ids is None:
+        UNSUPPORTED[pmapi.market_version(m)] += 1
+        return None
     event = (m.get("events") or [{}])[0]
     return {
         "market_id": m.get("id"),
@@ -101,7 +109,7 @@ def keep(m, seen, banned, args):
         "event_slug": event.get("slug"),
         "outcomes": json.loads(m.get("outcomes", "[]")),
         "outcome_prices": prices,
-        "clob_token_ids": json.loads(m.get("clobTokenIds", "[]")),
+        "clob_token_ids": token_ids,
         "volume_24h": float(m.get("volume24hr") or 0),
         "liquidity": float(m.get("liquidityNum") or 0),
         "slug": m.get("slug"),
@@ -150,6 +158,9 @@ def main():
                     kept += 1
                     print(json.dumps(rec))
         print(f"scan: query {label!r} -> {got} candidates", file=sys.stderr)
+    if UNSUPPORTED:
+        print(f"scan: skipped {sum(UNSUPPORTED.values())} markets with no usable "
+              f"token ids, by Gamma version: {dict(UNSUPPORTED)}", file=sys.stderr)
     print(f"scan: {kept} candidates total within {args.hours}h", file=sys.stderr)
 
 

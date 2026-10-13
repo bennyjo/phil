@@ -47,8 +47,39 @@ def best_prices(token_id):
     return (max(bids) if bids else None, min(asks) if asks else None)
 
 
+# Gamma tags each market with the CLOB protocol it trades on. V1 markets carry
+# their token ids in clobTokenIds. Protocol V2 markets (from 2026-11-02) set
+# clobTokenIds to null and carry positionIds instead; whether /book and the
+# resolution fields work the same for them is unconfirmed, so they are
+# skipped until read-only V2 support lands. A market with no version predates
+# the tag and is V1.
+SUPPORTED_VERSIONS = {"v1"}
+
+
+def market_version(market):
+    return market.get("version") or "v1"
+
+
+def token_ids(market):
+    """CLOB token ids of a gamma market record in outcome order, or None when
+    the market is on an unsupported protocol version or its ids are unusable."""
+    if market_version(market) not in SUPPORTED_VERSIONS:
+        return None
+    try:
+        ids = json.loads(market.get("clobTokenIds") or "null")
+        outcomes = json.loads(market.get("outcomes") or "null")
+    except (ValueError, TypeError):
+        return None
+    if not (isinstance(ids, list) and isinstance(outcomes, list)
+            and ids and len(ids) == len(outcomes)):
+        return None
+    return ids
+
+
 def market_tokens(market):
-    """Map outcome name -> clob token id for a gamma market record."""
-    outcomes = json.loads(market.get("outcomes", "[]"))
-    token_ids = json.loads(market.get("clobTokenIds", "[]"))
-    return dict(zip(outcomes, token_ids))
+    """Map outcome name -> clob token id for a gamma market record, or None
+    when token_ids() cannot read the market."""
+    ids = token_ids(market)
+    if ids is None:
+        return None
+    return dict(zip(json.loads(market["outcomes"]), ids))
