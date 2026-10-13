@@ -141,9 +141,10 @@ Every invocation runs as one of three ticks:
      shapes no model is needed for (line-constructed markets, sub-daily crypto,
      placeholder 0.500 mids); `dropped_by_reason` says what each cut.
    - Spawn ONE Task subagent PER BATCH FILE, all in parallel in a single
-     message (model `haiku` when the Task tool lets me choose it, otherwise the
-     default). Give each subagent exactly `subagent_prompt_template` with the
-     literal `NN` replaced by that batch's `nn`, and nothing else. Each writes
+     message, each with `subagent_type: "screener"` (the operator-owned
+     `.claude/agents/screener.md`: haiku, Read and Write tools only). Give
+     each subagent exactly `subagent_prompt_template` with the literal `NN`
+     replaced by that batch's `nn`, and nothing else. Each writes
      `<work_dir>/out-NN.json` itself; I do not relay its answers.
    - When every subagent has finished: `python3 core/screen.py collect --dir
      <work_dir>`. It validates the out files, computes divergence, appends

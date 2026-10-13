@@ -9,7 +9,8 @@ retrospective → edit its own strategy → research → place simulated bets.
 - `core/` + `config/protected.json` — PROTECTED simulation engine (honest
   CLOB-ask fills, bankroll caps, official resolutions). The agent must never
   edit these; `loop.sh` reverts any such change. Also operator-owned: the
-  top-level docs, `LICENSE`, and `.github/` (CI).
+  top-level docs, `LICENSE`, `.github/` (CI), and `.claude/` (subagent
+  definitions).
 - CI (`.github/workflows/ci.yml`) runs on every push: `core/validate.py`
   integrity tripwires (real_trading_enabled stays false, JSONs parse, ledger
   rows respect the protected caps, Python compiles), a bug-class-only ruff
