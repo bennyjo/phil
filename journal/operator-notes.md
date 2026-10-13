@@ -1370,3 +1370,133 @@ contain `origin/main`, so a runner on a stale ledger can't cycle. The
 `core/validate.py` duplicate-position tripwire half of P3 stays open.
 
 Mark the lease ask actioned on your next deep-retro pass.
+
+## 2026-10-13 ~13:15Z - gnhf run 1 forward test: FAIL; strategy/ unchanged; the next run starts from a sealed cutoff (operator)
+
+Issue #3 (opened by `.github/workflows/forward-test.yml`) judged the
+forward test pre-registered in the 2026-09-02 ~08:30Z note. The verdict is
+**FAIL**: forward cw_return -0.1557 is not above zero. Your 2026-09-10
+deep retro reached the same verdict and closed the tracking line
+resolved-negative. This note puts it on the operator record.
+
+Criteria, fixed 2026-09-02 before any forward row settled:
+
+- At least 15 forward bets, else the test is inconclusive and waits.
+- Forward cw_return above zero.
+- No single bet carries more than 50% of a positive pnl.
+
+Judged on 135 forward rows with
+`python3 core/replay.py --after 2026-09-02T00:14:36Z`:
+
+| Metric | Forward | In-sample (5 folds, for reference) |
+|---|---|---|
+| cw_return | -0.1557 | +0.743 |
+| pnl | +28.40 | +121.68 |
+| bets | 16 / 135 rows | 19 / 336 |
+| win rate | 0.688 | 0.895 |
+| brier_delta vs market | +0.0011 | -0.0248 |
+
+The bet-count bar passed and the cw_return bar failed. The concentration
+bar failed on its own: the largest bet (`5ee44ae81c9f`, +$39.64) is more
+than the whole net pnl.
+
+Pre-registered bets on the rows open at the cutoff:
+
+| id | side | status | pnl | question |
+|---|---|---|---|---|
+| a3ab895344cf | no | open | no fill | Will Charlie Crist win the St. Petersburg mayoral election? |
+| d48834ed8f41 | no | lost | +0.79 | Will the total domestic gross for The Odyssey be at least 57... |
+| e9f9221a3afb | yes | won | +0.81 | Will the total domestic gross for Spider-Man: Brand New Day... |
+| 650a1bcef8e7 | no | open | no fill | Will Magdalena Andersson be the next Prime Minister of Sweden? |
+| 0b03a937a48d | yes | won | +1.10 | US Open WTA: Kaitlin Quevedo vs Elise Mertens |
+
+For context only, not a re-judgment: the same command today reads
+cw_return -0.0313, pnl +41.17, 118 bets on 1102 rows. The window kept
+filling after the verdict, and it is still not above zero.
+
+What follows from the FAIL path:
+
+1. **Nothing in `strategy/` changes.** The 0.20-0.45 dead zone is not
+   adopted into `risk.json`, and the both-sides small-edge rule is not
+   proposed. The gnhf run 1 branch history is the writeup.
+   `strategy/policy.py` v3 stays as the record of what was tested. The
+   cycle doesn't read it.
+2. **The next gnhf run starts from a sealed cutoff.** Run 1's cutoff was a
+   timestamp chosen after the run had read all 420 settled rows. The next
+   run sees only rows settled before its cutoff, enforced by what it can
+   reach, not by instruction:
+   1. When you start the run, record `CUTOFF` (UTC, to the second) and
+      `C=$(git rev-parse origin/main)` in the run's operator note.
+   2. Run gnhf in an export of `C`, not in a worktree of this repository:
+      `git archive "$C" | tar -x -C ~/gnhf-7`, then `git init`,
+      `git add -A`, and `git commit -m "seal: $C"` inside `~/gnhf-7`. No
+      later commit, and no later ledger row, is reachable from there.
+   3. Give the run no route to the live ledger: no `origin` remote, and
+      the run prompt forbids fetching github.com/bennyjo/phil, which
+      publishes the newer `journal/forecasts.jsonl`.
+   4. Inside the export, evaluate only with the walk-forward folds:
+      `python3 core/replay.py [--policy PATH]`. It reads `C`'s ledger,
+      which holds only rows settled by `CUTOFF`.
+   5. After the run, score its policy out of sample on `main`:
+      `python3 core/replay.py --policy <run policy> --after <CUTOFF>`.
+      Pre-register the criteria and the run's decisions on the rows open
+      at `CUTOFF` before the first forward row settles, as on 2026-09-02.
+   6. Point `.github/scripts/forward_test.py` (`CUTOFF`, `PREREGISTERED`)
+      and the issue title in `forward-test.yml` at the new run, and give
+      it a new label. The issue-once guard matches any `forward-test`
+      issue, open or closed, so the old label never fires again.
+
+Closes issue #3. Nothing in your procedure changes.
+
+## 2026-10-13 ~13:15Z - Headline Arena: an external score you cannot edit, off until the key is added (operator)
+
+Issue #2 offered Headline Arena (headlinearena.com) as a public scoreboard
+for daily forecasts. It posts one daily question per futures asset: does
+the price end the window above +X%, below -X%, or inside that dead zone,
+versus the session open. The criteria are frozen at creation, settlement is
+mechanical against the platform's price feed, and every forecast is
+Brier-scored with per-agent calibration in a public API. You rewrite your
+own strategy and grade yourself with tools in this repository. This score
+lives where no commit can reach it.
+
+`core/headline_arena.py` is the adapter and CYCLE.md step 5c is the
+procedure. Both are protected. The adapter enforces the boundary in code:
+
+- It accepts only open questions of `challenge_type` `daily`.
+- It needs `--forecast-id` for a forecast row recorded today, so a
+  submission comes out of research you already did on that underlying.
+- It sends the bearish, neutral, and bullish probabilities and nothing
+  else. No reasoning, summary, stake, or context leaves the repo, so
+  nothing about your positions or money reaches Headline Arena.
+
+**Status: off.** With no credentials, `open`, `submit`, and `score` print
+`"enabled": false` and step 5c is skipped. Do not work around it.
+
+To switch it on, the operator does the following:
+
+1. Register the agent once. In a Claude Code session outside this repo,
+   install the Headline Arena plugin
+   (`claude plugin marketplace add headlinearena/headlinearena-agent-plugin`,
+   then `claude plugin install headlinearena-agent-plugin@headlinearena`)
+   and run `ha-register`. Alternatively, follow Steps 1-3 of
+   https://headlinearena.com/api/v1/agent/onboarding/guide.txt with curl.
+   Request only `prediction:submit` and `challenge:read`. Phil doesn't
+   comment or follow. The registration challenge asks for one written
+   analysis of a market event. Write it without any Phil position or
+   money detail.
+2. Save `agent_id` and `client_secret` from the JSON response body, not
+   from terminal echo. The secret is shown once.
+3. Claim the agent within the 7-day grace window: open `claim_url`, sign
+   in, and enter `pairing_code`. Until the claim, the agent is capped at
+   10 predictions and is unranked.
+4. Provision the credentials on each runner, never in the repo. On the
+   operator machine, write `~/.config/phil/headline-arena.json` as
+   `{"agent_id": "...", "client_secret": "..."}`, or export
+   `HEADLINE_ARENA_AGENT_ID` and `HEADLINE_ARENA_CLIENT_SECRET`. On the
+   cloud routine, set the two environment variables.
+5. Check it: `python3 core/headline_arena.py open` lists today's daily
+   questions, and `score` prints the scorecard.
+
+The public leaderboard ranks an agent after 30 settled non-BTC forecasts.
+Deep retros report the external Brier and calibration next to
+`brier_delta`. Issue #2 stays open until the key is added.

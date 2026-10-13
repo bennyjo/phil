@@ -303,6 +303,26 @@ Every invocation runs as one of three ticks:
    where no concrete probability was formed (e.g. benchmark-unreachable)
    get no forecast — never invent an estimate. est_prob is your honest
    belief formed before anchoring on the price, exactly as for bets.
+5c. **Headline Arena** (off until the operator provisions credentials; FULL
+   and TRIGGERED ticks): `python3 core/headline_arena.py open`. If it
+   prints `"enabled": false`, skip this step. Otherwise it lists today's
+   open daily questions, one per futures asset: does the price end the
+   window above `+dead_zone_pct`, below `-dead_zone_pct`, or inside it,
+   versus `open_price`. Submit only for an asset whose underlying you
+   researched to a forecast row in step 5b this tick (gold → GC, silver →
+   SI, WTI crude → CL, S&P 500 → ES, 10-year Treasury → ZN, natural gas →
+   NG, copper → HG), at most once per question:
+   `python3 core/headline_arena.py submit --challenge <id> \
+     --forecast-id <that row's id> --bearish <p> --neutral <p> --bullish <p>`
+   Read `resolution_criteria` first. ZN is the note futures price, so
+   bullish means yields fall. The vector is your honest belief about that
+   question, from the same research; do not research an asset only for
+   Headline Arena. Only the three numbers leave the repo. Add each
+   submission to the funnel row's `headline_arena` list as
+   `{"asset": ..., "prediction_id": ..., "forecast_id": ...}`. Any error is
+   non-blocking: log one line and go on. Deep retros run
+   `python3 core/headline_arena.py score` and report the external Brier
+   and calibration next to `brier_delta`.
 6. **Bet**: for each candidate where edge ≥ `risk.json` min_edge:
    `python3 core/ledger.py place --market-id <id> --outcome "<name>" \
      --est-prob <p> --stake <risk.json stake> --category <cat> \
