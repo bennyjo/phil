@@ -5,6 +5,7 @@
 # quota) are deliberately NOT here: a conflict there has to fail loudly.
 journal/cycles.log merge=union
 journal/screener.jsonl merge=union
+journal/screener/*.jsonl merge=union
 journal/mech-requests.jsonl merge=union
 journal/watch-triggers.jsonl merge=union
 strategy/funnel.jsonl merge=union

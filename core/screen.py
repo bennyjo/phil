@@ -38,7 +38,7 @@ Two things this deliberately does NOT do:
     triage guesses, not honest researched beliefs; letting them near the
     forecast ledger would corrupt brier_delta and violate CYCLE.md's
     "never invent an estimate" rule. Screener output lives only in
-    journal/screener.jsonl, which nothing else writes.
+    journal/screener/YYYY-MM.jsonl, which nothing else writes.
   * It never places, sizes or vetoes anything. It emits a reading list.
 
 Divergence caveat: `outcome_prices` come from gamma's market record - they are
@@ -61,8 +61,8 @@ Output: prepare prints a JSON header (work_dir, batches, screened_pool,
         dropped_by_reason, subagent_prompt_template) on stdout and writes the
         batch files under reports/screener-work/<UTCstamp>/ (gitignored).
         collect prints the top-N rows by divergence as JSON lines on stdout,
-        appends one row per market to journal/screener.jsonl, and summarises
-        on stderr.
+        appends one row per market to journal/screener/YYYY-MM.jsonl, and
+        summarises on stderr.
 
 Pre-filter (operator, 2026-09-04, from gnhf run 3's journal/screener-rank-
 decision.md): before the strata see anything, `prepare` drops the shapes in
@@ -110,9 +110,44 @@ PROTECTED = json.loads((ROOT / "config" / "protected.json").read_text())
 PROMPT_FILE = ROOT / "strategy" / "screener-prompt.md"
 STRATA_FILE = ROOT / "strategy" / "screener-strata.json"
 FILTERS_FILE = ROOT / "strategy" / "screener-filters.json"
-LOG_FILE = ROOT / "journal" / "screener.jsonl"
+# Screener rows append to one file per UTC month (journal/screener/YYYY-MM.jsonl)
+# so no journal file nears GitHub's 100 MB push limit. The single pre-rotation
+# file journal/screener.jsonl is still read while a cycle that started on older
+# code can append to it; log_files() covers both layouts.
+LOG_DIR = ROOT / "journal" / "screener"
+LEGACY_LOG_FILE = ROOT / "journal" / "screener.jsonl"
 QUOTA_DIR = ROOT / "journal" / "screener-quota"
 WORK_ROOT = ROOT / "reports" / "screener-work"
+
+def log_file(ts):
+    """The monthly screener log a row stamped ts (ISO UTC) appends to."""
+    return LOG_DIR / f"{ts[:7]}.jsonl"
+
+
+def log_files():
+    """Every screener log, oldest first: the pre-rotation file, then by name."""
+    legacy = [LEGACY_LOG_FILE] if LEGACY_LOG_FILE.is_file() else []
+    return legacy + sorted(LOG_DIR.glob("*.jsonl"))
+
+
+def log_rows():
+    """Yield every screener row from log_files(), oldest file first."""
+    for path in log_files():
+        with path.open() as fh:
+            for line in fh:
+                if line.strip():
+                    yield json.loads(line)
+
+
+def append_log(rows, ts):
+    """Append rows to ts's monthly log; returns its repo-relative path."""
+    path = log_file(ts)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a") as fh:
+        for row in rows:
+            fh.write(json.dumps(row) + "\n")
+    return path.relative_to(ROOT)
+
 
 # Deterministic pre-filter defaults; strategy/screener-filters.json overrides
 # them within these types. See load_filters.
@@ -830,7 +865,7 @@ def cmd_collect(args):
     if marker.is_file():
         print(f"screen: {args.dir} was already collected "
               f"({marker.read_text().strip()}) - refusing to append "
-              f"journal/screener.jsonl twice. Re-run prepare for a fresh "
+              f"the screener log twice. Re-run prepare for a fresh "
               f"screen; do not delete the marker.", file=sys.stderr)
         return 1
 
@@ -880,11 +915,9 @@ def cmd_collect(args):
               file=sys.stderr)
         return 1
 
-    with LOG_FILE.open("a") as fh:
-        for row in rows:
-            fh.write(json.dumps(row) + "\n")
+    log_rel = append_log(rows, ts)
     marker.write_text(f"collected {ts} - {len(rows)} rows appended to "
-                      f"journal/screener.jsonl\n")
+                      f"{log_rel}\n")
 
     ranked = sorted((r for r in rows if r.get("divergence") is not None),
                     key=lambda r: r["divergence"], reverse=True)
@@ -895,7 +928,7 @@ def cmd_collect(args):
     n_err = sum(1 for r in rows if r.get("screen_error"))
     if n_err:
         print(f"screen: {n_err} market(s) came back malformed (see screen_error "
-              f"in journal/screener.jsonl)", file=sys.stderr)
+              f"in {log_rel})", file=sys.stderr)
     _own, by_runner, used = load_quota()
     print(f"screen: collected {len(ranked)}/{expected} markets from {n_batches} "
           f"batches, escalated {len(escalated)}, day batches "

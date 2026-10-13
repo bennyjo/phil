@@ -35,7 +35,7 @@ because a feature only readable after research cannot rank anything.
 Three things this deliberately does NOT do:
 
   * It never writes a journal. Not journal/forecasts.jsonl, not
-    journal/screener.jsonl, not the quota. `fit` reads and prints; that is
+    journal/screener/*.jsonl, not the quota. `fit` reads and prints; that is
     all it does.
   * It never places, sizes or vetoes anything - same prohibition as
     core/screen.py and core/screen_rank.py. It re-orders a reading list.
@@ -76,7 +76,7 @@ Usage:
   python3 core/screen_value.py rank              # re-rank the latest collect run
   python3 core/screen_value.py rank --run 20260908T213047
   python3 core/screen_value.py rank --work-root ~/Code/phil/reports/screener-work
-Input:  journal/forecasts.jsonl, journal/screener.jsonl (the screened pools and
+Input:  journal/forecasts.jsonl, journal/screener/*.jsonl (the screened pools and
         the market-age proxy), journal/screener-outcomes.jsonl (end_date only),
         journal/screener-events.jsonl (clustering), strategy/funnel.jsonl
         (TRIGGERED or FULL), strategy/screener-value.json (the tuning file),
@@ -97,11 +97,11 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import counterfactual  # noqa: E402  (protected sibling: fill model, folds)
 import replay  # noqa: E402  (protected sibling: loaders, ts parsing)
+import screen  # noqa: E402  (protected sibling: screener log files)
 import screen_replay  # noqa: E402  (protected sibling: clustering, SEs)
 
 ROOT = replay.ROOT
 VALUE_FILE = ROOT / "strategy" / "screener-value.json"
-SCREENER = ROOT / "journal" / "screener.jsonl"
 FUNNEL = ROOT / "strategy" / "funnel.jsonl"
 
 # The family set is CODE, not tuning. The prior table's shape has to survive
@@ -262,7 +262,7 @@ def hours_between(a, b):
 
 
 def first_screened():
-    """market_id -> earliest ts it appears in journal/screener.jsonl.
+    """market_id -> earliest ts it appears in journal/screener/*.jsonl.
 
     The only market-age proxy this repo can compute offline. It is missing
     for a market the screener never saw, and it runs BACKWARDS for a market
@@ -271,17 +271,12 @@ def first_screened():
     """
     first = {}
     try:
-        with open(SCREENER) as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                r = json.loads(line)
-                mid, ts = str(r.get("market_id")), r.get("ts")
-                if ts and (mid not in first or ts < first[mid]):
-                    first[mid] = ts
+        for r in screen.log_rows():
+            mid, ts = str(r.get("market_id")), r.get("ts")
+            if ts and (mid not in first or ts < first[mid]):
+                first[mid] = ts
     except OSError as e:
-        print(f"screen_value: journal/screener.jsonl unreadable ({e}); no "
+        print(f"screen_value: screener log unreadable ({e}); no "
               f"market-age feature", file=sys.stderr)
     return first
 
@@ -605,13 +600,8 @@ def screener_runs():
     the cycle actually researches from, not the per-batch cut.
     """
     runs = {}
-    with open(SCREENER) as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            r = json.loads(line)
-            runs.setdefault(r["ts"], []).append(r)
+    for r in screen.log_rows():
+        runs.setdefault(r["ts"], []).append(r)
     return dict(sorted(runs.items()))
 
 
@@ -658,7 +648,7 @@ def screened_features(row, run_ts, rules, bands, end_of, first_seen):
     Two of them read differently here than in `observations`, and both
     differences are in the header rather than buried:
 
-      * family has no slug to match on - journal/screener.jsonl carries the
+      * family has no slug to match on - journal/screener/*.jsonl carries the
         question and not the slug - so only the title rules can fire.
       * price_band is a list, one band per outcome, because no side has been
         chosen yet. See prior_score.
@@ -684,7 +674,7 @@ def rank_report(run, work_root, k=RANK_K):
     """Re-rank one collect run's screened pool by the prior. Writes nothing."""
     runs = screener_runs()
     if not runs:
-        return {"error": "journal/screener.jsonl holds no collect run"}
+        return {"error": "journal/screener/*.jsonl holds no collect run"}
     if run:
         hits = [t for t in runs if t == run or t.replace("-", "").replace(":", "")
                 .startswith(run.replace("-", "").replace(":", ""))]

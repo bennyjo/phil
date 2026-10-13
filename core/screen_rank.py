@@ -68,8 +68,8 @@ Usage:
 Input:  scan.py candidate JSON lines on stdin or --file, exactly what
         core/screen.py prepare reads.
 Output: prints the top-N rows by rank_score as JSON lines on stdout, appends
-        one row per screened market to journal/screener.jsonl, and summarises
-        on stderr. --dry-run writes nothing and prints a header instead.
+        one row per screened market to journal/screener/YYYY-MM.jsonl, and
+        summarises on stderr. --dry-run writes nothing and prints a header instead.
 """
 import argparse
 import json
@@ -205,18 +205,16 @@ def cmd_rank(args):
         print(json.dumps(header, indent=2, ensure_ascii=False))
         print(f"screen_rank: dry run - would rank {len(rows)} of "
               f"{len(candidates)} candidates, filter {n_filtered}, escalate "
-              f"{len(escalated)}; journal/screener.jsonl untouched",
+              f"{len(escalated)}; screener log untouched",
               file=sys.stderr)
         return 0
 
-    with screen.LOG_FILE.open("a") as fh:
-        for row in rows:
-            fh.write(json.dumps(row) + "\n")
+    log_rel = screen.append_log(rows, ts)
     for row in escalated:
         print(json.dumps(row))
     print(f"screen_rank: ranked {len(rows)} markets, filtered {n_filtered} "
           f"({by_filter or 'none'}), escalated {len(escalated)}; appended to "
-          f"journal/screener.jsonl as model={MODEL_LABEL}, prompt_rev="
+          f"{log_rel} as model={MODEL_LABEL}, prompt_rev="
           f"{prompt_rev[:8]}. No subagents, no quota spent.", file=sys.stderr)
     return 0
 

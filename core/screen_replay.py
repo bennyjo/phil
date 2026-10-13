@@ -3,7 +3,7 @@
 
 PROTECTED CORE - the trading agent must not edit files under core/.
 
-journal/screener.jsonl is a frozen record of what the screening subagents
+journal/screener/*.jsonl is a frozen record of what the screening subagents
 believed: one row per (market, screening run) with the Haiku probabilities,
 the market mids at screen time, the divergence the pipeline ranked on, the
 confidence and the prompt_rev (the git blob hash of the exact
@@ -235,7 +235,6 @@ import resolve  # noqa: E402
 import screen  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-SCREENER = ROOT / "journal" / "screener.jsonl"
 OUTCOMES = ROOT / "journal" / "screener-outcomes.jsonl"
 EVENTS = ROOT / "journal" / "screener-events.jsonl"
 PROMPT_FILE = ROOT / "strategy" / "screener-prompt.md"
@@ -317,9 +316,10 @@ def parse_arg_ts(value, flag):
 
 
 def load_screener_rows():
-    if not SCREENER.is_file():
-        sys.exit(f"no screener log at {SCREENER.relative_to(ROOT)}")
-    return resolve.load_jsonl(SCREENER)
+    rows = list(screen.log_rows())
+    if not rows:
+        sys.exit("no screener log under journal/screener/")
+    return rows
 
 
 def load_outcome_cache():
@@ -2354,7 +2354,7 @@ def prompt_bytes(prompt_path, prompt_rev):
     text every arm read is provable after the fact rather than remembered.
 
     --prompt-rev takes the text straight out of git by blob hash, which is
-    the same identifier journal/screener.jsonl records in prompt_rev (see
+    the same identifier journal/screener/*.jsonl records in prompt_rev (see
     screen.blob_rev), so the four revisions the `score` tables rank can be
     put head to head under one model on one day instead of compared across
     the weeks that separated them live.
@@ -2370,7 +2370,7 @@ def prompt_bytes(prompt_path, prompt_rev):
                                  timeout=10, check=True)
         except Exception:  # noqa: BLE001 - any git failure means "no such blob"
             sys.exit(f"--prompt-rev {prompt_rev}: not a blob in this "
-                     f"repository. prompt_rev in journal/screener.jsonl is a "
+                     f"repository. prompt_rev in journal/screener/*.jsonl is a "
                      f"git blob hash of strategy/screener-prompt.md; the blob "
                      f"has to be reachable here to be re-screened.")
         return out.stdout, f"git blob {prompt_rev}"
@@ -2584,14 +2584,14 @@ def cmd_prepare(args):
     manifest = json.loads(manifest_path.read_text())
     manifest["replay"] = {
         "source": (str(source_dir) if source_dir is not None
-                   else str(SCREENER.relative_to(ROOT))),
+                   else "journal/screener/"),
         "like": source_dir.name if source_dir is not None else None,
         "window": {"after": after, "before": before},
         "seed": args.seed, "size": args.size,
         "eligible_markets": eligible, "selected": len(picked),
         "static_fetch_misses": [m for m in picked if m not in static]
                                if copied is None else [],
-        "mids": "recorded at screen time (journal/screener.jsonl), never live",
+        "mids": "recorded at screen time (journal/screener/*.jsonl), never live",
         "volume_liquidity": "zeroed - not recorded at screen time",
         "answers_file": "answers.json",
         "prompt": {"file": ARM_PROMPT_FILE, "rev": arm_rev,
@@ -2696,7 +2696,7 @@ def main():
                         "read (default strategy/screener-prompt.md)")
     p.add_argument("--prompt-rev", metavar="SHA",
                    help="pin the brief from a git blob hash instead - the "
-                        "same identifier journal/screener.jsonl records in "
+                        "same identifier journal/screener/*.jsonl records in "
                         "prompt_rev, so a historical revision can be "
                         "re-screened exactly")
     p.add_argument("--sleep", type=float, default=FETCH_SLEEP_S)

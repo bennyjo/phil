@@ -148,8 +148,10 @@ Every invocation runs as one of three ticks:
      `<work_dir>/out-NN.json` itself; I do not relay its answers.
    - When every subagent has finished: `python3 core/screen.py collect --dir
      <work_dir>`. It validates the out files, computes divergence, appends
-     `journal/screener.jsonl`, and prints the top rows plus a stderr summary
-     (collected X/Y, escalated N, day batches Q/CAP).
+     this month's `journal/screener/YYYY-MM.jsonl` (the screener log is one
+     file per month; read it with `screen.log_rows()` or a glob, never one
+     file), and prints the top rows plus a stderr summary (collected X/Y,
+     escalated N, day batches Q/CAP).
    Research allocation in step 5 STARTS from collect's top divergences - but
    the screener ranks, it does not gate: watch items, the mechanical-econ
    calendar and the sibling census still claim their research slots under the

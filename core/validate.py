@@ -13,7 +13,11 @@ Checks that an unattended cycle cannot have left the repo broken or unsafe:
   - journal/ledger.jsonl is well-formed and every row respects the caps
   - journal/forecasts.jsonl (stake-free forecasts) rows are well-formed
   - the screener block stays inside its hard batch/pool ceilings, and
-    journal/screener-quota/*.json / screener.jsonl are well-formed
+    journal/screener-quota/*.json and the screener logs
+    (journal/screener/*.jsonl, plus the pre-rotation journal/screener.jsonl)
+    are well-formed
+  - no file under journal/ is over 80 MB: GitHub refuses any push holding a
+    file over 100 MB, which would stop every runner's push
   - every Python file under core/ and strategy/ still compiles
 
 Usage: python3 core/validate.py
@@ -223,19 +227,22 @@ if screener_quota_dir.is_dir():
         elif batches < 0:
             err(f"{rel}: batches {batches} is negative")
 
-screener_path = ROOT / "journal" / "screener.jsonl"
-if screener_path.exists():
+legacy_screener = ROOT / "journal" / "screener.jsonl"
+screener_paths = (([legacy_screener] if legacy_screener.exists() else [])
+                  + sorted((ROOT / "journal" / "screener").glob("*.jsonl")))
+for screener_path in screener_paths:
+    name = screener_path.relative_to(ROOT / "journal")
     for lineno, line in enumerate(screener_path.read_text().splitlines(), 1):
         if not line.strip():
             continue
         try:
             row = json.loads(line)
         except json.JSONDecodeError as e:
-            err(f"screener.jsonl:{lineno}: invalid JSON - {e}")
+            err(f"{name}:{lineno}: invalid JSON - {e}")
             continue
         missing = SCREENER_REQUIRED - row.keys()
         if missing:
-            err(f"screener.jsonl:{lineno}: missing fields {sorted(missing)}")
+            err(f"{name}:{lineno}: missing fields {sorted(missing)}")
             continue
         # A malformed model answer is a logged screen_error row, not a failure -
         # but a row that claims a divergence must carry a usable one.
@@ -243,14 +250,14 @@ if screener_path.exists():
         if div is not None and not (isinstance(div, (int, float))
                                     and not isinstance(div, bool)
                                     and 0 <= div <= 1):
-            err(f"screener.jsonl:{lineno}: divergence {div!r} is not a number "
+            err(f"{name}:{lineno}: divergence {div!r} is not a number "
                 f"in [0, 1]")
         if div is None and not row.get("screen_error"):
-            err(f"screener.jsonl:{lineno}: no divergence and no screen_error - "
+            err(f"{name}:{lineno}: no divergence and no screen_error - "
                 f"every unscored row must say why")
         cost = row["cost_usd"]
         if not isinstance(cost, (int, float)) or isinstance(cost, bool) or cost < 0:
-            err(f"screener.jsonl:{lineno}: cost_usd {cost!r} is not a "
+            err(f"{name}:{lineno}: cost_usd {cost!r} is not a "
                 f"non-negative number")
 
 real_ledger_path = ROOT / "journal" / "real-ledger.jsonl"
@@ -268,6 +275,15 @@ if real_ledger_path.exists() and protected and isinstance(protected.get("real"),
                 isinstance(row.get("usd"), (int, float)) and row["usd"] > real_cap:
             err(f"real-ledger.jsonl:{lineno}: real stake {row['usd']} exceeds "
                 f"real.max_stake_usd {real_cap}")
+
+# GitHub rejects a push holding any file over 100 MB, for every runner at once.
+# Fail well before that so an append-only journal gets rotated in time.
+JOURNAL_FILE_MAX_MB = 80
+for path in sorted((ROOT / "journal").rglob("*")):
+    if path.is_file() and path.stat().st_size > JOURNAL_FILE_MAX_MB * 1024 * 1024:
+        err(f"{path.relative_to(ROOT)}: {path.stat().st_size / 1024 / 1024:.1f} MB "
+            f"is over the {JOURNAL_FILE_MAX_MB} MB journal file limit - rotate "
+            f"it before it reaches GitHub's 100 MB push limit")
 
 for pyfile in sorted((ROOT / "core").glob("*.py")) + \
         sorted((ROOT / "strategy").rglob("*.py")):
