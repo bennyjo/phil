@@ -22,6 +22,8 @@ jobs:
         run: python3 core/validate.py
       - name: Runner lease excludes two simulated runners (local bare remote)
         run: python3 core/test_lease.py -v
+      - name: Real settle fails closed without live positions (stubbed, offline)
+        run: python3 core/test_real.py -v
       - name: Headline Arena adapter sends only daily-question vectors (offline)
         run: python3 core/test_headline_arena.py -v
       - name: Score report parses the real ledger (offline)

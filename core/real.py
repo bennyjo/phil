@@ -270,12 +270,22 @@ def cmd_settle(args):
     # Reconcile: a pending/unknown row whose token shows up as a position or
     # trade is a fill; mark placed rows settled when their token no longer
     # appears among open positions.
-    open_tokens = set()
+    # Fail closed: with no trustworthy position list (positions.py failed,
+    # timed out, or returned an unknown shape - e.g. after the Data API v1
+    # retirement on 2026-10-24) an empty token set would fail every pending
+    # row and settle every placed one. Leave the rows as they are; pending
+    # rows keep blocking new real bets.
     if isinstance(positions, list):
-        open_tokens = {str(p.get("token_id")) for p in positions}
-    elif isinstance(positions, dict):
-        open_tokens = {str(p.get("token_id"))
-                       for p in positions.get("positions", [])}
+        live = positions
+    elif isinstance(positions, dict) and isinstance(positions.get("positions"), list):
+        live = positions["positions"]
+    else:
+        result["reconcile_skipped"] = "no usable positions list"
+        append_real({"id": f"settle-{uuid.uuid4().hex[:8]}", "type": "settle",
+                     **result})
+        fail("positions.py gave no usable positions list - reconcile "
+             "skipped, real-ledger rows left unchanged")
+    open_tokens = {str(p.get("token_id")) for p in live}
     for row in real_rows():
         tok = str(row.get("token_id"))
         if row.get("status") in ("pending", "unknown"):
