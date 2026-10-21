@@ -3069,6 +3069,10 @@ the market's 0.99 (+0.005 dBrier, all four rows lost to the mid).
 Concrete form of "sit near the market": when the projected centre is at
 least 1.5 sd inside both bracket edges, own p on that rung stays within
 0.03 of the mid unless a fresh read shows a pace break.
+Fourth settled instance (RETRO-20261021-1813, MrBeast RE3_PGwDwhw day4
+113-115/115-117): two dated RYD reads put the centre on the 115 edge; I sat
+within 0.01 of both mids (0.42/0.415, 0.55/0.555), outcome 115-117, net dBrier
+~0.000. Straddle case confirms: on an edge, stay at the mid.
 
 **2026-09-04 update (LIGHT tick 06:29Z, settled by resolve.py; 4 rows,
 two OpenAI Astra release-timeline markets, two sequential snapshots
