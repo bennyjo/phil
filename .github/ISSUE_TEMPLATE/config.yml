@@ -1,1 +1,5 @@
 blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/bennyjo/phil/security/advisories/new
+    about: Report anything that touches funds, keys, or the protected boundary privately.
