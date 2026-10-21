@@ -10130,3 +10130,9 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   -0.176. WSV totals 105 rows, 89 fillable, 47W/42L, CF -$66.24. Below-mid, so the Yes reopen
   set is unchanged (n=22, -0.024). AAA Oct21 drift centre error 0.32c (model now 2/4 bins hit);
   stays forecast-only. No boundary change.
+
+## 2026-10-21 20:12Z: Musk Oct19-21 40-64 / 65-89 settled (RETRO-20261021-2012)
+
+- Anchor-rule shadow tally: n=24/30, sum +0.575, mean +0.024 (`552829d2e3f5` 40-64 at 0.63 vs mid
+  0.545 lost, +0.100; `e9458f14459c` 65-89 at 0.23 vs mid 0.325 won, +0.137). A decaying-pace
+  extrapolation lost to the book on both legs. Mid still better; no rule change before n=30.
