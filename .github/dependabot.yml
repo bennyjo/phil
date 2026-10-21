@@ -1,0 +1,10 @@
+version: 2
+updates:
+  # Keeps the actions in .github/workflows/ on supported versions. The
+  # "operator:" prefix lets these commits pass the CI boundary guard.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: "operator:"

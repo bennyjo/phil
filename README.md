@@ -82,20 +82,102 @@ Pearl at [pearl.you/connect](https://www.pearl.you/connect).
   commit that touches protected files. Caps: $10/bet max, 60 open positions,
   no market resolving under 20 minutes out, no entries outside 2¢ to 95¢.
 
-## Run
+## Repository layout
+
+The operator owns the engine, and the agent owns its strategy and its
+record. The following table lists who owns each path:
+
+| Path | What it holds | Owner |
+|---|---|---|
+| `core/` | The engine: market scan, screening, ledger and fills, settlement, scoring, real execution (`real.py`), the runner lease, integrity tripwires (`validate.py`), and offline tests (`test_*.py`) | Operator |
+| `config/protected.json` | Bankroll, stake and position caps, banned question patterns, screener tunables, and the real-execution caps | Operator |
+| `CYCLE.md`, `REAL.md` | The procedure the agent follows each cycle, and the addendum for real mode | Operator |
+| `loop.sh` | Runs cycles headlessly with Claude Code and reverts agent edits to operator-owned paths | Operator |
+| `.github/`, `.claude/` | CI, the boundary guard, community files, and subagent definitions | Operator |
+| `strategy/` | Playbook, risk policy, discovery queries, screener prompt, pacing schedule, watchlist, and tools | Agent |
+| `journal/` | Ledger, forecasts, retrospectives, cycle log, operator notes, and proposals | Agent, with ledger rows written only through `core/` and operator notes by the operator |
+
+## Quickstart
+
+The engine is Python 3 standard library only, so there is nothing to
+install. CI runs on Python 3.12. These commands work on a fresh clone:
 
 ```bash
-./loop.sh 10 45          # 10 paper cycles, 45 min apart (headless Claude Code)
-./loop.sh 1 45 --real    # one cycle with real twins via Pearl Connect
-python3 core/score.py    # calibration & P&L report any time
+git clone https://github.com/bennyjo/phil.git
+cd phil
+python3 -m unittest discover -s core -p 'test_*.py'   # offline tests
+python3 core/validate.py                              # integrity tripwires
+python3 core/score.py                                 # calibration and P&L report
+```
+
+`core/score.py` fetches live prices to mark open positions to market. To run
+it offline, add `--skip-mtm`. Market data needs no API key; it comes from
+Polymarket's public gamma and CLOB endpoints.
+
+## Run cycles
+
+A cycle is a headless [Claude Code](https://claude.com/claude-code) session
+that follows `CYCLE.md`. `loop.sh` runs cycles one after another:
+
+```bash
+./loop.sh 10 45               # 10 paper cycles, 45 minutes apart
+./loop.sh 1 45 --real         # one cycle with real twins via Pearl Connect
 python3 core/real.py doctor   # is the real-execution path ready?
 ```
 
-Requires [Claude Code](https://claude.com/claude-code) (`claude` on your
-PATH) and Python 3. Market data needs no API key; it comes from Polymarket's
-public gamma/CLOB endpoints. The bookmaker-odds benchmark (`core/odds.py`)
-needs an `ODDS_API_KEY` from [the-odds-api.com](https://the-odds-api.com),
-in the environment or in `~/.config/phil/odds-api-key`.
+Before you run `loop.sh`, know what it does:
+
+- It needs `claude` on your `PATH`, and each cycle uses your Claude Code
+  account. `loop.sh` pins the model per cycle (`claude-opus-5-5`, or
+  `claude-sonnet-5` when the pacing schedule makes the tick light) and runs
+  the session with `--permission-mode acceptEdits` and a fixed tool
+  allowlist that includes web search and web fetch.
+- Each cycle commits, and `loop.sh` pushes to `main` on your `origin`
+  remote. Before each cycle it takes the runner lease (`core/lease.py`),
+  which is also a push to `origin`. On a clone that can't push to `origin`,
+  such as a clone without write access, every tick is skipped with
+  `WARNING: runner lease not taken`. To run your own Phil, fork the
+  repository and clone your fork. To run locally without pushing anywhere,
+  remove the remote with `git remote remove origin`; without an `origin`
+  remote, the lease and the push are both skipped.
+- A fork starts from Phil's state on the day you fork it: the ledger, open
+  positions, strategy, and journal.
+- Cycles stay on paper unless all of these hold: you pass `--real`,
+  `PEARL_CONNECT_STORE` is set, the local Pearl Connect signer is healthy,
+  and `python3 core/real.py doctor` reports ready. `real_trading_enabled` is
+  `true` in this repository's `config/protected.json`; to turn real mode off
+  in code, set it to `false`.
+- With `PEARL_CONNECT_STORE` set and the signer up, paper cycles can also buy
+  second-opinion predictions from the Olas mech marketplace, about $0.01
+  USDC each, paid from the service Safe (`CYCLE.md` step 5a).
+
+In Phil's own deployment, the hourly cycle, the watcher, and the daily deep
+retro run as scheduled cloud routines that the operator configures outside
+this repository. `loop.sh` is the runner that ships with it.
+
+## Configuration
+
+Caps and engine settings live in `config/protected.json`; the agent's sizing
+policy lives in `strategy/risk.json`, inside those caps. All environment
+variables are optional:
+
+| Variable | Read by | Purpose |
+|---|---|---|
+| `PEARL_CONNECT_STORE` | `loop.sh`, `core/real.py` | Pearl Connect workspace directory (contains `.mcp.json`). Enables mech second opinions and, with `--real`, real twins. |
+| `CONNECT_POLYMARKET_VENV` | `core/real.py` | Virtual environment of the connect-polymarket skill scripts. Defaults to `~/.cache/connect-polymarket/venv`. |
+| `ODDS_API_KEY` | `core/odds.py` | Key for the bookmaker-odds benchmark from [the-odds-api.com](https://the-odds-api.com). Falls back to `~/.config/phil/odds-api-key`. |
+| `HEADLINE_ARENA_AGENT_ID`, `HEADLINE_ARENA_CLIENT_SECRET` | `core/headline_arena.py` | Credentials for Headline Arena daily questions. Fall back to `~/.config/phil/headline-arena.json`. Without them, the step is off. |
+| `PHIL_RUNNER` | `core/screen.py`, `core/lease.py` | Runner name for the lease and the screener quota. Defaults to `operator` under `loop.sh`, else `cloud`. |
+
+Keep keys and tokens outside the repository. The journal and strategy are
+public, and every cycle commits them.
+
+## Status
+
+Phil is a running experiment, not a versioned release. The agent commits to
+`main` many times a day, and `main` is the only supported version. For the
+current score, run `python3 core/score.py` or read the newest retrospective
+in `journal/retros/`.
 
 ## Disclaimer
 
@@ -107,6 +189,14 @@ Nothing here is financial, investment, or betting advice. Past performance,
 paper or real, predicts nothing. Prediction-market trading is restricted or
 unlawful in some jurisdictions. Know your own rules before running any of
 this with real funds.
+
+## Contributing and security
+
+- [Contributing guide](.github/CONTRIBUTING.md): what is accepted, and the
+  checks to run before a pull request.
+- [Code of conduct](.github/CODE_OF_CONDUCT.md)
+- [Security policy](.github/SECURITY.md): report anything that touches funds,
+  keys, or the protected boundary privately.
 
 ## License
 
