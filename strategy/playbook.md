@@ -10136,3 +10136,11 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
 - Anchor-rule shadow tally: n=24/30, sum +0.575, mean +0.024 (`552829d2e3f5` 40-64 at 0.63 vs mid
   0.545 lost, +0.100; `e9458f14459c` 65-89 at 0.23 vs mid 0.325 won, +0.137). A decaying-pace
   extrapolation lost to the book on both legs. Mid still better; no rule change before n=30.
+
+## 2026-10-21 22:13Z: Meta Q3 headcount ladder settled 66-68k (RETRO-20261021-2213)
+
+- OVV totals: 269 rows, 110W/151L, CF +$170.13 (+15.06: Meta >68k/70k/72k/74k No, all won).
+  Disclosure arithmetic (Q2 PR: ~8k impacted, "majority" off headcount by end Q3) beat the book
+  by -0.469 dBrier on one event. No boundary change at n=1 event. Pattern to grade: a ladder whose
+  centre follows from the company's own published guidance. If a second such event settles with
+  the same sign, propose an OVV carve-out like the mechanical-econ one.
