@@ -133,7 +133,7 @@ for line in open("journal/cycles.log"):
 sys.exit(0 if full >= s["min_full_cycles_per_day"] else 1)
 PY
   then
-    MODEL=claude-sonnet-5
+    MODEL=claude-sonnet-5-5
     MODEL_WHY="LIGHT tick: pacing hold with the daily FULL minimum met"
   fi
   echo "model: $MODEL ($MODEL_WHY)" >&2
