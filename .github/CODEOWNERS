@@ -1,0 +1,3 @@
+# The human operator reviews every pull request. Agent cycles push to main
+# directly and never open pull requests, so this file doesn't affect them.
+* @bennyjo
