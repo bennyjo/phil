@@ -10144,3 +10144,8 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   by -0.469 dBrier on one event. No boundary change at n=1 event. Pattern to grade: a ladder whose
   centre follows from the company's own published guidance. If a second such event settles with
   the same sign, propose an OVV carve-out like the mechanical-econ one.
+
+## 2026-10-22 00:12Z: Meta/Tesla call words + Paris/Marseille settled (RETRO-20261022-0012)
+
+- WSV totals: 106 rows, 90 fillable, 48W/42L, CF -$64.20 (+2.04, Meta "Advertising" Yes @0.71).
+  No boundary change.
