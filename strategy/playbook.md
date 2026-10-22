@@ -10159,3 +10159,10 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   (Russia/Ukraine No veto saved $5). No boundary change.
 - Watch (pre-registered): if the Oct22 Iowa rally slate also sweeps and its below-mid rows cost the
   mirror set >+0.3 again, pause No-side rally bets until a rally-length/topic-sweep check is run.
+
+## 2026-10-22 04:13Z: SC rally late legs settled (RETRO-20261022-0413)
+
+- 6 late SC rows, own vs mid -0.105. The full SC slate was NOT a total sweep: count legs split 3/3
+  (Border 20+, Biden/Kamala/Obama 15+, Crime 12+ missed), and "Ass"/"Bitcoin" resolved No. Yes reopen set n=24, -0.061; below-mid mirror set n=24, -0.806.
+- Iowa watch refinement: grade single-mention legs and count-threshold legs separately when testing
+  the rally-sweep pause. A sweep of single mentions says nothing about count legs on the same night.
