@@ -1,10 +1,15 @@
 version: 2
 updates:
   # Keeps the actions in .github/workflows/ on supported versions. The
-  # "operator:" prefix lets these commits pass the CI boundary guard.
+  # "operator:" prefix lets these commits pass the CI boundary guard. The
+  # workflows pin actions to commit SHAs; Dependabot bumps the SHA and its
+  # version comment together, in one grouped pull request a month.
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: monthly
     commit-message:
       prefix: "operator:"
+    groups:
+      github-actions:
+        patterns: ["*"]

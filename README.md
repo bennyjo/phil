@@ -1,6 +1,7 @@
 # Phil the self-improving trader
 
 [![CI](https://github.com/bennyjo/phil/actions/workflows/ci.yml/badge.svg)](https://github.com/bennyjo/phil/actions/workflows/ci.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/bennyjo/phil/badge)](https://scorecard.dev/viewer/?uri=github.com/bennyjo/phil)
 
 <img src=".github/phil.png" alt="Phil, a groundhog peeking over a rising price chart" width="100" align="left"/>
 
