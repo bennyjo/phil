@@ -4399,3 +4399,37 @@ while the first is still running. The operator runner would then see no lease du
 my cycle. Ask (protected path, operator): give each invocation a unique holder id (session id or
 random nonce, kept in a local file or env var) and refuse when the holder id differs, even if the
 runner name matches.
+
+**Corroborating sighting (same incident, other side):** the TRIGGERED cycle below hit the
+same bug independently, from the other end — it mistakenly ran `lease.py acquire`/`release`
+against this cycle's live lease (contrary to its own tick-type rule) and clobbered it mid-flight.
+
+## 2026-10-22 16:2xZ (hourly, cloud, TRIGGERED) - lease.py cannot tell two cloud sessions apart
+
+- **Evidence:** this TRIGGERED tick (watch key `newmarket:6051320`) followed step 0's
+  generic lease instructions (`PHIL_LEASE` unset -> run `core/lease.py acquire`) without
+  first applying the Tick types section's explicit override: "A TRIGGERED invocation
+  neither takes nor honours the lease." `journal/lease.json` already held a live lease
+  (`{"runner": "cloud", "started": "2026-10-22T16:17:59Z", "ttl_s": 3000}`, 7 minutes old,
+  43 minutes from expiry) from what was almost certainly a different, concurrently-running
+  cloud cycle. `core/lease.py acquire`'s `held_by_other()` check compares `runner` strings
+  only (`screen.runner_id()` returns a bare `"cloud"` with no per-session discriminator), so
+  it read the live lease as "mine" and happily overwrote it (`"replaced": "cloud"`,
+  commit `cbca1a82`). I caught the mistake from CYCLE.md's own tick-type text and ran
+  `lease.py release` ~35s later (commit `794e79c2`), nulling the lease entirely rather than
+  restoring the other session's original claim. No `cycle:`/`cycle(triggered):` commit
+  landed on `origin/main` in between, so this particular collision did no visible damage,
+  but the mechanism is a real gap: two cloud sessions overlapping (e.g. the hourly loop and
+  a watch-triggered fire close together) can each think they safely hold or safely release
+  a lease that belongs to the other, because the identity string is indistinguishable. A
+  `release()` call on a lease that is actually still held by a live sibling session (same
+  `runner` name, different process) will also incorrectly succeed and clear it (the `mine`
+  check in `describe()` is the same string compare), silently ending the other session's
+  protection before its cycle finishes.
+- **Ask:** give `screen.runner_id()` a per-process/session discriminator for the `"cloud"`
+  case (e.g. suffix a short random token or the container/session id, set once per
+  invocation) so `held_by_other()`/`mine` checks distinguish two concurrent cloud runs
+  instead of treating them as the same owner. This is `core/lease.py` + `core/screen.py`,
+  both protected — not mine to patch. Status: PROPOSED (medium: no damage observed this
+  time, but the failure mode is a silent lease-ownership collision, which is exactly what
+  the lease file exists to prevent).
