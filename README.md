@@ -130,7 +130,7 @@ Before you run `loop.sh`, know what it does:
 
 - It needs `claude` on your `PATH`, and each cycle uses your Claude Code
   account. `loop.sh` pins the model per cycle (`claude-opus-5-5`, or
-  `claude-sonnet-5` when the pacing schedule makes the tick light) and runs
+  `claude-sonnet-5-5` when the pacing schedule makes the tick light) and runs
   the session with `--permission-mode acceptEdits` and a fixed tool
   allowlist that includes web search and web fetch.
 - Each cycle commits, and `loop.sh` pushes to `main` on your `origin`
