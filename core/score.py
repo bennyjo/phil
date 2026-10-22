@@ -89,15 +89,23 @@ def placeholder_book(r):
 # zero over at least this many independent events, and it is retired once the
 # interval sits above zero over as many.
 RULE_MIN_EVENTS = 20
+# The verdict is re-checked every cycle, and re-checking a fixed 95% interval
+# after every event lets a no-effect rule cross it 13-19% of the time within
+# 150-300 events (adversarial review of PR #14, replaying this ledger's event
+# clusters). A 99.5% two-sided interval brings that back to about 2-4%, and a
+# real shrink rule still passed about a week later in the same replay.
+RULE_Z = 2.807
+# Below this many events the Cornish-Fisher t value reads narrow (-4% at
+# df=5), so no interval is shown.
+RULE_MIN_CI_EVENTS = 10
 
 
-def _t95(df):
-    """Two-sided 95% Student-t critical value, Cornish-Fisher expansion.
+def _t_crit(df):
+    """Two-sided 99.5% Student-t critical value, Cornish-Fisher expansion.
 
-    Within 0.2% of the table from df=9 (2.093 at df=19). It reads narrow at
-    very low df, where no verdict is issued anyway (RULE_MIN_EVENTS).
+    Within 1% of the table from df=9 (3.171 at df=19, table 3.174).
     """
-    z = 1.96
+    z = RULE_Z
     return z + (z ** 3 + z) / (4 * df) + (5 * z ** 5 + 16 * z ** 3 + 3 * z) / (96 * df ** 2)
 
 
@@ -112,8 +120,11 @@ def paired_rule_test(rows):
 
     Rows from one event share an outcome driver (a rally's word markets, one
     game day), so the interval is clustered by event, keyed (category, end
-    date) like the 2026-10-22 analysis: a ratio-mean standard error over
-    event sums, with a t critical value on events - 1 degrees of freedom.
+    date). The 2026-10-22 analysis keyed (family, end date) over 8 families;
+    category is the agent's free text, so a few events split in two and the
+    event count reads a little high. A ratio-mean standard error over event
+    sums, with a 99.5% t critical value on events - 1 degrees of freedom
+    (RULE_Z).
     """
     clusters = defaultdict(lambda: [0.0, 0])
     for r in rows:
@@ -126,11 +137,11 @@ def paired_rule_test(rows):
         return {"n": 0, "events": 0, "verdict": "shadow"}
     mean = sum(s for s, _ in clusters.values()) / n
     out = {"n": n, "events": g, "mean_delta": round(mean, 4), "verdict": "shadow"}
-    if g >= 2:
+    if g >= RULE_MIN_CI_EVENTS:
         se = math.sqrt(g / (g - 1) * sum((s - mean * k) ** 2
                                          for s, k in clusters.values())) / n
-        lo, hi = mean - _t95(g - 1) * se, mean + _t95(g - 1) * se
-        out["ci95"] = [round(lo, 4), round(hi, 4)]
+        lo, hi = mean - _t_crit(g - 1) * se, mean + _t_crit(g - 1) * se
+        out["ci"] = [round(lo, 4), round(hi, 4)]
         if g >= RULE_MIN_EVENTS and hi < 0:
             out["verdict"] = "pass"
         elif g >= RULE_MIN_EVENTS and lo > 0:
@@ -139,14 +150,19 @@ def paired_rule_test(rows):
 
 
 def rule_verdicts(frows):
-    """Per-rule paired verdicts over live (not superseded) rule-tagged rows.
+    """Per-rule paired verdicts over every rule-tagged row.
+
+    Superseded rows count too: each raw and rule pair was made before the
+    outcome, while a supersede follows later news, so dropping them would let
+    post-record information pick the evidence. The event clustering absorbs
+    the extra correlation of a revised market.
 
     verdict: shadow (still collecting: the recorded estimate stays raw), pass
     (the rule binds), fail (retired: core/forecast.py refuses new rows).
     """
     by_rule = defaultdict(list)
     for r in frows:
-        if r.get("rule") and not r.get("superseded_by"):
+        if r.get("rule"):
             by_rule[r["rule"]].append(r)
     out = {}
     for rule, rs in sorted(by_rule.items()):
@@ -465,11 +481,11 @@ def main():
             print(f"  placeholder books (excluded above, P5): n={ph['n']} "
                   f"brier_delta={ph['brier_delta']:+.4f}")
         for rule, v in (fr.get("rules") or {}).items():
-            ci = v.get("ci95")
+            ci = v.get("ci")
             print(f"  rule {rule}: {v['verdict'].upper()} settled={v['n']} "
                   f"events={v['events']} open={v['open']}"
                   + (f" paired={v['mean_delta']:+.4f}" if v["n"] else "")
-                  + (f" ci95=[{ci[0]:+.4f},{ci[1]:+.4f}]" if ci else ""))
+                  + (f" ci99.5=[{ci[0]:+.4f},{ci[1]:+.4f}]" if ci else ""))
         for reason, s in fr["by_skip_reason"].items():
             print(f"  [{reason:14}] n={s['n']:3} brier_delta={s['brier_delta']:+.4f}")
         for cat, s in fr["by_category"].items():

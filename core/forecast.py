@@ -74,9 +74,9 @@ EXTREME_DISAGREEMENT = 0.40
 
 # Rule budget: at most this many estimation rules in play (not retired, and
 # tagged on a row in the last RULE_IDLE_DAYS). Every concurrent rule is one
-# more chance of a false pass at the 95% bar, and the playbook grew ~60 KB a
-# week while rules were adopted on 1 to 3 events; a small budget keeps the
-# set under test small enough to reach verdicts.
+# more chance of a false pass at the scorer's bar, and the playbook grew
+# ~60 KB a week while rules were adopted on 1 to 3 events; a small budget
+# keeps the set under test small enough to reach verdicts.
 RULE_BUDGET = 6
 RULE_IDLE_DAYS = 14
 RULE_ID = re.compile(r"^[a-z0-9][a-z0-9-]{1,47}$")
@@ -127,11 +127,12 @@ def rule_state(args, rows):
     v = verdicts.get(args.rule)
     if v and v["verdict"] == "fail":
         sys.exit(f"REJECTED: rule {args.rule!r} is retired by its paired test "
-                 f"(paired {v['mean_delta']:+.4f}, ci95 {v['ci95']}, "
+                 f"(paired {v['mean_delta']:+.4f}, ci99.5 {v['ci']}, "
                  f"{v['events']} events): record your estimate without it")
-    if v is None:
-        cutoff = (dt.datetime.now(dt.timezone.utc)
-                  - dt.timedelta(days=RULE_IDLE_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    cutoff = (dt.datetime.now(dt.timezone.utc)
+              - dt.timedelta(days=RULE_IDLE_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    if v is None or v["last_ts"] < cutoff:
+        # a new rule, or an idle one coming back: either takes a free slot
         active = sorted(k for k, w in verdicts.items()
                         if w["verdict"] != "fail" and w["last_ts"] >= cutoff)
         if len(active) >= RULE_BUDGET:
@@ -184,9 +185,12 @@ def cmd_record(args, rows):
         sys.exit("REJECTED: empty book — no market probability to benchmark against")
     mid = (bid + ask) / 2 if bid is not None and ask is not None else bid or ask
 
-    gap = max(abs(p - mid) for p in (args.est_prob, est))
+    # a rule-tagged row checks both of its numbers, whichever one is recorded
+    gap, name, p = max((abs(p - mid), name, p) for name, p in
+                       (("est-prob", args.est_prob), ("raw-prob", args.raw_prob))
+                       if p is not None)
     if gap > EXTREME_DISAGREEMENT and not args.confirm_extreme:
-        sys.exit(f"REJECTED: est_prob {est} vs market mid {round(mid, 4)} "
+        sys.exit(f"REJECTED: {name} {p} vs market mid {round(mid, 4)} "
                  f"for outcome {args.outcome!r} differs by {round(gap, 4)} "
                  f"(> {EXTREME_DISAGREEMENT}). If this extreme disagreement is your "
                  "researched belief, re-run with --confirm-extreme; if not, you "

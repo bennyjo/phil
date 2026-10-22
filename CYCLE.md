@@ -133,7 +133,7 @@ Every invocation runs as one of three ticks:
      every row it moves in step 5b. `core/score.py` grades it with a paired
      raw-versus-rule test on the same outcomes and prints one line per rule:
      SHADOW (collecting: `core/forecast.py` records your raw estimate and
-     logs the rule's value), PASS (at least 20 events with the paired
+     logs the rule's value), PASS (at least 20 events with the paired 99.5%
      interval below zero: the rule binds), or FAIL (interval above zero:
      retired, tagged rows are refused). Quote that line when you judge a
      rule; never adopt, keep, or revert one on a hand tally, and never
@@ -357,7 +357,8 @@ Every invocation runs as one of three ticks:
      --rationale "<evidence, benchmark, why the market is wrong>" \
      --strategy-rev $(git rev-parse --short HEAD)`
    `--est-prob` is the `est_prob` that step 5b's forecast printed, so a rule
-   in shadow never sizes or creates a bet.
+   in shadow does not size or create a bet. `core/ledger.py` does not check
+   this; keeping to it is on you.
    `--edge-class` is the playbook edge class the bet claims — score.py now
    splits brier_delta by it, so classify honestly, not aspirationally.
    Respect rejections — they are protected-cap enforcement, not errors to fix.
