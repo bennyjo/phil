@@ -10,6 +10,11 @@ Reports, overall and per category:
 Also a calibration table (est-prob buckets vs realized frequency) and
 per-strategy-revision P&L so self-improvement is measurable across commits.
 
+Forecast slices exclude placeholder-book rows (P5, see placeholder_book) and
+report them on their own. The rules section grades each estimation rule with
+a paired raw-versus-rule test (see paired_rule_test); its verdict is what
+core/forecast.py reads to decide whether a rule binds.
+
 Usage: python3 core/score.py [--json] [--skip-mtm]
 """
 import argparse
@@ -62,6 +67,94 @@ def fstats(rows):
         "brier_agent": round(brier_agent, 4), "brier_market": round(brier_market, 4),
         "brier_delta": round(brier_agent - brier_market, 4),
     }
+
+
+def placeholder_book(r):
+    """P5 (journal/proposals.md, DEEP-2026-10-15): a forecast recorded against
+    an empty or placeholder book (a one-sided book, bid-ask >= 0.9, or under
+    $25 liquidity) has a meaningless mid, usually 0.50. Those rows are about
+    4% of settled forecasts but carried -10.87 of the Brier sum on 2026-10-22,
+    enough to flip the headline's sign, so every mid-baselined slice skips
+    them and they get their own line. Rows without liquidity_at_record
+    (before 2026-09-09) are judged on the book alone.
+    """
+    bid, ask = r.get("best_bid_at_record"), r.get("best_ask_at_record")
+    liq = r.get("liquidity_at_record")
+    return (bid is None or ask is None or round(ask - bid, 4) >= 0.9
+            or (liq is not None and liq < 25))
+
+
+# Pre-registered bar for an estimation rule (report "How to raise Phil's
+# learning rate", Option B): it binds only once its paired interval sits below
+# zero over at least this many independent events, and it is retired once the
+# interval sits above zero over as many.
+RULE_MIN_EVENTS = 20
+
+
+def _t95(df):
+    """Two-sided 95% Student-t critical value, Cornish-Fisher expansion.
+
+    Within 0.2% of the table from df=9 (2.093 at df=19). It reads narrow at
+    very low df, where no verdict is issued anyway (RULE_MIN_EVENTS).
+    """
+    z = 1.96
+    return z + (z ** 3 + z) / (4 * df) + (5 * z ** 5 + 16 * z ** 3 + 3 * z) / (96 * df ** 2)
+
+
+def paired_rule_test(rows):
+    """Paired Brier test of one estimation rule over the settled rows it moved.
+
+    Each row carries raw_prob (the estimate before the rule) and rule_prob
+    (after it), and both face the same outcome, so the per-row difference
+    (rule_prob - y)^2 - (raw_prob - y)^2 cancels the outcome noise a
+    before-and-after comparison carries: 7 to 26 times fewer rows per verdict
+    at Phil's observed noise. Negative means the rule helps.
+
+    Rows from one event share an outcome driver (a rally's word markets, one
+    game day), so the interval is clustered by event, keyed (category, end
+    date) like the 2026-10-22 analysis: a ratio-mean standard error over
+    event sums, with a t critical value on events - 1 degrees of freedom.
+    """
+    clusters = defaultdict(lambda: [0.0, 0])
+    for r in rows:
+        y = 1.0 if r["status"] == "won" else 0.0
+        c = clusters[(r["category"], (r.get("end_date") or "")[:10])]
+        c[0] += (r["rule_prob"] - y) ** 2 - (r["raw_prob"] - y) ** 2
+        c[1] += 1
+    n, g = len(rows), len(clusters)
+    if not n:
+        return {"n": 0, "events": 0, "verdict": "shadow"}
+    mean = sum(s for s, _ in clusters.values()) / n
+    out = {"n": n, "events": g, "mean_delta": round(mean, 4), "verdict": "shadow"}
+    if g >= 2:
+        se = math.sqrt(g / (g - 1) * sum((s - mean * k) ** 2
+                                         for s, k in clusters.values())) / n
+        lo, hi = mean - _t95(g - 1) * se, mean + _t95(g - 1) * se
+        out["ci95"] = [round(lo, 4), round(hi, 4)]
+        if g >= RULE_MIN_EVENTS and hi < 0:
+            out["verdict"] = "pass"
+        elif g >= RULE_MIN_EVENTS and lo > 0:
+            out["verdict"] = "fail"
+    return out
+
+
+def rule_verdicts(frows):
+    """Per-rule paired verdicts over live (not superseded) rule-tagged rows.
+
+    verdict: shadow (still collecting: the recorded estimate stays raw), pass
+    (the rule binds), fail (retired: core/forecast.py refuses new rows).
+    """
+    by_rule = defaultdict(list)
+    for r in frows:
+        if r.get("rule") and not r.get("superseded_by"):
+            by_rule[r["rule"]].append(r)
+    out = {}
+    for rule, rs in sorted(by_rule.items()):
+        v = paired_rule_test([r for r in rs if r["status"] in ("won", "lost")])
+        v["open"] = sum(1 for r in rs if r["status"] == "open")
+        v["last_ts"] = max(r["ts"] for r in rs)
+        out[rule] = v
+    return out
 
 
 EDGE_GRID = [0.02, 0.03, 0.04, 0.05, 0.07, 0.10, 0.15]
@@ -186,18 +279,26 @@ def forecast_report(frows):
     # row per market+outcome counts in the headline stats; the abandoned
     # estimates get their own slice so "do my revisions help?" stays a
     # measured question (PLBY 2026-08-10: the revision was worse).
+    # Placeholder-book rows (P5) are out of every slice below and get their
+    # own line: their mid is no market baseline.
     live = [r for r in frows if not r.get("superseded_by")]
     revised = [r for r in frows if r.get("superseded_by")]
-    fsettled = [r for r in live if r["status"] in ("won", "lost")]
+    settled = [r for r in live if r["status"] in ("won", "lost")]
+    fsettled = [r for r in settled if not placeholder_book(r)]
+    psettled = [r for r in settled if placeholder_book(r)]
     n_open = sum(1 for r in live if r["status"] == "open")
-    rsettled = [r for r in revised if r["status"] in ("won", "lost")]
+    rsettled = [r for r in revised if r["status"] in ("won", "lost")
+                and not placeholder_book(r)]
     revised_away = {"settled": len(rsettled),
                     "open": sum(1 for r in revised if r["status"] == "open")}
     if rsettled:
         revised_away.update(fstats(rsettled))
+    placeholder = fstats(psettled) if psettled else {"n": 0}
     if not fsettled:
-        return {"settled": 0, "open": n_open, "revised_away": revised_away}
+        return {"settled": 0, "open": n_open, "revised_away": revised_away,
+                "placeholder": placeholder, "rules": rule_verdicts(frows)}
     rep = {"overall": fstats(fsettled), "luck_adjusted": luck_adjusted(fsettled),
+           "placeholder": placeholder, "rules": rule_verdicts(frows),
            "by_category": {}, "by_skip_reason": {}, "calibration": [],
            "threshold_sweep": threshold_sweep(fsettled),
            "threshold_sweep_no": threshold_sweep_no(fsettled),
@@ -359,6 +460,16 @@ def main():
             if "brier_delta" in ra:
                 line += f" brier_delta={ra['brier_delta']:+.4f}"
             print(line)
+        ph = fr.get("placeholder") or {}
+        if ph.get("n"):
+            print(f"  placeholder books (excluded above, P5): n={ph['n']} "
+                  f"brier_delta={ph['brier_delta']:+.4f}")
+        for rule, v in (fr.get("rules") or {}).items():
+            ci = v.get("ci95")
+            print(f"  rule {rule}: {v['verdict'].upper()} settled={v['n']} "
+                  f"events={v['events']} open={v['open']}"
+                  + (f" paired={v['mean_delta']:+.4f}" if v["n"] else "")
+                  + (f" ci95=[{ci[0]:+.4f},{ci[1]:+.4f}]" if ci else ""))
         for reason, s in fr["by_skip_reason"].items():
             print(f"  [{reason:14}] n={s['n']:3} brier_delta={s['brier_delta']:+.4f}")
         for cat, s in fr["by_category"].items():

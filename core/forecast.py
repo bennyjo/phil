@@ -26,23 +26,35 @@ settles into score.py's separate revised-away slice - whether revisions
 actually improve estimates is measured, not assumed (PLBY 2026-08-10: the
 revision was worse than the original).
 
+Estimation rules ship in shadow. A row that a playbook rule moved carries
+--rule <id> --raw-prob <estimate before the rule>, with --est-prob the rule's
+value. core/score.py grades each rule by the paired Brier difference of those
+two numbers on the same outcomes; until its verdict is pass, the recorded
+est_prob is the raw estimate and the rule's value sits in rule_prob, so an
+unvalidated rule never moves the headline score or a bet. A failed rule is
+retired: new rows tagged with it are refused. At most RULE_BUDGET rules may
+be in play at once.
+
 Usage:
   record: python3 core/forecast.py record --market-id 123 --outcome Yes \
             --est-prob 0.62 --category econ --skip-reason no-edge \
             [--fit-score 4] [--note "..."] [--strategy-rev abc1234] \
-            [--confirm-extreme] [--supersede]
+            [--confirm-extreme] [--supersede] \
+            [--rule half-gap-below-mid --raw-prob 0.70]
   status: python3 core/forecast.py status
 """
 import argparse
 import datetime as dt
 import json
 import pathlib
+import re
 import sys
 import uuid
 from collections import Counter
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import pmapi  # noqa: E402
+import score  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 FORECASTS = ROOT / "journal" / "forecasts.jsonl"
@@ -59,6 +71,15 @@ MIN_REVISION_DELTA = 0.05
 # keystroke exactly when the agent should be pausing anyway; the typo gets
 # caught at the only moment it is fixable.
 EXTREME_DISAGREEMENT = 0.40
+
+# Rule budget: at most this many estimation rules in play (not retired, and
+# tagged on a row in the last RULE_IDLE_DAYS). Every concurrent rule is one
+# more chance of a false pass at the 95% bar, and the playbook grew ~60 KB a
+# week while rules were adopted on 1 to 3 events; a small budget keeps the
+# set under test small enough to reach verdicts.
+RULE_BUDGET = 6
+RULE_IDLE_DAYS = 14
+RULE_ID = re.compile(r"^[a-z0-9][a-z0-9-]{1,47}$")
 
 
 def read_forecasts():
@@ -87,9 +108,46 @@ def _num(value):
         return None
 
 
+def rule_state(args, rows):
+    """(recorded est_prob, rule fields) for this row; exits on a refusal."""
+    if args.rule is None and args.raw_prob is None:
+        return args.est_prob, {}
+    if args.rule is None or args.raw_prob is None:
+        sys.exit("REJECTED: --rule and --raw-prob go together: name the rule "
+                 "that moved the estimate and the estimate before it")
+    if not RULE_ID.match(args.rule):
+        sys.exit(f"REJECTED: rule id {args.rule!r} must be a lowercase slug "
+                 "(a-z, 0-9, dashes, 2-48 chars), the id its playbook section names")
+    if not 0.0 < args.raw_prob < 1.0:
+        sys.exit("REJECTED: raw-prob must be in (0,1)")
+    if round(args.raw_prob - args.est_prob, 4) == 0:
+        sys.exit("REJECTED: --raw-prob equals --est-prob: the rule did not move "
+                 "this estimate, so record it without --rule")
+    verdicts = score.rule_verdicts(rows)
+    v = verdicts.get(args.rule)
+    if v and v["verdict"] == "fail":
+        sys.exit(f"REJECTED: rule {args.rule!r} is retired by its paired test "
+                 f"(paired {v['mean_delta']:+.4f}, ci95 {v['ci95']}, "
+                 f"{v['events']} events): record your estimate without it")
+    if v is None:
+        cutoff = (dt.datetime.now(dt.timezone.utc)
+                  - dt.timedelta(days=RULE_IDLE_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        active = sorted(k for k, w in verdicts.items()
+                        if w["verdict"] != "fail" and w["last_ts"] >= cutoff)
+        if len(active) >= RULE_BUDGET:
+            sys.exit(f"REJECTED: rule budget full ({RULE_BUDGET} in play: "
+                     f"{', '.join(active)}). Retire one in the playbook and let "
+                     f"it idle {RULE_IDLE_DAYS} days, or record without --rule")
+    bound = bool(v) and v["verdict"] == "pass"
+    return (args.est_prob if bound else args.raw_prob), {
+        "rule": args.rule, "raw_prob": args.raw_prob, "rule_prob": args.est_prob,
+        "rule_state": "bound" if bound else "shadow"}
+
+
 def cmd_record(args, rows):
     if not 0.0 < args.est_prob < 1.0:
         sys.exit("REJECTED: est-prob must be in (0,1)")
+    est, rule_fields = rule_state(args, rows)
     live = [r for r in rows
             if r["market_id"] == args.market_id and r["outcome"] == args.outcome
             and r["status"] == "open" and not r.get("superseded_by")]
@@ -104,11 +162,11 @@ def cmd_record(args, rows):
         old = live[0]
         # round like ledger.py's edge field so an exactly-boundary revision
         # (0.33 - 0.28 = 0.049999...) does not float-drop below the gate
-        if (round(abs(args.est_prob - old["est_prob"]), 4) < MIN_REVISION_DELTA
+        if (round(abs(est - old["est_prob"]), 4) < MIN_REVISION_DELTA
                 and args.skip_reason == old.get("skip_reason")):
             sys.exit(f"REJECTED: supersede needs a material change — "
                      f"|delta est_prob| >= {MIN_REVISION_DELTA} "
-                     f"(old {old['est_prob']}, new {args.est_prob}) or a changed "
+                     f"(old {old['est_prob']}, new {est}) or a changed "
                      f"skip-reason (old {old.get('skip_reason')!r})")
 
     m = pmapi.gamma_market(args.market_id)
@@ -126,9 +184,9 @@ def cmd_record(args, rows):
         sys.exit("REJECTED: empty book — no market probability to benchmark against")
     mid = (bid + ask) / 2 if bid is not None and ask is not None else bid or ask
 
-    gap = abs(args.est_prob - mid)
+    gap = max(abs(p - mid) for p in (args.est_prob, est))
     if gap > EXTREME_DISAGREEMENT and not args.confirm_extreme:
-        sys.exit(f"REJECTED: est_prob {args.est_prob} vs market mid {round(mid, 4)} "
+        sys.exit(f"REJECTED: est_prob {est} vs market mid {round(mid, 4)} "
                  f"for outcome {args.outcome!r} differs by {round(gap, 4)} "
                  f"(> {EXTREME_DISAGREEMENT}). If this extreme disagreement is your "
                  "researched belief, re-run with --confirm-extreme; if not, you "
@@ -144,7 +202,8 @@ def cmd_record(args, rows):
         "end_date": m.get("endDate"),
         "outcome": args.outcome,
         "token_id": tokens[args.outcome],
-        "est_prob": args.est_prob,
+        "est_prob": est,
+        **rule_fields,
         "best_bid_at_record": bid,
         "best_ask_at_record": ask,
         "market_prob_at_record": round(mid, 4),
@@ -172,11 +231,14 @@ def cmd_record(args, rows):
         with FORECASTS.open("a") as f:
             f.write(json.dumps(row) + "\n")
     out = {"recorded": row["id"], "mid": row["market_prob_at_record"],
-           "bid": bid, "ask": ask, "delta_vs_mid": round(args.est_prob - mid, 4),
-           "question": row["question"]}
+           "bid": bid, "ask": ask, "est_prob": est,
+           "delta_vs_mid": round(est - mid, 4), "question": row["question"]}
+    if rule_fields:
+        out["rule"] = {"id": args.rule, "state": rule_fields["rule_state"],
+                       "raw_prob": args.raw_prob, "rule_prob": args.est_prob}
     if old is not None:
         out["supersedes"] = old["id"]
-        out["delta_est_prob"] = round(args.est_prob - old["est_prob"], 4)
+        out["delta_est_prob"] = round(est - old["est_prob"], 4)
     print(json.dumps(out, indent=2))
 
 
@@ -201,6 +263,12 @@ def main():
                    help="required when |est_prob - mid| > "
                         f"{EXTREME_DISAGREEMENT}: confirms the extreme "
                         "disagreement is deliberate, not an inverted outcome side")
+    p.add_argument("--rule", default=None,
+                   help="id of the playbook estimation rule that moved this "
+                        "estimate (needs --raw-prob; --est-prob is the rule's value)")
+    p.add_argument("--raw-prob", type=float, default=None,
+                   help="the estimate before --rule moved it; recorded as "
+                        "est_prob while the rule is in shadow")
     p.add_argument("--fit-score", type=int, default=None, help="playbook fit score 0-5")
     p.add_argument("--note", default="", help="one line of context (optional)")
     p.add_argument("--strategy-rev", default="", help="git rev of strategy/ used")
