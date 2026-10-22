@@ -1602,6 +1602,13 @@ Prefer, in order:
    company's historical beat rate (most large caps beat 75–85% of quarters),
    recent guidance, peer results this season. Suspect mispricing when the
    price is far from the historical beat base rate without news to justify it.
+   **Company-KPI vs own-guide ladders (RETRO-20261022-1233, Spotify Q3'26 MAU,
+   n=1 family):** anchoring the ladder on the company's own published guide
+   (788M, confirmed in the SEC 6-K) plus its historical print-vs-guide spread
+   (-1..+10M) beat the mid on all 3 rungs (dBrier -0.096/-0.063/-0.118; print
+   788M = guide). Keep using guide+dispersion as the model for MAU/subscriber
+   KPI rungs; re-check at n>=3 families before any OVV carve-out (the >800
+   veto cost CF +$1.58).
    Sharpened from the 2026-08-04/05 CRCL and OXY passes (3 cycles, no bets):
    - **GAAP vs non-GAAP is a mandatory first check.** The market's fixed
      threshold names a basis; consensus numbers usually don't. CRCL's
