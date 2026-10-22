@@ -195,6 +195,10 @@ def main():
         playbook = (ROOT / "strategy" / "playbook.md").read_text()
     except OSError:
         playbook = ""
+    # DEEP-2026-10-22 moved the veto-ledger narrative to strategy/archive/;
+    # an id documented there still counts as documented.
+    for path in sorted((ROOT / "strategy" / "archive").glob("*.md")):
+        playbook += path.read_text()
     latest = {}
     for row in forecasts:
         rid = str(row.get("id", ""))

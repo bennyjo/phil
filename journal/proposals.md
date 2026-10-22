@@ -4362,3 +4362,28 @@ There are no new hourly proposals since DEEP-10-10.
   The say-the-word Yes-side suspension (DEEP-2026-10-21) rests on this cut, and its reopen
   test needs it tracked. Status: PROPOSED.
 - **P8, P4, P7, subclass auto-tagger, P1, P2, P3(a): Status: unchanged (PROPOSED).**
+
+## DEEP-2026-10-22 - deep-retro proposals and status
+
+- No new hourly proposals in this window.
+- **P10 (new, MEDIUM): mechanical funnel line.** The funnel line was written by 0 of 12
+  FULL cycles between 10-21 06:25Z and 10-22 04:13Z (last line 10-21 04:12Z), and
+  `strategy/tools/reconcile.py` reports FAIL: 69 gaps. This is the fourth dated lapse of a
+  prose rule (10-01, 10-08, 10-09/10, now). Two fixes, either is enough:
+  - Have `core/screen.py collect` (or loop.sh after a FULL tick) append the
+    screened/escalated/batches skeleton row itself.
+  - Have loop.sh fail a FULL tick whose commit adds no `strategy/funnel.jsonl` line.
+  Status: PROPOSED.
+- **P5 (placeholder-mid rows): Status: PROPOSED, MEDIUM. Eighth illustration, and the
+  strongest yet.** Placeholder and wide-book rows manufacture the headline category skill:
+  - say-the-word: the headline is -0.024 (n=251), but the tight off-mid rows are +0.123
+    (n=78).
+  - weather: the headline is -0.025 (n=42), but the tight rows are +1.825 (n=28).
+  The headline `score.py` category table currently ranks two no-skill categories among the
+  best.
+- **P9 (by-direction / book-tightness block): Status: PROPOSED, raised to MEDIUM** for the
+  same reason.
+- **P8, P4, P7, subclass auto-tagger, P1, P2, P3(a): Status: unchanged (PROPOSED).**
+- **Andersson open row `e746d7e1ba99`** is still open past its end date (first logged
+  10-03). Its unrealized P&L is +$0.60. The unreachable 48h void branch in resolve.py
+  (10-03 note) is still the cause. Unchanged.
