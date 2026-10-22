@@ -7611,6 +7611,15 @@ OVV saved $20 (0W/4L). WSV missed +$4.09 at a 0.40-spread book. No rule change.
   banks beat consensus most quarters. Before recording a beat-market
   estimate below the mid, write the issuer's last-8-quarter beat count
   in the note. That is a research step, not a gate.
+  **Superseded RETRO-20261022-1430 (n=7 settled, dBrier +0.088, 5/7
+  deviated from mid in the wrong direction: GS, IBKR x2, PG
+  `6b0ef6b22c89`, AAL `9e6cdb87a518`):** earnings-beat est_prob stays
+  within 0.05 of the mid unless the note cites an issuer primary-source
+  datapoint dated after the line was set (pre-announcement, 8-K,
+  guidance update). Peer read-throughs (AAL from UAL fuel), the
+  issuer's own pre-quarter guide (PG "down >=5%", printed +1%), and beat
+  counts do not qualify; put them in the note as "shade view: X".
+  Re-grade at n=15.
 
 ## 2026-10-14 14:25Z update: BAC beat WSV row settled (FULL, RETRO-20261014-1425)
 
