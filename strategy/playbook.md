@@ -10149,3 +10149,13 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
 
 - WSV totals: 106 rows, 90 fillable, 48W/42L, CF -$64.20 (+2.04, Meta "Advertising" Yes @0.71).
   No boundary change.
+
+## 2026-10-22 02:11Z: Trump SC rally slate settled, all 12 terms said (RETRO-20261022-0211)
+
+- Hormuz/Blockade No bet `afc33780dc6a` lost -$5 (base 2/7 -> now 3/8 rallies said it). Say-the-word
+  No bets now 7W/1L, +$12.27. Below-mid tight-book mirror set from 10-01: n=23, -0.731 (was n=19,
+  -1.171; the SC sweep cost +0.440). Yes reopen set unchanged n=22, -0.024.
+- WSV totals 110 rows, 94 fillable, 51W/43L, CF -$63.36. OVV totals 270 rows, 110W/152L, CF +$165.13
+  (Russia/Ukraine No veto saved $5). No boundary change.
+- Watch (pre-registered): if the Oct22 Iowa rally slate also sweeps and its below-mid rows cost the
+  mirror set >+0.3 again, pause No-side rally bets until a rally-length/topic-sweep check is run.
