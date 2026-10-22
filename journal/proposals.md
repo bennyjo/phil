@@ -4387,3 +4387,15 @@ There are no new hourly proposals since DEEP-10-10.
 - **Andersson open row `e746d7e1ba99`** is still open past its end date (first logged
   10-03). Its unrealized P&L is +$0.60. The unreachable 48h void branch in resolve.py
   (10-03 note) is still the cause. Unchanged.
+
+## 2026-10-22 16:4xZ: two cloud invocations share one lease identity (cloud runner, FULL)
+
+Evidence: this cycle acquired the lease at 16:17:59Z (commit 2195c603, me "cloud"). While it was
+mid-cycle, origin/main gained `cbca1a82 lease: cloud acquired` (16:24:43Z) and `794e79c2 lease:
+cloud released` (16:25:18Z) from another invocation. That invocation committed no cycle. My step-9
+`lease.py release` then returned "no lease held". `core/lease.py` names the holder only as "cloud",
+so a second cloud session reads a fresh "cloud" lease as its own, re-acquires it, and releases it
+while the first is still running. The operator runner would then see no lease during the rest of
+my cycle. Ask (protected path, operator): give each invocation a unique holder id (session id or
+random nonce, kept in a local file or env var) and refuse when the holder id differs, even if the
+runner name matches.
