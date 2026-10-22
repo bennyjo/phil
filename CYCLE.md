@@ -114,7 +114,10 @@ Every invocation runs as one of three ticks:
    never scrape around it.
 
 1. **Settle**: `python3 core/resolve.py`
-2. **Score**: `python3 core/score.py` — read the report.
+2. **Score**: `python3 core/score.py` — read the report. Forecast slices
+   exclude placeholder-book rows (P5, operator 2026-10-23) and report them on
+   their own line; that exclusion alone moved the forecast headline from
+   -0.0019 to +0.0040 on the day it shipped, with no change in skill.
 3. **Retro** (only if new positions settled since the last retro): write
    `journal/retros/RETRO-<UTCdate-HHMM>.md`:
    - For each settled bet: was the estimate wrong, the fill bad, or the
@@ -123,6 +126,20 @@ Every invocation runs as one of three ticks:
      overreact to fewer than ~15 settlements in a category).
    - Concrete lessons → then ACTUALLY EDIT `strategy/playbook.md`,
      `strategy/risk.json`, or `strategy/tools/` to encode them.
+   - **Estimation rules ship in shadow; only the scorer promotes them**
+     (operator, 2026-10-23). An estimation rule is any playbook rule that
+     moves a probability you record (half-gap, shrink toward the mid, a
+     floor or cap). Give each one a slug id in its playbook section and tag
+     every row it moves in step 5b. `core/score.py` grades it with a paired
+     raw-versus-rule test on the same outcomes and prints one line per rule:
+     SHADOW (collecting: `core/forecast.py` records your raw estimate and
+     logs the rule's value), PASS (at least 20 events with the paired 99.5%
+     interval below zero: the rule binds), or FAIL (interval above zero:
+     retired, tagged rows are refused). Quote that line when you judge a
+     rule; never adopt, keep, or revert one on a hand tally, and never
+     write settlement tallies for it into the playbook. At most 6 rules may
+     be in play; to free a slot, retire one in the playbook and stop using
+     it.
    - Settled forecasts are graded the same way (deep retros additionally
      reconcile `journal/forecasts.jsonl` coverage against funnel researched
      entries, and grade skip reasons against settled forecast outcomes).
@@ -297,7 +314,14 @@ Every invocation runs as one of three ticks:
    outcome, probability) — including no-edge and market-agrees skips:
    `python3 core/forecast.py record --market-id <id> --outcome "<name>" \
      --est-prob <p> --category <cat> --skip-reason <bet|no-edge|market-agrees|...> \
-     [--fit-score N] [--note "..."] --strategy-rev $(git rev-parse --short HEAD)`
+     [--fit-score N] [--note "..."] --strategy-rev $(git rev-parse --short HEAD) \
+     [--rule <id> --raw-prob <p before the rule>]`
+   When an estimation rule moved the estimate, `--est-prob` is the rule's
+   value and `--raw-prob` is your estimate just before it (any PASS rule
+   already applied). Tag one rule per row: if two unpassed rules would
+   apply, use only the one you are testing. In shadow, the recorded
+   `est_prob` (forecast.py prints it) is the raw estimate - the honest
+   belief this experiment scores until the rule earns its place.
    No stake, no edge floor — this is how your calibration gets feedback on
    research that doesn't become a bet (scored as brier_delta vs the market
    MID, separately from bets, in score.py). For candidates you intend to
@@ -332,6 +356,9 @@ Every invocation runs as one of three ticks:
      --edge-class <info-race|cross-market|book-devig|other> \
      --rationale "<evidence, benchmark, why the market is wrong>" \
      --strategy-rev $(git rev-parse --short HEAD)`
+   `--est-prob` is the `est_prob` that step 5b's forecast printed, so a rule
+   in shadow does not size or create a bet. `core/ledger.py` does not check
+   this; keeping to it is on you.
    `--edge-class` is the playbook edge class the bet claims — score.py now
    splits brier_delta by it, so classify honestly, not aspirationally.
    Respect rejections — they are protected-cap enforcement, not errors to fix.
