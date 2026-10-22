@@ -2664,7 +2664,7 @@ resolved 123-125): the 08Z re-record put the centre 0.33 sd above the 123 edge (
 0.6M) yet sat 0.16 off both mids (+0.16 dBrier, both lost). The 00Z rows on a 0.14-spread book
 beat the mid (-0.31), so this event is mixed (net -0.0235 over 6). The rule stands: straddle
 means |centre - edge| < 1.5 sd, and then own p is the mid, whatever the shade-up note says.
-WSV tool totals 10-22 20:15Z: 114 rows, 53W/45L, CF -55.58, dBrier -0.0190.
+WSV tool totals 10-22 20:15Z (rows `4b2b6b7b3641` `6c084bd69e66` `38a4845cfd8e` `3a303ade7e6a`): 114 rows, 53W/45L, CF -55.58, dBrier -0.0190.
 
 **Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
 21:35Z, all 3 legs settled):** leg 3 BTC dip-$75k (753366c2ea8e,
