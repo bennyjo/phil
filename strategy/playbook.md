@@ -8329,3 +8329,18 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   in `strategy/archive/`. Live rules and all 253 reconcile rows are kept, and
   `core/counterfactual.py reconcile` output is unchanged (A=0, B=67, C=152).
   `strategy/tools/reconcile.py` check 5 now also reads `strategy/archive/*.md`.
+
+## 2026-10-22 16:20Z: GTA VI Launch Trailer wk1 settled 60-80 (RETRO-20261022-1620)
+
+- 22 ladder rows, own Brier 0.2266 vs mid 0.1420 (dBrier +0.085); the market led all week.
+  OVV blocked all 3 vetoed pairs, each of which would have lost.
+- **Stale-read rule.** A RYD/YouTube count identical across two fetches, or unchanged over a
+  window where trailing pace predicts >= 0.05M growth, is a stale cache. Do not project from
+  it and do not record a new snapshot on it: keep the previous snapshot, or record at the mid.
+  Evidence: `63c1fb8c4d1e`/`1bb73797fe08` dropped 0.87 -> 0.60 on a static 56.65M read vs a
+  0.88 book (+0.145/+0.152); the next read was 58.16M.
+- **Measured decay only.** A multi-day view projection uses the measured day-over-day ratio of
+  trailing-24h adds (>= 2 ratios observed) as its decay, never a guessed band. With fewer than
+  2 measured ratios, own p stays within 0.05 of the mid. Evidence: Oct18-20 snapshots assumed
+  18-25%/day and centred 57-59.7M; measured adds (6.4/5.25/4.9/~5.1M per day) decayed
+  ~10-15%/day and the week closed above 60M (8 off-mid rows, mean dBrier ~+0.18).
