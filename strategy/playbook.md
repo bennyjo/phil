@@ -2659,6 +2659,12 @@ Fourth settled instance (RETRO-20261021-1813, MrBeast RE3_PGwDwhw day4
 113-115/115-117): two dated RYD reads put the centre on the 115 edge; I sat
 within 0.01 of both mids (0.42/0.415, 0.55/0.555), outcome 115-117, net dBrier
 ~0.000. Straddle case confirms: on an edge, stay at the mid.
+Fifth settled instance (RETRO-20261022-2015, RE3_PGwDwhw day5 121-123/123-125,
+resolved 123-125): the 08Z re-record put the centre 0.33 sd above the 123 edge (123.2M, sd
+0.6M) yet sat 0.16 off both mids (+0.16 dBrier, both lost). The 00Z rows on a 0.14-spread book
+beat the mid (-0.31), so this event is mixed (net -0.0235 over 6). The rule stands: straddle
+means |centre - edge| < 1.5 sd, and then own p is the mid, whatever the shade-up note says.
+WSV tool totals 10-22 20:15Z: 114 rows, 53W/45L, CF -55.58, dBrier -0.0190.
 
 **Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
 21:35Z, all 3 legs settled):** leg 3 BTC dip-$75k (753366c2ea8e,
