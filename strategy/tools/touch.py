@@ -18,6 +18,10 @@ P(touch) = 2 * (1 - Phi(|ln(B/S)| / (sigma * sqrt(T)))). For commodity
 ladders pass the ACTIVE-MONTH contract price as --spot (playbook, 2026-09-17)
 and --year-days 252 with --days counted in sessions.
 
+With --mid, it also prints p_rule: the value touch_rule.py says to record
+(DEEP-2026-10-16 rule 1, the half-gap shade above the mid). Edits to this file
+or touch_rule.py ship only on a core/touch_replay.py PASS (CYCLE.md step 3).
+
 The output is a forecast input only: the family stays `unvalidated-method`
 forecast-only until the ruling's re-grade bar is met.
 """
@@ -43,13 +47,18 @@ def main(argv):
     ap.add_argument("--vol-source", required=True,
                     help="named, dated source of the vol number")
     ap.add_argument("--year-days", type=float, default=365.0)
+    ap.add_argument("--mid", type=float,
+                    help="market mid at record time; adds p_rule from touch_rule.py")
     a = ap.parse_args(argv)
     if len(a.vol_source.strip()) < 8:
         ap.error("--vol-source must name a dated source (guessed vol is retired)")
     if not (a.spot > 0 and a.barrier > 0 and a.days > 0 and 0 < a.ann_vol < 5):
         ap.error("spot, barrier, days must be > 0 and ann-vol a fraction in (0, 5)")
+    if a.mid is not None and not 0 < a.mid < 1:
+        ap.error("--mid must be a probability in (0, 1)")
+    raw = p_touch(a.spot, a.barrier, a.days, a.ann_vol, a.year_days)
     out = {
-        "p_touch": round(p_touch(a.spot, a.barrier, a.days, a.ann_vol, a.year_days), 4),
+        "p_touch": round(raw, 4),
         "p_touch_vol_x0.75": round(
             p_touch(a.spot, a.barrier, a.days, a.ann_vol * 0.75, a.year_days), 4),
         "p_touch_vol_x1.25": round(
@@ -59,6 +68,11 @@ def main(argv):
         "vol_source": a.vol_source.strip(),
         "skip_reason": "unvalidated-method",
     }
+    if a.mid is not None:
+        import touch_rule  # beside this file: python puts the script's directory on sys.path
+        row = {"spot": a.spot, "barrier": a.barrier, "days": a.days, "ann_vol": a.ann_vol}
+        out["mid"] = a.mid
+        out["p_rule"] = round(touch_rule.estimate(raw, a.mid, row), 4)
     print(json.dumps(out, indent=2))
 
 
