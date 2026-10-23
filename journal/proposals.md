@@ -4433,3 +4433,31 @@ against this cycle's live lease (contrary to its own tick-type rule) and clobber
   both protected — not mine to patch. Status: PROPOSED (medium: no damage observed this
   time, but the failure mode is a silent lease-ownership collision, which is exactly what
   the lease file exists to prevent).
+
+## DEEP-2026-10-23 - deep-retro proposals and status
+
+- **Hourly lease proposals (2026-10-22 16:4xZ FULL and 16:2xZ TRIGGERED) - one incident, two
+  reports: ENDORSED, MEDIUM. Status: ENDORSED.** Both describe the same 16:17-16:25Z
+  collision from either side, and the diagnosis is right: `screen.runner_id()` returns a bare
+  `"cloud"`, so `held_by_other()` and `release()` cannot tell two concurrent cloud
+  invocations apart. Only the triggered tick's own error (it ran acquire/release against
+  CYCLE.md's "a TRIGGERED invocation neither takes nor honours the lease") caused this
+  instance, so the immediate fix is discipline. The mechanism stays real: an hourly tick and a
+  watch-triggered fire can overlap. Operator ask: a per-invocation holder nonce, with release
+  refused on a nonce mismatch.
+- **P5 (placeholder-mid rows): Status: DONE by operator #14 (d4551d27).** It already matters:
+  with placeholders excluded, the forecast stream reads dBrier **+0.0042** (n=1856, luck z
+  +1.24). Yesterday's headline, placeholders included, was -0.0019 (n=1908). The 84
+  placeholder rows sit at -0.129 on their own. The stream does not beat the market.
+- **P10 (mechanical funnel line): Status: PROPOSED, lowered to LOW.** After DEEP-10-22 every
+  FULL from 06:2xZ to 04:12Z wrote a funnel line (12 new rows). Two lines lack
+  `pool_by_query` (14:24Z, 16:17Z) and one triggered forecast has no line. The prose rule is
+  holding for now.
+- **P11 (new, LOW): cycles.log timestamp contract.** Since ~10-22 the hourly agent stamps
+  lines `2026-10-22T06:2xZ`. Any pacing check that parses the stamp goes blind: the schedule
+  count v5 printed 0 against a true 11, and the playbook/schedule now carry v6. Ask: have
+  loop.sh (operator-owned) prefix the real UTC time on the agent's line, so the stamp is
+  mechanical.
+- **P9, P8, P4, P7, subclass auto-tagger, P1, P2, P3(a): Status: unchanged (PROPOSED).**
+- **Andersson `e746d7e1ba99`:** still open past its end date (mark +$0.60), on the known
+  void-path issue. Unchanged.

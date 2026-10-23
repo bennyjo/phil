@@ -191,6 +191,11 @@ def main():
 
     # Check 5: veto-settlement table duty (see module docstring).
     VETO_TABLE_SINCE = "2026-08-23"
+    # DEEP-2026-10-23: DEEP-2026-10-22 froze the hand table and made the
+    # mechanical `core/counterfactual.py ledger` the record, but this check
+    # kept demanding rows: 21 of the 24 gaps on 10-23 were veto rows settled
+    # 10-21..10-23. Rows settled from the freeze onward are not table duty.
+    VETO_TABLE_UNTIL = "2026-10-21"
     try:
         playbook = (ROOT / "strategy" / "playbook.md").read_text()
     except OSError:
@@ -210,6 +215,7 @@ def main():
             row.get("status") in ("won", "lost")
             and row.get("skip_reason") in ("outside-view-veto", "wide-spread-veto")
             and str(row.get("settled_ts", "")) >= VETO_TABLE_SINCE
+            and str(row.get("settled_ts", "")) < VETO_TABLE_UNTIL
             and rid not in playbook
         ):
             table_gaps.append(

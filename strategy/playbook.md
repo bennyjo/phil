@@ -14,6 +14,43 @@ the last 7 days. Those sit at the end of the file. Settled narrative
 lives in `strategy/playbook-archive.md`. You do not need to read it
 per cycle.
 
+## Estimation-rule registry (DEEP-2026-10-23; binding, read every FULL)
+
+Operator #14 (d4551d27, CYCLE.md step 3): an estimation rule is any playbook rule that MOVES a
+recorded probability after you have formed your own estimate (set-to-mid, shrink/clip toward
+the mid, cap, floor, fixed correction). Each ships in SHADOW: record with `--rule <slug>
+--raw-prob <your estimate before the rule>` and `--est-prob <rule value>`; forecast.py then
+stores YOUR raw estimate as est_prob and that raw value is what a bet is sized on. Only
+`core/score.py` promotes (PASS, >=20 events, 99.5% paired CI below zero) or retires (FAIL) a
+rule. Quote score.py's rule line when judging one. **No hand tallies for these rules in this
+file any more** — the "re-grade at n=X", "tally n=Y" clauses attached to them below are void.
+Budget 6. Since #14 merged (2026-10-22 ~23:48Z) the 00:12/02:12/04:12Z FULLs recorded 35
+forecast rows and tagged 0 (score.py `rules: {}`): no rule had a slug. Now four do.
+
+| slug | applies to | raw | rule value | source |
+|---|---|---|---|---|
+| `postcount-mid` | social-media-postcount brackets not already decided by the live count | your bootstrap/pace read | CLOB mid | RETRO-20261016-0815 |
+| `knife-edge-mid` | any self-computed distribution whose centre is within 1.5 sd of the bracket/threshold edge (merges the 0.40-0.60 knife-edge cap, RETRO-20261012-1400, and the straddle rule; the cap is retired) | your computed P | CLOB mid | MrBeast straddle instances; GTA `63c1fb8c4d1e` (cap 0.60 vs book 0.88, lost) |
+| `earnings-mid` | earnings-beat rows with no issuer primary-source datapoint dated after the line was set | your estimate | clipped to mid +/-0.05 | RETRO-20261022-1430 |
+| `views-decay-mid` | multi-day view/count projections with fewer than 2 measured day-over-day decay ratios | your projection | clipped to mid +/-0.05 | RETRO-20261022-1620 |
+| (2 free) | | | | |
+
+Consequences, stated once:
+- When raw equals the rule value (e.g. you already sat at the mid), record WITHOUT `--rule`
+  (forecast.py refuses a no-move tag).
+- Every OTHER probability-moving rule in this file (e.g. Brazil right-ward poll correction,
+  seat-model shading, any "shade", "half-gap", "floor"/"cap" clause) is NOT in play: record
+  your raw estimate and write the rule's value in the note as `rule view (<name>): X`. To put
+  one in play, give it a slug here (free slot) in a deep retro or retro commit, with evidence.
+- Bet GATES are not estimation rules and stay binding: min_edge, max_spread, outside-view
+  veto, wide-spread veto, category-bar, comparables gate, Yes-side say-the-word suspension.
+- Base-rate ESTIMATORS (Laplace on a market-series, transcript counts, seat models) are how
+  you form the raw estimate, not rules on top of it. But note (DEEP-2026-10-23): when the raw
+  frequency k/n alone sits within min_edge of the ask and only Laplace's pull toward 0.5
+  clears min_edge (`d159734b4051`: raw 5/8 = 0.625 vs book 0.645 is a 0.015 No edge; Laplace
+  0.60 made it exactly 0.04; open), write `laplace-only edge` in the rationale so the next deep retro can grade
+  the cell. Insufficient data to gate it yet.
+
 **Before committing ANY cycle that screened or recorded a forecast
 (DEEP-2026-10-01, hardened DEEP-2026-10-10) — run these two commands and
 paste both outputs into the cycles.log line:**
@@ -2585,7 +2622,8 @@ dBrier **+0.0264** (vetoed beliefs still worse than the book; P&L is longshot-dr
 This section keeps (1) the live rules that had accreted inside it, verbatim, and (2) every
 hand-table row, in original order, so `core/counterfactual.py reconcile` still parses it.
 The hand table is FROZEN (last rows 2026-10-07); do not append rows; settlement retros
-cite the mechanical totals instead.
+cite the mechanical totals instead. `strategy/tools/reconcile.py` check 5 now only
+demands table rows for veto rows settled before 2026-10-21 (DEEP-2026-10-23).
 
 ### Live rules carried over from the archived narrative
 
