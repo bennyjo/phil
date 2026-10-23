@@ -25,7 +25,7 @@ stores YOUR raw estimate as est_prob and that raw value is what a bet is sized o
 rule. Quote score.py's rule line when judging one. **No hand tallies for these rules in this
 file any more** — the "re-grade at n=X", "tally n=Y" clauses attached to them below are void.
 Budget 6. Since #14 merged (2026-10-22 ~23:48Z) the 00:12/02:12/04:12Z FULLs recorded 35
-forecast rows and tagged 0 (score.py `rules: {}`): no rule had a slug. Now four do.
+forecast rows and tagged 0 (score.py `rules: {}`): no rule had a slug. Now five do.
 
 | slug | applies to | raw | rule value | source |
 |---|---|---|---|---|
@@ -33,7 +33,8 @@ forecast rows and tagged 0 (score.py `rules: {}`): no rule had a slug. Now four 
 | `knife-edge-mid` | any self-computed distribution whose centre is within 1.5 sd of the bracket/threshold edge (merges the 0.40-0.60 knife-edge cap, RETRO-20261012-1400, and the straddle rule; the cap is retired) | your computed P | CLOB mid | MrBeast straddle instances; GTA `63c1fb8c4d1e` (cap 0.60 vs book 0.88, lost) |
 | `earnings-mid` | earnings-beat rows with no issuer primary-source datapoint dated after the line was set | your estimate | clipped to mid +/-0.05 | RETRO-20261022-1430 |
 | `views-decay-mid` | multi-day view/count projections with fewer than 2 measured day-over-day decay ratios | your projection | clipped to mid +/-0.05 | RETRO-20261022-1620 |
-| (2 free) | | | | |
+| `rally-below-mid` | Trump/Vance rally say-the-word reads (market-series, judgment) that sit BELOW the CLOB mid; not speaker-only transcript counts | your raw read | CLOB mid | NC-revert pre-registration (+0.20 threshold): SC+IA+FL below-mid raw n=20, +0.750 vs mid, RETRO-20261023-2215 |
+| (1 free) | | | | |
 
 Consequences, stated once:
 - When raw equals the rule value (e.g. you already sat at the mid), record WITHOUT `--rule`
@@ -8399,3 +8400,13 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   Each AAA forecast note must now state the book-implied centre next to the drift centre,
   so a later deep retro can grade which centre is better without reconstructing books.
 - WSV totals (tool): 119 rows, 102 fillable, 55W/47L, CF -$60.17. No boundary change.
+
+## 2026-10-23 22:15Z: FL rally first legs + Russia/Ukraine No bet settled (RETRO-20261023-2215)
+
+- `d159734b4051` (No @0.36, own 0.60 vs mid 0.645) lost -$5: third straight rally No loss.
+  Say-the-word No bets 10 settled, 7W/3L, +$2.27 (expected wins 6.10). Iowa sweep trigger
+  did not fire; No side kept.
+- **The 2026-10-21 "3 more rallies -> record the mid" clause is superseded** by shadow rule
+  `rally-below-mid` (table above): SC +0.397 (11), IA +0.171 (4), FL +0.182 (5 of 23 legs
+  settled), total +0.750 vs a +0.20 threshold. Tag every below-mid rally read with
+  `--rule rally-below-mid --raw-prob <raw> --est-prob <mid>`; score.py grades it.
