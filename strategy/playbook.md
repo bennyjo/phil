@@ -8388,3 +8388,14 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   2 measured ratios, own p stays within 0.05 of the mid. Evidence: Oct18-20 snapshots assumed
   18-25%/day and centred 57-59.7M; measured adds (6.4/5.25/4.9/~5.1M per day) decayed
   ~10-15%/day and the week closed above 60M (8 off-mid rows, mean dBrier ~+0.18).
+
+## 2026-10-23 16:15Z: UMich Oct final + AAA gas Oct23 settled (RETRO-20261023-1615)
+
+- UMich prelim->final revision rows beat the mid again (`2f8b20bc6692` 0.57/0.47 won,
+  `d96ac3d2c8b9` 0.39/0.41 lost; -0.112 together). n=2 events: no change; WSV held both.
+- **AAA drift-model graded centre errors: 0.0 / 0.65 / 0.98 / 0.32 / >=1.6c (Oct 18-23).**
+  Oct 23 printed >=4.29 against a 4.274 centre; the book's implied centre (~4.285) was
+  closer and the 5 rows were +0.254 vs the mid. AAA bins stay forecast-only (DEEP-2026-10-20).
+  Each AAA forecast note must now state the book-implied centre next to the drift centre,
+  so a later deep retro can grade which centre is better without reconstructing books.
+- WSV totals (tool): 119 rows, 102 fillable, 55W/47L, CF -$60.17. No boundary change.
