@@ -8410,3 +8410,15 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   `rally-below-mid` (table above): SC +0.397 (11), IA +0.171 (4), FL +0.182 (5 of 23 legs
   settled), total +0.750 vs a +0.20 threshold. Tag every below-mid rally read with
   `--rule rally-below-mid --raw-prob <raw> --est-prob <mid>`; score.py grades it.
+
+## 2026-10-24 02:15Z update: Kyiv Oct17 daily-target rows settled No (FULL, RETRO-20261024-0215)
+
+**What counts as a positive fact on daily city-target markets (n=1: Kyiv `cb75789e5935`
+0.88/0.739 No, the first No after Oct1-16 16/16 Yes).** A secondary outlet's "capital under
+drone attack / explosions heard" line, with the city administration (KMVA for Kyiv) posting
+alerts only, is NOT a positive Yes fact: the resolver did not count it. A Yes read above the
+mid needs an official city-administration post on AD over the city / debris / damage, or a
+named-outlet strike report on the city itself. Converse (`e07028a1da26` 0.20/0.142 No): the
+RETRO-20261019-0015 absence cap binds only while local evening/night hours remain; once the
+local date has closed, official silence IS the positive fact the cap asks for. Not an
+estimation rule (no slug): it says which evidence counts, not how to move a number.
