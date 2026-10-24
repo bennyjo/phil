@@ -33,7 +33,7 @@ forecast rows and tagged 0 (score.py `rules: {}`): no rule had a slug. Now five 
 | `knife-edge-mid` | any self-computed distribution whose centre is within 1.5 sd of the bracket/threshold edge (merges the 0.40-0.60 knife-edge cap, RETRO-20261012-1400, and the straddle rule; the cap is retired) | your computed P | CLOB mid | MrBeast straddle instances; GTA `63c1fb8c4d1e` (cap 0.60 vs book 0.88, lost) |
 | `earnings-mid` | earnings-beat rows with no issuer primary-source datapoint dated after the line was set | your estimate | clipped to mid +/-0.05 | RETRO-20261022-1430 |
 | `views-decay-mid` | multi-day view/count projections with fewer than 2 measured day-over-day decay ratios | your projection | clipped to mid +/-0.05 | RETRO-20261022-1620 |
-| `rally-below-mid` | Trump/Vance rally say-the-word reads (market-series, judgment) that sit BELOW the CLOB mid; not speaker-only transcript counts | your raw read | CLOB mid | NC-revert pre-registration (+0.20 threshold): SC+IA+FL below-mid raw n=20, +0.750 vs mid, RETRO-20261023-2215 (FL was a partial rally; the completed FL legs moved the other way, RETRO-20261024-0015 - untagged, the GA tagged rows are the first scored evidence) |
+| `rally-below-mid` | Trump/Vance rally say-the-word reads (market-series, judgment) that sit BELOW the CLOB mid; not speaker-only transcript counts | your raw read | CLOB mid | NC-revert pre-registration (+0.20 threshold): SC+IA+FL below-mid raw n=20, +0.750 vs mid, RETRO-20261023-2215 (FL was a partial rally; the completed FL legs moved the other way, RETRO-20261024-0015 - untagged, the GA tagged rows are the first scored evidence). DEEP-2026-10-24 recount: the 8 completed-FL below-mid rows (AI, Drill, SI, Fish, Space, Jacksonville, Filibuster, Hell 15+; RETRO-20261024-0015) sum -0.567, so the whole pre-registration pool is about +0.18, UNDER its own +0.20 threshold, and one Fish row (0.50/0.91 book, -0.337) carries much of the swing. Kept in shadow because shadow costs nothing (raw sizes bets); score.py decides |
 | (1 free) | | | | |
 
 Consequences, stated once:
@@ -8422,3 +8422,16 @@ named-outlet strike report on the city itself. Converse (`e07028a1da26` 0.20/0.1
 RETRO-20261019-0015 absence cap binds only while local evening/night hours remain; once the
 local date has closed, official silence IS the positive fact the cap asks for. Not an
 estimation rule (no slug): it says which evidence counts, not how to move a number.
+
+## DEEP-2026-10-24 rulings
+
+- **AAA gas bins: the stream's -0.110 is a wide-book artifact, not edge.** n=31 settled
+  non-placeholder rows over 6 print days (Oct16 to Oct23), sum -3.408 vs mid; 5 of the 6 days
+  beat the mid. But 19 of 31 rows had spreads >0.10 (e.g. 0.02/0.95, 0.01/0.97), where the mid is
+  not a price, and only ONE row (`23f62eecefcd`, Yes @0.39) would have passed min_edge and the
+  spread gate. Its counterfactual is +$7.82, n=1. AAA stays forecast-only (DEEP-2026-10-20),
+  with no lane opening and no rule. Re-check only once >=10 AAA rows have a spread <=0.10.
+  Same failure mode as the say-the-word wide-book finding (DEEP-2026-10-22).
+- **Funnel lines must be written in-cycle.** The 00:11Z and 02:12Z FULL lines carry
+  "reconstructed from cycles.log line", and the 22:13Z line was split into FULL plus SUPPLEMENT.
+  A reconstructed line is better than none, but it cannot carry `pool_by_query` honestly.
