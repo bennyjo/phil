@@ -147,9 +147,10 @@ Every invocation runs as one of three ticks:
      change `strategy/tools/touch.py` or its shading rule
      `strategy/tools/touch_rule.py` (what `touch.py --mid` prints as
      `p_rule`) only when `python3 core/touch_replay.py`, run on the edit
-     before you commit it, prints `touch-replay PASS` (or `NO CHANGE` for a
-     refactor) against the committed version, and paste that line in the
-     retro; otherwise revert the edit.
+     before you commit it with a 10-minute timeout, prints
+     `touch-replay PASS` (or `NO CHANGE` for a refactor) against the
+     committed version, and paste that line in the retro; otherwise revert
+     the edit. Every run is logged in `journal/replay/runs.jsonl`.
    - Commit: `git add -A && git commit -m "retro: <one-line lesson>"`.
 4. **Scan & screen**: `python3 core/scan.py --hours 336 --limit 800 |
    python3 core/screen.py prepare` — queries come from `strategy/discovery.py`,

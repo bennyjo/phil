@@ -8,6 +8,7 @@ estimate(raw, mid, row) -> float in [0, 1]
 `touch.py --mid <m>` prints this as p_rule. core/touch_replay.py (protected)
 scores this file and touch.py against every resolved crypto touch market of
 the last 90 days; CYCLE.md step 3 makes its PASS the bar for editing either.
+The replay refuses a rule that uses anything but its arguments and `math`.
 
 Current rule: DEEP-2026-10-16 rule 1. Above the mid, record the mid plus half
 the gap to the raw output; at or below the mid, record raw.

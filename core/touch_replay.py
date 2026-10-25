@@ -29,7 +29,10 @@ What a replayed forecast sees at its time t (and nothing later):
   - the mid must be at most --max-mid-age seconds old (default 600: an
     estimator fed fresh klines and scored against an older price gets credit
     for the lag) and inside Phil's scan bounds [0.05, 0.95].
-The outcome (Gamma outcomePrices) is read only to score.
+The outcome (Gamma outcomePrices) is read only to score. Each side runs in its
+own `python3 -I` process that is handed one row at a time, in forecast-time
+order, with only touch.py's inputs and the mid; it never holds an outcome or a
+later row. touch_rule.py may use only its arguments and `math` (check_rule).
 
 Scoring: dBrier = mean Brier(variant) - mean Brier(mid); negative beats the
 market. "candidate - current" is the paired difference on the same rows.
@@ -43,7 +46,11 @@ Gate (the line to paste in the retro):
              window, a mean at or below zero on the 14-day holdout and in at
              least 3 of the window's 4 chronological folds, and differs on at
              least 20 price paths;
-  FAIL       anything else.
+  FAIL       anything else, including any failed price read (rerun: successful
+             reads are cached).
+The line names the baseline commit and the candidate files' git blob hashes,
+and every run is appended to journal/replay/runs.jsonl, so a pasted line can
+be matched to its diff and reruns show.
 
 Data: Gamma GET /markets/keyset (closed, tag 102134 "hit price", end-date
 range) lists the markets; outcome ids are picked by `version` per
@@ -52,16 +59,17 @@ Klines come from data-api.binance.vision (Binance's public market-data host,
 reachable where api.binance.com is geo-blocked). Price reads are paced under
 the published 200 per 10 s and cached append-only in
 journal/replay/touch-prices.jsonl, so a cold run takes about 14 minutes and a
-warm one (market list and klines only) well under a minute.
+warm one (market list and klines only) well under a minute. Cache lines are
+append-only and the first read of a key wins.
 
 Usage: python3 core/touch_replay.py [--baseline REF] [--days 90]
                                     [--start ISO --end ISO] [--holdout-days 14]
                                     [--max-mid-age 600] [--json]
 """
 import argparse
+import ast
 import concurrent.futures as cf
 import datetime as dt
-import importlib.util
 import json
 import math
 import pathlib
@@ -79,6 +87,7 @@ import pmapi  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CACHE = ROOT / "journal" / "replay" / "touch-prices.jsonl"
+RUNS = ROOT / "journal" / "replay" / "runs.jsonl"
 TOOL = "strategy/tools/touch.py"
 RULE = "strategy/tools/touch_rule.py"
 
@@ -97,7 +106,10 @@ HIST_INTERVAL_S = 0.06       # ~167 reads per 10 s, under the published 200
 BOOT_DRAWS = 2000
 MIN_CHANGED_PATHS = 20
 FOLDS = 4
-RULE_ROW_KEYS = ("spot", "barrier", "days", "ann_vol")   # what touch.py --mid passes live
+SIDE_INPUTS = ("spot", "barrier", "days", "ann_vol", "mid")   # what touch.py --mid has live
+RULE_IMPORTS = {"math"}
+RULE_BANNED_NAMES = {"open", "eval", "exec", "compile", "globals", "locals", "vars", "getattr",
+                     "setattr", "delattr", "breakpoint", "input", "help", "memoryview"}
 
 http = pmapi.get_json        # tests swap this for an offline fake
 _pace_lock = threading.Lock()
@@ -148,7 +160,7 @@ def load_cache(path):
         for line in path.read_text().splitlines():
             if line.strip():
                 r = json.loads(line)
-                cache[(r["token"], r["as_of"])] = r["point"]
+                cache.setdefault((r["token"], r["as_of"]), r["point"])   # first read wins
     return cache
 
 
@@ -334,18 +346,63 @@ def build_rows(start, end, max_mid_age, cache_path=None):
 
 # ----------------------------------------------------------------- rule sides
 
-def load_module(name, path):
+# Runs one side in a separate `python3 -I` process. It reads one row's inputs
+# per line and answers before the next is sent, so it never holds a later row.
+SIDE_CHILD = r"""
+import importlib.util, json, sys
+def load(name, path):
     spec = importlib.util.spec_from_file_location(name, path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
+p_touch = load("touch", sys.argv[1]).p_touch
+estimate = (load("touch_rule", sys.argv[2]).estimate if len(sys.argv) > 2
+            else lambda raw, mid, row: raw)
+for line in sys.stdin:
+    spot, barrier, days, ann_vol, mid = json.loads(line)
+    raw = p_touch(spot, barrier, days, ann_vol, 365.0)
+    row = {"spot": spot, "barrier": barrier, "days": days, "ann_vol": ann_vol}
+    print(json.dumps([raw, estimate(raw, mid, row)]), flush=True)
+"""
 
 
-def load_side(label, tool_path, rule_path):
-    """(p_touch, estimate) for one side; no rule file means raw is recorded."""
-    tool = load_module(f"touch_{label}", tool_path)
-    rule = load_module(f"touch_rule_{label}", rule_path) if rule_path else None
-    return tool.p_touch, (rule.estimate if rule else (lambda raw, mid, row: raw))
+def check_rule(path):
+    """Refuse a rule that could reach past its arguments: it may import only
+    math, read attributes only of math, and not name the builtins that open
+    files or reach objects' internals. The operator widens these lists."""
+    tree = ast.parse(pathlib.Path(path).read_text(), str(path))
+    for node in ast.walk(tree):
+        bad = None
+        if isinstance(node, ast.Import):
+            if any(a.name not in RULE_IMPORTS or a.asname for a in node.names):
+                bad = "imports " + ", ".join(a.name for a in node.names)
+        elif isinstance(node, ast.ImportFrom):
+            if node.level or node.module not in RULE_IMPORTS:
+                bad = f"imports from {node.module}"
+        elif isinstance(node, ast.Attribute):
+            if not (isinstance(node.value, ast.Name) and node.value.id in RULE_IMPORTS) \
+                    or node.attr.startswith("_"):
+                bad = f"reads attribute .{node.attr}"
+        elif isinstance(node, ast.Name):
+            if node.id.startswith("__") or node.id in RULE_BANNED_NAMES:
+                bad = f"uses {node.id}"
+            elif node.id in RULE_IMPORTS and not isinstance(node.ctx, ast.Load):
+                bad = f"rebinds {node.id}"
+        elif isinstance(node, ast.arg) and node.arg in RULE_IMPORTS:
+            bad = f"rebinds {node.arg}"
+        elif isinstance(node, ast.MatchClass):
+            bad = "matches a class pattern"
+        if bad:
+            raise ValueError(f"{pathlib.Path(path).name} line {node.lineno} {bad}: a rule may use "
+                             f"only its arguments and {', '.join(sorted(RULE_IMPORTS))}")
+
+
+def load_side(tool_path, rule_path):
+    """(tool, rule) paths for one side, the rule checked; no rule file means
+    raw is recorded."""
+    if rule_path:
+        check_rule(rule_path)
+    return tool_path, rule_path
 
 
 def git_file(ref, relpath, outdir):
@@ -359,17 +416,37 @@ def git_file(ref, relpath, outdir):
     return out
 
 
+def git_out(*args):
+    return subprocess.run(["git", *args], cwd=ROOT, check=True, capture_output=True,
+                          text=True).stdout.strip()
+
+
 def evaluate(rows, side):
-    """(raw, recorded) per row. The rule sees only what touch.py --mid passes
-    live, never the outcome or the market's identity."""
-    p_touch, estimate = side
-    out = []
-    for r in rows:
-        raw = p_touch(r["spot"], r["barrier"], r["days"], r["ann_vol"], 365.0)
-        p = estimate(raw, r["mid"], {k: r[k] for k in RULE_ROW_KEYS})
-        if not (isinstance(p, (int, float)) and 0.0 <= p <= 1.0):
-            raise ValueError(f"rule returned {p!r} for raw {raw:.4f}, mid {r['mid']}")
-        out.append((raw, float(p)))
+    """(raw, recorded) per row, from a separate process fed one row at a time
+    in forecast-time order: the side never holds an outcome, the market's
+    identity, or a row from after the one it is pricing."""
+    tool, rule = side
+    cmd = [sys.executable, "-I", "-c", SIDE_CHILD, str(tool)] + ([str(rule)] if rule else [])
+    out = [None] * len(rows)
+    with tempfile.TemporaryFile("w+") as err, \
+            subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=err,
+                             text=True) as proc:
+        try:
+            for i in sorted(range(len(rows)), key=lambda i: rows[i]["t"]):
+                r = rows[i]
+                proc.stdin.write(json.dumps([r[k] for k in SIDE_INPUTS]) + "\n")
+                proc.stdin.flush()
+                raw, p = json.loads(proc.stdout.readline())
+                if not (isinstance(p, (int, float)) and 0.0 <= p <= 1.0):
+                    raise ValueError(f"rule returned {p!r} for raw {raw:.4f}, mid {r['mid']}")
+                out[i] = (raw, float(p))
+            proc.stdin.close()
+        except (OSError, ValueError, TypeError) as e:
+            proc.kill()
+            proc.wait()
+            err.seek(0)
+            name = pathlib.Path(rule or tool).name
+            raise ValueError(f"{name}: {err.read().strip() or e}") from None
     return out
 
 
@@ -399,8 +476,10 @@ def boot(rows, d, draws=BOOT_DRAWS, seed=0):
             "hi": round(stats[int(0.975 * draws) - 1], 4)}
 
 
-def score(rows, base, cand, holdout_days=14):
-    """Slices, paired candidate - current, and the gate verdict."""
+def score(rows, base, cand, holdout_days=14, fetch_errors=0):
+    """Slices, paired candidate - current, and the gate verdict. A failed
+    price read fails the gate: a verdict on a partial dataset vouches for
+    nothing."""
     for r, (braw, bp), (craw, cp) in zip(rows, base, cand):
         mid_b = (r["mid"] - r["y"]) ** 2
         r["d_raw"] = (craw - r["y"]) ** 2 - mid_b
@@ -409,8 +488,9 @@ def score(rows, base, cand, holdout_days=14):
         r["paired"] = (cp - r["y"]) ** 2 - (bp - r["y"]) ** 2
         r["changed"] = abs(cp - bp) > 1e-12
         r["above"] = braw > r["mid"]
+    reasons = [f"{fetch_errors} price reads failed; rerun"] if fetch_errors else []
     if not rows:
-        return {"slices": [], "verdict": "FAIL", "reasons": ["no replayed rows"]}
+        return {"slices": [], "verdict": "FAIL", "reasons": reasons + ["no replayed rows"]}
     t0, t1 = min(r["end"] for r in rows), max(r["end"] for r in rows) + 1
     hold = t1 - holdout_days * DAY
     span = (t1 - t0) / FOLDS
@@ -433,11 +513,10 @@ def score(rows, base, cand, holdout_days=14):
     changed_paths = len({cluster(r) for r in changed})
     res = {"slices": out, "changed_rows": len(changed), "changed_paths": changed_paths}
     if not changed:
-        res.update(verdict="NO CHANGE", reasons=[])
+        res.update(verdict="FAIL" if reasons else "NO CHANGE", reasons=reasons)
         return res
     whole, holdout, folds = out[0]["paired"], out[-1]["paired"], out[3:3 + FOLDS]
     folds_ok = sum(1 for f in folds if (f["paired"]["mean"] or 0.0) <= 0)
-    reasons = []
     if changed_paths < MIN_CHANGED_PATHS:
         reasons.append(f"differs on {changed_paths} paths, under {MIN_CHANGED_PATHS}")
     if whole["hi"] >= 0:
@@ -450,7 +529,7 @@ def score(rows, base, cand, holdout_days=14):
     return res
 
 
-def gate_line(res, args, window):
+def gate_line(res, args, window, ids):
     s = res["slices"][0]["paired"] if res["slices"] else {}
     if res["verdict"] == "NO CHANGE":
         body = "candidate records what the current version records on every row"
@@ -464,7 +543,8 @@ def gate_line(res, args, window):
     if res["verdict"] == "FAIL" and s:
         body += " - " + "; ".join(res["reasons"])
     return (f"touch-replay {res['verdict']}: {body}; window {window}, "
-            f"max mid age {args.max_mid_age}s, baseline {args.baseline}")
+            f"max mid age {args.max_mid_age}s, baseline {ids['baseline'][:12]}, "
+            f"candidate touch.py {ids['touch.py'][:12]} touch_rule.py {ids['touch_rule.py'][:12]}")
 
 
 def fmt(m):
@@ -488,17 +568,30 @@ def main(argv=None):
 
     end = parse_ts(args.end) if args.end else int(time.time())
     start = parse_ts(args.start) if args.start else int(end - args.days * DAY)
+    rule = ROOT / RULE
+    ids = {"baseline": git_out("rev-parse", "--verify", f"{args.baseline}^{{commit}}"),
+           "touch.py": git_out("hash-object", TOOL),
+           "touch_rule.py": git_out("hash-object", RULE) if rule.exists() else "none"}
     with tempfile.TemporaryDirectory() as tmp:
-        base_tool = git_file(args.baseline, TOOL, tmp)
+        base_tool = git_file(ids["baseline"], TOOL, tmp)
         if base_tool is None:
             sys.exit(f"{TOOL} is not in {args.baseline}")
-        base = load_side("base", base_tool, git_file(args.baseline, RULE, tmp))
-        rule = ROOT / RULE
-        cand = load_side("cand", ROOT / TOOL, rule if rule.exists() else None)
+        try:
+            base = load_side(base_tool, git_file(ids["baseline"], RULE, tmp))
+            cand = load_side(ROOT / TOOL, rule if rule.exists() else None)
+        except ValueError as e:
+            sys.exit(f"touch-replay FAIL: {e}")
         rows, funnel = build_rows(start, end, args.max_mid_age)
-        res = score(rows, evaluate(rows, base), evaluate(rows, cand), args.holdout_days)
+        res = score(rows, evaluate(rows, base), evaluate(rows, cand), args.holdout_days,
+                    funnel.get("fetch_errors", 0))
     window = f"{iso(start)[:10]}..{iso(end)[:10]}"
-    res["funnel"], res["gate"] = funnel, gate_line(res, args, window)
+    res["funnel"], res["gate"] = funnel, gate_line(res, args, window, ids)
+    RUNS.parent.mkdir(parents=True, exist_ok=True)
+    with open(RUNS, "a") as f:
+        f.write(json.dumps({"at": iso(int(time.time())), "verdict": res["verdict"],
+                            "baseline_ref": args.baseline, **ids, "window": window,
+                            "max_mid_age": args.max_mid_age, "funnel": funnel,
+                            "gate": res["gate"]}) + "\n")
     if args.json:
         print(json.dumps(res, indent=2))
         return

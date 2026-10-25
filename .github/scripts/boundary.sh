@@ -11,6 +11,8 @@ BEFORE="${1:?usage: boundary.sh <before-sha> <after-sha>}"
 AFTER="${2:?usage: boundary.sh <before-sha> <after-sha>}"
 
 PROTECTED='^(core/|config/|\.github/|\.claude/|CYCLE\.md|REAL\.md|loop\.sh|CLAUDE\.md|LICENSE|README\.md|\.gitignore)'
+# Written by core/touch_replay.py; an agent commit may only append to them.
+APPEND_ONLY='^journal/replay/(touch-prices|runs)\.jsonl$'
 
 if [[ "$BEFORE" =~ ^0+$ ]]; then
   # Branch creation: no meaningful range; check only the head commit.
@@ -31,6 +33,13 @@ for sha in $COMMITS; do
   if [[ -n "$touched" ]]; then
     echo "::error::agent commit $sha ('$subject') touches operator-owned paths:"
     echo "$touched" | sed 's/^/    /'
+    fail=1
+  fi
+  rewritten=$(git diff-tree --no-commit-id --numstat -r "$sha" \
+    | awk -v re="$APPEND_ONLY" '$3 ~ re && $2 != "0" {print $3}')
+  if [[ -n "$rewritten" ]]; then
+    echo "::error::agent commit $sha ('$subject') changes or deletes lines in append-only files:"
+    echo "$rewritten" | sed 's/^/    /'
     fail=1
   fi
 done

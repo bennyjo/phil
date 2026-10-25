@@ -9,3 +9,5 @@ journal/screener/*.jsonl merge=union
 journal/mech-requests.jsonl merge=union
 journal/watch-triggers.jsonl merge=union
 strategy/funnel.jsonl merge=union
+journal/replay/touch-prices.jsonl merge=union
+journal/replay/runs.jsonl merge=union
