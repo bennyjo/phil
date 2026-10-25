@@ -6,8 +6,10 @@ The agent CALLS this to bet; it cannot bypass the caps in config/protected.json
 because this is the only writer of journal/ledger.jsonl.
 
 Fills are honest: a paper BUY fills at the live CLOB best ask for the chosen
-outcome token (crossing the spread, like a real taker order). If the book is
-empty or the fill violates protected caps, the bet is rejected.
+outcome token (crossing the spread, like a real taker order) and pays the
+market's taker fee out of the stake, so the stake buys fewer shares. If the
+book is empty, the order is below the book's min_order_size (the CLOB would
+reject it), or the fill violates protected caps, the bet is rejected.
 
 Usage:
   place:  python3 core/ledger.py place --market-id 123 --outcome Yes \
@@ -44,15 +46,14 @@ def bankroll(entries):
         if e["status"] == "won":
             cash += e["shares"]  # $1 per share
         elif e["status"] == "void":
-            cash += e["stake_usd"]
+            cash += e["stake_usd"] + e["pnl_usd"]  # what resolve.py paid out
     return cash
 
 
 def cmd_status(entries):
     open_pos = [e for e in entries if e["status"] == "open"]
     settled = [e for e in entries if e["status"] in ("won", "lost")]
-    pnl = sum((e["shares"] - e["stake_usd"]) if e["status"] == "won" else -e["stake_usd"]
-              for e in settled)
+    pnl = sum(e["pnl_usd"] for e in entries if e["status"] in ("won", "lost", "void"))
     print(json.dumps({
         "cash": round(bankroll(entries), 2),
         "open_positions": len(open_pos),
@@ -89,11 +90,22 @@ def cmd_place(args, entries):
                  f"{sorted(pmapi.SUPPORTED_VERSIONS)})")
     if args.outcome not in tokens:
         sys.exit(f"REJECTED: outcome {args.outcome!r} not in {list(tokens)}")
-    bid, ask = pmapi.best_prices(tokens[args.outcome])
+    q = pmapi.book_quote(tokens[args.outcome])
+    bid, ask = q["bid"], q["ask"]
     if ask is None:
         sys.exit("REJECTED: no asks in the book (cannot fill)")
     if not PROTECTED["min_entry_price"] <= ask <= PROTECTED["max_entry_price"]:
         sys.exit(f"REJECTED: fill price {ask} outside protected bounds")
+    try:
+        fee_per_share = pmapi.taker_fee_per_share(m, ask)
+    except ValueError as err:
+        sys.exit(f"REJECTED: cannot price the taker fee ({err})")
+    shares = args.stake / (ask + fee_per_share)
+    # docs.polymarket.com/market-data/market-details: "Orders smaller than the
+    # minimum order size are rejected." The book's min_order_size is in shares.
+    if q["min_order_size"] and shares < q["min_order_size"]:
+        sys.exit(f"REJECTED: {shares:.2f} shares is below the book's min_order_size "
+                 f"{q['min_order_size']:g} (raise the stake or skip)")
 
     entry = {
         "id": uuid.uuid4().hex[:12],
@@ -110,7 +122,8 @@ def cmd_place(args, entries):
         "est_prob": args.est_prob,
         "edge": round(args.est_prob - ask, 4),
         "stake_usd": args.stake,
-        "shares": round(args.stake / ask, 4),
+        "shares": round(shares, 4),
+        "fee_usd": round(shares * fee_per_share, 5),
         "category": args.category,
         "edge_class": args.edge_class,
         "rationale": args.rationale,
@@ -120,7 +133,8 @@ def cmd_place(args, entries):
     with LEDGER.open("a") as f:
         f.write(json.dumps(entry) + "\n")
     print(json.dumps({"placed": entry["id"], "filled_at": ask, "edge": entry["edge"],
-                      "shares": entry["shares"], "question": entry["question"]}, indent=2))
+                      "shares": entry["shares"], "fee_usd": entry["fee_usd"],
+                      "question": entry["question"]}, indent=2))
 
 
 def main():

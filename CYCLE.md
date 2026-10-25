@@ -342,8 +342,9 @@ Every invocation runs as one of three ticks:
    `est_prob` (forecast.py prints it) is the raw estimate - the honest
    belief this experiment scores until the rule earns its place.
    No stake, no edge floor — this is how your calibration gets feedback on
-   research that doesn't become a bet (scored as brier_delta vs the market
-   MID, separately from bets, in score.py). For candidates you intend to
+   research that doesn't become a bet (scored as brier_delta vs the price
+   Polymarket displays: the mid, or the last trade when the spread is wider
+   than $0.10; separately from bets, in score.py). For candidates you intend to
    bet, record the forecast with `--skip-reason bet` BEFORE running `place`.
    Put the returned id in the cycle's funnel row as `forecast_id`. Skips
    where no concrete probability was formed (e.g. benchmark-unreachable)

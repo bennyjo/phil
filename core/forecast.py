@@ -10,9 +10,11 @@ stake. Research that ends in a skip (no-edge, market-agrees) still produced
 an estimate; recording it here turns ~10-30 researched candidates/day into
 scored calibration feedback instead of ~0-1 settled bets/day.
 
-No caps, no edge floor, no fill: the market baseline is the MID at record
-time ((bid+ask)/2), not the ask a bet would fill at — a forecast has no
-transaction, and the mid is the stricter benchmark. Forecast brier_delta is
+No caps, no edge floor, no fill: the market baseline is the price
+Polymarket displays at record time (pmapi.displayed_price: the mid, or the
+last trade when the spread is wider than $0.10), not the ask a bet would
+fill at - a forecast has no transaction, and the displayed price is the
+stricter benchmark. Forecast brier_delta is
 therefore NOT comparable to bet brier_delta; score.py reports them in
 separate sections. est_prob is the agent's honest belief, formed before
 anchoring on the price, exactly as for bets.
@@ -64,7 +66,7 @@ FORECASTS = ROOT / "journal" / "forecasts.jsonl"
 # prevent, not a revision.
 MIN_REVISION_DELTA = 0.05
 
-# An |est_prob - mid| gap this large is either a deliberate extreme
+# An |est_prob - market price| gap this large is either a deliberate extreme
 # disagreement (rare: the outside-view-veto class) or an inverted outcome
 # side (fe954ed9f325: --outcome No with the Yes-side est_prob, silently
 # recording the opposite of the researched belief). The flag costs one
@@ -180,17 +182,18 @@ def cmd_record(args, rows):
                  f"{sorted(pmapi.SUPPORTED_VERSIONS)})")
     if args.outcome not in tokens:
         sys.exit(f"REJECTED: outcome {args.outcome!r} not in {list(tokens)}")
-    bid, ask = pmapi.best_prices(tokens[args.outcome])
+    q = pmapi.book_quote(tokens[args.outcome])
+    bid, ask = q["bid"], q["ask"]
     if bid is None and ask is None:
         sys.exit("REJECTED: empty book — no market probability to benchmark against")
-    mid = (bid + ask) / 2 if bid is not None and ask is not None else bid or ask
+    price, source = pmapi.displayed_price(tokens[args.outcome], bid, ask)
 
     # a rule-tagged row checks both of its numbers, whichever one is recorded
-    gap, name, p = max((abs(p - mid), name, p) for name, p in
+    gap, name, p = max((abs(p - price), name, p) for name, p in
                        (("est-prob", args.est_prob), ("raw-prob", args.raw_prob))
                        if p is not None)
     if gap > EXTREME_DISAGREEMENT and not args.confirm_extreme:
-        sys.exit(f"REJECTED: {name} {p} vs market mid {round(mid, 4)} "
+        sys.exit(f"REJECTED: {name} {p} vs market price {round(price, 4)} "
                  f"for outcome {args.outcome!r} differs by {round(gap, 4)} "
                  f"(> {EXTREME_DISAGREEMENT}). If this extreme disagreement is your "
                  "researched belief, re-run with --confirm-extreme; if not, you "
@@ -210,7 +213,8 @@ def cmd_record(args, rows):
         **rule_fields,
         "best_bid_at_record": bid,
         "best_ask_at_record": ask,
-        "market_prob_at_record": round(mid, 4),
+        "price_source_at_record": source,
+        "market_prob_at_record": round(price, 4),
         # Book size at record time, from the same gamma record scan.py reads.
         # Added 2026-09-09 so research edge can be split by liquidity later;
         # gnhf run 5 had to drop that feature for lack of it. None when gamma
@@ -234,9 +238,9 @@ def cmd_record(args, rows):
     else:
         with FORECASTS.open("a") as f:
             f.write(json.dumps(row) + "\n")
-    out = {"recorded": row["id"], "mid": row["market_prob_at_record"],
-           "bid": bid, "ask": ask, "est_prob": est,
-           "delta_vs_mid": round(est - mid, 4), "question": row["question"]}
+    out = {"recorded": row["id"], "market_price": row["market_prob_at_record"],
+           "price_source": source, "bid": bid, "ask": ask, "est_prob": est,
+           "delta_vs_market": round(est - price, 4), "question": row["question"]}
     if rule_fields:
         out["rule"] = {"id": args.rule, "state": rule_fields["rule_state"],
                        "raw_prob": args.raw_prob, "rule_prob": args.est_prob}
@@ -264,7 +268,7 @@ def main():
                         "materially changed read (links the rows; the old one is "
                         "graded in the revised-away slice, not the headline stats)")
     p.add_argument("--confirm-extreme", action="store_true",
-                   help="required when |est_prob - mid| > "
+                   help="required when |est_prob - market price| > "
                         f"{EXTREME_DISAGREEMENT}: confirms the extreme "
                         "disagreement is deliberate, not an inverted outcome side")
     p.add_argument("--rule", default=None,

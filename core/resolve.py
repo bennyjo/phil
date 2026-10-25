@@ -5,10 +5,14 @@ PROTECTED CORE — the trading agent must not edit files under core/.
 
 For each open row (bets in journal/ledger.jsonl, stake-free forecasts in
 journal/forecasts.jsonl), fetch the market; if it is closed with a decisive
-outcome price (>=0.99 for one side), settle won/lost. Markets closed without
-decisive prices (disputed/void) settle as void after a grace period (stake
-returned for bets; forecasts are excluded from scoring). Rewrites both files
-in place (single writer, alongside ledger.py/forecast.py appends).
+outcome price (>=0.99 for one side), settle won/lost. Polymarket resolves a
+market with no applicable outcome 50/50, each token redeeming for $0.50
+(docs.polymarket.com/concepts/resolution): once the grace period passes, a
+closed market whose settled prices are all 0.50 settles as void and a bet
+pays shares x 0.50. A market with no outcome prices at all settles as void
+with the stake returned; any other undecided prices leave the row open.
+Void forecasts are excluded from scoring. Rewrites both files in place
+(single writer, alongside ledger.py/forecast.py appends).
 
 Usage: python3 core/resolve.py
 """
@@ -24,6 +28,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 LEDGER = ROOT / "journal" / "ledger.jsonl"
 FORECASTS = ROOT / "journal" / "forecasts.jsonl"
 VOID_GRACE_HOURS = 48
+VOID_PAYOUT_PER_SHARE = 0.50
 
 
 def load_jsonl(path):
@@ -76,7 +81,7 @@ def settle_against_market(e, m, now):
     if not m.get("closed"):
         return False
     outcomes = json.loads(m.get("outcomes", "[]"))
-    prices = [float(p) for p in json.loads(m.get("outcomePrices", "[]"))]
+    prices = [float(p) for p in json.loads(m.get("outcomePrices") or "[]")]
     decisive = {o: p for o, p in zip(outcomes, prices) if p >= 0.99}
     if decisive:
         won = e["outcome"] in decisive
@@ -86,13 +91,19 @@ def settle_against_market(e, m, now):
             e["pnl_usd"] = round(e["shares"] - e["stake_usd"], 4) if won else -e["stake_usd"]
         e["outcome_won"] = max(zip(prices, outcomes))[1]
         return True
+    # "Market resolves 50/50 - each token redeems for $0.50". Pay that only
+    # when the settled prices say so; with no prices at all, return the stake.
+    split = bool(prices) and all(p == VOID_PAYOUT_PER_SHARE for p in prices)
+    if prices and not split:
+        return False
     end = dt.datetime.fromisoformat(e["end_date"].replace("Z", "+00:00"))
     if now - end > dt.timedelta(hours=VOID_GRACE_HOURS):
         e["status"] = "void"
         # Deterministic too: the void boundary is a pure function of end_date.
         e["settled_ts"] = (end + dt.timedelta(hours=VOID_GRACE_HOURS)).strftime("%Y-%m-%dT%H:%M:%SZ")
         if "shares" in e:
-            e["pnl_usd"] = 0.0
+            payout = e["shares"] * VOID_PAYOUT_PER_SHARE if split else e["stake_usd"]
+            e["pnl_usd"] = round(payout - e["stake_usd"], 4)
         return True
     return False
 

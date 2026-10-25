@@ -3,10 +3,10 @@
 
 PROTECTED CORE - the trading agent must not edit files under core/.
 
-Polymarket Protocol V2 markets (from 2026-11-02) set clobTokenIds to null.
-Before this guard, json.loads(None) raised TypeError and the first such
-market killed the whole scan. These tests feed hand-built Gamma records, so
-nothing touches the network. CI runs it on every push.
+A Polymarket Protocol V2 market may set clobTokenIds to null. Before this
+guard, json.loads(None) raised TypeError and the first such market killed
+the whole scan. These tests feed hand-built Gamma records, so nothing
+touches the network. CI runs it on every push.
 
 Usage: python3 core/test_token_ids.py
 """
@@ -39,10 +39,13 @@ class TokenIds(unittest.TestCase):
         self.assertEqual(pmapi.token_ids(gamma()), ["111", "222"])
         self.assertEqual(pmapi.market_tokens(gamma()), {"Yes": "111", "No": "222"})
 
-    def test_untagged_market_is_v1(self):
+    def test_untagged_market_is_rejected(self):
+        # docs.polymarket.com/migrate/polymarket-v2/api-integrations:
+        # "Reject missing or unsupported versions"
         m = gamma()
         del m["version"]
-        self.assertEqual(pmapi.token_ids(m), ["111", "222"])
+        self.assertIsNone(pmapi.token_ids(m))
+        self.assertIsNone(pmapi.market_tokens(m))
 
     def test_v2_is_unsupported(self):
         self.assertIsNone(pmapi.token_ids(gamma(**V2)))

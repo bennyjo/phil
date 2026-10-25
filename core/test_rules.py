@@ -121,13 +121,18 @@ GAMMA = {"question": "Will it happen?", "slug": "q", "endDate": "2026-10-30T00:0
          "version": "v1", "liquidityNum": "900", "volume24hr": "100"}
 
 
+BOOK = {"bid": 0.49, "ask": 0.51, "min_order_size": 5.0}
+LAST_TRADE_PRICE = forecast.pmapi.last_trade_price
+
+
 class Record(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.path = pathlib.Path(self.tmp.name) / "forecasts.jsonl"
         for p in (mock.patch.object(forecast, "FORECASTS", self.path),
                   mock.patch.object(forecast.pmapi, "gamma_market", lambda _id: GAMMA),
-                  mock.patch.object(forecast.pmapi, "best_prices", lambda _t: (0.49, 0.51))):
+                  mock.patch.object(forecast.pmapi, "book_quote", lambda _t: BOOK),
+                  mock.patch.object(forecast.pmapi, "last_trade_price", lambda _t: 0.55)):
             p.start()
             self.addCleanup(p.stop)
         self.addCleanup(self.tmp.cleanup)
@@ -159,6 +164,29 @@ class Record(unittest.TestCase):
         out = self.record("1", 0.62)
         self.assertEqual(out["est_prob"], 0.62)
         self.assertNotIn("rule", self.rows()[0])
+
+    def test_wide_spread_benchmarks_last_trade(self):
+        # docs.polymarket.com/concepts/prices-orderbook: "If the spread is
+        # wider than $0.10, the last traded price is shown instead."
+        wide = dict(BOOK, bid=0.30, ask=0.60)
+        with mock.patch.object(forecast.pmapi, "book_quote", lambda _t: wide):
+            out = self.record("1", 0.62)
+        self.assertEqual((out["market_price"], out["price_source"]), (0.55, "last_trade"))
+        self.assertEqual(self.rows()[0]["market_prob_at_record"], 0.55)
+        out = self.record("2", 0.62)  # a tight book shows its mid
+        self.assertEqual((out["market_price"], out["price_source"]), (0.5, "mid"))
+
+    def test_never_traded_placeholder_is_not_a_trade(self):
+        # docs.polymarket.com/market-data/prices-order-books: "When a token has
+        # never traded and its order book is empty, the API returns the "0.5"
+        # placeholder and an empty side string"
+        wide = dict(BOOK, bid=0.30, ask=0.60)
+        with mock.patch.object(forecast.pmapi, "book_quote", lambda _t: wide), \
+                mock.patch.object(forecast.pmapi, "last_trade_price", LAST_TRADE_PRICE), \
+                mock.patch.object(forecast.pmapi, "get_json",
+                                  lambda *_a, **_k: {"price": "0.5", "side": ""}):
+            out = self.record("1", 0.62)
+        self.assertEqual((out["market_price"], out["price_source"]), (0.45, "book"))
 
     def test_shadow_rule_records_raw(self):
         out = self.record("1", 0.55, rule="half-gap", raw=0.62)
