@@ -51,10 +51,11 @@ def stats(entries):
 
 
 def fstats(rows):
-    """Brier stats for stake-free forecast rows (baseline = mid at record time).
+    """Brier stats for stake-free forecast rows (baseline = the displayed price
+    at record time: the mid, or the last trade when the spread is over $0.10).
 
     Not comparable to bet stats(): bets baseline on the fill ask, forecasts on
-    the mid — the sections stay separate by design.
+    the displayed price - the sections stay separate by design.
     """
     n = len(rows)
     wins = sum(1 for r in rows if r["status"] == "won")
@@ -363,10 +364,10 @@ def mark_to_market(open_entries):
     for e in open_entries:
         try:
             bid, ask = pmapi.best_prices(e["token_id"])
+            price = pmapi.displayed_price(e["token_id"], bid, ask)[0] or 0.0
         except Exception as err:  # noqa: BLE001 — MTM is advisory, never fatal
             rows.append({"id": e["id"], "error": str(err)[:80]})
             continue
-        mid = (bid + ask) / 2 if bid is not None and ask is not None else bid or ask or 0.0
         past_end = False
         try:
             past_end = dt.datetime.fromisoformat(e["end_date"].replace("Z", "+00:00")) < now
@@ -374,9 +375,9 @@ def mark_to_market(open_entries):
             pass
         rows.append({
             "id": e["id"], "q": e["question"][:60], "outcome": e["outcome"],
-            "entry": e["entry_price"], "mid": round(mid, 3),
-            "cost_usd": e["stake_usd"], "mark_usd": round(e["shares"] * mid, 2),
-            "unrealized_usd": round(e["shares"] * mid - e["stake_usd"], 2),
+            "entry": e["entry_price"], "price": round(price, 3),
+            "cost_usd": e["stake_usd"], "mark_usd": round(e["shares"] * price, 2),
+            "unrealized_usd": round(e["shares"] * price - e["stake_usd"], 2),
             "past_end_date": past_end,
         })
     return rows
@@ -451,7 +452,7 @@ def main():
                 print(f"  {r['id']} MTM unavailable: {r['error']}")
                 continue
             flag = " PAST END DATE" if r["past_end_date"] else ""
-            print(f"  {r['id']} {r['outcome']:3} entry={r['entry']} mid={r['mid']} "
+            print(f"  {r['id']} {r['outcome']:3} entry={r['entry']} price={r['price']} "
                   f"cost=${r['cost_usd']:.2f} mark=${r['mark_usd']:.2f} "
                   f"unrealized=${r['unrealized_usd']:+.2f}{flag}")
     print("\nby category:")
