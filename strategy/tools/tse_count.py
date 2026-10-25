@@ -24,6 +24,7 @@ the -u.json files carry the results.
 import argparse
 import concurrent.futures as cf
 import json
+import subprocess
 import urllib.request
 
 BASE = "https://resultados.tse.jus.br/oficial/ele2026/{ele}/"
@@ -31,8 +32,17 @@ UA = {"User-Agent": "Mozilla/5.0 (compatible; paper-trader-tse)"}
 
 
 def fetch(url):
-    req = urllib.request.Request(url, headers=UA)
-    return json.load(urllib.request.urlopen(req, timeout=20))
+    # 2026-10-25 runoff night: urllib got HTTP 429 on config/mun-e006258-cm.json
+    # while curl with a browser UA got 200 on the same URL seconds apart (same
+    # TLS-fingerprint pattern as quote.py's CLOB note). Fall back to curl.
+    try:
+        req = urllib.request.Request(url, headers=UA)
+        return json.load(urllib.request.urlopen(req, timeout=20))
+    except Exception:
+        out = subprocess.run(
+            ["curl", "-sS", "-m", "20", "-A", "Mozilla/5.0", url],
+            capture_output=True, text=True, check=True).stdout
+        return json.loads(out)
 
 
 def walk(o):
