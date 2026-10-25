@@ -8,8 +8,8 @@ because this is the only writer of journal/ledger.jsonl.
 Fills are honest: a paper BUY fills at the live CLOB best ask for the chosen
 outcome token (crossing the spread, like a real taker order) and pays the
 market's taker fee out of the stake, so the stake buys fewer shares. If the
-book is empty, the order is one the CLOB would reject (below min_order_size
-or off tick_size), or the fill violates protected caps, the bet is rejected.
+book is empty, the order is below the book's min_order_size (the CLOB would
+reject it), or the fill violates protected caps, the bet is rejected.
 
 Usage:
   place:  python3 core/ledger.py place --market-id 123 --outcome Yes \
@@ -101,12 +101,8 @@ def cmd_place(args, entries):
     except ValueError as err:
         sys.exit(f"REJECTED: cannot price the taker fee ({err})")
     shares = args.stake / (ask + fee_per_share)
-    # docs.polymarket.com/market-data/market-details: "an order price must be
-    # a multiple of the active value. Orders smaller than the minimum order
-    # size are rejected." The book carries both; min_order_size is in shares.
-    tick = q["tick_size"]
-    if tick and abs(ask / tick - round(ask / tick)) > 1e-6:
-        sys.exit(f"REJECTED: fill price {ask} is not a multiple of tick_size {tick}")
+    # docs.polymarket.com/market-data/market-details: "Orders smaller than the
+    # minimum order size are rejected." The book's min_order_size is in shares.
     if q["min_order_size"] and shares < q["min_order_size"]:
         sys.exit(f"REJECTED: {shares:.2f} shares is below the book's min_order_size "
                  f"{q['min_order_size']:g} (raise the stake or skip)")

@@ -121,7 +121,8 @@ GAMMA = {"question": "Will it happen?", "slug": "q", "endDate": "2026-10-30T00:0
          "version": "v1", "liquidityNum": "900", "volume24hr": "100"}
 
 
-BOOK = {"bid": 0.49, "ask": 0.51, "min_order_size": 5.0, "tick_size": 0.01}
+BOOK = {"bid": 0.49, "ask": 0.51, "min_order_size": 5.0}
+LAST_TRADE_PRICE = forecast.pmapi.last_trade_price
 
 
 class Record(unittest.TestCase):
@@ -174,6 +175,18 @@ class Record(unittest.TestCase):
         self.assertEqual(self.rows()[0]["market_prob_at_record"], 0.55)
         out = self.record("2", 0.62)  # a tight book shows its mid
         self.assertEqual((out["market_price"], out["price_source"]), (0.5, "mid"))
+
+    def test_never_traded_placeholder_is_not_a_trade(self):
+        # docs.polymarket.com/market-data/prices-order-books: "When a token has
+        # never traded and its order book is empty, the API returns the "0.5"
+        # placeholder and an empty side string"
+        wide = dict(BOOK, bid=0.30, ask=0.60)
+        with mock.patch.object(forecast.pmapi, "book_quote", lambda _t: wide), \
+                mock.patch.object(forecast.pmapi, "last_trade_price", LAST_TRADE_PRICE), \
+                mock.patch.object(forecast.pmapi, "get_json",
+                                  lambda *_a, **_k: {"price": "0.5", "side": ""}):
+            out = self.record("1", 0.62)
+        self.assertEqual((out["market_price"], out["price_source"]), (0.45, "book"))
 
     def test_shadow_rule_records_raw(self):
         out = self.record("1", 0.55, rule="half-gap", raw=0.62)

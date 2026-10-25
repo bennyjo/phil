@@ -48,13 +48,12 @@ def _float(value):
 
 def book_quote(token_id):
     """Best bid and ask of a CLOB token (None if a side is empty), with the
-    book's min_order_size (shares) and tick_size, each None when absent."""
+    book's min_order_size in shares (None when absent)."""
     book = clob_book(token_id)
     bids = [float(b["price"]) for b in book.get("bids", [])]
     asks = [float(a["price"]) for a in book.get("asks", [])]
     return {"bid": max(bids) if bids else None, "ask": min(asks) if asks else None,
-            "min_order_size": _float(book.get("min_order_size")),
-            "tick_size": _float(book.get("tick_size"))}
+            "min_order_size": _float(book.get("min_order_size"))}
 
 
 def last_trade_price(token_id):

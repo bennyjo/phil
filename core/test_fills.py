@@ -29,7 +29,7 @@ GAMMA = {"question": "Will it happen?", "slug": "q", "endDate": "2026-10-30T00:0
          "outcomes": json.dumps(["Yes", "No"]), "clobTokenIds": json.dumps(["111", "222"]),
          "version": "v1", "feesEnabled": True,
          "feeSchedule": {"rate": 0.05, "exponent": 1, "takerOnly": True, "rebateRate": 0.15}}
-BOOK = {"bid": 0.39, "ask": 0.40, "min_order_size": 5.0, "tick_size": 0.01}
+BOOK = {"bid": 0.39, "ask": 0.40, "min_order_size": 5.0}
 
 
 class Place(unittest.TestCase):
@@ -61,6 +61,15 @@ class Place(unittest.TestCase):
         free = dict(GAMMA, feesEnabled=False)
         self.assertEqual(self.place(5, market=free, market_id="2")["shares"], 12.5)
 
+    def test_fees_without_a_rate_are_rejected(self):
+        # A market with feesEnabled must carry its fee parameters
+        # (docs.polymarket.com/market-data/market-details#trading-fees); a fill
+        # never assumes a zero fee.
+        with self.assertRaises(SystemExit) as cm:
+            self.place(5, market=dict(GAMMA, feeSchedule=None))
+        self.assertIn("cannot price the taker fee", str(cm.exception.code))
+        self.assertFalse(self.path.exists())
+
     def test_order_below_min_order_size_is_rejected(self):
         # docs.polymarket.com/market-data/market-details: "Orders smaller than
         # the minimum order size are rejected." $1.80 at $0.40 is about 4.4 shares.
@@ -71,18 +80,34 @@ class Place(unittest.TestCase):
 
 
 class Void(unittest.TestCase):
+    NOW = dt.datetime(2026, 10, 5, tzinfo=dt.timezone.utc)
+
+    def settle(self, prices):
+        e = {"status": "open", "outcome": "Yes", "end_date": "2026-10-01T00:00:00Z",
+             "stake_usd": 5.0, "shares": 12.5}
+        m = {"closed": True, "outcomes": json.dumps(["Yes", "No"]), "outcomePrices": prices}
+        return resolve.settle_against_market(e, m, self.NOW), e
+
     def test_void_bet_redeems_half_a_dollar_a_share(self):
         # docs.polymarket.com/concepts/resolution: "Market resolves 50/50 -
         # each token redeems for $0.50"
-        e = {"status": "open", "outcome": "Yes", "end_date": "2026-10-01T00:00:00Z",
-             "stake_usd": 5.0, "shares": 12.5}
-        m = {"closed": True, "outcomes": json.dumps(["Yes", "No"]),
-             "outcomePrices": json.dumps(["0.5", "0.5"])}
-        now = dt.datetime(2026, 10, 5, tzinfo=dt.timezone.utc)
-        self.assertTrue(resolve.settle_against_market(e, m, now))
+        settled, e = self.settle(json.dumps(["0.5", "0.5"]))
+        self.assertTrue(settled)
         self.assertEqual((e["status"], e["pnl_usd"]), ("void", 1.25))
         start = ledger.PROTECTED["sim_bankroll_usd"]
         self.assertEqual(ledger.bankroll([e]), start + 1.25)
+
+    def test_void_without_resolution_prices_returns_the_stake(self):
+        for prices in (None, json.dumps([])):
+            with self.subTest(prices=prices):
+                settled, e = self.settle(prices)
+                self.assertTrue(settled)
+                self.assertEqual((e["status"], e["pnl_usd"]), ("void", 0.0))
+
+    def test_undecided_prices_stay_open(self):
+        settled, e = self.settle(json.dumps(["0.6", "0.4"]))
+        self.assertFalse(settled)
+        self.assertEqual(e["status"], "open")
 
 
 if __name__ == "__main__":
