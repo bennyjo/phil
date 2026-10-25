@@ -2605,7 +2605,11 @@ days later is not new evidence (Sep 14 decline at edge 0.06, Sep 18 bet at
 0.05, same Gaussian). Keep counting, not yet a rule: in both Sep 20 states
 my precedent adjustment (Berlin-2023 CDU bonus, Brandenburg-2024 SPD
 consolidation) shaded AWAY from the poll leader and the poll leader won
-(n=2 elections, one night).
+(n=2 elections, one night). n=3 (RETRO-20261025-0815): BC Oct 24, my
+2024-NDP-seat-efficiency shade lifted NDP-most-seats to 0.21 against the
+models' 0.15-0.18 core, Conservatives (poll leader) won; both rows were
+forecast-only (dBrier +0.031, +0.010). Still counting: three elections, no
+paired test yet.
 
 ## Outside-view veto: settled counterfactual ledger (DEEP-2026-08-15)
 
