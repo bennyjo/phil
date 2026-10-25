@@ -1621,6 +1621,7 @@ all Yes, family dBrier +0.596. The 13 mid rows were flat. Later-than-market
 reads are now 12/12 against me.
 Mid-anchored control rows (RETRO-20261015-0625): Fable 5.2+ Oct 14
 `a301f1e0348d` 0.265/0.26 settled No, dBrier +0.003 -- flat, as the rule predicts.
+Fable 5.2+ Oct 24 (RETRO-20261025-0615): anchored `efd09c5220e7`/`1cd2488efaaa` flat; `84ad37e66d6f` (10-14, 0.85 vs mid 0.91, no primary-source URL) violated the Pre-record check and happened to win (dBrier -0.106) -- first later-than-market read to go my way; one event, rule unchanged, counts toward the n=8 shade-view re-grade.
 
 **Treasury touch drift rule (RETRO-20260928-2215).** For a Treasury
 par-yield touch rung ("hit X% in <month>") with 5 or fewer prints left,
