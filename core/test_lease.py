@@ -25,7 +25,7 @@ import unittest
 from unittest import mock
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
-SEED = ("core/lease.py", "core/screen.py", "config/protected.json")
+SEED = ("core/lease.py", "core/screen.py", "core/funnel.py", "config/protected.json")
 LEASE_FILE = "journal/lease.json"
 
 

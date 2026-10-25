@@ -172,10 +172,21 @@ Every invocation runs as one of three ticks:
    Research allocation in step 5 STARTS from collect's top divergences - but
    the screener ranks, it does not gate: watch items, the mechanical-econ
    calendar and the sibling census still claim their research slots under the
-   existing rules. The funnel line gains three mandatory fields: `screened`,
-   `escalated`, `screener_batches`. If `prepare` reports quota exhaustion, the
-   Task tool is unavailable, or `collect` yields nothing, fall back to the
-   current unscreened selection and say so in the funnel line.
+   existing rules. If `prepare` reports quota exhaustion, the Task tool is
+   unavailable, or `collect` yields nothing, fall back to the current
+   unscreened selection and say so in the funnel row's `screener` field.
+   **Funnel row** (operator, 2026-10-25, P10): `prepare` opens this FULL
+   cycle's `strategy/funnel.jsonl` row itself, on every path including quota
+   exhaustion, and prints its `funnel_cycle` (in the header and on stderr);
+   `collect` writes `screened` and `escalated` into it. Core owns the fields
+   it measures: `cycle`, `tick_type`, `runner`, `strategy_rev`, `pool_total`,
+   `pool_by_query`, `screened`, `escalated`, `screener_batches`. Add
+   everything else (`researched`, `placed`, `settled`, `mode`, `mech`,
+   `headline_arena`, the `screener` prose) with
+   `python3 core/funnel.py merge --cycle <funnel_cycle> --json '{...}'` (or
+   `--file <path>`), which updates that one row in place. Never append a
+   second row for a FULL cycle; this supersedes any playbook instruction to
+   append the FULL row by hand.
 5. **Select & research**: per `strategy/playbook.md`, pick candidates worth
    researching (respect `risk.json` per-category limits). Research each with
    web search / fetches. Form your estimate before anchoring on the price.

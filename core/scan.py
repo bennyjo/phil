@@ -156,6 +156,9 @@ def main():
                 if rec:
                     got += 1
                     kept += 1
+                    # The query that first found it: screen.py counts the
+                    # funnel row's pool_by_query from this.
+                    rec["query"] = label
                     print(json.dumps(rec))
         print(f"scan: query {label!r} -> {got} candidates", file=sys.stderr)
     if UNSUPPORTED:
