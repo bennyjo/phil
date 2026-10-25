@@ -57,12 +57,13 @@ Usage:
   python3 core/screen.py prepare --dry-run     # header only, writes nothing
   python3 core/screen.py collect --dir reports/screener-work/<stamp>
 Input:  scan.py candidate JSON lines on stdin or --file (prepare).
-Output: prepare prints a JSON header (work_dir, batches, screened_pool,
-        dropped_by_reason, subagent_prompt_template) on stdout and writes the
-        batch files under reports/screener-work/<UTCstamp>/ (gitignored).
+Output: prepare prints a JSON header (work_dir, funnel_cycle, batches,
+        screened_pool, dropped_by_reason, subagent_prompt_template) on stdout,
+        writes the batch files under reports/screener-work/<UTCstamp>/
+        (gitignored) and opens the cycle's strategy/funnel.jsonl row.
         collect prints the top-N rows by divergence as JSON lines on stdout,
-        appends one row per market to journal/screener/YYYY-MM.jsonl, and
-        summarises on stderr.
+        appends one row per market to journal/screener/YYYY-MM.jsonl, writes
+        screened/escalated into the funnel row, and summarises on stderr.
 
 Pre-filter (operator, 2026-09-04, from gnhf run 3's journal/screener-rank-
 decision.md): before the strata see anything, `prepare` drops the shapes in
@@ -91,6 +92,12 @@ direction. Once the day's batches reach `max_batches_per_day` this exits 0
 with an empty stdout: an exhausted quota must degrade the cycle, never kill
 it.
 
+Funnel row (operator, 2026-10-25, proposal P10): every FULL runs `prepare`,
+so `prepare` opens the cycle's strategy/funnel.jsonl row (core/funnel.py) on
+every non-dry-run path, the quota-exhausted one included, and prints its
+`funnel_cycle`; `collect` fills in screened/escalated. The agent enriches that
+row with `core/funnel.py merge` and never appends its own for a FULL.
+
 The agent may call this freely but may not edit it; if the strata, the row
 schema or the quota guard are wrong, that is a journal/proposals.md entry.
 """
@@ -104,6 +111,10 @@ import re
 import subprocess
 import sys
 import time
+from collections import Counter
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import funnel  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 PROTECTED = json.loads((ROOT / "config" / "protected.json").read_text())
@@ -322,6 +333,20 @@ def runner_id():
     if not name:
         name = "operator" if os.environ.get("PHIL_PUSH_BY_LOOP") else "cloud"
     return re.sub(r"[^A-Za-z0-9_.-]", "_", name)[:40]
+
+
+def open_funnel(now, candidates, screener, screened=0, batches=0):
+    """Open (or reuse) this FULL cycle's funnel row; says so on stderr."""
+    by_query = Counter(str(c.get("query") or "unlabeled") for c in candidates)
+    cycle = funnel.open_row(now, runner_id(), {
+        "screened": screened, "escalated": 0, "screener_batches": batches,
+        "screener": screener, "pool_total": len(candidates),
+        "pool_by_query": dict(by_query)})
+    print(f"screen: funnel row open for cycle {cycle} in "
+          f"{funnel.FUNNEL.relative_to(ROOT)}; add this cycle's fields with "
+          f"python3 core/funnel.py merge --cycle {cycle} --json '{{...}}'",
+          file=sys.stderr)
+    return cycle
 
 
 def _empty_quota():
@@ -624,7 +649,8 @@ def recount_selected(pool, lane_of, counts):
     return counts
 
 
-def write_work_dir(work_dir, batches, sizes, counts, dropped, cfg, prompt_rev, ts):
+def write_work_dir(work_dir, batches, sizes, counts, dropped, cfg, prompt_rev, ts,
+                   funnel_cycle):
     work_dir.mkdir(parents=True, exist_ok=True)
     written = []
     for i, batch in enumerate(batches, 1):
@@ -643,6 +669,7 @@ def write_work_dir(work_dir, batches, sizes, counts, dropped, cfg, prompt_rev, t
         "batch_size": cfg["batch_size"], "top_n": cfg["top_n"],
         "prompt_rev": prompt_rev, "strata_sizes": sizes, "strata": counts,
         "dropped_by_reason": dropped, "batches": written,
+        "funnel_cycle": funnel_cycle,
     }
     (work_dir / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     return written
@@ -655,13 +682,17 @@ def cmd_prepare(args):
     if args.top_n is not None:
         cfg["top_n"] = max(1, args.top_n)
 
+    now = utcnow()
     candidates, n_bad = read_candidates(args.file)
+    scanned = candidates
     if n_bad:
         print(f"screen: {n_bad} input line(s) failed the candidate contract",
               file=sys.stderr)
     if not candidates:
         print("screen: no valid candidates on input; nothing to screen",
               file=sys.stderr)
+        if not args.dry_run:
+            open_funnel(now, scanned, "no valid scan candidates - unscreened")
         return 0
 
     quota, by_runner, used = load_quota()
@@ -672,6 +703,9 @@ def cmd_prepare(args):
               f"screening skipped, no subagents to spawn. Research unscreened "
               f"candidates as before and log 'screener quota exhausted'; do "
               f"not work around.", file=sys.stderr)
+        if not args.dry_run:
+            open_funnel(now, scanned, f"screener quota exhausted ({used}/{cap} "
+                        f"day batches, UTC {quota['day']}) - unscreened selection")
         return 0
 
     n_in = len(candidates)
@@ -681,10 +715,11 @@ def cmd_prepare(args):
     if not candidates:
         print("screen: the pre-filter left no candidates to screen "
               f"({by_filter}); nothing to do", file=sys.stderr)
+        if not args.dry_run:
+            open_funnel(now, scanned, "pre-filter left no candidates - unscreened")
         return 0
 
     sizes = strata_sizes()
-    now = utcnow()
     pool, lane_of, counts, dropped = stratify(
         candidates, sizes, cfg["max_pool_after_strata"], now, stamp(now))
     for name, n in sorted(by_filter.items()):
@@ -730,10 +765,15 @@ def cmd_prepare(args):
 
     if not batches:
         print("screen: stratification left no markets to screen", file=sys.stderr)
+        open_funnel(now, scanned, "stratification left no markets - unscreened")
         return 0
 
+    day_used = used + len(batches)
+    funnel_cycle = open_funnel(
+        now, scanned, f"prepared {len(pool)} in {len(batches)} batches, day "
+        f"batches {day_used}/{cap} - collect not yet run", batches=len(batches))
     written = write_work_dir(work_dir, batches, sizes, counts, dropped, cfg,
-                             prompt_rev, now)
+                             prompt_rev, now, funnel_cycle)
 
     # Reserve before any subagent runs: a cycle that dies mid-fan-out has still
     # spent the reservation. Over-counting is the safe direction.
@@ -742,9 +782,8 @@ def cmd_prepare(args):
     quota["last_prepare_utc"] = iso(now)
     save_quota(quota)
     by_runner[runner_id()] = quota["batches"]
-    day_used = used + len(batches)
 
-    header = {"work_dir": rel_dir, "batch_count": len(written), "batches": written,
+    header = {"work_dir": rel_dir, "funnel_cycle": funnel_cycle, "batch_count": len(written), "batches": written,
               "screened_pool": len(pool), "candidates_in": n_in,
               "strata": counts, "dropped_by_reason": dropped, "filters": filters,
               "day_batches_used": day_used, "day_batches_by_runner": by_runner,
@@ -934,7 +973,24 @@ def cmd_collect(args):
           f"batches, escalated {len(escalated)}, day batches "
           f"{used}/{cfg['max_batches_per_day']} (by runner {by_runner})",
           file=sys.stderr)
+    update_funnel(work_dir, {
+        "screened": len(ranked), "escalated": len(escalated),
+        "screener": f"collected {len(ranked)}/{expected} ({n_err} malformed), "
+                    f"day batches {used}/{cfg['max_batches_per_day']}"})
     return 0
+
+
+def update_funnel(work_dir, fields):
+    """Write collect's counts into the row prepare opened. Never fatal."""
+    try:
+        cycle = json.loads((work_dir / "manifest.json").read_text())["funnel_cycle"]
+        funnel.update_row(cycle, fields, core=True)
+    except (OSError, ValueError, KeyError) as e:
+        print(f"screen: funnel row not updated ({type(e).__name__}: {e}); the "
+              f"screener counts are in this summary only", file=sys.stderr)
+        return
+    print(f"screen: funnel row {cycle} updated: screened {fields['screened']}, "
+          f"escalated {fields['escalated']}", file=sys.stderr)
 
 
 def main():
