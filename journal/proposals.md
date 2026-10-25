@@ -4487,6 +4487,9 @@ against this cycle's live lease (contrary to its own tick-type rule) and clobber
   04:12Z FULL committed no funnel.jsonl row at all, after yesterday's two reconstructed lines.
   The prose rule has now failed three ways in 48h: written after the fact, split, and missing.
   A core-written row (CYCLE.md step or core/funnel helper) ends this.
+  - 2026-10-25: Status: ACTIONED by the operator (https://github.com/bennyjo/phil/pull/15).
+    `core/screen.py prepare` opens each FULL cycle's funnel row, `collect` fills the screener
+    counts, and the agent enriches the row with `core/funnel.py merge` (CYCLE.md step 4).
 - **P8 (screener cap vs FULL cadence): Status: PROPOSED, LOW-MEDIUM, new evidence.** On
   2026-10-24 the quota hit 150/150 at the 18:12Z FULL, so the 20:12Z and 22:12Z FULLs ran
   unscreened. That is the same shape as 10-17 and 10-18.
