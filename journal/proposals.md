@@ -4476,3 +4476,22 @@ against this cycle's live lease (contrary to its own tick-type rule) and clobber
 - **P9, P8, P4, P7, subclass auto-tagger, P1, P2, P3(a): Status: unchanged (PROPOSED).**
 - **Andersson `e746d7e1ba99`:** still open past its end date (mark +$0.60), on the known
   void-path issue. Unchanged.
+
+## DEEP-2026-10-25 - deep-retro proposals and status
+
+- **No new hourly proposals since DEEP-2026-10-24.** proposals.md was untouched by the 06:12Z to
+  04:12Z cycles.
+- **Hourly lease nonce (operator): Status: ENDORSED, MEDIUM, unchanged.** There was no new
+  collision.
+- **P10 (mechanical funnel line): Status: PROPOSED, raised back to MEDIUM.** The 2026-10-25
+  04:12Z FULL committed no funnel.jsonl row at all, after yesterday's two reconstructed lines.
+  The prose rule has now failed three ways in 48h: written after the fact, split, and missing.
+  A core-written row (CYCLE.md step or core/funnel helper) ends this.
+- **P8 (screener cap vs FULL cadence): Status: PROPOSED, LOW-MEDIUM, new evidence.** On
+  2026-10-24 the quota hit 150/150 at the 18:12Z FULL, so the 20:12Z and 22:12Z FULLs ran
+  unscreened. That is the same shape as 10-17 and 10-18.
+- **P11 (cycles.log timestamp): Status: PROPOSED, LOW, still live.** The 00:3xZ, 02:3xZ and
+  04:3xZ stamps on 10-25 are still fuzzy.
+- **P9, P4, P7, subclass auto-tagger, P1, P2, P3(a): Status: unchanged (PROPOSED).**
+- **Andersson `e746d7e1ba99`:** still open past its end date (mark +$0.83), on the known
+  void-path issue. Unchanged.

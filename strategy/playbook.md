@@ -8435,3 +8435,29 @@ estimation rule (no slug): it says which evidence counts, not how to move a numb
 - **Funnel lines must be written in-cycle.** The 00:11Z and 02:12Z FULL lines carry
   "reconstructed from cycles.log line", and the 22:13Z line was split into FULL plus SUPPLEMENT.
   A reconstructed line is better than none, but it cannot carry `pool_by_query` honestly.
+
+## DEEP-2026-10-25 rulings
+
+- **Say-the-word No-side suspension test (pre-registered; a bet gate, not an estimation rule, so
+  no registry slot).** No-side bets stay open: n=11, 7W/4L, -$2.73. The market expected 6.50
+  wins and we expected 7.28, so the record is at the market. The four straight losses
+  (`a55d46b9f373`, `d159734b4051`, the 10-23 Russia/Ukraine leg, `06211e957b9f`) have
+  probability ≈0.13 at their entry prices.
+  - The DEEP-2026-10-21 justification was the tight-book (spread <=0.06), gap >=0.05,
+    below-mid forecast set: n=39, ~14 events, -1.296, up to 2026-10-21 12Z.
+  - Since then the same set is **n=7, ~3 events, +0.022**: at the mid, and insufficient data.
+  - **Test:** count that set from 2026-10-21T12:00Z, excluding placeholder-mid rows.
+    - At n>=30: if the sum is >= +0.20, No-side bets become forecast-only, the same as the Yes
+      side.
+    - If the sum is <= -0.20, the No side is reconfirmed.
+    - In between, keep counting to n=50 and apply the same two bars there.
+  - Recompute with the one-liner in journal/retros/DEEP-2026-10-25.md (a). Until n=30, four
+    straight losses or a single rally is not evidence. Do not hand-tally it in hourly retros.
+- **Zero-bet days are a valid output.** 30h with 0 placements came from 12 FULLs, which
+  recorded 35 forecasts. The gates those skips relied on are validated:
+  - `category-bar` skips: n=92, dBrier +0.024.
+  - The forecast stream at large is +0.0037 (n=1935).
+  - The threshold sweep worsens as the edge threshold rises.
+
+  Do not loosen min_edge, a category bar or a veto to end a drought. Only settled evidence of
+  the kind registered above reopens a lane.
