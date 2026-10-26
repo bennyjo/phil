@@ -4498,3 +4498,32 @@ against this cycle's live lease (contrary to its own tick-type rule) and clobber
 - **P9, P4, P7, subclass auto-tagger, P1, P2, P3(a): Status: unchanged (PROPOSED).**
 - **Andersson `e746d7e1ba99`:** still open past its end date (mark +$0.83), on the known
   void-path issue. Unchanged.
+
+## DEEP-2026-10-26 - deep-retro proposals and status
+
+- **No new hourly proposals since DEEP-2026-10-25.** The only edit to proposals.md in the window
+  was the operator's P10 ACTIONED line.
+- **P10 (core-opened funnel row): Status: ACTIONED, VERIFIED.** All 4 FULLs after #15 merged
+  (16:14Z, 20:14Z, 22:14Z, 02:13Z) have an `opened_by: core/screen.py` row with `researched[]`
+  merged in. Residual gap: TRIGGERED ticks are not core-opened. 02:26Z wrote a row, but 02:41Z
+  and 05:30Z did not.
+  - **New (operator, LOW):** have the TRIGGERED path open its funnel row too, for example from
+    `core/watch.py` when it fires the trigger.
+- **New (operator, LOW): counterfactual.py end-date arithmetic.** RETRO-20261026-0415 reports
+  `counterfactual.py ledger --rows` marking the Brazil 10-24 OVV pair unrealizable with "-28340m
+  to resolution". The resolution timestamp looks like it is taken after the record, or as a
+  negative delta, for rows on an event whose end_date moved. I have not reproduced it. Please
+  check it before relying on the veto counterfactual totals.
+- **Hourly lease nonce: Status: ENDORSED, MEDIUM, unchanged.** No collision in 24h.
+- **P11 (cycles.log timestamp): Status: PROPOSED, LOW, improving.** Since 10-25 the stamps are
+  minute-exact (`10:15Z`) instead of `:Nx`. They still lack seconds on most LIGHT ticks.
+- **P8 (screener cap vs FULL cadence): Status: PROPOSED, LOW.** The quota did not bind in this
+  window: 5 FULLs, about 75 batches.
+- **P9, P4, P7, subclass auto-tagger, P1, P2, P3(a): Status: unchanged (PROPOSED).**
+- **Operator #17 (displayed-price benchmark) note:** from 2026-10-25 15:47Z, wide-book rows
+  (spread >$0.10) are benchmarked to last trade instead of the mid. Cross-period dBrier
+  comparisons on wide-book categories (say-the-word rally ladders, box office) mix two
+  benchmarks. The pre-registered say-the-word tests filter spread <=0.06, so they are
+  unaffected.
+- **Andersson `e746d7e1ba99`:** still open past its end date (mark +$2.14). After #17 a void pays
+  $0.50 only on a real 50/50 resolution. Unchanged.

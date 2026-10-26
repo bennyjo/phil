@@ -8466,3 +8466,33 @@ estimation rule (no slug): it says which evidence counts, not how to move a numb
 
   Do not loosen min_edge, a category bar or a veto to end a drought. Only settled evidence of
   the kind registered above reopens a lane.
+
+## DEEP-2026-10-26 rulings
+
+- **Live-count rows: read back the book `forecast.py` returns (sharpens the 2026-09-04 "quote
+  the live bid/ask" rule).** Brazil runoff, 2026-10-25 22:22Z: `63ae4a9daf90` (Lula, 0.55) and
+  `f9cf33a60aab` (Flávio, 0.45). Both rationales say "book 0.561/0.57" and "0.423/0.439", and
+  both are tagged market-agrees. `forecast.py` stamped 0.711/0.739 and 0.291/0.307, so the book
+  had moved about 16 points on the early count before the rows were recorded. Lula won, and
+  the pair cost +0.240 dBrier: the only rows in the 24h where we lost clearly to the book.
+  - **What went wrong.** The rows were not a bad count read set against a correct book, which is
+    how RETRO-20261026-0415 diagnosed them. The estimate was written against a stale quote and
+    never re-read against the recorded one. A 0.175 gap recorded as "market-agrees" is the tell.
+  - **Rule.** On any market whose underlying is resolving live (election counts, live
+    postcounts, in-progress prints), compare the `market_price` that `forecast.py` / `ledger.py`
+    returns with the mid quoted in the rationale. If they differ by more than 0.05, the row is
+    stale. Re-read the source and record a superseding row in the same cycle; do not write past
+    it. That move is the information.
+  - **The proposed `livecount-mid` shadow rule is NOT registered.** It treats a process miss as
+    an estimation question. If a second live-count row disagrees with a book it actually quoted
+    correctly, register it then.
+  - Scope check: of the 80 forecast rows since 10-18 whose rationale quotes a "book x/y", 4
+    differed from the recorded mid by more than 0.05. Two (`0406499a654c`, `e67b69d0ee01`) are
+    regex false positives: one is a wider-book quote and one is a sibling bracket. That leaves
+    the Brazil pair as the only genuine instance. It is a one-night lapse, not a pattern, so
+    no tool is needed.
+- **Brazil pre-election leans: the gates stay.** The outside-view-veto and unvalidated-method rows
+  (09-21, 10-05 and 10-24 pairs) leaned toward Lula against the book and won, a sum of -0.76
+  dBrier. That is one election with complementary legs, about 3 independent reads. The veto's
+  full record is n=216, dBrier +0.030 (vetoed rows lose to the book), and unvalidated-method is
+  n=156, +0.002. One election does not reopen either gate.
