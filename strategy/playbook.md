@@ -5581,6 +5581,9 @@ rule predicted:
   forecast's pre-registered check. The freed slots go to the holding
   cells above or to an unresearched category. Research priority only,
   no gate change; revisit when postcount delta turns ≤ 0 at n ≥ 50.
+  *Status RETRO-20261026-1815:* forecast delta +0.0208 at n=87 (Musk
+  Oct24-26 family, 4 rows all behind the book, +0.16 summed) — revisit
+  condition not met; bar and one-family cap stand.
 - ai-model-release +0.0838 (n=35), weather +0.0495 (n=34), news
   +0.0246 (n=32), market-microstructure +0.0750 (n=9): unchanged in kind.
 
