@@ -4399,6 +4399,15 @@ recorded under the gate: if gated-out rows (thematic-only, forecast
 status) start WINNING at their est more often than losing, loosen or
 drop the gate in a deep retro and say so here.
 
+Forecast-side addendum (RETRO-20261026-1615): a word that was a reported
+KPI in ONE prior call's third-party summary is not a base rate. Verizon
+"Prepaid" 1f9f70627032 (own 0.92 / mid 0.765, No, dBrier +0.26) rested on
+the Q2 nasdaq.com summary alone; the Q3 8-K release headlines (406k
+postpaid phone adds, 0.94% churn) omitted prepaid entirely. For an
+earnings-call KPI word, read the same-morning release (it posts ~1h
+before the call) and the two-transcript count before recording above
+~0.85; a KPI missing from the release headlines is not structural.
+
 **Method note (2026-09-15): exact-phrase transcript search undercounts
 disfluent real speech.** Sourcing the base rate for the Trump NC
 "Stock Market" market (Rocky Mount Dec19'25 / Myrtle Beach Aug21'26
