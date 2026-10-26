@@ -3055,6 +3055,18 @@ modal 10-12M at 0.72 -> floor 0.62, below my 0.82). Frozen: no re-tune on
 one event. Sourcing note only: when the note's own Sun-drop arithmetic
 lands in the next bracket, that is not a tail to discount. Box-office
 forecasts n=40 (score.py, P5-excluded), brier_delta +0.0187. Still no-bet.
+Tally (RETRO-20261026-2215, evidence `19ed6967869d`, `8960119876e6`,
+`feba2f3f2541`, `c1ced74c0d18`, `dd9f989f0874`, `729b442ee6e0`): Street
+Fighter wk2 landed 8-11M (Sunday est 8.6M). The Fri-night rows bumped P(<8M)
+from 0.27 to 0.30 on "fan-film Sat-AM projections run high"; the 8.15M
+Sat-AM figure ran LOW instead (dBrier +0.075 / +0.081 on the <8M / 8-11M
+legs). Same weekend, the Wildwood Sunday estimate also ran low. Two films,
+one weekend, both directional "projection runs high" priors wrong-signed.
+Sourcing note only (no probability rule, no shadow slot): do not apply a
+directional revision prior to a weekend projection without a dated
+precedent for that genre. Six rows net dBrier +0.579 (dd9f989f0874 +0.405
+dominates, already graded in RETRO-20261026-2015). Box-office forecasts
+n=43, brier_delta +0.0269. Still no-bet.
 
 ### Frozen hand table (all rows, original order)
 
