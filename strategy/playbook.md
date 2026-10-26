@@ -3043,6 +3043,18 @@ rows centred on the low end of Deadline's "30M, maybe 30M+" (centre on the
 bracket edge, 50/50 split); Sat-AM rows used sd 1.2 over the 1.0M cap. Floor
 record: helped 3, hurt 1 (frozen; no re-tune). Box-office forecasts n=48.
 Still no-bet.
+Tally (RETRO-20261026-2015, evidence `b0d744564909`, `5fa0bb6cfe9c`):
+Wildwood OW landed >=12M (12-14M leg proposed Yes 0.9995; 8-10/10-12/14-16
+resolved No) against a Sunday studio estimate of 11.0M (JoBlo 11.5-11.6M).
+The family-animation Sunday estimate revised UP >=9%, the reverse of the
+genre-opener shape. Sun 16:20Z row 10-12M 0.82 vs book 0.72, N, dBrier
++0.154; the Fri-night row 0.66 vs 0.70 beat the mid by -0.054. The book
+(last trade 0.467 on 12-14M) priced the upward revision my own -15% Sunday
+drop math raised and then discounted to 0.17. Floor did not bind (book
+modal 10-12M at 0.72 -> floor 0.62, below my 0.82). Frozen: no re-tune on
+one event. Sourcing note only: when the note's own Sun-drop arithmetic
+lands in the next bracket, that is not a tail to discount. Box-office
+forecasts n=40 (score.py, P5-excluded), brier_delta +0.0187. Still no-bet.
 
 ### Frozen hand table (all rows, original order)
 
