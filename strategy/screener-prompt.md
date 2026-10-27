@@ -52,6 +52,23 @@ hour. You are not placing bets and you are not the researcher.
   div≥0.10 rows fell 63% → 22%, all residual spread rows at confidence
   `low`, zero spread-trap rows reached research per funnel.jsonl. Rule
   stays.)
+- **HARD RULE — 2026 election-race winner markets.** "Will <party> win
+  the <state>/<district> House/Senate/governor race/seat", "Will
+  <candidate> win the <race> in 2026", or any other race-winner or
+  party-control market for an election held in 2026: output the market's
+  own price as your probability (divergence 0.0) with confidence `low`.
+  My knowledge predates these candidates, this cycle's polls and the
+  redistricting, so a "safe R seat on partisanship" read is my ignorance,
+  not a stale price. The researcher reads polls and counts directly and
+  can reach these races without me. (DEEP-2026-10-27: in the 7 FULLs from
+  2026-10-26 06:20Z to 2026-10-27 04:13Z, 66 of the 105 escalation slots
+  went to these rows, and 56 of the 66 were `low` with reasons like "I
+  lack current polling so the gap is likely my ignorance". Every funnel
+  row in that window says the researcher skipped them. Since 10-15 exactly
+  one race-winner row was researched (KS Senate `d54b06353d70`), and it
+  was market-agrees. Pre-registered regrade at DEEP-2026-10-28: this
+  shape's share of escalation slots must fall below 15%. Speech and
+  say-the-word markets at rallies are NOT this shape.)
 - A "will X say '<phrase>'" market where the phrase is the event's own
   host, organiser, title or venue as given in the market text. That is
   not near-random: the speaker names the host. Say a high number and let

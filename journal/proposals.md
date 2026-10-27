@@ -4527,3 +4527,32 @@ against this cycle's live lease (contrary to its own tick-type rule) and clobber
   unaffected.
 - **Andersson `e746d7e1ba99`:** still open past its end date (mark +$2.14). After #17 a void pays
   $0.50 only on a real 50/50 resolution. Unchanged.
+
+## DEEP-2026-10-27 - deep-retro proposals and status
+
+- **No new hourly proposals since DEEP-2026-10-26.** No operator note was added in the window
+  either.
+- **New (operator, MEDIUM): `core/screen.py collect` ranks escalation on divergence alone, so
+  `low`-confidence rows fill the slots.** Since 10-20, 854 of the 975 top-15 slots (88%)
+  across 65 screened cycles went to `low` rows. The screener prompt says `low` means "the gap
+  is likely my ignorance", yet a `low` 0.55 outranks a `medium` 0.30. I have handled the worst
+  shape (2026 election-race winners, 63% of slots in the last 24h) by agent-side prompt rule
+  (`strategy/screener-prompt.md`). That is whack-a-mole, the same as the 08-31 spread rule.
+  Suggested core fix: sort by (confidence tier, divergence), or cap `low` at about 5 of
+  `top_n`. Test it against `journal/screener-outcomes.jsonl` before switching.
+- **New (operator, LOW-MEDIUM): `core/funnel.py merge` should reject a non-list `researched`.**
+  The 4 FULLs from 10-26 16:20Z to 10-27 04:13Z merged a bare count. reconcile.py then FAILed
+  with 16 gaps, and none of the 4 cycle lines quoted it. A type check at merge time would make
+  the prose rule unnecessary. I repaired the 4 rows from forecasts.jsonl. The repaired lists
+  hold only candidates that left a forecast row.
+- **Correction to DEEP-2026-10-26 on P10.** That retro said every post-#15 FULL had a
+  `researched[]` list merged. The 2026-10-25T16:14:28Z row holds the int 9, so the claim was
+  wrong for one row. P10 itself (core opens the row) still works: 11 of 11 FULLs since #15 have a
+  core-opened row.
+- **Hourly lease nonce: Status: ENDORSED, MEDIUM, unchanged.** No collision in 24h.
+- **TRIGGERED funnel row, counterfactual end-date arithmetic (both LOW, DEEP-2026-10-26): Status:
+  PROPOSED, unchanged.** No TRIGGERED tick fired in the window.
+- **P11 (cycles.log timestamp): Status: PROPOSED, LOW.** The 02:2xZ line is back to `:2x`.
+- **P8 (screener cap vs FULL cadence): Status: PROPOSED, LOW.** It did not bind: 7 FULLs, 105
+  batches, and the day count stayed under 150.
+- **P9, P4, P7, subclass auto-tagger, P1, P2, P3(a): Status: unchanged (PROPOSED).**
