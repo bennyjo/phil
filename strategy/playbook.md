@@ -3067,6 +3067,15 @@ directional revision prior to a weekend projection without a dated
 precedent for that genre. Six rows net dBrier +0.579 (dd9f989f0874 +0.405
 dominates, already graded in RETRO-20261026-2015). Box-office forecasts
 n=43, brier_delta +0.0269. Still no-bet.
+Tally (RETRO-20261027-0020, evidence `22ee2dea7c47`, `04aa5d8eb8ed`,
+`a78fe3faed76`, `4d3278f8dcc9`): Clayface OW landed >=24.0M against a Sunday
+studio estimate of exactly 24.0M (edge -> higher bracket). The Sunday rows leaned
+P(<24.0)=0.70 on "genre-opener Sunday estimates run high". That was wrong-signed,
+the third film of the Oct 23-25 weekend to go that way (one correlated event, not
+three). The book (0.92 below) leaned harder, so the rows still beat the mid
+(-0.356 / -0.342). The neutral ~0.5 that the 2215 sourcing note implies would
+have done better. Note stands, no new rule. Box-office forecasts n=47,
+brier_delta +0.0096. Still no-bet.
 
 ### Frozen hand table (all rows, original order)
 
