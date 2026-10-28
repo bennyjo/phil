@@ -43,6 +43,11 @@ Consequences, stated once:
   seat-model shading, any "shade", "half-gap", "floor"/"cap" clause) is NOT in play: record
   your raw estimate and write the rule's value in the note as `rule view (<name>): X`. To put
   one in play, give it a slug here (free slot) in a deep retro or retro commit, with evidence.
+- Ad-hoc situational shades on a series/Laplace base ("two-rally day", venue, topicality)
+  are shades too (RETRO-20261028-0015): raw = the unshaded base; write the shaded value as
+  `rule view (<name>): X` in the note. Corpus Christi rows 06f6494e0435, 640e68454c58,
+  c13163ddc745 baked an unregistered "two-rally day shade" into raw, so their raw is not
+  the estimator's output.
 - Bet GATES are not estimation rules and stay binding: min_edge, max_spread, outside-view
   veto, wide-spread veto, category-bar, comparables gate, Yes-side say-the-word suspension.
 - Base-rate ESTIMATORS (Laplace on a market-series, transcript counts, seat models) are how
