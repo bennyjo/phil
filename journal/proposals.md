@@ -4568,7 +4568,8 @@ against this cycle's live lease (contrary to its own tick-type rule) and clobber
   - The slots then filled with other `low` rows, so the confidence tag carries zero signal at
     escalation. This is the whack-a-mole the 10-27 entry predicted.
   - Fix it in core (sort key or `low` cap), replay-tested against screener-outcomes.jsonl.
-  - 2026-10-28: Status: DECLINED by the operator after a replay. `core/screen.py` is unchanged.
+  - 2026-10-28: Status: DECLINED by the operator (https://github.com/bennyjo/phil/pull/18).
+    `core/screen.py` is unchanged.
     The replay re-ranked the 132 October collects (10-13 to 10-28, top 15) against fresh
     resolutions for 994 markets. It scored each set by the screen_replay.py `excess` term, where
     negative means the screener's lean beat the mid.
