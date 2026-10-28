@@ -8153,3 +8153,22 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   Their headings are indexed under "Archived settlement updates". That saved about 25KB (4%).
   The real cut is lifting the live rules out of "Market selection" (80KB) and the
   mechanical-econ carve-out (46KB), and that is still owed.
+
+## DEEP-2026-10-28 rulings
+
+- **Screener election-race hard rule: regrade PASSED, rule stays.** In the 6 FULLs after it
+  (10-27 08:18Z to 10-28 02:13Z), 2026 election-race winner rows took 1 of 90 top-15 escalation
+  slots, and that one was a Knesset seat leg, not a US race. Before the rule they took 5-12 of
+  15 per FULL. The bar was below 15%. The slots now go to rally legs, macro prints and earnings,
+  which are the shapes the researcher can actually work. Nov 3 midterm night is still researched
+  off-screener.
+- **Still open: 90 of 90 escalated rows were `low`-confidence.** The screener's confidence tag
+  no longer discriminates at all, so escalation is divergence-ranked noise that the researcher
+  filters by hand. This is a core/screen.py ranking issue (proposal DEEP-2026-10-27, raised to
+  MEDIUM-HIGH in DEEP-2026-10-28). Do not add more prompt-side shape rules for it.
+- **No thin-series rule for say-the-word.** The Lubbock "Million|Billion|Trillion 25+" row
+  `3c2bcbdddb9b` (Laplace on n=3 gave 0.60 against a 0.83 book, Yes, +0.131) looks like "a tiny
+  series overrode a confident book". Across all settled say-the-word market-series rows, though,
+  the ones with base n<6 and a gap of 0.15 or more to the book scored -0.030 per row (n=9),
+  which is ahead of the book. That is insufficient data and points the other way. Leave it as
+  variance and record raw as usual.

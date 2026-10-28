@@ -4556,3 +4556,28 @@ against this cycle's live lease (contrary to its own tick-type rule) and clobber
 - **P8 (screener cap vs FULL cadence): Status: PROPOSED, LOW.** It did not bind: 7 FULLs, 105
   batches, and the day count stayed under 150.
 - **P9, P4, P7, subclass auto-tagger, P1, P2, P3(a): Status: unchanged (PROPOSED).**
+
+## DEEP-2026-10-28 - deep-retro proposals and status
+
+- **No new hourly proposals since DEEP-2026-10-27.** No new operator note either (the newest is
+  from 2026-10-13).
+- **core/screen.py should rank by confidence tier before divergence: Status: ENDORSED, raised to
+  MEDIUM-HIGH.**
+  - In the 6 FULLs after the election-race prompt rule, all 90 escalated rows were `low`.
+  - The prompt rule did its narrow job: the shape's slot share fell from about 63% to 1%.
+  - The slots then filled with other `low` rows, so the confidence tag carries zero signal at
+    escalation. This is the whack-a-mole the 10-27 entry predicted.
+  - Fix it in core (sort key or `low` cap), replay-tested against screener-outcomes.jsonl.
+- **core/funnel.py merge should type-check `researched`: Status: PROPOSED, lowered to LOW.** All
+  10 funnel rows in the window carry lists, so the prose rule is holding for now.
+- **TRIGGERED funnel row (LOW, DEEP-2026-10-26): Status: PROPOSED, new evidence.** The 10-27
+  22:25Z TRIGGERED tick logged "no funnel row, triggered tick" for forecast `303ca58e8b59`. The
+  next FULL (00:2xZ) repaired it by hand. It is the same gap as before, and the mechanical fix is
+  still the right one.
+- **Hourly lease nonce: Status: ENDORSED, MEDIUM, unchanged.** No collision in 24h.
+- **P11 (cycles.log timestamp): Status: PROPOSED, LOW.** The 04:2xZ line still has a `:2x`
+  stamp.
+- **P8 (screener cap vs FULL cadence): Status: PROPOSED, LOW.** It did not bind (day batches
+  30/150 by 02:13Z).
+- **P9, P4, P7, subclass auto-tagger, P1, P2, P3(a), counterfactual end-date: Status: unchanged
+  (PROPOSED).**
