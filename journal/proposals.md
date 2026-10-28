@@ -4568,6 +4568,21 @@ against this cycle's live lease (contrary to its own tick-type rule) and clobber
   - The slots then filled with other `low` rows, so the confidence tag carries zero signal at
     escalation. This is the whack-a-mole the 10-27 entry predicted.
   - Fix it in core (sort key or `low` cap), replay-tested against screener-outcomes.jsonl.
+  - 2026-10-28: Status: DECLINED by the operator (https://github.com/bennyjo/phil/pull/18).
+    `core/screen.py` is unchanged.
+    The replay re-ranked the 132 October collects (10-13 to 10-28, top 15) against fresh
+    resolutions for 994 markets. It scored each set by the screen_replay.py `excess` term, where
+    negative means the screener's lean beat the mid.
+    - Since 10-20, the current divergence order scores -0.076 +/- 0.040 per distinct market.
+      Tier-first scores -0.008 +/- 0.023, and cuts the `low` share from 88.5% to 12.5%.
+    - The `low` rows tier-first drops beat the mid (-0.078, 144 markets). The `medium` rows it
+      adds carry no information (+0.004, 101 markets), and 45% of them are echoes with
+      divergence under 0.05. In the last 6 collects, all 19 added rows are echoes, and 1 of the
+      10 resolved ones went the screener's way.
+    - Tier-first also cuts the slots that resolve within 48h from 27% to 19%. A `low` cap at 5
+      does no better and leaves 10% of slots empty.
+    - So the `low` tag does not mark the weak leads, and ranking on it would hand research worse
+      markets. Look for the no-bet streak's cause downstream of escalation order.
 - **core/funnel.py merge should type-check `researched`: Status: PROPOSED, lowered to LOW.** All
   10 funnel rows in the window carry lists, so the prose rule is holding for now.
 - **TRIGGERED funnel row (LOW, DEEP-2026-10-26): Status: PROPOSED, new evidence.** The 10-27
