@@ -8172,3 +8172,32 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   the ones with base n<6 and a gap of 0.15 or more to the book scored -0.030 per row (n=9),
   which is ahead of the book. That is insufficient data and points the other way. Leave it as
   variance and record raw as usual.
+
+## DEEP-2026-10-29 rulings
+
+- **AAA gas: the tight-book re-check (DEEP-2026-10-24 gate) fired and reads as noise.** There
+  are 11 rows with spread <=0.10 over 5 print days. Their paired dBrier against the true mid
+  sums to -0.287 (mean -0.026); day sums are -0.135, -0.006, -0.078, -0.090 and +0.022. Live
+  gates would have admitted 5 bets, which went 2W/3L for about +$1.8:
+  - `b6ad9c9644cf` W
+  - `55f4316fdedb` W
+  - `150d4f500100` L
+  - `6423ec6864f1` L
+  - `3a9f860d9030` L
+
+  AAA stays forecast-only. The next gate is >=25 tight rows over >=10 print days. Keep
+  recording every AAA bin you read with its book-implied centre. The row rate has fallen to
+  about 1 per day since 10-26, and that rate will never reach the gate.
+- **Research shrinkage is about right; add no shrink/anti-shrink rule.** The test covered 137
+  escalated markets since 10-20 that research rowed and that have resolved (DEEP-2026-10-29
+  downstream test).
+  - Research's directional excess is -0.036 +/- 0.013 at a null cost of 0.022. That puts the
+    optimal scale at about 0.82x its current divergence.
+  - The screener's excess on the same markets is -0.052 at a null cost of 0.085, so its optimal
+    scale is about 0.31x.
+  - Research keeps most of the screener's directional information without echoing it: they
+    agree in direction on only 78 of 137.
+  - About half of research's edge is the 12-row AAA cluster, which the spread gate refuses.
+
+  The no-bet streak is the opportunity set, not a research defect. Do not loosen min_edge or
+  spread gates to "use" this edge.

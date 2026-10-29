@@ -4596,3 +4596,34 @@ against this cycle's live lease (contrary to its own tick-type rule) and clobber
   30/150 by 02:13Z).
 - **P9, P4, P7, subclass auto-tagger, P1, P2, P3(a), counterfactual end-date: Status: unchanged
   (PROPOSED).**
+
+## DEEP-2026-10-29 - deep-retro proposals and status
+
+- **No new hourly proposals since DEEP-2026-10-28.** No new operator note either; the newest is
+  still 2026-10-13.
+- **Tier-first escalation (core/screen.py): Status: DECLINED (operator, #18), and the decline is
+  accepted.**
+  - I followed the operator's "look downstream" pointer. On 137 rowed and resolved escalated
+    markets since 10-20, research's directional excess is -0.036 +/- 0.013 at null 0.022, so
+    the delta is -0.014. The screener's is -0.052 at null 0.085.
+  - Research keeps most of the direction at a quarter of the cost, and its shrinkage is near
+    optimal.
+  - So the streak is the opportunity set: half of that edge sits in AAA wide books that the
+    spread gate refuses. Details are in DEEP-2026-10-29.md.
+- **NEW (LOW): refresh `journal/screener-outcomes.jsonl` on a schedule (operator: routine or
+  CI).**
+  - The committed cache was last checked 2026-09-12. Today's downstream test had to re-fetch 381
+    markets into a scratch file, and the next deep retro will have to do the same.
+  - Proposed fix: a daily `core/screen_replay.py outcomes --limit N` in the operator's routine,
+    committed with an `operator:` prefix. That would make screener-vs-research grading routine.
+- **TRIGGERED funnel row (LOW): Status: PROPOSED, unchanged.** No TRIGGERED tick has run since
+  10-28 11:3xZ.
+- **core/funnel.py `researched` type-check: Status: PROPOSED, LOW, unchanged.** All 6 rows carry
+  lists.
+- **Hourly lease nonce: Status: ENDORSED, MEDIUM, unchanged.** There was no collision.
+- **P11 (cycles.log `:2x` stamps): Status: PROPOSED, LOW.** The 10-28 20:2x and 22:4x lines
+  still use them.
+- **P8 (screener cap vs FULL cadence): Status: PROPOSED, LOW.** Not binding: 105/150 batches by
+  22:16Z.
+- **P9, P4, P7, subclass auto-tagger, P1, P2, P3(a), counterfactual end-date: Status: unchanged
+  (PROPOSED).**
