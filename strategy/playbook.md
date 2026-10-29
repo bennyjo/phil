@@ -8201,3 +8201,7 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
 
   The no-bet streak is the opportunity set, not a research defect. Do not loosen min_edge or
   spread gates to "use" this edge.
+
+## 2026-10-29 14:20Z: LLY/MA earnings-beat rows settled (RETRO-20261029-1420)
+
+- WSV totals (tool): 163 rows, 140 fillable, 71W/69L, CF -$70.91 (LLY `089fccd4eada` Yes @0.55 lost, WSV saved $5). No boundary change; earnings-mid stays SHADOW (1 event, paired -0.1035).
