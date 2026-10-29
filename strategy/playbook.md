@@ -8205,3 +8205,7 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
 ## 2026-10-29 14:20Z: LLY/MA earnings-beat rows settled (RETRO-20261029-1420)
 
 - WSV totals (tool): 163 rows, 140 fillable, 71W/69L, CF -$70.91 (LLY `089fccd4eada` Yes @0.55 lost, WSV saved $5). No boundary change; earnings-mid stays SHADOW (1 event, paired -0.1035).
+
+## 2026-10-29 20:15Z: Alberta referendum + Saudi/Yemen forecasts settled (RETRO-20261029-2015)
+
+- WSV totals (tool): 165 rows, 141 fillable, 71W/70L, CF -$75.91 (Saudi x Yemen Sep23 `ecca0a61ca2c` No-side lost, WSV saved $5; Alberta Leave-any-division `a99903a45e08` refused by tool). No boundary change.
