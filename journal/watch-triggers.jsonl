@@ -179,3 +179,4 @@
 {"utc": "2026-10-27T22:22:35Z", "kind": "new_market", "key": "newmarket:6326205", "market_id": "6326205", "detail": "created 2026-10-27T22:01:09.229844Z, liquidity 10137 (floor 5000)"}
 {"utc": "2026-10-28T11:25:34Z", "kind": "new_market", "key": "newmarket:6338684", "market_id": "6338684", "detail": "created 2026-10-28T11:15:12.747147Z, liquidity 16572 (floor 5000)"}
 {"utc": "2026-10-29T23:23:17Z", "kind": "new_market", "key": "newmarket:6403106", "market_id": "6403106", "detail": "created 2026-10-29T23:10:02.288468Z, liquidity 10119 (floor 5000)"}
+{"utc": "2026-10-30T05:23:16Z", "kind": "new_market", "key": "newmarket:6407604", "market_id": "6407604", "detail": "created 2026-10-30T05:05:03.880984Z, liquidity 16479 (floor 5000)"}
