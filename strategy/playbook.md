@@ -8220,3 +8220,23 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
 ## 2026-10-30 02:15Z: SC rally legs + WTI>101 + ETH 2200 settled (RETRO-20261030-0215)
 
 - WSV totals (tool): 169 rows, 144 fillable, 72W/72L, CF -$85.36 (WTI>101 `a94a6b8ba179` Yes won but refused by tool at the 0.99 ask, so WSV cost $0). No boundary change; knife-edge-mid SHADOW 8 events paired +0.0395, rally-below-mid SHADOW 4 events paired -0.0132.
+
+## DEEP-2026-10-30 rulings
+
+- **Do not cite `threshold_sweep_no` (No-side counterfactual) to relax min_edge, outside-view-veto,
+  category-bar or unvalidated-method.** At floor 0.04 it reads +0.110 ROI (n=333). Five longshot
+  favourite-fades carry +$52.5 of the +$55.6:
+  - `a8d12b4831b4`
+  - `a733d6439c5a`
+  - `1d37368ed8f2`
+  - `a78fe3faed76`
+  - `cfda85a4abde`
+
+  These are bids of 0.88 to 0.94, in ai-model-release, ai-leaderboard, politics-primary and
+  box-office. Without them the ROI is +0.012. Event-clustered with spread <= 0.06, it is
+  +0.151 +/- 0.141 over 181 events, about 1 se. The vetoed categories behind it are the ones where
+  our real bets lost. Re-open only when the event-clustered, top-5-excluded ROI at spread <= 0.06
+  is above 2 se over >= 150 events (DEEP-2026-10-30).
+- The `series-recent6` note view (50049e2d) stays note-only. Its 4 SI rows are one phrase across
+  consecutive rallies, so effectively n=1. Promotion needs a score.py slug and 20 events, like
+  every shadow rule.

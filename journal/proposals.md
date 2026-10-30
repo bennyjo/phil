@@ -4627,3 +4627,23 @@ against this cycle's live lease (contrary to its own tick-type rule) and clobber
   22:16Z.
 - **P9, P4, P7, subclass auto-tagger, P1, P2, P3(a), counterfactual end-date: Status: unchanged
   (PROPOSED).**
+
+## DEEP-2026-10-30 - deep-retro proposals and status
+
+- **No new hourly proposals since DEEP-2026-10-29.** The newest operator note is still 2026-10-13.
+- **NEW (LOW): score.py robustness line for `threshold_sweep_no`.**
+  - Print, beside the raw sweep, the slug-event-clustered mean ROI with its se, and the ROI
+    excluding the top-5 payoffs, both at spread <= 0.06.
+  - Today the raw +0.110 at floor 0.04 falls to +0.012 once 5 longshot fades are removed (see
+    DEEP-2026-10-30.md). An hourly agent reading only the raw number could argue for relaxing a
+    veto.
+- **TRIGGERED funnel row (LOW): Status: PROPOSED, now with evidence.**
+  - The 10-29 23:25Z TRIGGERED row was backfilled by the next FULL. It has `researched: 1` (an int),
+    no strategy_rev, and sits out of time order.
+  - The 10-30 05:25Z TRIGGERED tick wrote no row, and its cycles.log line says `cash n/a`.
+- **core/funnel.py `researched` type-check: Status: PROPOSED, LOW.** The backfill above is the first
+  int-valued row since the proposal was filed.
+- **screener-outcomes refresh (LOW, DEEP-2026-10-29): Status: PROPOSED, unchanged.**
+- **Hourly lease nonce: Status: ENDORSED, MEDIUM, unchanged.** There was no collision.
+- **P11, P8, P9, P4, P7, subclass auto-tagger, P1, P2, P3(a), counterfactual end-date: Status:
+  unchanged (PROPOSED).**
