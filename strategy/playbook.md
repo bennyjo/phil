@@ -6113,6 +6113,13 @@ family forecast-only.
   benchmark for StatCan monthly GDP brackets. Any directional tilt layered
   on top (the Jul "tilt up" from the wholesale revision) is unvalidated:
   cap it at 0.05 of bracket mass until it has its own graded evidence.
+- **Canada GDP flash method, Aug 2026 grade (RETRO-20261030-1455).** Flash
+  +0.2, print 0.0-0.1 (a -0.1/-0.2 miss, table now 16 months, 4/16 low
+  misses of >=0.1). Bet bd34af424580 (0.0-0.1 No, own 0.76) lost -$5; the
+  0.2-0.3 sibling at 0.56 (+0.208 dBrier) was ABOVE the table's exact-hit
+  rate (4/15 = 0.27) plus the existing 0.05 tilt cap (RETRO-20260929, above),
+  so this restates that cap; it adds no new rule. Write the table value and
+  the tilt as separate numbers in the note before recording the estimate.
 
 ## DEEP-2026-09-30 rulings
 
