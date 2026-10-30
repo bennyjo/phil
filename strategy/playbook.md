@@ -8240,3 +8240,14 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
 - The `series-recent6` note view (50049e2d) stays note-only. Its 4 SI rows are one phrase across
   consecutive rallies, so effectively n=1. Promotion needs a score.py slug and 20 events, like
   every shadow rule.
+
+## Euro-area GDP y/y ladders: first settled pair (RETRO-20261030-1225)
+
+- Germany Q3 2026 (Destatis flash) and Eurozone Q3 2026 (Eurostat flash) y/y ladders both
+  resolved one bracket ABOVE my centre (and above the book's). My forecasts beat the mid
+  (dBrier -0.17/-0.14) by keeping width, so the method stays; no centre tilt (n=2, one day).
+- Method notes from now on: (1) Destatis flash y/y is price-adjusted but NOT calendar-adjusted —
+  write the working-day difference vs the prior-year quarter in the note before setting the
+  centre; (2) for EZ, Ireland's contribution (payback or not after an outsized quarter) is its own
+  component with its own sd, never folded silently into the centre; (3) record every bracket
+  whose book was read (existing econ-ladder rule), including the one above the centre.
