@@ -56,6 +56,13 @@ Consequences, stated once:
   clears min_edge (`d159734b4051`: raw 5/8 = 0.625 vs book 0.645 is a 0.015 No edge; Laplace
   0.60 made it exactly 0.04; open), write `laplace-only edge` in the rationale so the next deep retro can grade
   the cell. Insufficient data to gate it yet.
+- Recent-window note for coined/trending phrases (RETRO-20261030-0415): Trump-rally "SI|Super
+  Intelligence" (coined 2026-09-22) full-series Laplace sat ABOVE the mid on four straight rows
+  that all resolved No (FL 0406499a654c 0.65, Corpus 518226fb3a96 0.60, OH 3678d60b2663 0.50,
+  SC 7813b8b4b788 0.46 vs mid 0.37). The last-6 window (FL N, Macon Y, MS Y, Corpus N, OH N,
+  SC N = 2/6, Laplace 0.375) matched the book. For a phrase coined inside the series window,
+  also compute the last-6 Laplace and write it as `rule view (series-recent6): X` in the note;
+  raw stays the full-series estimator until score.py grades a slug (none registered).
 
 **Before committing ANY cycle that screened or recorded a forecast
 (DEEP-2026-10-01, hardened DEEP-2026-10-10) — run these two commands and
