@@ -8209,3 +8209,7 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
 ## 2026-10-29 20:15Z: Alberta referendum + Saudi/Yemen forecasts settled (RETRO-20261029-2015)
 
 - WSV totals (tool): 165 rows, 141 fillable, 71W/70L, CF -$75.91 (Saudi x Yemen Sep23 `ecca0a61ca2c` No-side lost, WSV saved $5; Alberta Leave-any-division `a99903a45e08` refused by tool). No boundary change.
+
+## 2026-10-30 02:15Z: SC rally legs + WTI>101 + ETH 2200 settled (RETRO-20261030-0215)
+
+- WSV totals (tool): 169 rows, 144 fillable, 72W/72L, CF -$85.36 (WTI>101 `a94a6b8ba179` Yes won but refused by tool at the 0.99 ask, so WSV cost $0). No boundary change; knife-edge-mid SHADOW 8 events paired +0.0395, rally-below-mid SHADOW 4 events paired -0.0132.
