@@ -8258,3 +8258,14 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   centre; (2) for EZ, Ireland's contribution (payback or not after an outsized quarter) is its own
   component with its own sd, never folded silently into the centre; (3) record every bracket
   whose book was read (existing econ-ladder rule), including the one above the centre.
+
+## 2026-10-30 16:50Z: AAA gas Oct30 rows + Basel Rune settled (RETRO-20261030-1650)
+
+- AAA printed $4.2046 (-2.12c). The drift centre (-1.8c) was 0.3c off, but at sd 0.8c it can only put
+  0.65 on <4.21. The tight book (0.93/0.98) was right. This is the second tight-book day (after Oct 23)
+  where the book-implied centre beat the drift centre. From now on, when the AAA spread is <= 0.05,
+  the note gives the book-implied centre as a number (e.g. "book ctr -2.5c"), not "market sees a larger
+  drop". A deep retro grades book centre vs drift centre after 5 such days. AAA stays forecast-only.
+- WSV totals (tool): 172 rows, 146 fillable, 73W/73L, CF -$86.88 (1832b963a34f 4.21 bin Yes-side
+  lost; dcbfe678964b refused at 0.99). OVV totals (tool): 293 rows, 283 fillable, CF +$220.21
+  (99a8392865e1 <4.21 No-side lost, OVV saved $5). No boundary change.
