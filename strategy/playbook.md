@@ -8269,3 +8269,18 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
 - WSV totals (tool): 172 rows, 146 fillable, 73W/73L, CF -$86.88 (1832b963a34f 4.21 bin Yes-side
   lost; dcbfe678964b refused at 0.99). OVV totals (tool): 293 rows, 283 fillable, CF +$220.21
   (99a8392865e1 <4.21 No-side lost, OVV saved $5). No boundary change.
+
+## DEEP-2026-10-31 rulings
+
+- **Say-the-word No-side suspension test, recount.** The test set (tight book, gap >=0.05, below
+  the mid, since 2026-10-21T12Z) is **n=14, ~7 events, +0.082**. That is below n=30, so it has not
+  triggered and No-side bets stay open.
+  - The 5 straight No-side rally bet losses (`afc33780dc6a`, `a55d46b9f373`, `d159734b4051`,
+    `06211e957b9f`, `533a2fdcff3c`; -$25) are not the test. Do not suspend on them in an hourly
+    retro.
+  - The above-mid set since 10-21 is n=30, +1.07. The Yes suspension is reconfirmed.
+- **Commodities 7d dBrier -2.04 (n=26) is not an edge.** `6172f26a0840` (placeholder book, -0.978)
+  and WTI>102 Oct 29 (-0.622, unfillable) make almost all of it, and the rest sits at the book. Do
+  not cite it to open commodities bets.
+- **Rule registry is full (6/6).** A seventh rule needs score.py to retire one (FAIL) or promote
+  one (PASS) first, or a deep retro has to free a slot with evidence.

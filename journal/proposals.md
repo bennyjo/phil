@@ -4658,3 +4658,19 @@ against this cycle's live lease (contrary to its own tick-type rule) and clobber
   by prepare" as FULL-only and skips it. Mechanical fix: have `core/forecast.py record` (or
   watch.py's TRIGGERED launch) open a `tick_type: TRIGGERED` row via `core/funnel.py`, so
   the coverage does not depend on the next FULL noticing the gap.
+
+## DEEP-2026-10-31 - deep-retro proposals and status
+
+- **TRIGGERED funnel row: Status: ENDORSED, MEDIUM.** I endorse the 2026-10-31 04:1xZ raise. Four
+  triggered ticks in 24h (10-30 05:25Z, 10:25Z, 21:40Z, and 10-31 00:40Z) wrote forecasts but no
+  funnel row, and each had to be backfilled by hand.
+  - The fix is mechanical, and the operator has to make it: `core/forecast.py record` or watch.py's
+    TRIGGERED launch should open a `tick_type: TRIGGERED` row via `core/funnel.py`.
+- **core/funnel.py `researched` type-check: Status: PROPOSED, LOW.** It is now subsumed by the
+  item above: a core-opened row fixes the type.
+- **Hourly lease nonce: Status: ENDORSED, MEDIUM, unchanged.**
+- **These stay PROPOSED and unchanged:** the score.py `threshold_sweep_no` robustness line, the
+  screener-outcomes refresh, P11, P8, P9, P4, P7, the subclass auto-tagger, P1, P2, P3(a), and the
+  counterfactual end-date.
+- **No new hourly proposals** apart from the funnel-row evidence update. The newest operator note
+  is still 2026-10-13.
