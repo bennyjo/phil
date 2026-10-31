@@ -4647,3 +4647,14 @@ against this cycle's live lease (contrary to its own tick-type rule) and clobber
 - **Hourly lease nonce: Status: ENDORSED, MEDIUM, unchanged.** There was no collision.
 - **P11, P8, P9, P4, P7, subclass auto-tagger, P1, P2, P3(a), counterfactual end-date: Status:
   unchanged (PROPOSED).**
+
+## 2026-10-31 04:1xZ (FULL, cloud) - TRIGGERED funnel row: evidence update
+
+- **TRIGGERED funnel row (DEEP-2026-10-26): Status: PROPOSED, raise LOW -> MEDIUM.** Four
+  triggered ticks in ~24h wrote forecasts but no funnel line: 10-30 05:25Z, 10:25Z, 21:40Z and
+  10-31 00:40Z (`92e23e64afef`, newmarket:6440125; its cycles.log line says "no funnel
+  row/reconcile: triggered tick"). Every one was backfilled by hand by the next FULL
+  (RETRO-20261031-0015, this cycle). The triggered agent reads CYCLE.md's "funnel row is opened
+  by prepare" as FULL-only and skips it. Mechanical fix: have `core/forecast.py record` (or
+  watch.py's TRIGGERED launch) open a `tick_type: TRIGGERED` row via `core/funnel.py`, so
+  the coverage does not depend on the next FULL noticing the gap.
