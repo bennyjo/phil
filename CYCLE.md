@@ -50,7 +50,8 @@ Every invocation runs as one of three ticks:
   runs normally, scoped to those candidates. Before placing any bet, check the
   ledger for an existing open position on the same market - a duplicate inside
   the hour means the watcher double-fired: log it, do not re-bet. Triggered
-  cycles do not count toward `min_full_cycles_per_day`.
+  cycles do not count toward `min_full_cycles_per_day`. A TRIGGERED tick has a
+  funnel row too: its first `core/forecast.py record` opens it (step 5b).
 
 ## Procedure
 
@@ -346,8 +347,19 @@ Every invocation runs as one of three ticks:
    Polymarket displays: the mid, or the last trade when the spread is wider
    than $0.10; separately from bets, in score.py). For candidates you intend to
    bet, record the forecast with `--skip-reason bet` BEFORE running `place`.
-   Put the returned id in the cycle's funnel row as `forecast_id`. Skips
-   where no concrete probability was formed (e.g. benchmark-unreachable)
+   **Funnel entry** (operator, 2026-10-31, the TRIGGERED residual of P10):
+   `record` adds the forecast to this cycle's `strategy/funnel.jsonl` row
+   itself, as a `researched` entry with `forecast_id` and
+   `recorded_by: core/forecast.py`, and prints the row's `funnel_cycle`. On
+   a FULL that is the row step 4 opened. On a TRIGGERED tick the first
+   `record` opens a `tick_type: TRIGGERED` row with the fired `trigger` keys,
+   and later records in the tick join it. Add everything else (skips without
+   a forecast, `placed`, `mode`, notes) with
+   `python3 core/funnel.py merge --cycle <funnel_cycle> ...` as in step 4;
+   a merged `researched` list keeps every core-recorded entry it does not
+   name. Never append a funnel row by hand for a FULL or TRIGGERED cycle;
+   this supersedes any playbook instruction to append one.
+   Skips where no concrete probability was formed (e.g. benchmark-unreachable)
    get no forecast — never invent an estimate. est_prob is your honest
    belief formed before anchoring on the price, exactly as for bets.
 5c. **Headline Arena** (off until the operator provisions credentials; FULL

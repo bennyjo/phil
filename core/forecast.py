@@ -3,6 +3,9 @@
 
 PROTECTED CORE — the trading agent must not edit files under core/.
 This is the only writer of journal/forecasts.jsonl (resolve.py settles rows).
+Each record also adds the forecast to this cycle's strategy/funnel.jsonl row
+(core/funnel.py record_forecast; operator, 2026-10-31) and prints that row's
+`funnel_cycle`, so coverage no longer depends on the agent writing the row.
 
 The experiment's honest metric is brier_delta — is the agent's probability a
 better forecast than the market's own price? — and measuring that needs no
@@ -55,8 +58,10 @@ import uuid
 from collections import Counter
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import funnel  # noqa: E402
 import pmapi  # noqa: E402
 import score  # noqa: E402
+import screen  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 FORECASTS = ROOT / "journal" / "forecasts.jsonl"
@@ -238,7 +243,20 @@ def cmd_record(args, rows):
     else:
         with FORECASTS.open("a") as f:
             f.write(json.dumps(row) + "\n")
-    out = {"recorded": row["id"], "market_price": row["market_prob_at_record"],
+    try:
+        funnel_cycle = funnel.record_forecast(
+            dt.datetime.now(dt.timezone.utc), screen.runner_id(),
+            {"market_id": row["market_id"], "question": row["question"],
+             "outcome": row["outcome"], "category": row["category"],
+             "skip_reason": row["skip_reason"], "forecast_id": row["id"],
+             "recorded_by": funnel.RECORDED_BY})
+    except Exception as e:  # noqa: BLE001 - the forecast row is already written
+        funnel_cycle = None
+        print(f"WARNING: forecast {row['id']} recorded, but its funnel row was "
+              f"not written ({type(e).__name__}: {e}); add it by hand or "
+              "reconcile.py fails", file=sys.stderr)
+    out = {"recorded": row["id"], "funnel_cycle": funnel_cycle,
+           "market_price": row["market_prob_at_record"],
            "price_source": source, "bid": bid, "ask": ask, "est_prob": est,
            "delta_vs_market": round(est - price, 4), "question": row["question"]}
     if rule_fields:
