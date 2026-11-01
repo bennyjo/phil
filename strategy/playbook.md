@@ -8308,3 +8308,13 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   using a "prime sale -> TGE in 1-2 days" prior. A guide dated Oct 28 already showed a community
   vote between Nov 1 and Dec 1, both outside the window. n=1. This is a research lookup, not an
   estimation rule: it moves no probability mechanically and takes no registry slot.
+
+## 2026-11-01 18:15Z: AAA gas Nov 1 rows settled (RETRO-20261101-1815)
+
+- AAA Nov 1 printed in [4.1700, 4.1799] (change -0.4 to -1.4c after five ~-2c days). Drift centre
+  -2.0c missed by ~1c (`93bdd88c982d` 0.25 vs last 0.71, +0.478; `e6aa609bcfaa` 0.55 vs 0.365, +0.169).
+  The GasBuddy state 24h-change nowcast (-1.3 to -1.5c, `c7f964d848cd` 0.62) was closer but still
+  below the tight book (0.922/0.971 -> 0.95, +0.142).
+- **Tight-book tally (10-30 rule): book centre beat drift centre on 3 of 3 days (Oct 23, Oct 30,
+  Nov 1).** Deep retro grades at 5. Until then, when a GasBuddy state nowcast is available, write
+  its centre in the note next to the drift and book centres. AAA stays forecast-only.
