@@ -8298,3 +8298,13 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   - Gate 1 needs both f3 and f4 negative. Re-check daily with the recipe, and do not pre-empt it.
   - The Rhine `b2fb9bff5332` veto (own 0.45 vs 0.755, resolved No, about +$13.5 CF) is one row of
     f4's pattern. It is not a carve-out.
+
+## Token-launch-by-date rows: cite the project's own TGE schedule first (RETRO-20261101-0615)
+
+- Before recording or superseding a "will X launch a token by <date>" row on venue signals
+  (pre-market perps, Binance Wallet prime/pre-TGE sales, tokenomics posts), find and cite the
+  project's own announced TGE date or vote options in the note. If none is published, say so.
+- Evidence: `65adcd1e5ac9` (Predict.fun by Oct31, 0.85, lost). It superseded a right-side 0.20 row
+  using a "prime sale -> TGE in 1-2 days" prior. A guide dated Oct 28 already showed a community
+  vote between Nov 1 and Dec 1, both outside the window. n=1. This is a research lookup, not an
+  estimation rule: it moves no probability mechanically and takes no registry slot.
