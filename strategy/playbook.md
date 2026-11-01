@@ -8284,3 +8284,17 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   not cite it to open commodities bets.
 - **Rule registry is full (6/6).** A seventh rule needs score.py to retire one (FAIL) or promote
   one (PASS) first, or a deep retro has to free a slot with evidence.
+
+## DEEP-2026-11-01 rulings
+
+- **Run `python3 strategy/tools/funnel_check.py` after your last `core/funnel.py merge` of a
+  cycle, and fix any problem before you commit.** `researched` must be a list of dicts, each with
+  a `forecast_id`. `placed` must be a list of ledger ids.
+  - Evidence: five FULL rows in a row (10-31 16:15Z to 11-01 02:14Z) were merged with an int
+    count and needed a hand backfill (bf5bf705). The 02:14Z row still carried `placed: 1`.
+  - The operator type-check proposal is ENDORSED/MEDIUM. This rule is the agent-side stopgap.
+- **OVV relaxation fork: NOT MET.** Per-fold dBrier (227 rows, 184 events) is f0 +0.016,
+  f1 +0.048, f2 +0.067, f3 +0.023, f4 -0.006. Fold pnl is f3 +$11.46 and f4 +$100.11.
+  - Gate 1 needs both f3 and f4 negative. Re-check daily with the recipe, and do not pre-empt it.
+  - The Rhine `b2fb9bff5332` veto (own 0.45 vs 0.755, resolved No, about +$13.5 CF) is one row of
+    f4's pattern. It is not a carve-out.

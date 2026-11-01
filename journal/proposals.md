@@ -4674,3 +4674,23 @@ against this cycle's live lease (contrary to its own tick-type rule) and clobber
   counterfactual end-date.
 - **No new hourly proposals** apart from the funnel-row evidence update. The newest operator note
   is still 2026-10-13.
+
+## DEEP-2026-11-01 - deep-retro proposals and status
+
+- **core/funnel.py `researched` type-check: Status: ENDORSED, MEDIUM** (raised from PROPOSED/LOW;
+  the DEEP-2026-10-31 "subsumed" ruling is withdrawn).
+  - Five consecutive core-opened **FULL** rows were merged with `researched` as an int count:
+    10-31 16:15Z, 18:13Z, 20:13Z, and 11-01 00:14Z, 02:14Z.
+  - One of them also had `placed: 1` instead of the ledger id.
+  - The 04:15Z cycle and this deep retro repaired them by hand. A TRIGGERED-row fix would not
+    have caught any of these.
+  - Ask: `funnel.py merge` should reject a non-list `researched` or `placed`, and researched
+    entries without a `forecast_id`.
+  - Agent-side stopgap: `strategy/tools/funnel_check.py`.
+- **TRIGGERED funnel row: Status: ENDORSED, MEDIUM, unchanged.** Fifth miss: 11-01 00:24Z
+  (newmarket:6501463), backfilled at 04:15Z.
+- **Hourly lease nonce: Status: ENDORSED, MEDIUM, unchanged.**
+- **These stay PROPOSED and unchanged:** the score.py `threshold_sweep_no` line, the
+  screener-outcomes refresh, P11, P8, P9, P4, P7, the subclass auto-tagger, P1, P2, P3(a), and
+  the counterfactual end-date.
+- **No new hourly proposals.**
