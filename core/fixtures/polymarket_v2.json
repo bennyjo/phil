@@ -1,0 +1,711 @@
+{
+ "_comment": "gamma: public Gamma reads recorded 2026-11-02, trimmed. connect: [exit code, stdout JSON, stderr] from Pearl Connect v0.1.13's connect-polymarket script functions, run on those records with the signer, chain, relayer, and CLOB client stubbed. Addresses and hashes are placeholders. No funds moved.",
+ "gamma": {
+  "binary_open": {
+   "id": "6294297",
+   "question": "Petkim Spor vs. Anadolu Efes",
+   "slug": "polyv2bkbsl-pet-ana-2026-11-02",
+   "conditionId": "0x01cab1eaa8052e690646ee6a398bcc2767000000000000000000000000000000",
+   "endDate": "2026-11-09T15:00:00Z",
+   "outcomes": "[\"Petkim Spor\", \"Anadolu Efes\"]",
+   "outcomePrices": "[\"0.575\", \"0.425\"]",
+   "clobTokenIds": "[\"810443891093998525403128602700364082016851758760213951997384294603423744000\", \"810443891093998525403128602700364082016851758760213951997384294603423744001\"]",
+   "positionIds": [
+    "810443891093998525403128602700364082016851758760213951997384294603423744000",
+    "810443891093998525403128602700364082016851758760213951997384294603423744001"
+   ],
+   "version": "v2",
+   "negRisk": false,
+   "active": true,
+   "closed": false,
+   "acceptingOrders": true,
+   "feesEnabled": true,
+   "feeSchedule": {
+    "exponent": 1,
+    "rate": 0.05,
+    "takerOnly": true,
+    "rebateRate": 0.15
+   },
+   "orderMinSize": 5,
+   "resolutionStatus": "active"
+  },
+  "neg_risk_open": {
+   "id": "6389919",
+   "question": "Will the highest temperature in New York City be between 68-69\u00b0F on October 30?",
+   "slug": "polyv2-highest-temperature-atomic-in-nyc-on-october-30-2026-68-69f",
+   "conditionId": "0x0255c41d747588b4a9dbaba984a4093111000c00000000000000000000000400",
+   "endDate": "2026-10-30T12:00:00Z",
+   "outcomes": "[\"Yes\", \"No\"]",
+   "outcomePrices": "[\"0.5\", \"0.5\"]",
+   "clobTokenIds": "[\"1056161234059696262103638593071164169636008086984931975163686004493492683776\", \"1056161234059696262103638593071164169636008086984931975163686004493492683777\"]",
+   "positionIds": [
+    "1056161234059696262103638593071164169636008086984931975163686004493492683776",
+    "1056161234059696262103638593071164169636008086984931975163686004493492683777"
+   ],
+   "version": "v2",
+   "negRisk": true,
+   "active": true,
+   "closed": false,
+   "acceptingOrders": true,
+   "feesEnabled": true,
+   "feeSchedule": {
+    "exponent": 1,
+    "rate": 0.05,
+    "takerOnly": true,
+    "rebateRate": 0.25
+   },
+   "orderMinSize": 5,
+   "resolutionStatus": "active"
+  },
+  "binary_closed": {
+   "id": "6552718",
+   "question": "Jake LaRavia: Rebounds O/U 1.5",
+   "slug": "polyv2-nba-tor-lal-2026-11-01-rebounds-jake-laravia-1pt5",
+   "conditionId": "0x01b0d80310d32775015ff453644a3074ce000000000000000000000000000000",
+   "endDate": "2026-11-02T02:00:00Z",
+   "closedTime": "2026-11-02 10:04:00.948007+00",
+   "outcomes": "[\"Yes\", \"No\"]",
+   "outcomePrices": "[\"1\", \"0\"]",
+   "clobTokenIds": "[\"764768791846869230743938092384205596200122077549842667757923457055668043776\", \"764768791846869230743938092384205596200122077549842667757923457055668043777\"]",
+   "positionIds": [
+    "764768791846869230743938092384205596200122077549842667757923457055668043776",
+    "764768791846869230743938092384205596200122077549842667757923457055668043777"
+   ],
+   "version": "v2",
+   "negRisk": false,
+   "active": true,
+   "closed": true,
+   "acceptingOrders": false,
+   "feesEnabled": true,
+   "feeSchedule": {
+    "exponent": 1,
+    "rate": 0.05,
+    "takerOnly": true,
+    "rebateRate": 0.15
+   },
+   "orderMinSize": 5,
+   "resolutionStatus": "resolved"
+  }
+ },
+ "ids": {
+  "open": "810443891093998525403128602700364082016851758760213951997384294603423744000",
+  "win": "764768791846869230743938092384205596200122077549842667757923457055668043776",
+  "loss": "764768791846869230743938092384205596200122077549842667757923457055668043777"
+ },
+ "connect": {
+  "status_v2_ready": [
+   0,
+   {
+    "agent_eoa": "0xe022222222222222222222222222222222222222",
+    "deposit_wallet": "0xD011111111111111111111111111111111111111",
+    "owner": "0xe022222222222222222222222222222222222222",
+    "relayer_registered": true,
+    "approvals": {
+     "pusd_allowances": {
+      "0xE111180000d2663C0091e4f400237545B87B996B": true,
+      "0xe2222d279d744050d28e00520010520000310F59": true,
+      "0xd91E80cF2E7be2e162c6513ceD06f1dD0dA35296": true,
+      "0xe3333700cA9d93003F00f0F71f8515005F6c00Aa": true
+     },
+     "ctf_operators": {
+      "0xE111180000d2663C0091e4f400237545B87B996B": true,
+      "0xe2222d279d744050d28e00520010520000310F59": true,
+      "0xd91E80cF2E7be2e162c6513ceD06f1dD0dA35296": true
+     },
+     "position_manager_operators": {
+      "0xe3333700cA9d93003F00f0F71f8515005F6c00Aa": true
+     }
+    },
+    "approval_contracts": {
+     "pusd_allowances": {
+      "0xE111180000d2663C0091e4f400237545B87B996B": "CTFExchange",
+      "0xe2222d279d744050d28e00520010520000310F59": "NegRiskCTFExchange",
+      "0xd91E80cF2E7be2e162c6513ceD06f1dD0dA35296": "NegRiskAdapter",
+      "0xe3333700cA9d93003F00f0F71f8515005F6c00Aa": "ExchangeV3"
+     },
+     "ctf_operators": {
+      "0xE111180000d2663C0091e4f400237545B87B996B": "CTFExchange",
+      "0xe2222d279d744050d28e00520010520000310F59": "NegRiskCTFExchange",
+      "0xd91E80cF2E7be2e162c6513ceD06f1dD0dA35296": "NegRiskAdapter"
+     },
+     "position_manager_operators": {
+      "0xe3333700cA9d93003F00f0F71f8515005F6c00Aa": "ExchangeV3"
+     }
+    },
+    "pusd_balance": 0.0
+   },
+   ""
+  ],
+  "status_pre_v2": [
+   0,
+   {
+    "agent_eoa": "0xe022222222222222222222222222222222222222",
+    "deposit_wallet": "0xD011111111111111111111111111111111111111",
+    "owner": "0xe022222222222222222222222222222222222222",
+    "relayer_registered": true,
+    "approvals": {
+     "pusd_allowances": {
+      "0xE111180000d2663C0091e4f400237545B87B996B": true,
+      "0xe2222d279d744050d28e00520010520000310F59": true,
+      "0xd91E80cF2E7be2e162c6513ceD06f1dD0dA35296": true,
+      "0xe3333700cA9d93003F00f0F71f8515005F6c00Aa": false
+     },
+     "ctf_operators": {
+      "0xE111180000d2663C0091e4f400237545B87B996B": true,
+      "0xe2222d279d744050d28e00520010520000310F59": true,
+      "0xd91E80cF2E7be2e162c6513ceD06f1dD0dA35296": true
+     },
+     "position_manager_operators": {
+      "0xe3333700cA9d93003F00f0F71f8515005F6c00Aa": false
+     }
+    },
+    "approval_contracts": {
+     "pusd_allowances": {
+      "0xE111180000d2663C0091e4f400237545B87B996B": "CTFExchange",
+      "0xe2222d279d744050d28e00520010520000310F59": "NegRiskCTFExchange",
+      "0xd91E80cF2E7be2e162c6513ceD06f1dD0dA35296": "NegRiskAdapter",
+      "0xe3333700cA9d93003F00f0F71f8515005F6c00Aa": "ExchangeV3"
+     },
+     "ctf_operators": {
+      "0xE111180000d2663C0091e4f400237545B87B996B": "CTFExchange",
+      "0xe2222d279d744050d28e00520010520000310F59": "NegRiskCTFExchange",
+      "0xd91E80cF2E7be2e162c6513ceD06f1dD0dA35296": "NegRiskAdapter"
+     },
+     "position_manager_operators": {
+      "0xe3333700cA9d93003F00f0F71f8515005F6c00Aa": "ExchangeV3"
+     }
+    },
+    "pusd_balance": 0.0
+   },
+   ""
+  ],
+  "top_up": [
+   0,
+   {
+    "topped_up": 1.15,
+    "to": "0xD011111111111111111111111111111111111111",
+    "tx_hash": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+    "status": 1
+   },
+   ""
+  ],
+  "buy_matched": [
+   0,
+   {
+    "ok": true,
+    "order_id": "0xabababababababababababababababababababababababababababababababab",
+    "status": "matched",
+    "making_amount": "1",
+    "taking_amount": "1.818181",
+    "trade_ids": [
+     "trade-1"
+    ],
+    "transactions_hashes": [
+     "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+    ]
+   },
+   ""
+  ],
+  "buy_delayed": [
+   0,
+   {
+    "ok": true,
+    "order_id": "0xabababababababababababababababababababababababababababababababab",
+    "status": "delayed",
+    "making_amount": "1",
+    "taking_amount": "1.818181",
+    "trade_ids": [],
+    "transactions_hashes": []
+   },
+   ""
+  ],
+  "buy_killed": [
+   1,
+   null,
+   "order couldn't be fully filled. FOK orders are fully filled or killed."
+  ],
+  "buy_uncertain": [
+   1,
+   null,
+   "placement uncertain: the CLOB's reply does not show whether the order was placed (connection reset); before retrying, check the chain after a minute or so, since a fill settles there after the match (positions.py positions --wallet dw --token-ids 810443891093998525403128602700364082016851758760213951997384294603423744000): a limit order may instead rest unfilled on the book, where no position shows it"
+  ],
+  "buy_no_wallet": [
+   1,
+   null,
+   "no DepositWallet yet \u2014 run `deposit_wallet.py ensure` first"
+  ],
+  "buy_no_market": [
+   1,
+   null,
+   "no open binary v2 market lists token 810443891093998525403128602700364082016851758760213951997384294603423744000; this skill trades only v1 and binary v2 markets (Gamma `version`), and a closed market cannot be traded"
+  ],
+  "buy_no_pusd": [
+   1,
+   null,
+   "the DepositWallet holds no pUSD \u2014 run `funds.py top-up` first"
+  ],
+  "buy_under_minimum": [
+   1,
+   null,
+   "a $1.00 buy against a 0.500000 pUSD balance would be rejected: under the CLOB's $1 marketable minimum \u2014 run `funds.py top-up` first"
+  ],
+  "buy_not_enough_balance": [
+   1,
+   null,
+   "not enough balance / allowance"
+  ],
+  "buy_market_not_ready": [
+   1,
+   null,
+   "the market is not yet ready to process new orders"
+  ],
+  "buy_invalid_nonce": [
+   1,
+   null,
+   "invalid nonce"
+  ],
+  "buy_invalid_expiration": [
+   1,
+   null,
+   "invalid expiration"
+  ],
+  "buy_request_rejected": [
+   1,
+   {
+    "error": "order is invalid"
+   },
+   ""
+  ],
+  "buy_auth_rejected": [
+   1,
+   {
+    "error": "Unauthorized",
+    "retry": "not attempted automatically: operation is not replay-safe"
+   },
+   ""
+  ],
+  "buy_timeout_408": [
+   1,
+   {
+    "error": "request timeout"
+   },
+   ""
+  ],
+  "buy_rate_limited": [
+   1,
+   {
+    "error": "rate limited"
+   },
+   ""
+  ],
+  "buy_region_restricted": [
+   1,
+   {
+    "error": "Trading restricted in your region"
+   },
+   ""
+  ],
+  "buy_http_400_quoting_a_refusal": [
+   1,
+   {
+    "error": "not enough balance / allowance"
+   },
+   ""
+  ],
+  "buy_unrecognised_reply": [
+   1,
+   null,
+   "placement uncertain: the CLOB's reply does not show whether the order was placed (a reason the SDK has no code for); before retrying, check the chain after a minute or so, since a fill settles there after the match (positions.py positions --wallet dw --token-ids 810443891093998525403128602700364082016851758760213951997384294603423744000): a limit order may instead rest unfilled on the book, where no position shows it"
+  ],
+  "buy_server_error": [
+   1,
+   null,
+   "placement uncertain: the CLOB's reply does not show whether the order was placed (bad gateway); before retrying, check the chain after a minute or so, since a fill settles there after the match (positions.py positions --wallet dw --token-ids 810443891093998525403128602700364082016851758760213951997384294603423744000): a limit order may instead rest unfilled on the book, where no position shows it"
+  ],
+  "buy_auth_ambiguous": [
+   1,
+   {
+    "error": "api key not allowed",
+    "retry": "not attempted automatically: operation is not replay-safe",
+    "warning": "submission outcome may be ambiguous; reconcile before retrying"
+   },
+   ""
+  ],
+  "sweep_position": [
+   0,
+   {
+    "swept": true,
+    "pusd": 0.13,
+    "positions": {
+     "810443891093998525403128602700364082016851758760213951997384294603423744000": 1818181
+    },
+    "discovery": "1 recorded + 0 pending + 0 indexed",
+    "relayer_state": "STATE_CONFIRMED",
+    "onchain_status": 1,
+    "tx_hash": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+   },
+   ""
+  ],
+  "sweep_empty": [
+   0,
+   {
+    "swept": false,
+    "note": "DepositWallet is empty (pUSD and positions)",
+    "warning": "no positions discovered (recorded state and indexer both empty); if a buy just happened the indexer may lag \u2014 re-run with --token-ids <id> to be certain nothing is left in the DW"
+   },
+   ""
+  ],
+  "positions_indexer_lag": [
+   0,
+   {
+    "wallet": "safe",
+    "address": "0x5AFE000000000000000000000000000000000000",
+    "source": "data-api (indexer)",
+    "positions": [],
+    "onchain_check": {
+     "addresses": [
+      {
+       "address": "0x5AFE000000000000000000000000000000000000",
+       "location": "service_safe"
+      },
+      {
+       "address": "0xD011111111111111111111111111111111111111",
+       "location": "deposit_wallet"
+      }
+     ],
+     "checked_token_ids": [
+      "810443891093998525403128602700364082016851758760213951997384294603423744000"
+     ],
+     "held": [
+      {
+       "token_id": "810443891093998525403128602700364082016851758760213951997384294603423744000",
+       "address": "0x5AFE000000000000000000000000000000000000",
+       "location": "service_safe",
+       "size": 1.818181,
+       "size_base_units": 1818181
+      }
+     ]
+    },
+    "warning": "chain and indexer disagree on 1 position(s): 1 the indexer has not caught up on. The chain is authoritative \u2014 read onchain_check.held, whose `location` names the wallet holding each one"
+   },
+   ""
+  ],
+  "positions_ambiguous_no_fill": [
+   0,
+   {
+    "wallet": "safe",
+    "address": "0x5AFE000000000000000000000000000000000000",
+    "source": "data-api (indexer)",
+    "positions": [],
+    "onchain_check": {
+     "addresses": [
+      {
+       "address": "0x5AFE000000000000000000000000000000000000",
+       "location": "service_safe"
+      },
+      {
+       "address": "0xD011111111111111111111111111111111111111",
+       "location": "deposit_wallet"
+      }
+     ],
+     "checked_token_ids": [
+      "810443891093998525403128602700364082016851758760213951997384294603423744000"
+     ],
+     "held": []
+    },
+    "note": "the data API is an indexer and lags the chain; an empty or short list does not prove there is no position. Confirm on-chain with `positions.py positions --token-ids <id>` before concluding that a buy did not fill."
+   },
+   ""
+  ],
+  "positions_win_unclaimed": [
+   0,
+   {
+    "wallet": "safe",
+    "address": "0x5AFE000000000000000000000000000000000000",
+    "source": "data-api (indexer)",
+    "positions": [
+     {
+      "title": "Jake LaRavia: Rebounds O/U 1.5",
+      "outcome": "Yes",
+      "condition_id": "0x01b0d80310d32775015ff453644a3074ce000000000000000000000000000000",
+      "token_id": "764768791846869230743938092384205596200122077549842667757923457055668043776",
+      "size": 1.8181,
+      "avg_price": 0.55,
+      "cur_price": 1.0,
+      "value": 1.8181,
+      "cash_pnl": 0.8181,
+      "redeemable": true,
+      "neg_risk": false,
+      "outcome_index": 0
+     }
+    ],
+    "onchain_check": {
+     "addresses": [
+      {
+       "address": "0x5AFE000000000000000000000000000000000000",
+       "location": "service_safe"
+      },
+      {
+       "address": "0xD011111111111111111111111111111111111111",
+       "location": "deposit_wallet"
+      }
+     ],
+     "checked_token_ids": [
+      "764768791846869230743938092384205596200122077549842667757923457055668043776"
+     ],
+     "held": [
+      {
+       "token_id": "764768791846869230743938092384205596200122077549842667757923457055668043776",
+       "address": "0x5AFE000000000000000000000000000000000000",
+       "location": "service_safe",
+       "size": 1.818181,
+       "size_base_units": 1818181
+      }
+     ]
+    }
+   },
+   ""
+  ],
+  "positions_win_unlisted": [
+   0,
+   {
+    "wallet": "safe",
+    "address": "0x5AFE000000000000000000000000000000000000",
+    "source": "data-api (indexer)",
+    "positions": [],
+    "onchain_check": {
+     "addresses": [
+      {
+       "address": "0x5AFE000000000000000000000000000000000000",
+       "location": "service_safe"
+      },
+      {
+       "address": "0xD011111111111111111111111111111111111111",
+       "location": "deposit_wallet"
+      }
+     ],
+     "checked_token_ids": [
+      "764768791846869230743938092384205596200122077549842667757923457055668043776"
+     ],
+     "held": [
+      {
+       "token_id": "764768791846869230743938092384205596200122077549842667757923457055668043776",
+       "address": "0x5AFE000000000000000000000000000000000000",
+       "location": "service_safe",
+       "size": 1.818181,
+       "size_base_units": 1818181
+      }
+     ]
+    },
+    "warning": "chain and indexer disagree on 1 position(s): 1 the indexer has not caught up on. The chain is authoritative \u2014 read onchain_check.held, whose `location` names the wallet holding each one"
+   },
+   ""
+  ],
+  "positions_win_claimed_stale_listing": [
+   0,
+   {
+    "wallet": "safe",
+    "address": "0x5AFE000000000000000000000000000000000000",
+    "source": "data-api (indexer)",
+    "positions": [
+     {
+      "title": "Jake LaRavia: Rebounds O/U 1.5",
+      "outcome": "Yes",
+      "condition_id": "0x01b0d80310d32775015ff453644a3074ce000000000000000000000000000000",
+      "token_id": "764768791846869230743938092384205596200122077549842667757923457055668043776",
+      "size": 1.8181,
+      "avg_price": 0.55,
+      "cur_price": 1.0,
+      "value": 1.8181,
+      "cash_pnl": 0.8181,
+      "redeemable": true,
+      "neg_risk": false,
+      "outcome_index": 0
+     }
+    ],
+    "onchain_check": {
+     "addresses": [
+      {
+       "address": "0x5AFE000000000000000000000000000000000000",
+       "location": "service_safe"
+      },
+      {
+       "address": "0xD011111111111111111111111111111111111111",
+       "location": "deposit_wallet"
+      }
+     ],
+     "checked_token_ids": [
+      "764768791846869230743938092384205596200122077549842667757923457055668043776"
+     ],
+     "held": []
+    },
+    "warning": "chain and indexer disagree on 1 position(s): 1 already gone on-chain. The chain is authoritative \u2014 read onchain_check.held, whose `location` names the wallet holding each one"
+   },
+   ""
+  ],
+  "positions_win_claimed": [
+   0,
+   {
+    "wallet": "safe",
+    "address": "0x5AFE000000000000000000000000000000000000",
+    "source": "data-api (indexer)",
+    "positions": [],
+    "onchain_check": {
+     "addresses": [
+      {
+       "address": "0x5AFE000000000000000000000000000000000000",
+       "location": "service_safe"
+      },
+      {
+       "address": "0xD011111111111111111111111111111111111111",
+       "location": "deposit_wallet"
+      }
+     ],
+     "checked_token_ids": [
+      "764768791846869230743938092384205596200122077549842667757923457055668043776"
+     ],
+     "held": []
+    },
+    "note": "the data API is an indexer and lags the chain; an empty or short list does not prove there is no position. Confirm on-chain with `positions.py positions --token-ids <id>` before concluding that a buy did not fill."
+   },
+   ""
+  ],
+  "positions_loss_listed": [
+   0,
+   {
+    "wallet": "safe",
+    "address": "0x5AFE000000000000000000000000000000000000",
+    "source": "data-api (indexer)",
+    "positions": [
+     {
+      "title": "Jake LaRavia: Rebounds O/U 1.5",
+      "outcome": "No",
+      "condition_id": "0x01b0d80310d32775015ff453644a3074ce000000000000000000000000000000",
+      "token_id": "764768791846869230743938092384205596200122077549842667757923457055668043777",
+      "size": 1.8181,
+      "avg_price": 0.55,
+      "cur_price": 0.0,
+      "value": 0.0,
+      "cash_pnl": -1.0,
+      "redeemable": true,
+      "neg_risk": false,
+      "outcome_index": 1
+     }
+    ],
+    "onchain_check": {
+     "addresses": [
+      {
+       "address": "0x5AFE000000000000000000000000000000000000",
+       "location": "service_safe"
+      },
+      {
+       "address": "0xD011111111111111111111111111111111111111",
+       "location": "deposit_wallet"
+      }
+     ],
+     "checked_token_ids": [
+      "764768791846869230743938092384205596200122077549842667757923457055668043777"
+     ],
+     "held": [
+      {
+       "token_id": "764768791846869230743938092384205596200122077549842667757923457055668043777",
+       "address": "0x5AFE000000000000000000000000000000000000",
+       "location": "service_safe",
+       "size": 1.818181,
+       "size_base_units": 1818181
+      }
+     ]
+    }
+   },
+   ""
+  ],
+  "positions_loss_unlisted": [
+   0,
+   {
+    "wallet": "safe",
+    "address": "0x5AFE000000000000000000000000000000000000",
+    "source": "data-api (indexer)",
+    "positions": [],
+    "onchain_check": {
+     "addresses": [
+      {
+       "address": "0x5AFE000000000000000000000000000000000000",
+       "location": "service_safe"
+      },
+      {
+       "address": "0xD011111111111111111111111111111111111111",
+       "location": "deposit_wallet"
+      }
+     ],
+     "checked_token_ids": [
+      "764768791846869230743938092384205596200122077549842667757923457055668043777"
+     ],
+     "held": [
+      {
+       "token_id": "764768791846869230743938092384205596200122077549842667757923457055668043777",
+       "address": "0x5AFE000000000000000000000000000000000000",
+       "location": "service_safe",
+       "size": 1.818181,
+       "size_base_units": 1818181
+      }
+     ]
+    },
+    "warning": "chain and indexer disagree on 1 position(s): 1 the indexer has not caught up on. The chain is authoritative \u2014 read onchain_check.held, whose `location` names the wallet holding each one"
+   },
+   ""
+  ],
+  "redeem_win": [
+   0,
+   {
+    "redeemed": [
+     {
+      "condition_id": "0x01b0d80310d32775015ff453644a3074ce000000000000000000000000000000",
+      "adapter": "0x12121212006e4CD160D18e3f00711DA5c3372600",
+      "tx_hash": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+      "status": 1
+     }
+    ],
+    "failed": 0
+   },
+   ""
+  ],
+  "redeem_win_reverted": [
+   1,
+   {
+    "redeemed": [
+     {
+      "condition_id": "0x01b0d80310d32775015ff453644a3074ce000000000000000000000000000000",
+      "adapter": "0x12121212006e4CD160D18e3f00711DA5c3372600",
+      "tx_hash": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+      "status": 0
+     }
+    ],
+    "failed": 1
+   },
+   "1/1 redemption(s) did not confirm on-chain; the listed positions may still be unredeemed \u2014 re-run `redeem.py all`"
+  ],
+  "redeem_loss": [
+   0,
+   {
+    "redeemed": [],
+    "failed": 0,
+    "skipped": [
+     {
+      "condition_id": "0x01b0d80310d32775015ff453644a3074ce000000000000000000000000000000",
+      "outcome_index": 1,
+      "reason": "no_value"
+     }
+    ]
+   },
+   ""
+  ],
+  "redeem_nothing": [
+   0,
+   {
+    "redeemed": [],
+    "note": "nothing redeemable"
+   },
+   ""
+  ]
+ }
+}

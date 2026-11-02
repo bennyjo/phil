@@ -52,10 +52,10 @@ def bankroll(entries):
 
 
 def skip_v2_bet(args, m):
-    """Log a bet refused because its market is on a read-only protocol version
-    (see pmapi.TRADABLE_VERSIONS), so the bets V2 costs Phil stay countable."""
-    reason = (f"Gamma version {pmapi.market_version(m)!r} is read-only: Phil "
-              f"forecasts it but bets only {sorted(pmapi.TRADABLE_VERSIONS)}")
+    """Log a bet refused because its V2 market is read-only (see pmapi.tradable),
+    so the bets V2 costs Phil stay countable."""
+    reason = (f"this Gamma version {pmapi.market_version(m)!r} market is read-only: "
+              f"Phil forecasts it but bets only V1 and binary V2 markets")
     with V2_BET_SKIPS.open("a") as f:
         f.write(json.dumps({
             "ts": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -109,7 +109,7 @@ def cmd_place(args, entries):
                  f"{sorted(pmapi.SUPPORTED_VERSIONS)})")
     if args.outcome not in tokens:
         sys.exit(f"REJECTED: outcome {args.outcome!r} not in {list(tokens)}")
-    if pmapi.market_version(m) not in pmapi.TRADABLE_VERSIONS:
+    if not pmapi.tradable(m):
         skip_v2_bet(args, m)
     q = pmapi.book_quote(tokens[args.outcome])
     bid, ask = q["bid"], q["ask"]

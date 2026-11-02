@@ -10,7 +10,11 @@ additive.
 - During **Settle** (step 1), also run: `python3 core/real.py settle`.
   It sweeps filled positions to the Safe, redeems resolved ones, and
   reconciles any ambiguous submissions. Read its output; report anomalies
-  (reverted redemptions, unresolved pending orders) in the cycle log.
+  (reverted redemptions, unresolved pending orders, anything under
+  `unclaimed`) in the cycle log. `unclaimed` lists resolved V2 positions with
+  value that the claim step missed; only the operator claims those by hand. A
+  losing V2 position has no value to claim and stays in the Safe: that is
+  not an anomaly.
 - After **each paper bet you place** (step 6): if the bet's `--edge-class`
   is in `config/protected.json` → `real.allowed_edge_classes`, mirror it:
   `python3 core/real.py place --paper-id <paper ledger id>`
@@ -34,5 +38,8 @@ additive.
   it verbatim in the cycle log and move on; never work around it.
 - A 403/geoblock on order placement is venue policy: report it and stop
   real execution for the cycle. Do not attempt to circumvent.
+- A V2 refusal about missing approvals or the Pearl Connect version is the
+  operator's to fix: report it in the cycle log and move on. Never run
+  `core/real.py doctor --setup` yourself.
 - Never write tokens, config contents, or signer URLs to the journal —
   the journal is public. Wallet addresses are fine.
