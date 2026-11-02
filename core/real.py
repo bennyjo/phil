@@ -21,8 +21,9 @@ Binary Polymarket V2 markets trade through the same scripts as V1 ones, and
 need Pearl Connect v0.1.13 or later and the V2 approvals (`doctor --setup`).
 A V2 position lives in the Safe like a V1 one. Connect claims a winner through
 the Router and skips a loser, so a loser stays in the Safe; settle reads the
-official resolution to close its row. Phil records no payout: the Router's
-payout is the pUSD transfer in the claim tx, not its event's amount.
+official resolution to close its row, and lists under `unclaimed` a resolved
+position with value that Connect did not claim. Phil records no payout: the
+Router's payout is the pUSD transfer in the claim tx, not its event's amount.
 
 Requires env PEARL_CONNECT_STORE = the Pearl Connect workspace path
 (the directory containing .mcp.json). Optional CONNECT_POLYMARKET_VENV
@@ -34,7 +35,9 @@ Usage:
   python3 core/real.py settle
 """
 import argparse
+import contextlib
 import datetime as dt
+import fcntl
 import functools
 import json
 import os
@@ -63,6 +66,11 @@ RECONCILE_GRACE_S = 300
 # reply (the start and the end of one message, in case stderr's tail cuts the
 # start), an auth failure mid-submission, or a crash (a traceback's frames).
 AMBIGUOUS_BUY = ("placement uncertain", "check the chain", "may be ambiguous", 'File "')
+# What trade.py prints when it proves a buy never reached the book: its checks
+# before posting, then the CLOB's refusals of a fill-or-kill order.
+REFUSED_BUY = ("no DepositWallet", "lists token", "holds no pUSD", "would be rejected",
+               "couldn't be fully filled", "not enough balance", "not yet ready to process",
+               "invalid nonce", "invalid expiration")
 
 
 def fail(msg):
@@ -175,6 +183,31 @@ def now_iso():
     return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+@contextlib.contextmanager
+def ledger_lock():
+    """Hold the real ledger's lock, so two place calls can't both pass the gates
+    before either writes its pending row. The kernel drops it if this process
+    dies. A second call waits for the first's status script, up to its timeout."""
+    REAL_LEDGER.parent.mkdir(exist_ok=True)
+    with REAL_LEDGER.open("a") as ledger:
+        fcntl.flock(ledger, fcntl.LOCK_EX)
+        yield
+
+
+def buy_refused(rc, out, errtxt):
+    """True only when trade.py's failure proves the order never reached the book.
+    Anything else may have placed it, such as a signal kill (a negative exit), a
+    crash, or wording a later Connect release changed, so it stays unknown until
+    settle reads the chain. An unlisted refusal costs one blocked settle interval;
+    a misfiled order costs a bet outside the caps. `{"error": ...}` is Connect's
+    report of an API refusal: its _post turns transport errors and 5xx replies into
+    the uncertain message first, and an ambiguous auth failure carries a warning."""
+    if rc < 0 or any(mark in f"{errtxt} {out}" for mark in AMBIGUOUS_BUY):
+        return False
+    return (isinstance(out, dict) and "error" in out) \
+        or any(mark in errtxt for mark in REFUSED_BUY)
+
+
 def v2_approved(wallet_status):
     """True when `deposit_wallet.py status` shows every approval granted, V2's
     included. A Connect release without V2 support reports no PositionManager
@@ -195,20 +228,21 @@ def too_fresh_to_call(row):
     return age.total_seconds() < RECONCILE_GRACE_S
 
 
-def v2_position_lost(row):
-    """True when the official resolution leaves this V2 position worth nothing.
-    Unlike a V1 claim, which burns both sides, redeem.py leaves a losing V2
-    position in the Safe, so the chain keeps showing it. Read Gamma's resolution
-    rather than the Data API's row, which marks a loser redeemable and may not
-    list it at all. A market Gamma can't answer for stays open."""
+def v2_payout_per_share(row):
+    """What the official resolution pays per share of this V2 position, None until
+    it resolves or when Gamma can't answer. Unlike a V1 claim, which burns both
+    sides, redeem.py leaves a losing V2 position in the Safe, and claims a winner
+    only if the Data API lists it. So a held position's fate comes from Gamma, not
+    from the Data API's row, which marks a loser redeemable and may not list a
+    position at all."""
     try:
         market = pmapi.gamma_market(row["market_id"])
         if market.get("resolutionStatus") != "resolved":
-            return False
+            return None
         prices = zip(json.loads(market["outcomes"]), json.loads(market["outcomePrices"]))
-        return float(dict(prices)[row.get("outcome")]) == 0
+        return float(dict(prices)[row.get("outcome")])
     except (RuntimeError, KeyError, TypeError, ValueError):
-        return False
+        return None
 
 
 def cmd_doctor(args):
@@ -274,42 +308,45 @@ def cmd_place(args):
         fail(f"paper row {args.paper_id}'s token id is not the position id Gamma "
              f"lists for {twin.get('outcome')!r} on V2 market {twin['market_id']}")
 
-    rows = real_rows()
-    if any(r.get("status") in ("pending", "unknown") for r in rows):
-        fail("an earlier real order is unreconciled (pending/unknown) — run "
-             "`core/real.py settle` first; buys are not idempotent and must "
-             "never be blind-retried")
-    if any(r.get("market_id") == twin["market_id"]
-           and r.get("status") == "placed" for r in rows):
-        fail(f"market {twin['market_id']} already has a real position — one "
-             f"real bet per market")
-    open_count = sum(1 for r in rows if r.get("status") == "placed"
-                     and not r.get("settled"))
-    if open_count >= real["max_open_positions"]:
-        fail(f"open real positions ({open_count}) at cap "
-             f"({real['max_open_positions']})")
-    today = now_iso()[:10]
-    spent_today = sum(r.get("usd", 0) for r in rows
-                      if r.get("ts", "").startswith(today)
-                      and r.get("status") in ("placed", "pending", "unknown"))
-    if spent_today + args.usd > real["daily_stake_cap_usd"]:
-        fail(f"daily stake cap: {spent_today} spent + {args.usd} would exceed "
-             f"{real['daily_stake_cap_usd']}")
+    # Every gate below reads the ledger, so the lock runs from that read through
+    # the pending row they all block on.
+    with ledger_lock():
+        rows = real_rows()
+        if any(r.get("status") in ("pending", "unknown") for r in rows):
+            fail("an earlier real order is unreconciled (pending/unknown) - run "
+                 "`core/real.py settle` first; buys are not idempotent and must "
+                 "never be blind-retried")
+        if any(r.get("market_id") == twin["market_id"]
+               and r.get("status") == "placed" for r in rows):
+            fail(f"market {twin['market_id']} already has a real position - one "
+                 f"real bet per market")
+        open_count = sum(1 for r in rows if r.get("status") == "placed"
+                         and not r.get("settled"))
+        if open_count >= real["max_open_positions"]:
+            fail(f"open real positions ({open_count}) at cap "
+                 f"({real['max_open_positions']})")
+        today = now_iso()[:10]
+        spent_today = sum(r.get("usd", 0) for r in rows
+                          if r.get("ts", "").startswith(today)
+                          and r.get("status") in ("placed", "pending", "unknown"))
+        if spent_today + args.usd > real["daily_stake_cap_usd"]:
+            fail(f"daily stake cap: {spent_today} spent + {args.usd} would exceed "
+                 f"{real['daily_stake_cap_usd']}")
 
-    if version == "v2":
-        rc, out, errtxt = run_script(store, "deposit_wallet.py", "status")
-        if rc != 0 or not v2_approved(out):
-            fail(f"not ready for V2 orders: the DepositWallet lacks the V2 approvals "
-                 f"or Pearl Connect is older than v0.1.13. For the operator: "
-                 f"`core/real.py doctor --setup` grants the approvals. {errtxt}".strip())
+        if version == "v2":
+            rc, out, errtxt = run_script(store, "deposit_wallet.py", "status")
+            if rc != 0 or not v2_approved(out):
+                fail(f"not ready for V2 orders: the DepositWallet lacks the V2 approvals "
+                     f"or Pearl Connect is older than v0.1.13. For the operator: "
+                     f"`core/real.py doctor --setup` grants the approvals. {errtxt}".strip())
 
-    rid = uuid.uuid4().hex[:12]
-    base = {"id": rid, "ts": now_iso(), "paper_id": args.paper_id,
-            "market_id": twin["market_id"], "token_id": twin["token_id"],
-            "question": twin.get("question"), "outcome": twin.get("outcome"),
-            "edge_class": edge_class, "usd": args.usd, "version": version,
-            "strategy_rev": twin.get("strategy_rev")}
-    append_real({**base, "status": "pending"})
+        rid = uuid.uuid4().hex[:12]
+        base = {"id": rid, "ts": now_iso(), "paper_id": args.paper_id,
+                "market_id": twin["market_id"], "token_id": twin["token_id"],
+                "question": twin.get("question"), "outcome": twin.get("outcome"),
+                "edge_class": edge_class, "usd": args.usd, "version": version,
+                "strategy_rev": twin.get("strategy_rev")}
+        append_real({**base, "status": "pending"})
 
     topup = round(args.usd * (1 + FEE_HEADROOM), 2)
     rc, out, errtxt = run_script(store, "funds.py", "top-up",
@@ -322,22 +359,25 @@ def cmd_place(args):
     rc, out, errtxt = run_script(store, "trade.py", "buy",
                                  "--token-id", twin["token_id"],
                                  "--usd", args.usd, timeout=180)
+    # An unknown row is stamped now, not before the top-up and the buy: settle's
+    # grace has to start from the moment a fill can still reach the chain.
     if rc is None:
-        append_real({**base, "status": "unknown",
+        append_real({**base, "ts": now_iso(), "status": "unknown",
                      "error": "buy timed out — submission ambiguous; do NOT "
                               "retry; settle must reconcile"})
         fail("buy timed out — status unknown, further real bets blocked "
              "until settle reconciles")
-    if rc != 0 and any(mark in f"{errtxt} {out}" for mark in AMBIGUOUS_BUY):
-        append_real({**base, "status": "unknown", "error": errtxt or str(out)})
+    if rc != 0 and not buy_refused(rc, out, errtxt):
+        detail = errtxt or out or f"exit code {rc}"
+        append_real({**base, "ts": now_iso(), "status": "unknown", "error": str(detail)})
         fail(f"buy may have been placed - status unknown, further real bets "
-             f"blocked until settle reconciles: {errtxt or out}")
+             f"blocked until settle reconciles: {detail}")
     if rc != 0:
         append_real({**base, "status": "failed", "error": errtxt or str(out)})
         fail(f"buy rejected: {errtxt or out}")
     # Accepted is not filled: a delayed order can still be killed before it matches.
     if isinstance(out, dict) and out.get("status") in ("live", "delayed"):
-        append_real({**base, "status": "unknown", "order": out})
+        append_real({**base, "ts": now_iso(), "status": "unknown", "order": out})
         fail(f"buy accepted but not matched ({out['status']}) - status unknown, "
              f"further real bets blocked until settle reconciles")
     append_real({**base, "status": "placed", "order": out})
@@ -395,6 +435,7 @@ def cmd_settle(args):
     # A token this settle swept was filled, even if a claim has burned it since.
     sweep = result["sweep"].get("positions") if isinstance(result["sweep"], dict) else None
     swept = set(sweep) if isinstance(sweep, dict) else set()
+    unclaimed = []
     for row in real_rows():
         tok = str(row.get("token_id"))
         if row.get("status") in ("pending", "unknown"):
@@ -410,10 +451,18 @@ def cmd_settle(args):
                     append_real({**row, "settled": True, "ts": now_iso(),
                                  "note": "no longer an open position - resolved "
                                          "and swept/redeemed"})
-            elif row.get("version") == "v2" and v2_position_lost(row):
-                append_real({**row, "settled": True, "ts": now_iso(),
-                             "note": "resolved against this position: no value "
-                                     "to claim, so it stays in the Safe"})
+            elif row.get("version") == "v2":
+                payout = v2_payout_per_share(row)
+                if payout == 0:
+                    append_real({**row, "settled": True, "ts": now_iso(),
+                                 "note": "resolved against this position: no value "
+                                         "to claim, so it stays in the Safe"})
+                elif payout:
+                    unclaimed.append({"id": row["id"], "market_id": row.get("market_id"),
+                                      "token_id": tok, "payout_per_share": payout})
+    # The money stays in the Safe, but each such row holds an open position slot.
+    if unclaimed:
+        result["unclaimed"] = unclaimed
     append_real({"id": f"settle-{uuid.uuid4().hex[:8]}", "type": "settle",
                  **result})
     print(json.dumps({"ok": True, **result}, indent=2))

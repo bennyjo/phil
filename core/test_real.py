@@ -18,9 +18,12 @@ import io
 import json
 import pathlib
 import shutil
+import signal
 import stat
 import sys
 import tempfile
+import threading
+import time
 import unittest
 from unittest import mock
 
@@ -115,7 +118,8 @@ class ConnectStub(unittest.TestCase):
         """Run one real.py command; `replies` maps a script name to its fixture."""
         def run_script(store, name, *script_args, timeout=180):
             self.calls.append((name, *map(str, script_args)))
-            return tuple(replies[name])
+            reply = replies[name]
+            return tuple(reply() if callable(reply) else reply)
 
         out = io.StringIO()
         with mock.patch.object(self.real, "load_protected", return_value=({}, caps)), \
@@ -160,7 +164,7 @@ class PlaceV2(ConnectStub):
     def place(self, market=GAMMA["binary_open"], paper_id="p1", usd=None, caps=CAPS,
               status="status_v2_ready", buy="buy_matched"):
         replies = {"deposit_wallet.py": CONNECT[status], "funds.py": CONNECT["top_up"],
-                   "trade.py": buy if isinstance(buy, tuple) else CONNECT[buy]}
+                   "trade.py": CONNECT[buy] if isinstance(buy, str) else buy}
         args = mock.Mock(paper_id=paper_id, usd=usd)
         return self.run_cmd(self.real.cmd_place, args, replies, lambda _id: market, caps)
 
@@ -242,7 +246,7 @@ class PlaceV2(ConnectStub):
         self.assertNotEqual(code, 0)
         self.assertIn("operator", out)
         self.assertEqual(self.scripts(), ["deposit_wallet.py"])
-        self.assertFalse(self.real.REAL_LEDGER.exists())
+        self.assertEqual(self.history(), [])
 
     def test_connect_without_v2_support_is_refused_before_any_top_up(self):
         reply = json.loads(json.dumps(CONNECT["status_v2_ready"]))
@@ -252,7 +256,71 @@ class PlaceV2(ConnectStub):
                                   replies, lambda _id: GAMMA["binary_open"])
         self.assertNotEqual(code, 0)
         self.assertEqual(self.scripts(), ["deposit_wallet.py"])
-        self.assertFalse(self.real.REAL_LEDGER.exists())
+        self.assertEqual(self.history(), [])
+
+    def test_partly_approved_wallet_is_refused(self):
+        reply = json.loads(json.dumps(CONNECT["status_v2_ready"]))
+        spender = next(iter(reply[1]["approvals"]["pusd_allowances"]))
+        reply[1]["approvals"]["pusd_allowances"][spender] = False
+        code, _out = self.run_cmd(self.real.cmd_place, mock.Mock(paper_id="p1", usd=None),
+                                  {"deposit_wallet.py": reply},
+                                  lambda _id: GAMMA["binary_open"])
+        self.assertNotEqual(code, 0)
+        self.assertEqual(self.scripts(), ["deposit_wallet.py"])
+
+    def test_a_pending_row_blocks_the_next_bet(self):
+        # What a crash between the pending row and the buy leaves behind.
+        self.real.append_real({"id": "crashed", "market_id": "other", "token_id": "1",
+                               "status": "pending", "usd": 1})
+        code, out = self.place()
+        self.assertNotEqual(code, 0)
+        self.assertIn("unreconciled", out)
+        self.assertEqual(self.calls, [])
+
+    def test_failed_top_up_stops_before_the_buy(self):
+        replies = {"deposit_wallet.py": CONNECT["status_v2_ready"],
+                   "funds.py": (1, None, "top-up did not confirm on-chain"),
+                   "trade.py": CONNECT["buy_matched"]}
+        code, _out = self.run_cmd(self.real.cmd_place, mock.Mock(paper_id="p1", usd=None),
+                                  replies, lambda _id: GAMMA["binary_open"])
+        self.assertNotEqual(code, 0)
+        self.assertNotIn("trade.py", self.scripts())
+        self.assertEqual(self.history()[-1]["status"], "failed")
+
+    def test_parallel_place_calls_make_one_buy(self):
+        buys, codes = [], []
+
+        def run_script(store, name, *script_args, timeout=180):
+            if name == "trade.py":
+                buys.append(script_args)
+                return tuple(CONNECT["buy_matched"])
+            if name == "deposit_wallet.py":
+                # Long enough for an unlocked second call to pass every gate too.
+                time.sleep(0.2)
+                return tuple(CONNECT["status_v2_ready"])
+            return tuple(CONNECT["top_up"])
+
+        def place():
+            try:
+                self.real.cmd_place(mock.Mock(paper_id="p1", usd=None))
+                codes.append(0)
+            except SystemExit as e:
+                codes.append(e.code)
+
+        with mock.patch.object(self.real, "load_protected", return_value=({}, CAPS)), \
+             mock.patch.object(self.real, "store_path", return_value=self.tmp), \
+             mock.patch.object(self.real, "healthy", return_value=True), \
+             mock.patch.object(self.real, "run_script", side_effect=run_script), \
+             mock.patch.object(self.real.pmapi, "gamma_market",
+                               lambda _id: GAMMA["binary_open"]), \
+             contextlib.redirect_stdout(io.StringIO()):
+            threads = [threading.Thread(target=place) for _ in range(2)]
+            for thread in threads:
+                thread.start()
+            for thread in threads:
+                thread.join()
+        self.assertEqual(len(buys), 1)
+        self.assertEqual(sorted(codes), [0, 1])
 
     def test_every_real_cap_still_applies(self):
         token = {"token_id": IDS["open"], "status": "placed", "usd": 1}
@@ -317,6 +385,70 @@ class PlaceV2(ConnectStub):
         self.assertEqual(self.history()[-1]["status"], "failed")
         self.calls.clear()
         self.assertEqual(self.place()[0], 0)
+
+    def test_failures_that_prove_no_order_stay_failed(self):
+        for name in ("buy_no_wallet", "buy_no_market", "buy_no_pusd", "buy_under_minimum",
+                     "buy_not_enough_balance", "buy_market_not_ready", "buy_invalid_nonce",
+                     "buy_invalid_expiration", "buy_request_rejected", "buy_auth_rejected"):
+            with self.subTest(failure=name):
+                self.real.REAL_LEDGER.unlink(missing_ok=True)
+                code, _out = self.place(buy=name)
+                self.assertNotEqual(code, 0)
+                self.assertEqual(self.history()[-1]["status"], "failed")
+
+    def test_every_other_failure_blocks_until_settle_reconciles(self):
+        uncertain = CONNECT["buy_uncertain"][2]
+        cases = {
+            "recorded: unrecognised reply": CONNECT["buy_unrecognised_reply"],
+            "recorded: server error": CONNECT["buy_server_error"],
+            "recorded: ambiguous auth failure": CONNECT["buy_auth_ambiguous"],
+            "killed by SIGKILL": (-signal.SIGKILL, None, ""),
+            "killed by SIGTERM": (-signal.SIGTERM, None, ""),
+            "killed after printing a refusal": (-signal.SIGKILL, None, "invalid nonce"),
+            "Connect rewords its message": (1, None, "order outcome could not be established"),
+            "no message at all": (1, None, ""),
+            "unreadable stdout": (1, {"raw": "partial output"}, ""),
+            "long error, frames cut from the tail": (1, None, "x" * 2000),
+            "crash naming a refusal": (1, None, 'File "trade.py"\nError: invalid nonce'),
+            "uncertain, quoting a refusal": (1, None, uncertain + " not enough balance"),
+        }
+        for name, reply in cases.items():
+            with self.subTest(failure=name):
+                self.real.REAL_LEDGER.unlink(missing_ok=True)
+                self.calls.clear()
+                code, _out = self.place(buy=tuple(reply))
+                self.assert_unknown_and_blocking(code)
+
+    def test_v1_market_blocks_on_the_same_failures(self):
+        v1 = {"id": GAMMA["binary_open"]["id"], "version": "v1"}
+        code, _out = self.place(market=v1, buy=(-signal.SIGKILL, None, ""))
+        self.assertNotEqual(code, 0)
+        row = self.history()[-1]
+        self.assertEqual((row["status"], row["version"]), ("unknown", "v1"))
+        self.assertNotIn("deposit_wallet.py", self.scripts())
+        code, out = self.place(market=v1)
+        self.assertNotEqual(code, 0)
+        self.assertIn("unreconciled", out)
+
+    def test_unknown_row_is_stamped_after_the_buy_so_settle_waits_for_the_chain(self):
+        # The top-up and buy can outlast settle's grace, so the stamp from before
+        # them would let settle call the order unfilled too early.
+        cases = {"timeout": (None, None, "trade.py timed out"),
+                 "unrecognised failure": (1, None, "order outcome could not be established"),
+                 "delayed": CONNECT["buy_delayed"]}
+        for name, reply in cases.items():
+            with self.subTest(case=name):
+                self.real.REAL_LEDGER.unlink(missing_ok=True)
+                clock = {"now": "2026-11-02T00:00:00Z"}
+
+                def buy(reply=reply, clock=clock):
+                    clock["now"] = "2026-11-02T00:07:00Z"
+                    return reply
+
+                with mock.patch.object(self.real, "now_iso", lambda clock=clock: clock["now"]):
+                    self.place(buy=buy)
+                self.assertEqual(self.history()[-1]["status"], "unknown")
+                self.assertEqual(self.history()[-1]["ts"], "2026-11-02T00:07:00Z")
 
 
 class SettleV2(ConnectStub):
@@ -386,6 +518,45 @@ class SettleV2(ConnectStub):
         self.assertNotIn("settled", self.rows()["r1"])
         settle = self.history()[-1]
         self.assertEqual(settle["redeem"]["rc"], 1)
+
+    def test_resolved_winner_the_data_api_does_not_list_is_reported(self):
+        self.row(IDS["win"], outcome=self.WON)
+        code, out = self.settle("positions_win_unlisted")
+        self.assertEqual(code, 0)
+        self.assertNotIn("settled", self.rows()["r1"])
+        reported = json.loads(out)["unclaimed"]
+        self.assertEqual([(r["id"], r["token_id"], r["payout_per_share"]) for r in reported],
+                         [("r1", IDS["win"], 1.0)])
+        self.assertEqual(self.history()[-1]["unclaimed"], reported)
+
+    def test_win_whose_claim_reverted_is_reported_too(self):
+        self.row(IDS["win"], outcome=self.WON)
+        _code, out = self.settle("positions_win_unclaimed", redeem="redeem_win_reverted")
+        self.assertEqual(json.loads(out)["unclaimed"][0]["token_id"], IDS["win"])
+
+    def test_even_split_with_value_left_is_reported(self):
+        market = dict(GAMMA["binary_closed"], outcomePrices=json.dumps(["0.5", "0.5"]))
+        self.row(IDS["win"], outcome=self.WON)
+        _code, out = self.settle("positions_win_unlisted", market=market)
+        self.assertEqual(json.loads(out)["unclaimed"][0]["payout_per_share"], 0.5)
+
+    def test_only_a_held_resolved_position_with_value_is_reported(self):
+        def down(_id):
+            raise RuntimeError("gamma down")
+        cases = {
+            "claimed win": (IDS["win"], self.WON, "positions_win_claimed", GAMMA["binary_closed"]),
+            "loss": (IDS["loss"], self.LOST, "positions_loss_listed", GAMMA["binary_closed"]),
+            "unresolved": (IDS["open"], PlaceV2.OUTCOME, "positions_indexer_lag",
+                           GAMMA["binary_open"]),
+            "unreadable Gamma": (IDS["win"], self.WON, "positions_win_unlisted", down),
+        }
+        for name, (token, outcome, positions, market) in cases.items():
+            with self.subTest(case=name):
+                self.real.REAL_LEDGER.unlink(missing_ok=True)
+                self.row(token, outcome=outcome)
+                code, out = self.settle(positions, market=market)
+                self.assertEqual(code, 0)
+                self.assertNotIn("unclaimed", json.loads(out))
 
     def test_loss_is_not_claimed_and_settles_while_it_stays_in_the_safe(self):
         # The Data API may list the loser as redeemable or leave it out; either
@@ -534,6 +705,15 @@ class SkillEnv(unittest.TestCase):
         self.assertEqual(rc, 0)
         self.assertEqual(out, {"args": ["--x", "1"], "cwd": self.store.name,
                                "cert": "/certs/a.pem", "bundle": "/certs/a.pem"})
+
+    def test_signal_killed_script_reports_a_negative_exit(self):
+        self.bootstrap(f"echo 'export PY={sys.executable}'\n"
+                       "echo 'export SSL_CERT_FILE=/certs/a.pem'\n"
+                       "echo 'export REQUESTS_CA_BUNDLE=/certs/a.pem'\n")
+        (self.dir / "killed.py").write_text(
+            "import os, signal\nos.kill(os.getpid(), signal.SIGKILL)\n")
+        rc, _out, _err = self.real.run_script(self.store, "killed.py")
+        self.assertEqual(rc, -signal.SIGKILL)
 
     def test_failed_bootstrap_stops_before_any_script_runs(self):
         # bootstrap_env.sh reports failure as a failing command for the eval.

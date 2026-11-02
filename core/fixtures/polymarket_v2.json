@@ -229,6 +229,80 @@
    null,
    "placement uncertain: the CLOB's reply does not show whether the order was placed (connection reset); before retrying, check the chain after a minute or so, since a fill settles there after the match (positions.py positions --wallet dw --token-ids 810443891093998525403128602700364082016851758760213951997384294603423744000): a limit order may instead rest unfilled on the book, where no position shows it"
   ],
+  "buy_no_wallet": [
+   1,
+   null,
+   "no DepositWallet yet \u2014 run `deposit_wallet.py ensure` first"
+  ],
+  "buy_no_market": [
+   1,
+   null,
+   "no open binary v2 market lists token 810443891093998525403128602700364082016851758760213951997384294603423744000; this skill trades only v1 and binary v2 markets (Gamma `version`), and a closed market cannot be traded"
+  ],
+  "buy_no_pusd": [
+   1,
+   null,
+   "the DepositWallet holds no pUSD \u2014 run `funds.py top-up` first"
+  ],
+  "buy_under_minimum": [
+   1,
+   null,
+   "a $1.00 buy against a 0.500000 pUSD balance would be rejected: under the CLOB's $1 marketable minimum \u2014 run `funds.py top-up` first"
+  ],
+  "buy_not_enough_balance": [
+   1,
+   null,
+   "not enough balance / allowance"
+  ],
+  "buy_market_not_ready": [
+   1,
+   null,
+   "the market is not yet ready to process new orders"
+  ],
+  "buy_invalid_nonce": [
+   1,
+   null,
+   "invalid nonce"
+  ],
+  "buy_invalid_expiration": [
+   1,
+   null,
+   "invalid expiration"
+  ],
+  "buy_request_rejected": [
+   1,
+   {
+    "error": "order is invalid"
+   },
+   ""
+  ],
+  "buy_auth_rejected": [
+   1,
+   {
+    "error": "Unauthorized",
+    "retry": "not attempted automatically: operation is not replay-safe"
+   },
+   ""
+  ],
+  "buy_unrecognised_reply": [
+   1,
+   null,
+   "placement uncertain: the CLOB's reply does not show whether the order was placed (a reason the SDK has no code for); before retrying, check the chain after a minute or so, since a fill settles there after the match (positions.py positions --wallet dw --token-ids 810443891093998525403128602700364082016851758760213951997384294603423744000): a limit order may instead rest unfilled on the book, where no position shows it"
+  ],
+  "buy_server_error": [
+   1,
+   null,
+   "placement uncertain: the CLOB's reply does not show whether the order was placed (bad gateway); before retrying, check the chain after a minute or so, since a fill settles there after the match (positions.py positions --wallet dw --token-ids 810443891093998525403128602700364082016851758760213951997384294603423744000): a limit order may instead rest unfilled on the book, where no position shows it"
+  ],
+  "buy_auth_ambiguous": [
+   1,
+   {
+    "error": "api key not allowed",
+    "retry": "not attempted automatically: operation is not replay-safe",
+    "warning": "submission outcome may be ambiguous; reconcile before retrying"
+   },
+   ""
+  ],
   "sweep_position": [
    0,
    {
@@ -361,6 +435,41 @@
       }
      ]
     }
+   },
+   ""
+  ],
+  "positions_win_unlisted": [
+   0,
+   {
+    "wallet": "safe",
+    "address": "0x5AFE000000000000000000000000000000000000",
+    "source": "data-api (indexer)",
+    "positions": [],
+    "onchain_check": {
+     "addresses": [
+      {
+       "address": "0x5AFE000000000000000000000000000000000000",
+       "location": "service_safe"
+      },
+      {
+       "address": "0xD011111111111111111111111111111111111111",
+       "location": "deposit_wallet"
+      }
+     ],
+     "checked_token_ids": [
+      "764768791846869230743938092384205596200122077549842667757923457055668043776"
+     ],
+     "held": [
+      {
+       "token_id": "764768791846869230743938092384205596200122077549842667757923457055668043776",
+       "address": "0x5AFE000000000000000000000000000000000000",
+       "location": "service_safe",
+       "size": 1.818181,
+       "size_base_units": 1818181
+      }
+     ]
+    },
+    "warning": "chain and indexer disagree on 1 position(s): 1 the indexer has not caught up on. The chain is authoritative \u2014 read onchain_check.held, whose `location` names the wallet holding each one"
    },
    ""
   ],
