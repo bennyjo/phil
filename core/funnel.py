@@ -71,6 +71,7 @@ CORE_OPENERS = frozenset({OPENED_BY, RECORDED_BY})
 CORE_KEYS = frozenset({
     "cycle", "tick_type", "runner", "strategy_rev", "opened_by", "trigger",
     "pool_total", "pool_by_query", "screened", "escalated", "screener_batches",
+    "pool_by_version",
 })
 REOPEN_WINDOW = dt.timedelta(minutes=45)
 # watch.py records a fire a few minutes before the TRIGGERED tick it starts

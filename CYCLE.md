@@ -394,6 +394,9 @@ Every invocation runs as one of three ticks:
    `--edge-class` is the playbook edge class the bet claims — score.py now
    splits brier_delta by it, so classify honestly, not aspirationally.
    Respect rejections — they are protected-cap enforcement, not errors to fix.
+   Polymarket V2 markets are read-only: research and forecast them like V1
+   markets, but `core/ledger.py` refuses the bet and logs it to
+   `journal/v2-bet-skips.jsonl` (`v2_bets_skipped` in `ledger.py status`).
 7. **Log**: append one line to `journal/cycles.log`:
    `<UTC ISO> cycle done: settled N, placed M, cash $X` (from ledger status).
    On a TRIGGERED cycle the detail that follows opens with

@@ -29,6 +29,7 @@ import pmapi  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 LEDGER = ROOT / "journal" / "ledger.jsonl"
+V2_BET_SKIPS = ROOT / "journal" / "v2-bet-skips.jsonl"
 PROTECTED = json.loads((ROOT / "config" / "protected.json").read_text())
 
 
@@ -50,6 +51,22 @@ def bankroll(entries):
     return cash
 
 
+def skip_v2_bet(args, m):
+    """Log a bet refused because its market is on a read-only protocol version
+    (see pmapi.TRADABLE_VERSIONS), so the bets V2 costs Phil stay countable."""
+    reason = (f"Gamma version {pmapi.market_version(m)!r} is read-only: Phil "
+              f"forecasts it but bets only {sorted(pmapi.TRADABLE_VERSIONS)}")
+    with V2_BET_SKIPS.open("a") as f:
+        f.write(json.dumps({
+            "ts": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "market_id": args.market_id, "question": m.get("question"),
+            "outcome": args.outcome, "version": pmapi.market_version(m),
+            "est_prob": args.est_prob, "stake_usd": args.stake,
+            "edge_class": args.edge_class, "strategy_rev": args.strategy_rev,
+            "reason": reason}) + "\n")
+    sys.exit(f"REJECTED: {reason}; logged to {V2_BET_SKIPS.name}")
+
+
 def cmd_status(entries):
     open_pos = [e for e in entries if e["status"] == "open"]
     settled = [e for e in entries if e["status"] in ("won", "lost")]
@@ -60,6 +77,8 @@ def cmd_status(entries):
         "settled": len(settled),
         "wins": sum(1 for e in settled if e["status"] == "won"),
         "realized_pnl": round(pnl, 2),
+        "v2_bets_skipped": (len(V2_BET_SKIPS.read_text().splitlines())
+                            if V2_BET_SKIPS.exists() else 0),
         "open": [{"id": e["id"], "q": e["question"][:70], "outcome": e["outcome"],
                   "entry": e["entry_price"], "est": e["est_prob"], "ends": e["end_date"]}
                  for e in open_pos],
@@ -90,6 +109,8 @@ def cmd_place(args, entries):
                  f"{sorted(pmapi.SUPPORTED_VERSIONS)})")
     if args.outcome not in tokens:
         sys.exit(f"REJECTED: outcome {args.outcome!r} not in {list(tokens)}")
+    if pmapi.market_version(m) not in pmapi.TRADABLE_VERSIONS:
+        skip_v2_bet(args, m)
     q = pmapi.book_quote(tokens[args.outcome])
     bid, ask = q["bid"], q["ask"]
     if ask is None:

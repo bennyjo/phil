@@ -168,6 +168,15 @@ class Record(unittest.TestCase):
         self.assertEqual(out["est_prob"], 0.62)
         self.assertNotIn("rule", self.rows()[0])
 
+    def test_forecast_rows_carry_the_market_version(self):
+        self.record("1", 0.5)
+        v2 = dict(GAMMA, version="v2", positionIds=["9", "8"])
+        with mock.patch.object(forecast.pmapi, "gamma_market", lambda _id: v2):
+            self.record("2", 0.5)
+        v1_row, v2_row = self.rows()
+        self.assertEqual((v1_row["version"], v1_row["token_id"]), ("v1", "111"))
+        self.assertEqual((v2_row["version"], v2_row["token_id"]), ("v2", "9"))
+
     def test_wide_spread_benchmarks_last_trade(self):
         # docs.polymarket.com/concepts/prices-orderbook: "If the spread is
         # wider than $0.10, the last traded price is shown instead."

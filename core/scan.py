@@ -12,6 +12,9 @@ Split of responsibilities (changed 2026-08-03):
     resolution, entry-price bounds and the output contract are enforced after
     discovery, on every candidate, and cannot be bypassed by a query.
 
+Protocol V2 is read-only here: V2 markets with orders flow out tagged with their
+version like V1 ones, and core/ledger.py refuses to bet them.
+
 If `strategy/discovery.py` is missing, raises, or returns nothing usable, this
 falls back to the built-in default query and says so on stderr — a broken
 discovery module degrades sensing, it never silently returns an empty market.
@@ -34,6 +37,10 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 PROTECTED = json.loads((ROOT / "config" / "protected.json").read_text())
 # Gamma version -> markets keep() skipped for lack of usable token ids.
 UNSUPPORTED = collections.Counter()
+# Gamma version -> distinct markets the listings returned, before any filter.
+LISTED = collections.Counter()
+# V2 markets by whether their books hold any order ("orders" or "empty").
+V2_BOOKS = collections.Counter()
 
 
 def utcnow():
@@ -76,12 +83,47 @@ def discovery_queries(args, min_end, horizon):
         return default_queries(args, min_end, horizon)
 
 
+def v2_sweep(args, min_end, horizon):
+    """Core's own V2 query, so a V2 market cannot go unseen. Gamma leaves
+    volume24hr and liquidityNum null on V2 markets that have traded, which hides
+    them from queries with those floors or orderings. volumeNum is filled in."""
+    return {"_label": "v2-sweep", "version": "v2", "closed": "false",
+            "order": "volumeNum", "ascending": "false",
+            "end_date_min": iso(min_end), "end_date_max": iso(horizon)}
+
+
+def drop_empty_v2(recs):
+    """Drop V2 records whose books hold no order, and count them. Most V2 books
+    are empty, with placeholder 0.5/0.5 prices that pass keep() and would spend
+    the screener slots V1 markets get. Unreadable books count as empty, so an
+    outage costs V2 this scan and never touches V1."""
+    tokens = [t for r in recs if r["version"] == "v2" for t in r["clob_token_ids"]]
+    if not tokens:
+        return recs
+    try:
+        books = pmapi.clob_books(tokens)
+    except RuntimeError as e:
+        print(f"scan: v2 books unreadable: {e}", file=sys.stderr)
+        books = []
+    live = {b.get("asset_id") for b in books if b.get("bids") or b.get("asks")}
+    kept = []
+    for r in recs:
+        if r["version"] == "v2":
+            has_orders = live.intersection(r["clob_token_ids"])
+            V2_BOOKS["orders" if has_orders else "empty"] += 1
+            if not has_orders:
+                continue
+        kept.append(r)
+    return kept
+
+
 def keep(m, seen, banned, args):
     """Protected admissibility filter. Returns the output record or None."""
     q = m.get("question") or ""
     if m.get("id") in seen:
         return None
     seen.add(m.get("id"))
+    LISTED[pmapi.market_version(m)] += 1
     if any(p.search(q) for p in banned):
         return None
     if float(m.get("volume24hr") or 0) < args.min_volume_24h:
@@ -95,7 +137,7 @@ def keep(m, seen, banned, args):
     # skip effectively-decided markets (in-play blowouts, resolved-in-waiting)
     if max(prices) > PROTECTED["max_entry_price"] or min(prices) < PROTECTED["min_entry_price"]:
         return None
-    # A Protocol V2 market or unusable ids: skip it rather than crash the scan.
+    # An unsupported version or unusable ids: skip it rather than crash the scan.
     token_ids = pmapi.token_ids(m)
     if token_ids is None:
         UNSUPPORTED[pmapi.market_version(m)] += 1
@@ -103,6 +145,7 @@ def keep(m, seen, banned, args):
     event = (m.get("events") or [{}])[0]
     return {
         "market_id": m.get("id"),
+        "version": pmapi.market_version(m),
         "question": q,
         "end_date": m.get("endDate"),
         "event_id": event.get("id"),
@@ -138,7 +181,7 @@ def main():
     min_end = now + dt.timedelta(minutes=PROTECTED["min_minutes_to_resolution"])
 
     seen, kept = set(), 0
-    for base in discovery_queries(args, min_end, horizon):
+    for base in discovery_queries(args, min_end, horizon) + [v2_sweep(args, min_end, horizon)]:
         label = base.pop("_label", "unlabeled")
         got = 0
         offset = 0
@@ -151,19 +194,21 @@ def main():
             if not batch:
                 break
             offset += len(batch)
-            for m in batch:
-                rec = keep(m, seen, banned, args)
-                if rec:
-                    got += 1
-                    kept += 1
-                    # The query that first found it: screen.py counts the
-                    # funnel row's pool_by_query from this.
-                    rec["query"] = label
-                    print(json.dumps(rec))
+            recs = [keep(m, seen, banned, args) for m in batch]
+            for rec in drop_empty_v2([r for r in recs if r]):
+                got += 1
+                kept += 1
+                # The query that first found it: screen.py counts the
+                # funnel row's pool_by_query from this.
+                rec["query"] = label
+                print(json.dumps(rec))
         print(f"scan: query {label!r} -> {got} candidates", file=sys.stderr)
     if UNSUPPORTED:
         print(f"scan: skipped {sum(UNSUPPORTED.values())} markets with no usable "
               f"token ids, by Gamma version: {dict(UNSUPPORTED)}", file=sys.stderr)
+    print(f"scan: Gamma listed by version: {dict(sorted(LISTED.items(), key=str))}; "
+          f"v2 markets with orders: {V2_BOOKS['orders']}, "
+          f"dropped for an empty book: {V2_BOOKS['empty']}", file=sys.stderr)
     print(f"scan: {kept} candidates total within {args.hours}h", file=sys.stderr)
 
 

@@ -214,6 +214,7 @@ def cmd_record(args, rows):
         "end_date": m.get("endDate"),
         "outcome": args.outcome,
         "token_id": tokens[args.outcome],
+        "version": pmapi.market_version(m),
         "est_prob": est,
         **rule_fields,
         "best_bid_at_record": bid,
