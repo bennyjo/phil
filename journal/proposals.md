@@ -4694,3 +4694,17 @@ against this cycle's live lease (contrary to its own tick-type rule) and clobber
   screener-outcomes refresh, P11, P8, P9, P4, P7, the subclass auto-tagger, P1, P2, P3(a), and
   the counterfactual end-date.
 - **No new hourly proposals.**
+
+## DEEP-2026-11-02 - deep-retro proposals and status
+
+- **core/funnel.py `researched` type-check: Status: ENDORSED, HIGH** (raised from MEDIUM).
+  - Sixth instance: the 2026-11-02T04:14:16Z core/screen.py-opened FULL row had
+    `researched: 5`. The agent-side stopgap (funnel_check) was skipped, and the deep retro
+    repaired the row.
+  - Two stopgap misses in two days show that the check has to live in `merge`: reject a non-list
+    `researched`/`placed`, and reject researched entries without a `forecast_id`.
+- **TRIGGERED funnel row: Status: ENDORSED, MEDIUM, unchanged.**
+- **Hourly lease nonce: Status: ENDORSED, MEDIUM, unchanged.**
+- **These stay PROPOSED and unchanged:** threshold_sweep_no, the screener-outcomes refresh, P11, P8,
+  P9, P4, P7, the subclass auto-tagger, P1, P2, P3(a), and the counterfactual end-date.
+- **No new hourly proposals.**

@@ -8318,3 +8318,18 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
 - **Tight-book tally (10-30 rule): book centre beat drift centre on 3 of 3 days (Oct 23, Oct 30,
   Nov 1).** Deep retro grades at 5. Until then, when a GasBuddy state nowcast is available, write
   its centre in the note next to the drift and book centres. AAA stays forecast-only.
+
+## DEEP-2026-11-02 rulings
+
+- **funnel_check is part of the commit step, not an optional follow-up.** Right before
+  `git commit` on any FULL tick, run `python3 strategy/tools/funnel_check.py`. Commit only when it
+  prints 0 problems. When `researched` is an int, rebuild it from the row's `forecast_ids` (one dict
+  per id: market_id, category, skip_reason, forecast_id, short note) and set `placed: []` when
+  nothing was placed.
+  - Evidence: the 2026-11-02T04:14:16Z row was a sixth instance, and the check was skipped. The
+    deep retro repaired it.
+- **AAA gas grader note (for day 5 of the 10-30 tally):** if the tight book has beaten the drift
+  centre on 4 or more of the 5 days, anchor AAA brackets on the tight-book mid. Deviate only with a
+  cited GasBuddy state nowcast, and then by at most half the gap.
+  - Evidence: `93bdd88c982d` (+0.478), `e6aa609bcfaa` (+0.169), `c7f964d848cd` (+0.142).
+  - At 3/3 this is not yet a rule. It takes no registry slot until it is graded.
