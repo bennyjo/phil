@@ -197,15 +197,13 @@ def ledger_lock():
 def buy_refused(rc, out, errtxt):
     """True only when trade.py's failure proves the order never reached the book.
     Anything else may have placed it, such as a signal kill (a negative exit), a
-    crash, or wording a later Connect release changed, so it stays unknown until
-    settle reads the chain. An unlisted refusal costs one blocked settle interval;
-    a misfiled order costs a bet outside the caps. `{"error": ...}` is Connect's
-    report of an API refusal: its _post turns transport errors and 5xx replies into
-    the uncertain message first, and an ambiguous auth failure carries a warning."""
+    crash, wording a later Connect release changed, or an `{"error": ...}` reply,
+    which can report a timeout or a 4xx that arrived after the CLOB had the order.
+    So it stays unknown until settle reads the chain. An unlisted refusal costs one
+    blocked settle interval; a misfiled order costs a bet outside the caps."""
     if rc < 0 or any(mark in f"{errtxt} {out}" for mark in AMBIGUOUS_BUY):
         return False
-    return (isinstance(out, dict) and "error" in out) \
-        or any(mark in errtxt for mark in REFUSED_BUY)
+    return any(mark in errtxt for mark in REFUSED_BUY)
 
 
 def v2_approved(wallet_status):

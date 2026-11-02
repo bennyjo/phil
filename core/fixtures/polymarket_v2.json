@@ -284,6 +284,34 @@
    },
    ""
   ],
+  "buy_timeout_408": [
+   1,
+   {
+    "error": "request timeout"
+   },
+   ""
+  ],
+  "buy_rate_limited": [
+   1,
+   {
+    "error": "rate limited"
+   },
+   ""
+  ],
+  "buy_region_restricted": [
+   1,
+   {
+    "error": "Trading restricted in your region"
+   },
+   ""
+  ],
+  "buy_http_400_quoting_a_refusal": [
+   1,
+   {
+    "error": "not enough balance / allowance"
+   },
+   ""
+  ],
   "buy_unrecognised_reply": [
    1,
    null,

@@ -389,12 +389,33 @@ class PlaceV2(ConnectStub):
     def test_failures_that_prove_no_order_stay_failed(self):
         for name in ("buy_no_wallet", "buy_no_market", "buy_no_pusd", "buy_under_minimum",
                      "buy_not_enough_balance", "buy_market_not_ready", "buy_invalid_nonce",
-                     "buy_invalid_expiration", "buy_request_rejected", "buy_auth_rejected"):
+                     "buy_invalid_expiration"):
             with self.subTest(failure=name):
                 self.real.REAL_LEDGER.unlink(missing_ok=True)
                 code, _out = self.place(buy=name)
                 self.assertNotEqual(code, 0)
                 self.assertEqual(self.history()[-1]["status"], "failed")
+
+    def test_an_api_error_reply_is_not_proof_that_no_order_was_placed(self):
+        # Connect's _post_buy_with_recovery_hint: "only a refusal code or a 401
+        # drops its pending marker". Its JSON error reply covers every other API
+        # error, which may arrive after the CLOB has the order. A 401 looks the
+        # same from here, so it blocks too, which is the safe direction.
+        v1 = {"id": GAMMA["binary_open"]["id"], "version": "v1"}
+        for market in (GAMMA["binary_open"], v1):
+            for name in ("buy_timeout_408", "buy_rate_limited", "buy_region_restricted",
+                         "buy_request_rejected", "buy_http_400_quoting_a_refusal",
+                         "buy_auth_rejected"):
+                with self.subTest(failure=name, version=market["version"]):
+                    self.real.REAL_LEDGER.unlink(missing_ok=True)
+                    self.calls.clear()
+                    code, _out = self.place(market=market, buy=name)
+                    self.assertNotEqual(code, 0)
+                    self.assertIn("error", CONNECT[name][1])
+                    self.assertEqual(self.history()[-1]["status"], "unknown")
+                    code, out = self.place(market=market)
+                    self.assertNotEqual(code, 0)
+                    self.assertIn("unreconciled", out)
 
     def test_every_other_failure_blocks_until_settle_reconciles(self):
         uncertain = CONNECT["buy_uncertain"][2]
