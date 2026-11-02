@@ -39,8 +39,8 @@ see CYCLE.md step 5a. Cloud cycles have no signer and skip this.
 ## Real execution (operator machine only)
 
 - Env: `PEARL_CONNECT_STORE` = Pearl Connect workspace dir (contains
-  `.mcp.json`); optional `CONNECT_POLYMARKET_VENV` (default
-  `~/.cache/connect-polymarket/venv`).
+  `.mcp.json`); optional `CONNECT_POLYMARKET_VENV` (default `.venv` in that
+  dir).
 - `core/real.py` (protected) is the only code that touches funds for
   trading (mech second opinions per CYCLE.md 5a are the one non-trading
   spend) — it wraps

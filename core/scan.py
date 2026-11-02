@@ -12,8 +12,8 @@ Split of responsibilities (changed 2026-08-03):
     resolution, entry-price bounds and the output contract are enforced after
     discovery, on every candidate, and cannot be bypassed by a query.
 
-Protocol V2 is read-only here: V2 markets with orders flow out tagged with their
-version like V1 ones, and core/ledger.py refuses to bet them.
+V2 markets with orders flow out tagged with their version like V1 ones.
+core/ledger.py bets the binary ones and refuses the rest (pmapi.tradable).
 
 If `strategy/discovery.py` is missing, raises, or returns nothing usable, this
 falls back to the built-in default query and says so on stderr — a broken

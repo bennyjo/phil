@@ -133,15 +133,31 @@ def taker_fee_per_share(market, price):
 # guide says to "Reject missing or unsupported versions", so an untagged market
 # is rejected too (market_version returns None).
 SUPPORTED_VERSIONS = {"v1", "v2"}
-# V2 is read-only: Phil lists and forecasts V2 markets but does not bet them.
-# V2 orders need ExchangeV3, signing domain "3", and new approvals
-# (docs.polymarket.com/migrate/polymarket-v2/overview), which core/real.py does
-# not do. core/ledger.py and core/real.py refuse anything not listed here.
-TRADABLE_VERSIONS = {"v1"}
+# docs.polymarket.com/trading/positions/how-positions-work: a V2 Position ID's
+# first byte is its module: 1 BinaryModule, 2 NegRiskModule, 3 CombinatorialModule.
+V2_BINARY_MODULE = 1
 
 
 def market_version(market):
     return market.get("version")
+
+
+def position_module(position_id):
+    """Module of a decimal V2 position id, None for any other id."""
+    text = str(position_id)
+    return int(text) >> 248 if text.isascii() and text.isdigit() else None
+
+
+def tradable(market):
+    """True when Phil can bet this market: V1, or binary V2. Neg-risk and
+    combinatorial V2 markets settle on contracts Pearl Connect does not sign for,
+    so they stay read-only, with any unsupported or untagged version."""
+    version = market_version(market)
+    if version == "v1":
+        return True
+    ids = token_ids(market) if version == "v2" else None
+    return bool(ids) and not market.get("negRisk") \
+        and all(position_module(i) == V2_BINARY_MODULE for i in ids)
 
 
 def token_ids(market):

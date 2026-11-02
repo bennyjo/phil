@@ -165,7 +165,7 @@ variables are optional:
 | Variable | Read by | Purpose |
 |---|---|---|
 | `PEARL_CONNECT_STORE` | `loop.sh`, `core/real.py` | Pearl Connect workspace directory (contains `.mcp.json`). Enables mech second opinions and, with `--real`, real twins. |
-| `CONNECT_POLYMARKET_VENV` | `core/real.py` | Virtual environment of the connect-polymarket skill scripts. Defaults to `~/.cache/connect-polymarket/venv`. |
+| `CONNECT_POLYMARKET_VENV` | `core/real.py` | Virtual environment of the connect-polymarket skill scripts, which Pearl Connect's `bootstrap_env.sh` builds. Defaults to `.venv` in the Pearl Connect workspace. |
 | `ODDS_API_KEY` | `core/odds.py` | Key for the bookmaker-odds benchmark from [the-odds-api.com](https://the-odds-api.com). Falls back to `~/.config/phil/odds-api-key`. |
 | `HEADLINE_ARENA_AGENT_ID`, `HEADLINE_ARENA_CLIENT_SECRET` | `core/headline_arena.py` | Credentials for Headline Arena daily questions. Fall back to `~/.config/phil/headline-arena.json`. Without them, the step is off. |
 | `PHIL_RUNNER` | `core/screen.py`, `core/lease.py` | Runner name for the lease and the screener quota. Defaults to `operator` under `loop.sh`, else `cloud`. |

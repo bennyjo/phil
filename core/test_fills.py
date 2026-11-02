@@ -30,6 +30,8 @@ GAMMA = {"question": "Will it happen?", "slug": "q", "endDate": "2026-10-30T00:0
          "version": "v1", "feesEnabled": True,
          "feeSchedule": {"rate": 0.05, "exponent": 1, "takerOnly": True, "rebateRate": 0.15}}
 BOOK = {"bid": 0.39, "ask": 0.40, "min_order_size": 5.0}
+V2 = json.loads((pathlib.Path(__file__).resolve().parent / "fixtures"
+                 / "polymarket_v2.json").read_text())["gamma"]
 
 
 class Place(unittest.TestCase):
@@ -63,9 +65,17 @@ class Place(unittest.TestCase):
         free = dict(GAMMA, feesEnabled=False)
         self.assertEqual(self.place(5, market=free, market_id="2")["shares"], 12.5)
 
-    def test_v2_bet_is_refused_logged_and_counted(self):
-        # Read-only V2: Phil forecasts V2 markets but does not bet them.
-        v2 = dict(GAMMA, version="v2", positionIds=["9", "8"])
+    def test_binary_v2_bet_fills_on_its_position_id(self):
+        v2 = dict(V2["binary_open"], outcomes=json.dumps(["Yes", "No"]))
+        row = self.place(5, market=v2, market_id="7")
+        self.assertEqual(row["token_id"], v2["positionIds"][0])
+        # feeSchedule rate 0.05 at $0.40, as for V1.
+        self.assertEqual(row["shares"], round(5 / 0.412, 4))
+        self.assertFalse(self.skips.exists())
+
+    def test_neg_risk_v2_bet_is_refused_logged_and_counted(self):
+        # Read-only: Phil forecasts neg-risk V2 markets but does not bet them.
+        v2 = dict(V2["neg_risk_open"], outcomes=json.dumps(["Yes", "No"]))
         with self.assertRaises(SystemExit) as cm:
             self.place(5, market=v2, market_id="7")
         self.assertIn("REJECTED", str(cm.exception.code))
@@ -75,6 +85,13 @@ class Place(unittest.TestCase):
         self.assertEqual((skip["market_id"], skip["outcome"], skip["version"]), ("7", "Yes", "v2"))
         self.assertIn("read-only", skip["reason"])
         self.assertEqual(self.status()["v2_bets_skipped"], 1)
+
+    def test_v2_bet_without_a_binary_position_id_is_refused(self):
+        v2 = dict(GAMMA, version="v2", positionIds=["9", "8"])
+        with self.assertRaises(SystemExit) as cm:
+            self.place(5, market=v2, market_id="7")
+        self.assertIn("read-only", str(cm.exception.code))
+        self.assertFalse(self.path.exists())
 
     def test_v1_bet_logs_no_v2_skip(self):
         row = self.place(5)
@@ -105,6 +122,19 @@ class Place(unittest.TestCase):
             self.place(1.8)
         self.assertIn("min_order_size", str(cm.exception.code))
         self.assertFalse(self.path.exists())
+
+
+class V2Settlement(unittest.TestCase):
+    def test_resolved_v2_market_settles_a_paper_bet(self):
+        # Recorded: a closed V2 market's prices are "1" and "0".
+        market = V2["binary_closed"]
+        won, lost = json.loads(market["outcomes"])
+        now = dt.datetime(2026, 11, 3, tzinfo=dt.timezone.utc)
+        for outcome, status in ((won, "won"), (lost, "lost")):
+            e = {"status": "open", "outcome": outcome, "end_date": market["endDate"],
+                 "stake_usd": 5.0, "shares": 12.5}
+            self.assertTrue(resolve.settle_against_market(e, market, now))
+            self.assertEqual(e["status"], status)
 
 
 class Void(unittest.TestCase):

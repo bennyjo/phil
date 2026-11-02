@@ -5,10 +5,10 @@ PROTECTED CORE - the trading agent must not edit files under core/.
 
 The market's Gamma version alone selects its outcome ids: clobTokenIds for
 v1, positionIds for v2. A market with no supported version or unusable ids
-is skipped, so one bad record cannot kill the whole scan. V2 is read-only:
-scan lists and tags V2 markets, and core/ledger.py and core/real.py refuse to
-bet them. These tests feed hand-built Gamma records and books, so nothing
-touches the network. CI runs it on every push.
+is skipped, so one bad record cannot kill the whole scan. Scan lists and tags
+V2 markets. Phil bets binary V2 markets; core/ledger.py and core/real.py refuse
+every other V2 market. These tests feed Gamma records and books, hand-built or
+recorded, so nothing touches the network. CI runs it on every push.
 
 Usage: python3 core/test_token_ids.py
 """
@@ -71,6 +71,49 @@ class TokenIds(unittest.TestCase):
         for ids in (None, [], ["9"]):
             with self.subTest(position_ids=ids):
                 self.assertIsNone(pmapi.token_ids(gamma(**dict(V2, positionIds=ids))))
+
+
+class Tradable(unittest.TestCase):
+    RECORDED = json.loads((pathlib.Path(__file__).resolve().parent / "fixtures"
+                           / "polymarket_v2.json").read_text())["gamma"]
+
+    def test_position_module_is_the_first_byte_of_the_id(self):
+        # docs.polymarket.com/trading/positions/how-positions-work: 1 BinaryModule,
+        # 2 NegRiskModule, 3 CombinatorialModule.
+        binary, neg_risk = self.RECORDED["binary_open"], self.RECORDED["neg_risk_open"]
+        self.assertEqual(pmapi.position_module(binary["positionIds"][0]), 1)
+        self.assertEqual(pmapi.position_module(neg_risk["positionIds"][0]), 2)
+        self.assertEqual(pmapi.position_module(str(3 << 248)), 3)
+
+    def test_non_decimal_position_id_has_no_module(self):
+        for bad in ("0x01", "", "1e5", None, "١"):
+            with self.subTest(bad=bad):
+                self.assertIsNone(pmapi.position_module(bad))
+
+    def test_recorded_binary_v2_markets_are_tradable(self):
+        for name in ("binary_open", "binary_closed"):
+            with self.subTest(market=name):
+                self.assertTrue(pmapi.tradable(self.RECORDED[name]))
+
+    def test_recorded_neg_risk_v2_market_is_not(self):
+        self.assertFalse(pmapi.tradable(self.RECORDED["neg_risk_open"]))
+
+    def test_neg_risk_flag_alone_refuses_a_v2_market(self):
+        self.assertFalse(pmapi.tradable(dict(self.RECORDED["binary_open"], negRisk=True)))
+
+    def test_v2_market_with_unusable_ids_is_not(self):
+        binary = self.RECORDED["binary_open"]
+        for ids in (None, [], ["9", "8"], [binary["positionIds"][0], "0x01"]):
+            with self.subTest(ids=ids):
+                self.assertFalse(pmapi.tradable(dict(binary, positionIds=ids)))
+
+    def test_v1_stays_tradable_whatever_its_neg_risk_flag(self):
+        self.assertTrue(pmapi.tradable(gamma()))
+        self.assertTrue(pmapi.tradable(gamma(negRisk=True)))
+
+    def test_unknown_or_missing_version_is_not(self):
+        self.assertFalse(pmapi.tradable(gamma(version="v3")))
+        self.assertFalse(pmapi.tradable(gamma(version=None)))
 
 
 class Listing(unittest.TestCase):
