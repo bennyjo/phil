@@ -338,10 +338,11 @@ def runner_id():
 def open_funnel(now, candidates, screener, screened=0, batches=0):
     """Open (or reuse) this FULL cycle's funnel row; says so on stderr."""
     by_query = Counter(str(c.get("query") or "unlabeled") for c in candidates)
+    by_version = Counter(str(c.get("version") or "untagged") for c in candidates)
     cycle = funnel.open_row(now, runner_id(), {
         "screened": screened, "escalated": 0, "screener_batches": batches,
         "screener": screener, "pool_total": len(candidates),
-        "pool_by_query": dict(by_query)})
+        "pool_by_query": dict(by_query), "pool_by_version": dict(by_version)})
     print(f"screen: funnel row open for cycle {cycle} in "
           f"{funnel.FUNNEL.relative_to(ROOT)}; add this cycle's fields with "
           f"python3 core/funnel.py merge --cycle {cycle} --json '{{...}}'",

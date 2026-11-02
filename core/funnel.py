@@ -13,8 +13,8 @@ in the screener counts. A FULL can no longer end without its row.
 
 One row per FULL cycle, and who owns which field:
   * Core owns the measured fields in CORE_KEYS: the cycle stamp, tick type,
-    runner, strategy_rev, the scan pool (`pool_total`, `pool_by_query`) and
-    the screener counts (`screened`, `escalated`, `screener_batches`).
+    runner, strategy_rev, the scan pool (`pool_total`, `pool_by_query`,
+    `pool_by_version`) and the screener counts (`screened`, `escalated`, `screener_batches`).
   * The agent owns everything else - `researched`, `placed`, `settled`,
     `mode`, `mech`, `headline_arena`, the `screener` prose, notes - and adds
     it with `merge`, which rewrites that one row in place. The agent never
@@ -48,7 +48,7 @@ FUNNEL = ROOT / "strategy" / "funnel.jsonl"
 OPENED_BY = "core/screen.py"
 CORE_KEYS = frozenset({
     "cycle", "tick_type", "runner", "strategy_rev", "opened_by",
-    "pool_total", "pool_by_query", "screened", "escalated", "screener_batches",
+    "pool_total", "pool_by_query", "pool_by_version", "screened", "escalated", "screener_batches",
 })
 REOPEN_WINDOW = dt.timedelta(minutes=45)
 

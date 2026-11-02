@@ -28,7 +28,7 @@ jobs:
         run: python3 core/test_screener_log.py -v
       - name: A FULL cycle leaves exactly one core-opened funnel row (offline)
         run: python3 core/test_funnel.py -v
-      - name: Scan skips markets without usable token ids, e.g. Protocol V2 (offline)
+      - name: Scan reads V1 and V2 token ids, tags versions, and skips unusable ones (offline)
         run: python3 core/test_token_ids.py -v
       - name: Touch replay reads prices as_of only and scores on a fixed fixture (offline)
         run: python3 core/test_touch_replay.py -v

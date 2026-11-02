@@ -35,6 +35,9 @@ import sys
 import urllib.request
 import uuid
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import pmapi  # noqa: E402
+
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 PAPER_LEDGER = ROOT / "journal" / "ledger.jsonl"
 REAL_LEDGER = ROOT / "journal" / "real-ledger.jsonl"
@@ -196,6 +199,18 @@ def cmd_place(args):
     if edge_class not in real["allowed_edge_classes"]:
         fail(f"edge_class {edge_class!r} not in allowed_edge_classes "
              f"{real['allowed_edge_classes']} — this bet stays paper-only")
+
+    # V2 is read-only (pmapi.TRADABLE_VERSIONS). The paper ledger already refuses
+    # V2 bets; this check is on the market itself, so no paper row can reach a
+    # V2 order. Fails closed before any top-up.
+    try:
+        version = pmapi.market_version(pmapi.gamma_market(twin["market_id"]))
+    except RuntimeError as e:
+        fail(f"cannot read market {twin['market_id']}'s protocol version: {e}")
+    if version not in pmapi.TRADABLE_VERSIONS:
+        fail(f"market {twin['market_id']} is on Gamma version {version!r}, which "
+             f"is read-only - real orders only go to "
+             f"{sorted(pmapi.TRADABLE_VERSIONS)}")
 
     rows = real_rows()
     if any(r.get("status") in ("pending", "unknown") for r in rows):

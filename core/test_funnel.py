@@ -29,7 +29,8 @@ COPIED = ("core/screen.py", "core/funnel.py", "config/protected.json",
 
 def candidate(i, query):
     end = dt.datetime.now(dt.timezone.utc) + dt.timedelta(hours=24 + i)
-    return {"market_id": str(1000 + i), "question": f"Will event {i} happen?",
+    return {"market_id": str(1000 + i), "version": "v2" if i == 1 else "v1",
+            "question": f"Will event {i} happen?",
             "end_date": end.strftime("%Y-%m-%dT%H:%M:%SZ"),
             "outcomes": ["Yes", "No"], "outcome_prices": [0.3, 0.7],
             "volume_24h": 1000.0 * i, "liquidity": 500.0 * i,
@@ -94,6 +95,7 @@ class FunnelRow(unittest.TestCase):
         self.assertEqual(row["runner"], "test")
         self.assertEqual(row["pool_total"], 5)
         self.assertEqual(row["pool_by_query"], {"by-liquidity": 3, "active-today": 2})
+        self.assertEqual(row["pool_by_version"], {"v1": 4, "v2": 1})
         self.assertEqual(row["screener_batches"], 3)
         self.assertEqual(row["screened"], 5)
         self.assertEqual(row["escalated"], 5)

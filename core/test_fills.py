@@ -37,9 +37,11 @@ class Place(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.path = pathlib.Path(self.tmp.name) / "ledger.jsonl"
-        p = mock.patch.object(ledger, "LEDGER", self.path)
-        p.start()
-        self.addCleanup(p.stop)
+        self.skips = pathlib.Path(self.tmp.name) / "v2-bet-skips.jsonl"
+        for p in (mock.patch.object(ledger, "LEDGER", self.path),
+                  mock.patch.object(ledger, "V2_BET_SKIPS", self.skips)):
+            p.start()
+            self.addCleanup(p.stop)
 
     def place(self, stake, book=BOOK, market=GAMMA, market_id="1"):
         argv = ["ledger.py", "place", "--market-id", market_id, "--outcome", "Yes",
@@ -60,6 +62,32 @@ class Place(unittest.TestCase):
         self.assertAlmostEqual(row["fee_usd"], row["shares"] * 0.012, places=4)
         free = dict(GAMMA, feesEnabled=False)
         self.assertEqual(self.place(5, market=free, market_id="2")["shares"], 12.5)
+
+    def test_v2_bet_is_refused_logged_and_counted(self):
+        # Read-only V2: Phil forecasts V2 markets but does not bet them.
+        v2 = dict(GAMMA, version="v2", positionIds=["9", "8"])
+        with self.assertRaises(SystemExit) as cm:
+            self.place(5, market=v2, market_id="7")
+        self.assertIn("REJECTED", str(cm.exception.code))
+        self.assertIn("read-only", str(cm.exception.code))
+        self.assertFalse(self.path.exists())
+        skip = json.loads(self.skips.read_text())
+        self.assertEqual((skip["market_id"], skip["outcome"], skip["version"]), ("7", "Yes", "v2"))
+        self.assertIn("read-only", skip["reason"])
+        self.assertEqual(self.status()["v2_bets_skipped"], 1)
+
+    def test_v1_bet_logs_no_v2_skip(self):
+        row = self.place(5)
+        self.assertEqual(row["token_id"], "111")
+        self.assertFalse(self.skips.exists())
+        self.assertEqual(self.status()["v2_bets_skipped"], 0)
+
+    def status(self):
+        out = io.StringIO()
+        with mock.patch.object(sys, "argv", ["ledger.py", "status"]), \
+                contextlib.redirect_stdout(out):
+            ledger.main()
+        return json.loads(out.getvalue())
 
     def test_fees_without_a_rate_are_rejected(self):
         # A market with feesEnabled must carry its fee parameters
