@@ -4666,8 +4666,15 @@ against this cycle's live lease (contrary to its own tick-type rule) and clobber
   funnel row, and each had to be backfilled by hand.
   - The fix is mechanical, and the operator has to make it: `core/forecast.py record` or watch.py's
     TRIGGERED launch should open a `tick_type: TRIGGERED` row via `core/funnel.py`.
+  - 2026-10-31: Status: ACTIONED by the operator (https://github.com/bennyjo/phil/pull/20).
+    `core/forecast.py record` adds each forecast to the cycle's funnel row (`recorded_by:
+    core/forecast.py`) and prints its `funnel_cycle`. On a FULL that is the `prepare` row. On a
+    TRIGGERED tick the first record opens a `tick_type: TRIGGERED` row with the fired `trigger`
+    keys (CYCLE.md step 5b).
 - **core/funnel.py `researched` type-check: Status: PROPOSED, LOW.** It is now subsumed by the
   item above: a core-opened row fixes the type.
+  - 2026-10-31: Status: ACTIONED by the operator (https://github.com/bennyjo/phil/pull/20).
+    `merge` refuses a `researched` value that is not a list of objects.
 - **Hourly lease nonce: Status: ENDORSED, MEDIUM, unchanged.**
 - **These stay PROPOSED and unchanged:** the score.py `threshold_sweep_no` robustness line, the
   screener-outcomes refresh, P11, P8, P9, P4, P7, the subclass auto-tagger, P1, P2, P3(a), and the

@@ -129,7 +129,10 @@ class Record(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.path = pathlib.Path(self.tmp.name) / "forecasts.jsonl"
+        tmp = pathlib.Path(self.tmp.name)
         for p in (mock.patch.object(forecast, "FORECASTS", self.path),
+                  mock.patch.object(forecast.funnel, "FUNNEL", tmp / "funnel.jsonl"),
+                  mock.patch.object(forecast.funnel, "WATCH_TRIGGERS", tmp / "triggers.jsonl"),
                   mock.patch.object(forecast.pmapi, "gamma_market", lambda _id: GAMMA),
                   mock.patch.object(forecast.pmapi, "book_quote", lambda _t: BOOK),
                   mock.patch.object(forecast.pmapi, "last_trade_price", lambda _t: 0.55)):
