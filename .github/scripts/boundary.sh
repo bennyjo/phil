@@ -11,8 +11,11 @@ BEFORE="${1:?usage: boundary.sh <before-sha> <after-sha>}"
 AFTER="${2:?usage: boundary.sh <before-sha> <after-sha>}"
 
 PROTECTED='^(core/|config/|\.github/|\.claude/|CYCLE\.md|REAL\.md|loop\.sh|CLAUDE\.md|LICENSE|README\.md|\.gitignore)'
-# Written by core/touch_replay.py; an agent commit may only append to them.
-APPEND_ONLY='^journal/replay/(touch-prices|runs)\.jsonl$'
+# Written by core/touch_replay.py and core/scan.py; an agent commit may only
+# append to them.
+APPEND_ONLY='^journal/(replay/(touch-prices|runs)|archive/books/[0-9-]+)\.jsonl$'
+# Written once by core/archive.py; an agent commit may only add them.
+WRITE_ONCE='^journal/archive/prices/'
 
 if [[ "$BEFORE" =~ ^0+$ ]]; then
   # Branch creation: no meaningful range; check only the head commit.
@@ -40,6 +43,12 @@ for sha in $COMMITS; do
   if [[ -n "$rewritten" ]]; then
     echo "::error::agent commit $sha ('$subject') changes or deletes lines in append-only files:"
     echo "$rewritten" | sed 's/^/    /'
+    fail=1
+  fi
+  changed=$(git diff-tree --no-commit-id --name-only --diff-filter=a -r "$sha" | grep -E "$WRITE_ONCE" || true)
+  if [[ -n "$changed" ]]; then
+    echo "::error::agent commit $sha ('$subject') changes or deletes write-once archive files:"
+    echo "$changed" | sed 's/^/    /'
     fail=1
   fi
 done

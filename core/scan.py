@@ -31,6 +31,7 @@ import re
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import archive  # noqa: E402
 import pmapi  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -41,6 +42,8 @@ UNSUPPORTED = collections.Counter()
 LISTED = collections.Counter()
 # V2 markets by whether their books hold any order ("orders" or "empty").
 V2_BOOKS = collections.Counter()
+# Market id -> book fields of every non-banned market read, for core/archive.py.
+BOOKS = {}
 
 
 def utcnow():
@@ -126,6 +129,7 @@ def keep(m, seen, banned, args):
     LISTED[pmapi.market_version(m)] += 1
     if any(p.search(q) for p in banned):
         return None
+    BOOKS[str(m.get("id"))] = archive.book_row(m)
     if float(m.get("volume24hr") or 0) < args.min_volume_24h:
         return None
     try:
@@ -210,6 +214,7 @@ def main():
           f"v2 markets with orders: {V2_BOOKS['orders']}, "
           f"dropped for an empty book: {V2_BOOKS['empty']}", file=sys.stderr)
     print(f"scan: {kept} candidates total within {args.hours}h", file=sys.stderr)
+    archive.append_books(BOOKS, int(now.timestamp()))
 
 
 if __name__ == "__main__":

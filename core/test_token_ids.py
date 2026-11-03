@@ -18,6 +18,7 @@ import io
 import json
 import pathlib
 import sys
+import tempfile
 import unittest
 from unittest import mock
 
@@ -179,6 +180,10 @@ class ScanMain(unittest.TestCase):
         scan.UNSUPPORTED.clear()
         scan.LISTED.clear()
         scan.V2_BOOKS.clear()
+        scan.BOOKS.clear()
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.books_dir = pathlib.Path(tmp.name)
 
     def scan(self, books, rows_for=None):
         self.calls = []
@@ -199,9 +204,28 @@ class ScanMain(unittest.TestCase):
                                   lambda *_a: [{"_label": "q", "closed": "false"}]), \
                 mock.patch.object(pmapi, "gamma_markets", gamma_markets), \
                 mock.patch.object(pmapi, "clob_books", books), \
+                mock.patch.object(scan.archive, "BOOKS_DIR", self.books_dir), \
                 contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
             scan.main()
         return [json.loads(line) for line in out.getvalue().splitlines()], err.getvalue()
+
+    def test_scan_archives_the_book_fields_it_read(self):
+        recs, _ = self.scan(lambda tokens: [book("9", bids=[{"price": "0.4", "size": "5"}]),
+                                            book("8")])
+        (path,) = self.books_dir.iterdir()
+        (row,) = [json.loads(x) for x in path.read_text().splitlines()]
+        self.assertEqual(set(row["books"]), {r["market_id"] for r in recs})
+
+    def test_failed_book_archive_leaves_the_scan_output_alone(self):
+        good, _ = self.scan(lambda tokens: [book("9", bids=[{"price": "0.4", "size": "5"}]),
+                                            book("8")])
+        self.setUp()
+        self.books_dir = self.books_dir / "blocked"
+        self.books_dir.write_text("")
+        got, err = self.scan(lambda tokens: [book("9", bids=[{"price": "0.4", "size": "5"}]),
+                                             book("8")])
+        self.assertEqual(got, good)
+        self.assertIn("archive: books not saved", err)
 
     def test_v2_market_with_orders_flows_through_tagged(self):
         recs, err = self.scan(lambda tokens: [book("9", bids=[{"price": "0.4", "size": "5"}]),
