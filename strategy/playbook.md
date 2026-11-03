@@ -8372,3 +8372,16 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
 - Procedure (selection, not an estimation rule): when a draw (or any "No"-default) leg sits far from its
   base rate, quote the no-result clause and check the governing body's schedule news before modelling the
   match. Grade it when these four settle (by Nov 10).
+
+## 2026-11-03 18:15Z: JOLTS Sep bet lost, AAA Nov 3 missed low (RETRO-20261103-1815)
+
+- **JOLTS: no sub-0.10-edge bet against a same-direction ladder tilt.** Bet `7f45e8fe6a72` (No
+  >=7.4M, est 0.863, entry 0.78) lost: BLS 7.5M vs LinkUp centre 7.05M. LinkUp miss log vs BLS first
+  print: Jul -0.06, Aug -0.11, Sep +0.45 (M). Until that log reaches n>=5, a JOLTS bet needs edge
+  >=0.10 when the ladder mids lean away from the LinkUp centre on the side being bet against.
+  Selection rule only: moves no probability, takes no registry slot. Still record the LinkUp centre.
+- **AAA next-day centre: use the 3-day mean daily change, not the latest day.** Nov 1 the -2.0c drift
+  overshot (RETRO-20261101-1815); Nov 3 the carried latest-day -0.3c undershot a ~-2c print
+  (`208def9aa091` <4.15 at 0.02 vs mid 0.20, outcome Yes). Write the 3-day mean as the centre, sd at
+  least half the range of the last 3 daily changes, and keep the GasBuddy/book centres in the note.
+  AAA stays forecast-only; the tight-book tally (3/3) is unchanged because Nov 3 books were >0.30 wide.
