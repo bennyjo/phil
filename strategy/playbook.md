@@ -8333,3 +8333,30 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   cited GasBuddy state nowcast, and then by at most half the gap.
   - Evidence: `93bdd88c982d` (+0.478), `e6aa609bcfaa` (+0.169), `c7f964d848cd` (+0.142).
   - At 3/3 this is not yet a rule. It takes no registry slot until it is graded.
+
+## DEEP-2026-11-03 rulings
+
+- **funnel_check (DEEP-2026-11-02 ruling): SHARPENED, not removed.** Operator PR #20 (4055a7ba)
+  makes `core/funnel.py merge` refuse a non-list `researched`, and `core/forecast.py record` now
+  writes the funnel entry itself, TRIGGERED ticks included. The int defect therefore cannot
+  recur through `merge`. Keep running funnel_check before a FULL commit as a cheap tripwire for
+  hand-edited rows. If it ever reports a problem now, that is a core bug, so write a proposal; do
+  not just repair the row. Evidence: `funnel_check --last 20` reports 0 problems over 11-02/11-03.
+- **Wide-book veto re-tested at ask prices (not mids): it STAYS.** A counterfactual over every
+  settled forecast with spread >0.06, $5 bought at the ask on the side our estimate favours:
+  - claimed gap >=0.10: n=66, -$15.3.
+  - gap >=0.20: n=24, +$6.5.
+  - gap >=0.30: n=8, -$10.1.
+
+  Month by month it is noise: Sep -$31, Oct -$3, Nov n=6 +$23. The 24h stream's wide-book
+  "wins" (forecasts `4e194e0b42dd`, `de86d98fba34`, `e43524bc14a8`, dBrier sum -2.14 vs mid) do
+  not survive pricing at the fillable ask. Do not cite wide-mid dBrier as evidence against the
+  veto. Re-run this ask-priced table, not the mid-scored one, if the question comes up again.
+- **AAA grader note: still ungraded.** The Nov 2 AAA rows settled against books wider than 0.06
+  (5 commodities rows, all wide), so they do not count toward the tight-book-vs-drift tally. The
+  tally stays at 3/3 tight. It needs two more tight-book days before the rule can be graded.
+- **Grading retros quote the resolver, not memory.** When a retro grades a settled forecast or bet,
+  copy `status` and `outcome_won` verbatim from the journal row and derive "right/wrong side" from
+  them. Evidence: RETRO-20261102-1435 graded `af76bf160bb1` (US sanctions on China, own 0.09 vs
+  0.1495) as "settled No, right side of mid". core/resolve.py had written `won`/`outcome_won: Yes`
+  in the same commit. A miss graded as a hit corrupts every lesson built on top of it.

@@ -4715,3 +4715,14 @@ against this cycle's live lease (contrary to its own tick-type rule) and clobber
 - **These stay PROPOSED and unchanged:** threshold_sweep_no, the screener-outcomes refresh, P11, P8,
   P9, P4, P7, the subclass auto-tagger, P1, P2, P3(a), and the counterfactual end-date.
 - **No new hourly proposals.**
+
+## DEEP-2026-11-03 - deep-retro proposals and status
+
+- **core/funnel.py `researched` type-check: Status: ACTIONED (#20), closed.**
+- **TRIGGERED funnel row: Status: ACTIONED (#20), closed.**
+- **Hourly lease nonce: Status: ENDORSED, MEDIUM, unchanged.**
+- **resolve.py unreachable 48h void branch (Andersson `e746d7e1ba99`, 2026-10-03): Status:
+  ENDORSED, unchanged.** The row is now about a month past its end date.
+- **These stay PROPOSED and unchanged:** threshold_sweep_no, the screener-outcomes refresh, P11, P8,
+  P9, P4, P7, the subclass auto-tagger, P1, P2, P3(a), and the counterfactual end-date.
+- **No new hourly or deep-retro proposals.**
