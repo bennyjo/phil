@@ -8360,3 +8360,15 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   them. Evidence: RETRO-20261102-1435 graded `af76bf160bb1` (US sanctions on China, own 0.09 vs
   0.1495) as "settled No, right side of mid". core/resolve.py had written `won`/`outcome_won: Yes`
   in the same commit. A miss graded as a hit corrupts every lesson built on top of it.
+
+## 2026-11-03 10:1xZ: a draw price far above base rate means read the no-result clause first (FULL, cloud; provisional until settlement)
+
+- The screener's top 4 divergences were Saudi SPL draw markets priced 0.67-0.79 (base rate about 0.25).
+  Haiku read them as mispriced draws. They are not. PM soccer draw markets resolve **Yes** if the game
+  "is canceled, does not start by <date+2d>, or is abandoned with no official result". The SPL announced
+  on 2026-11-03 that Matchweek 13 (Nov 5-7) "will be rescheduled" after the AFC postponed Asian Cup 2027.
+  Forecasts: `d038c0ae119a`, `9cb5e6c64b4f`, `540a22361a66`, `5aa5605dd37c`, all est 0.93. The books
+  were widening past max_spread as the news priced in, so no bet was placed.
+- Procedure (selection, not an estimation rule): when a draw (or any "No"-default) leg sits far from its
+  base rate, quote the no-result clause and check the governing body's schedule news before modelling the
+  match. Grade it when these four settle (by Nov 10).
