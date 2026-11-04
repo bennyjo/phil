@@ -4726,3 +4726,15 @@ against this cycle's live lease (contrary to its own tick-type rule) and clobber
 - **These stay PROPOSED and unchanged:** threshold_sweep_no, the screener-outcomes refresh, P11, P8,
   P9, P4, P7, the subclass auto-tagger, P1, P2, P3(a), and the counterfactual end-date.
 - **No new hourly or deep-retro proposals.**
+
+## DEEP-2026-11-04 - deep-retro proposals and status
+
+- **Hourly lease nonce: Status: ENDORSED, MEDIUM, unchanged.**
+- **resolve.py unreachable 48h void branch (Andersson `e746d7e1ba99`, 2026-10-03): Status:
+  ENDORSED, unchanged.** Still open and past end date; MTM now +$4.29 (No at 0.39).
+- **Prop 40 `9a757f3a38c8` is also past end date (04:59Z today, No at 0.978).** Not a new proposal
+  yet: give the resolver its normal 48h. If it is still open at DEEP-2026-11-06, it becomes the
+  second instance for the void-branch proposal above.
+- **These stay PROPOSED and unchanged:** threshold_sweep_no, the screener-outcomes refresh, P11, P8,
+  P9, P4, P7, the subclass auto-tagger, P1, P2, P3(a), and the counterfactual end-date.
+- **No new hourly proposals. No new deep-retro proposals.**

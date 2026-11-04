@@ -8385,3 +8385,22 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   (`208def9aa091` <4.15 at 0.02 vs mid 0.20, outcome Yes). Write the 3-day mean as the centre, sd at
   least half the range of the last 3 daily changes, and keep the GasBuddy/book centres in the note.
   AAA stays forecast-only; the tight-book tally (3/3) is unchanged because Nov 3 books were >0.30 wide.
+
+## DEEP-2026-11-04 rulings
+
+- **KEEP the three hourly edits of 2026-11-03, all as provisional selection/method rules.**
+  - *No-result clause first* (Saudi MW13 draws): sound. It already produced compliant bet
+    `55c509720c48` (draw Yes @0.93, est 0.975, spread 0.018, one leg of the four). Grade it with the
+    four forecasts by Nov 10. Asymmetry reminder: at 0.93 a win pays $0.37 and a loss costs $5, so
+    resolver/reschedule risk must be quoted, not assumed; do not add a second MW13 leg: each game
+    is its own event for the $10 cap, but all legs ride one SPL scheduling decision (correlated).
+  - *JOLTS edge >=0.10 against a same-direction ladder tilt*: keep. `7f45e8fe6a72` lost because the
+    benchmark (LinkUp 7.05M) missed by +0.45M; the reasoning followed the benchmark correctly. n=3
+    LinkUp misses is insufficient to discount LinkUp itself; the rule only raises the bar.
+  - *AAA 3-day mean centre*: keep, forecast-only. The Nov 1 overshoot and the Nov 3 undershot
+    (`208def9aa091`) were both latest-day extrapolations in opposite directions; smoothing fits both.
+- **Sensing note: collapse a resolved-by-clause sibling cluster after one read.** The same Saudi
+  MW13 draw legs filled the screener's top 4 escalations on at least four FULLs (2026-11-03 10Z to
+  2026-11-04 04Z). Once a cluster's driver is established and recorded, note the cluster in the
+  cycle and research only legs whose ask moved; spend the other escalation slots on the rest of the
+  pool. This is about research allocation, not about the queries (pool 906, stable mix).
