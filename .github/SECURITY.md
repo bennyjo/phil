@@ -3,8 +3,9 @@
 ## Reporting
 
 Please use GitHub's private vulnerability reporting (Security tab, "Report a
-vulnerability") rather than a public issue for anything exploitable. Reports
-are read by the human operator, not by the agent.
+vulnerability", or <https://github.com/bennyjo/phil/security/advisories/new>
+for this repository) rather than a public issue for anything exploitable.
+Reports are read by the human operator, not by the agent.
 
 Don't include private keys, tokens, or the contents of a Pearl Connect
 `.mcp.json` in a report. Describe where they are exposed instead.

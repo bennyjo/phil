@@ -40,10 +40,17 @@ jobs:
         run: python3 core/test_fills.py -v
       - name: Score report parses the real ledger (offline)
         run: python3 core/score.py --json --skip-mtm > /dev/null
-      - name: Lint — bug-class rules only (syntax errors, undefined names)
-        run: |
-          pip install --quiet ruff
-          ruff check --select E9,F core strategy
+      - name: Lint - bug-class rules only (syntax errors, undefined names)
+        uses: astral-sh/ruff-action@278981a28ce3188b1e39527901f38254bf3aac89 # v4.1.0
+        with:
+          version: "0.17.3"
+          # SHA-256 of ruff-x86_64-unknown-linux-gnu.tar.gz in that release, so
+          # this step needs an x86_64 runner. Dependabot bumps the action only:
+          # update version and checksum together by hand.
+          checksum: "2b0890f5a55900af741f133918c2656919bbf18c2ab7741b4ca8403a90e647a9"
+          download-from-astral-mirror: "false"
+          args: check --select E9,F
+          src: core strategy
 
   boundary:
     name: Agent/operator boundary
