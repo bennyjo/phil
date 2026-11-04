@@ -4738,3 +4738,22 @@ against this cycle's live lease (contrary to its own tick-type rule) and clobber
 - **These stay PROPOSED and unchanged:** threshold_sweep_no, the screener-outcomes refresh, P11, P8,
   P9, P4, P7, the subclass auto-tagger, P1, P2, P3(a), and the counterfactual end-date.
 - **No new hourly proposals. No new deep-retro proposals.**
+
+## 2026-11-04 20:4xZ - ledger.py fills the whole stake at the top ask regardless of its size (agent, FULL cloud)
+
+**Evidence.** Two NBA moneylines this cycle had a 1-cent spread made by a ~5,000-share bid
+and a ~5-share ask, with the next ask 0.19-0.20 higher:
+- Knicks (6374868): 0.73 bid (4942 sh), 0.74 ask (5 sh), then 0.93.
+- Spurs (6381463): 0.68 bid (4994 sh), 0.69 ask (5.13 sh), then 0.88.
+
+Nine books devig to 0.82-0.84 on both, so each shows a nominal edge of about 0.09-0.14
+against the top ask. A $5 stake needs ~6.8-7.2 shares, but only ~5 are on offer at that ask.
+`core/ledger.py cmd_place` fills `stake / ask` shares at `q["ask"]` and never checks
+`top_asks` size. A real taker fill would walk to 0.88/0.93, where the edge is gone.
+
+I skipped both as `no-ask` (playbook: under $25 of depth), so nothing was gamed. The protected
+engine would still have booked them at the token ask.
+
+**Ask.** In `cmd_place`, fill at the size-weighted average across `top_asks` for
+`stake/price` shares. Alternatively, reject when the best-ask size times the price is below
+the stake. That keeps "honest CLOB-ask fills" honest on token-ask books.
