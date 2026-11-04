@@ -4490,6 +4490,18 @@ found by searching "Netflix YouTube earnings call". One hit was a
 moderator read, and Q1 2026/Q4 2025, the two most recent unsearched
 calls, were never checked. Yes-side gate record after this: 1W/1L.
 
+**Method note (2026-11-04): earnings-call words below the mid need live-news and brand
+checks (RETRO-20261104-1620).** Uber Q3'26: "DoorDash" own 0.30 vs mid 0.66 rested on ONE
+prior transcript plus "the CEO rarely names competitors" - below the two-transcript minimum -
+and an analyst raised a DoorDash-Instacart storyline in Q&A (said, Yes). "Uber Eats" own
+0.25 vs mid 0.525 rested on exact-phrase 0/3 across mixed official/third-party transcripts
+for the company's own flagship brand (said 3x, Yes). Gates blocked both No bets. Before
+reading an earnings-call word below the mid: (1) one transcript plus judgment is not
+`method=transcript-count` - stay near the mid; (2) search the last 14 days of news for the
+named entity; an active storyline (deal, merger, lawsuit, launch) makes an analyst question
+likely and voids a stale count; (3) for the issuer's own brand or segment names, a 0/k
+exact-phrase count does not support a read more than ~0.10 below the mid.
+
 **Method note (2026-09-16): count only the named speaker's lines.**
 These markets resolve on what the SPEAKER says ("if Warsh says the
 listed term"), and press-conference transcripts interleave reporter
