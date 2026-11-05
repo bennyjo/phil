@@ -109,6 +109,7 @@ cd phil
 python3 -m unittest discover -s core -p 'test_*.py'   # offline tests
 python3 core/validate.py                              # integrity tripwires
 python3 core/score.py                                 # calibration and P&L report
+python3 core/edge_board.py                            # variant table and edge map, offline
 ```
 
 `core/score.py` fetches live prices to mark open positions to market. To run

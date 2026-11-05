@@ -120,6 +120,14 @@ Every invocation runs as one of three ticks:
    exclude placeholder-book rows (P5, operator 2026-10-23) and report them on
    their own line; that exclusion alone moved the forecast headline from
    -0.0019 to +0.0040 on the day it shipped, with no change in skill.
+   Then `python3 core/edge_board.py` (operator, 2026-11-05; offline, about a
+   second; if it fails, log one line and go on). It replays strategy variants
+   on settled forecasts and prints a variant table, an edge map with verdict
+   changes flagged, and an allocation line. Read it in steps 3 and 5. It is a
+   report: it moves no recorded probability, changes no betting rule, and a
+   variant's verdict there neither promotes nor retires a rule. If it shows
+   something a rule should bind, tag that rule under step 3's shadow rules, or
+   make the case in `journal/proposals.md`.
 3. **Retro** (only if new positions settled since the last retro): write
    `journal/retros/RETRO-<UTCdate-HHMM>.md`:
    - For each settled bet: was the estimate wrong, the fill bad, or the
@@ -145,6 +153,11 @@ Every invocation runs as one of three ticks:
    - Settled forecasts are graded the same way (deep retros additionally
      reconcile `journal/forecasts.jsonl` coverage against funnel researched
      entries, and grade skip reasons against settled forecast outcomes).
+   - **Variants are mine to add** in `strategy/variants.py` (optional;
+     contract in `core/edge_board.py`). Each takes a slot in the 6-rule
+     budget. The board keeps the last 14 days of rows out of everything it
+     prints except the variant's verdict word, so judge a variant by that word
+     and quote its line.
    - **Touch-family edits need a passing replay** (operator, 2026-10-23):
      change `strategy/tools/touch.py` or its shading rule
      `strategy/tools/touch_rule.py` (what `touch.py --mid` prints as
@@ -182,7 +195,10 @@ Every invocation runs as one of three ticks:
    Research allocation in step 5 STARTS from collect's top divergences - but
    the screener ranks, it does not gate: watch items, the mechanical-econ
    calendar and the sibling census still claim their research slots under the
-   existing rules. If `prepare` reports quota exhaustion, the Task tool is
+   existing rules. `collect` also repeats the edge board's allocation line on
+   stderr: among otherwise similar candidates, favor its `prefer` cells over
+   its `skip` cells. It is advisory and refuses nothing. If `prepare` reports
+   quota exhaustion, the Task tool is
    unavailable, or `collect` yields nothing, fall back to the current
    unscreened selection and say so in the funnel row's `screener` field.
    **Funnel row** (operator, 2026-10-25, P10): `prepare` opens this FULL
