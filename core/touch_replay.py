@@ -171,7 +171,7 @@ def list_range(start, end):
     out, cursor = [], None
     while True:
         p = {"closed": "true", "tag_id": HIT_PRICE_TAG, "end_date_min": iso(start),
-             "end_date_max": iso(end), "limit": 500}
+             "end_date_max": iso(end), "limit": 500, "version": pmapi.LISTED_VERSIONS}
         if cursor:
             p["after_cursor"] = cursor
         d = http(KEYSET, p)

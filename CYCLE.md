@@ -14,7 +14,8 @@ procedure exactly once, then stop. Work from this directory.
 - You may edit anything under `strategy/`, and write to `journal/retros/` and
   `reports/`. Only `core/ledger.py` and `core/resolve.py` write the ledger;
   only `core/forecast.py` and `core/resolve.py` write `journal/forecasts.jsonl`;
-  only `core/lease.py` writes `journal/lease.json`.
+  only `core/lease.py` writes `journal/lease.json`; only `core/archive.py`
+  and `core/scan.py` write `journal/archive/`.
 - Every probability estimate you record must be your honest belief — your
   calibration is measured (`core/score.py`), and gaming it destroys the
   experiment's value.
@@ -398,6 +399,12 @@ Every invocation runs as one of three ticks:
    V2 markets are read-only: research and forecast them like V1 markets, but
    `core/ledger.py` refuses the bet and logs it to
    `journal/v2-bet-skips.jsonl` (`v2_bets_skipped` in `ledger.py status`).
+6b. **Archive** (FULL cycles only, not TRIGGERED; operator, 2026-11-03):
+   `python3 core/archive.py` with a 10-minute timeout. It saves 5-minute price
+   series before they expire, about once a day and a few minutes at most. It
+   exits 0 even on failure, and a later run retries. Whatever it prints,
+   including a failure or a timeout, go on to step 7; never retry it, debug it,
+   or work around it this cycle. Step 8's `git add -A` commits its files.
 7. **Log**: append one line to `journal/cycles.log`:
    `<UTC ISO> cycle done: settled N, placed M, cash $X` (from ledger status).
    On a TRIGGERED cycle the detail that follows opens with

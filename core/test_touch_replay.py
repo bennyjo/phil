@@ -73,11 +73,12 @@ class FakeAPI:
     The as_of answer's mid is `price`, `age` seconds old at t."""
 
     def __init__(self, markets=MARKETS):
-        self.hist_calls, self.markets = [], markets
+        self.hist_calls, self.list_calls, self.markets = [], [], markets
         self.price, self.age, self.fail = 0.30, 0, False
 
     def __call__(self, url, params=None):
         if url == tr.KEYSET:
+            self.list_calls.append(dict(params))
             return {"markets": self.markets, "next_cursor": None}
         if url == tr.KLINES:
             t0 = params["startTime"] // 1000
@@ -148,6 +149,10 @@ class LeakGuard(Offline):
         self.assertTrue(all(r["mid_age_s"] >= 0 for r in rows))
         # Protocol V2 ids come from positionIds.
         self.assertEqual(len([r for r in rows if r["asset"] == "Ethereum"]), 3)
+
+    def test_listing_asks_for_both_protocol_versions(self):
+        tr.build_rows(WSTART - 86400, END, 600)     # Gamma's default lists V1 only
+        self.assertTrue(all(p["version"] == ["v1", "v2"] for p in self.api.list_calls))
 
     def test_cached_lookahead_point_is_dropped(self):
         tr.CACHE.write_text(
