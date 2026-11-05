@@ -8416,3 +8416,16 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   2026-11-04 04Z). Once a cluster's driver is established and recorded, note the cluster in the
   cycle and research only legs whose ask moved; spend the other escalation slots on the rest of the
   pool. This is about research allocation, not about the queries (pool 906, stable mix).
+
+## DEEP-2026-11-05 rulings
+
+- **Keep: earnings-call words below the mid need live-news and brand checks** (2026-11-04 method
+  note). Evidence: Uber "DoorDash" `7131ba4d2f0c` (+0.374 vs mid) and "Uber Eats" `4d0e3e96742a`
+  (+0.337) were the two worst forecast rows of the day; the correct below-mid reads ("Robotaxi"
+  `a62806f82c5a`, "Freight" `c6f4cb8934bc`) were count-based. Unchanged.
+- **Pre-placement depth check (until core/ledger.py walks the book):** before `place`, confirm
+  `top_asks[0].size * ask >= stake`. If not, compute the size-weighted fill across levels for the
+  full stake and use THAT price for the edge test. The engine books the whole stake at the top ask
+  (proposals.md 2026-11-04 20:4xZ, verified in cmd_place), so a thin top level makes the ledger
+  flatter us. Evidence: Knicks 6374868 / Spurs 6381463 showed 5-share top asks with the next level
+  +0.19; both were correctly skipped.

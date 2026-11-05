@@ -4757,3 +4757,16 @@ engine would still have booked them at the token ask.
 **Ask.** In `cmd_place`, fill at the size-weighted average across `top_asks` for
 `stake/price` shares. Alternatively, reject when the best-ask size times the price is below
 the stake. That keeps "honest CLOB-ask fills" honest on token-ask books.
+
+## DEEP-2026-11-05 - deep-retro proposals and status
+
+- **ledger.py fills the whole stake at the top ask regardless of its size (hourly, 2026-11-04 20:4xZ):
+  Status: ENDORSED, HIGH.** Verified: `cmd_place` uses `q["ask"]` and `stake/(ask+fee)` shares and
+  checks only `min_order_size`, never top-of-book size. Prefer a size-weighted walk of `top_asks`
+  over outright rejection. Interim agent-side guard added to the playbook (DEEP-2026-11-05 rulings).
+- **Hourly lease nonce: Status: ENDORSED, MEDIUM, unchanged.**
+- **resolve.py unreachable 48h void branch (Andersson `e746d7e1ba99`): Status: ENDORSED, unchanged.**
+  Prop 40 `9a757f3a38c8` stays on watch until DEEP-2026-11-06 (No at 0.992, past end).
+- **These stay PROPOSED and unchanged:** threshold_sweep_no, screener-outcomes refresh, P11, P8, P9,
+  P4, P7, subclass auto-tagger, P1, P2, P3(a), counterfactual end-date.
+- **No new deep-retro proposals.**
