@@ -20,13 +20,13 @@ later), the shared screener quota ran to 195/150 batches, and the operator
 runner placed d5cfa982fa21 on top of the open 9a2944acc280 (DEEP-2026-10-08
 P3). Any credential that can push main can write this file.
 
-The file holds one JSON object: {"runner", "started", "ttl_s"} while held,
-{"runner": null, "released_by", "released"} once released; a missing file
-is free too. acquire and release each push one commit that changes nothing
-but this file, as a plain fast-forward push to main. Origin applies a push
-only while main still points where the pusher saw it, so of two runners
-racing for a free lease exactly one push lands; the loser re-reads and
-yields.
+The file holds one JSON object: {"runner", "holder", "started", "ttl_s"}
+while held, {"runner": null, "released_by", "released"} once released; a
+missing file is free too. acquire and release each push one commit that
+changes nothing but this file, as a plain fast-forward push to main. Origin
+applies a push only while main still points where the pusher saw it, so of
+two runners racing for a free lease exactly one push lands; the loser re-reads
+and yields.
 
 acquire builds its commit on the local HEAD and fast-forwards HEAD onto it,
 so the cycle starts from the commit that took the lease. It needs HEAD to
@@ -42,7 +42,7 @@ one. A LIGHT tick still settles and commits ledger and forecast rows, which
 are not union-merged (.gitattributes), so a LIGHT tick next to the holder's
 cycle makes one of the two pushes conflict and fork main. The holder's own
 cycle settles and monitors, so the skipped tick loses nothing. That covers
-both refusals: held by the other runner (exit 3) and not written (exit 4:
+both refusals: held by another run (exit 3) and not written (exit 4:
 origin unreachable, the push refused, or local main behind or diverged). A
 runner that cannot write the lease could not publish its cycle either, since
 both are pushes to main. A run that dies mid-cycle leaves a lease that
@@ -56,13 +56,27 @@ operator machine loop.sh acquires and releases in the interactive shell
 tells the cycle agent through PHIL_LEASE. In the cloud the cycle agent runs
 acquire and release itself.
 
+Run identity (operator, 2026-11-05): the runner name cannot tell two runs of
+one runner apart. On 2026-10-22 16:24Z a second cloud session read a live
+"cloud" lease as its own, overwrote it, then released it, so the first
+session's cycle ran unprotected. Each acquire now creates a holder id
+(core/screen.py's new_holder_id()), saves it to phil-lease-holder in the
+checkout's git directory, and pushes it in the lease. The file carries the id
+from acquire to release, which run as separate processes, and no commit can
+pick it up. Only a release from the checkout whose file matches the lease's
+holder clears the lease. acquire refuses any fresh lease, whoever holds it, so
+no run can extend one; a lease with no holder matches nothing. A run that
+dies mid-cycle therefore blocks the next ones until its ttl runs out. To clear
+it sooner, the operator runs `core/lease.py release` in the same checkout.
+
 Usage:
   python3 core/lease.py check                # never writes; prints JSON
-  python3 core/lease.py acquire [--ttl S]    # exit 0 acquired, 3 held by other, 4 not written
+  python3 core/lease.py acquire [--ttl S]    # exit 0 acquired, 3 held, 4 not written
   python3 core/lease.py release              # exit 0 released or not ours, 1 push failed
 Every subcommand prints one JSON object. Without an origin remote there is
 no shared main to protect, so acquire reports "acquired": true with
-"written": false. Nothing here writes any file but journal/lease.json.
+"written": false. The only files written here are journal/lease.json and the
+holder file in the git directory.
 """
 import argparse
 import datetime as dt
@@ -82,6 +96,7 @@ MAIN = "refs/heads/main"
 REMOTE_MAIN = "refs/remotes/origin/main"
 DEFAULT_TTL_S = 50 * 60
 RELEASE_ATTEMPTS = 3
+HOLDER_FILE = "phil-lease-holder"
 
 
 def git(*args, check=True, input=None, env=None):
@@ -129,11 +144,28 @@ def read_lease(rev):
     return payload if isinstance(payload, dict) else {}
 
 
-def describe(payload, me):
+def holder_path():
+    """Inside the git directory, so no commit can pick the file up."""
+    return ROOT / git("rev-parse", "--git-path", HOLDER_FILE).stdout.strip()
+
+
+def read_holder():
+    """The holder id of this checkout's last acquire; None if it has none."""
+    try:
+        return holder_path().read_text().strip() or None
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+
+def save_holder(holder):
+    holder_path().write_text(holder + "\n")
+
+
+def describe(payload, my_holder):
     runner = payload.get("runner")
     if not runner:
         return {"held": False, "mine": False, "fresh": False, "runner": None,
-                "age_s": None}
+                "holder": None, "age_s": None}
     try:
         started = dt.datetime.fromisoformat(str(payload.get("started")).replace("Z", "+00:00"))
         age = int((now() - started).total_seconds())
@@ -146,12 +178,14 @@ def describe(payload, me):
     # abs(): the two runners' clocks differ, so a lease read a moment after
     # it was taken can look a second or two old in the future.
     fresh = age is not None and abs(age) < ttl
-    return {"held": True, "mine": runner == me, "fresh": fresh,
-            "runner": runner, "age_s": age, "ttl_s": ttl}
+    holder = payload.get("holder")
+    mine = my_holder is not None and holder == my_holder
+    return {"held": True, "mine": mine, "fresh": fresh, "runner": runner,
+            "holder": holder, "age_s": age, "ttl_s": ttl}
 
 
-def held_by_other(d):
-    return d["held"] and d["fresh"] and not d["mine"]
+def is_live(d):
+    return d["held"] and d["fresh"]
 
 
 def is_ancestor(a, b):
@@ -193,12 +227,12 @@ def refuse(me, reason):
 def cmd_check(args):
     me = screen.runner_id()
     if not has_origin():
-        return out(dict(describe({}, me), reason="no remote", me=me))
+        return out(dict(describe({}, None), reason="no remote", me=me))
     try:
         base = fetch_main()
     except RuntimeError as e:
-        return out(dict(describe({}, me), reason=f"unreachable: {e}", me=me))
-    return out(dict(describe(read_lease(base), me), me=me, main=base))
+        return out(dict(describe({}, None), reason=f"unreachable: {e}", me=me))
+    return out(dict(describe(read_lease(base), read_holder()), me=me, main=base))
 
 
 def cmd_acquire(args):
@@ -209,10 +243,11 @@ def cmd_acquire(args):
         base = fetch_main()
     except RuntimeError as e:
         return refuse(me, f"origin unreachable: {e}")
-    d = describe(read_lease(base), me)
-    if held_by_other(d):
+    d = describe(read_lease(base), read_holder())
+    if is_live(d):
         return out(dict(d, acquired=False, me=me,
-                        reason=f"held by {d['runner']} for {d['age_s']}s of {d['ttl_s']}s"), 3)
+                        reason=f"held by {d['holder'] or d['runner']} "
+                               f"for {d['age_s']}s of {d['ttl_s']}s"), 3)
     head = git("rev-parse", "HEAD").stdout.strip()
     if not is_ancestor(base, head):
         where = "behind" if is_ancestor(head, base) else "diverged from"
@@ -220,25 +255,35 @@ def cmd_acquire(args):
                           "a runner on a stale ledger must not cycle")
     if git("status", "--porcelain", "--", LEASE_FILE).stdout.strip():
         return refuse(me, f"{LEASE_FILE} has local changes")
-    payload = {"runner": me, "started": screen.iso(now()), "ttl_s": args.ttl}
+    holder = screen.new_holder_id()
+    payload = {"runner": me, "holder": holder, "started": screen.iso(now()), "ttl_s": args.ttl}
     try:
         commit = lease_commit(head, payload, f"lease: {me} acquired")
     except subprocess.CalledProcessError as e:
         return refuse(me, f"could not build the lease commit: {e.stderr.strip()}")
+    # Saved before the push: a lease on origin always has its id on disk, and
+    # an id whose push fails matches nothing.
+    try:
+        save_holder(holder)
+    except (OSError, subprocess.SubprocessError) as e:
+        return refuse(me, f"could not save the holder id: {e}")
     ok, err = push(commit)
     if not ok:
-        # Either the other runner's lease landed first (lost the race) or
-        # origin refused the write. Re-read to say which; neither may cycle.
         try:
-            d2 = describe(read_lease(fetch_main()), me)
+            latest = read_lease(fetch_main())
         except RuntimeError:
-            d2 = describe({}, me)
-        if held_by_other(d2):
-            return out(dict(d2, acquired=False, me=me, reason=f"lost the race: {err}"), 3)
-        return refuse(me, f"push refused: {err}")
-    result = {"acquired": True, "written": True, "me": me, "sha": commit,
+            latest = {}
+        # Our own id on origin means the push landed and only the answer was
+        # lost. Otherwise another run's lease landed first (lost the race) or
+        # origin refused the write. Re-read to say which; neither may cycle.
+        if latest.get("holder") != holder:
+            d2 = describe(latest, None)
+            if is_live(d2):
+                return out(dict(d2, acquired=False, me=me, reason=f"lost the race: {err}"), 3)
+            return refuse(me, f"push refused: {err}")
+    result = {"acquired": True, "written": True, "me": me, "holder": holder, "sha": commit,
               "started": payload["started"], "ttl_s": args.ttl,
-              "replaced": d["runner"]}
+              "replaced": d["holder"] or d["runner"]}
     merged = git("merge", "--ff-only", "--quiet", commit, check=False)
     if merged.returncode != 0:
         # Harmless for exclusion: the cycle's push rebases over the commit.
@@ -251,18 +296,21 @@ def cmd_release(args):
     me = screen.runner_id()
     if not has_origin():
         return out({"released": False, "reason": "no remote", "me": me})
+    my_holder = read_holder()
     err = "push rejected"
     for _ in range(RELEASE_ATTEMPTS):
         try:
             base = fetch_main()
         except RuntimeError as e:
             return out({"released": False, "me": me, "reason": f"unreachable: {e}"}, 1)
-        d = describe(read_lease(base), me)
+        d = describe(read_lease(base), my_holder)
         if not d["held"]:
             return out({"released": False, "reason": "no lease held", "me": me})
         if not d["mine"]:
-            return out({"released": False, "reason": f"held by {d['runner']}, not ours",
-                        "me": me, "runner": d["runner"], "age_s": d["age_s"]})
+            return out({"released": False,
+                        "reason": f"held by {d['holder'] or d['runner']}, not ours",
+                        "me": me, "runner": d["runner"], "holder": d["holder"],
+                        "age_s": d["age_s"]})
         payload = {"runner": None, "released_by": me, "released": screen.iso(now())}
         try:
             commit = lease_commit(base, payload, f"lease: {me} released")

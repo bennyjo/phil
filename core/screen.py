@@ -108,6 +108,7 @@ import json
 import os
 import pathlib
 import re
+import secrets
 import subprocess
 import sys
 import time
@@ -333,6 +334,15 @@ def runner_id():
     if not name:
         name = "operator" if os.environ.get("PHIL_PUSH_BY_LOOP") else "cloud"
     return re.sub(r"[^A-Za-z0-9_.-]", "_", name)[:40]
+
+
+def new_holder_id():
+    """A lease holder id for one run: the runner name plus a random nonce.
+
+    runner_id() stays the same across a runner's runs, because the quota files
+    and funnel rows are keyed on it, so it cannot tell two runs apart.
+    """
+    return f"{runner_id()}-{secrets.token_hex(4)}"
 
 
 def open_funnel(now, candidates, screener, screened=0, batches=0):

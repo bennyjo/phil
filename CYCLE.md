@@ -79,22 +79,22 @@ Every invocation runs as one of three ticks:
    Then the **runner lease** (operator, 2026-09-06; moved onto `main`
    2026-10-08): the tip guard cannot see a cycle that is still in flight on
    the other runner, so a lease file on origin's `main`
-   (`journal/lease.json`, see `core/lease.py`) says who is mid-cycle. If
-   the environment variable `PHIL_LEASE` is set, loop.sh already took the
-   lease for this invocation: proceed, and never run the lease commands
-   yourself. Otherwise run `python3 core/lease.py acquire`.
+   (`journal/lease.json`, see `core/lease.py`) says who is mid-cycle. A
+   TRIGGERED invocation neither takes nor honours the lease: skip the rest
+   of this paragraph. If the environment variable `PHIL_LEASE` is set,
+   loop.sh already took the lease for this invocation: proceed, and never
+   run the lease commands yourself. Otherwise run `python3 core/lease.py acquire`.
    `"acquired": true` means proceed, and release the lease in step 9 after
    your push. `"acquired": false` means **stop this invocation now**: no
    settle, no log line, no commit, no push; end with the JSON's `reason` as
-   your final message. That covers both refusals: the other runner holds a
+   your final message. That covers both refusals: another run holds a
    fresh lease (exit 3), or the lease could not be written (exit 4: origin
    unreachable, the push refused, or local `main` behind or diverged from
    `origin/main`). Stopping instead of running LIGHT is deliberate: a LIGHT
    tick still commits settled ledger and forecast rows next to the holder's
    cycle, which forks `main`, and the holder's own cycle settles and
-   monitors. A TRIGGERED invocation neither takes nor honours the lease. A
-   lease expires on its own after 50 minutes, so a run that died mid-cycle
-   cannot block the next one.
+   monitors. A lease expires on its own after 50 minutes, so a run that died
+   mid-cycle blocks the next ones for at most that long.
 
 0b. **Pace**: read `strategy/schedule.json`. If `next_full_cycle_after` is in
    the future AND at least `min_full_cycles_per_day` full cycles ran in the
