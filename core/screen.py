@@ -130,6 +130,7 @@ LOG_DIR = ROOT / "journal" / "screener"
 LEGACY_LOG_FILE = ROOT / "journal" / "screener.jsonl"
 QUOTA_DIR = ROOT / "journal" / "screener-quota"
 WORK_ROOT = ROOT / "reports" / "screener-work"
+EDGE_BOARD_ALLOCATION = ROOT / "reports" / "edge-board-allocation.txt"
 
 def log_file(ts):
     """The monthly screener log a row stamped ts (ISO UTC) appends to."""
@@ -984,11 +985,24 @@ def cmd_collect(args):
           f"batches, escalated {len(escalated)}, day batches "
           f"{used}/{cfg['max_batches_per_day']} (by runner {by_runner})",
           file=sys.stderr)
+    allocation = edge_board_allocation()
+    if allocation:
+        print(f"screen: edge board {allocation}", file=sys.stderr)
     update_funnel(work_dir, {
         "screened": len(ranked), "escalated": len(escalated),
         "screener": f"collected {len(ranked)}/{expected} ({n_err} malformed), "
                     f"day batches {used}/{cfg['max_batches_per_day']}"})
     return 0
+
+
+def edge_board_allocation():
+    """The line core/edge_board.py wrote this cycle, or None. Advisory: it
+    changes no ranking. The board deletes the file before it runs, so a missing
+    file is a cycle where the board failed or was skipped."""
+    try:
+        return EDGE_BOARD_ALLOCATION.read_text().strip() or None
+    except OSError:
+        return None
 
 
 def update_funnel(work_dir, fields):
