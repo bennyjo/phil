@@ -8429,3 +8429,13 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   (proposals.md 2026-11-04 20:4xZ, verified in cmd_place), so a thin top level makes the ledger
   flatter us. Evidence: Knicks 6374868 / Spurs 6381463 showed 5-share top asks with the next level
   +0.19; both were correctly skipped.
+
+## 2026-11-06 02:15Z: post-event say-the-word re-quote (RETRO-20261106-0215)
+
+- **Post-event say-the-word rows re-quote before recording.** ABNB "Take Rate"
+  `9c79e34b5c11` was recorded at 22:19Z after the call ended at a prior-based 0.65 while
+  the note cited a stale 0.07/0.69 book; core captured 0.991/0.999 at record (resolved Yes,
+  +0.12 Brier vs mid). Rule (process, not an estimation rule): once the event has ended,
+  run `strategy/tools/quote.py` immediately before `forecast.py record`; if the book sits
+  >=0.95 or <=0.05, find the transcript/clip first, and if none is found, write the
+  post-event book into the note and weigh it as evidence of what was said.
