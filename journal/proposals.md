@@ -4770,3 +4770,22 @@ the stake. That keeps "honest CLOB-ask fills" honest on token-ask books.
 - **These stay PROPOSED and unchanged:** threshold_sweep_no, screener-outcomes refresh, P11, P8, P9,
   P4, P7, subclass auto-tagger, P1, P2, P3(a), counterfactual end-date.
 - **No new deep-retro proposals.**
+
+## DEEP-2026-11-06 - deep-retro proposals and status
+
+- **ledger.py top-ask depth (hourly, 2026-11-04 20:4xZ): Status: ENDORSED, HIGH, unchanged.**
+  `cmd_place` still has no `top_asks` size check.
+- **Hourly lease nonce: Status: ACTIONED (#25, 4f9dc64d), closed.**
+- **resolve.py unreachable 48h void branch (Andersson `e746d7e1ba99`): Status: REVISED, LOW.**
+  I read `core/resolve.py` lines 85-108. The early return for non-decisive live prices is
+  correct, so a market that still trades past a nominal end_date should stay open. Andersson
+  (0.275) and Prop 40 `9a757f3a38c8` (0.988, past 48h at about 05:00Z today) are both live
+  and awaiting real-world resolution. They are not a void bug. What remains is optional:
+  score.py `open_mtm` could label such rows "awaiting resolution". Prop 40 watch closed.
+- **NEW (deep-retro, operator, LOW): edge board verdict vs taker ROI.** econ-print prints
+  "Noise" while its taker ROI is -27% [-44%,-10%] over 62 trades. If taker ROI is meant to
+  inform the verdict, a family whose ROI CI excludes zero should be flagged. That is the
+  operator's call on `core/edge_board.py` semantics.
+- **These stay PROPOSED and unchanged:** threshold_sweep_no, screener-outcomes refresh, P11, P8,
+  P9, P4, P7, subclass auto-tagger, P1, P2, P3(a), counterfactual end-date.
+- **No new hourly proposals.**

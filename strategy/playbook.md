@@ -8439,3 +8439,32 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   run `strategy/tools/quote.py` immediately before `forecast.py record`; if the book sits
   >=0.95 or <=0.05, find the transcript/clip first, and if none is found, write the
   post-event book into the note and weigh it as evidence of what was said.
+
+## DEEP-2026-11-06 rulings
+
+- **Social-count bet bar (category-bar, forecast-only).** Post-count, view-count and other
+  social-media count brackets (edge board family `social-count`) are forecast-only. Use skip
+  reason `category-bar` and keep recording the honest raw estimate (and `postcount-mid` where
+  it applies). Evidence: `core/edge_board.py` 2026-11-06 shows social-count Negative,
+  102 rows / 34 events, dBrier +0.0280 [+0.0011,+0.0550], taker ROI -38% [-64%,-12%] on
+  50 trades. `postcount-mid` is SHADOW, n=10, +0.0205. Lift the bar only when a deep retro
+  quotes the edge board line for social-count with a verdict other than Negative and a
+  taker ROI CI that is no longer entirely below zero.
+- **Yes-side say-the-word suspension (DEEP-2026-10-21): reaffirmed at taker prices.**
+  Settled say-the-word forecasts on books with spread <=0.06 and an edge >=0.04 vs the
+  executable price split as follows: buy-Yes n=67 at -13.7% ROI, buy-No n=46 at +38.7%.
+  These are rows, not events, so treat the CI as wide. Ledger: Yes n=11 at -$35.56, No n=12
+  at -$7.73. The No side stays open at normal gates. Ledger and forecasts disagree on it,
+  which is insufficient data to change it either way.
+- **Earnings: beating the mid on a wide book is not edge.** Replaying every settled earnings
+  forecast at executable prices (Yes at ask or No at bid, edge >=0.04) gives n=14 at
+  -2.9 units, and the edge board shows earnings taker ROI -36%. The cell's -0.032 dBrier vs
+  the mid (n=35) comes from wide books: n=19 at -0.040, against tight books n=17 at -0.0025.
+  Do not loosen the wide-spread veto for earnings. Evidence: BGC `da9f2127c6d2`, ABNB
+  `8db579678fe0` and VIRT `3c31dd187a0e` were mid-scored wins on wide books, and USFD
+  `da5ca005a275` (0.62 vs 0.28, missed) was a wide-book loss.
+- **Read the edge board allocation line, but gates still bind.** "prefer say-the-word" does
+  not lift the Yes-side suspension. "skip news" agrees with the news process-shape bar
+  (RETRO-20260918-1518).
+- **Kept:** the post-event say-the-word re-quote (RETRO-20261106-0215), the top-of-book depth
+  skip (DEEP-2026-11-05) until the core fix lands, and the earnings-call-word rule.
