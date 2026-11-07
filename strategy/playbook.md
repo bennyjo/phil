@@ -8468,3 +8468,37 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   (RETRO-20260918-1518).
 - **Kept:** the post-event say-the-word re-quote (RETRO-20261106-0215), the top-of-book depth
   skip (DEEP-2026-11-05) until the core fix lands, and the earnings-call-word rule.
+
+## DEEP-2026-11-07 rulings
+
+- **Social-count bet bar LIFTED (pre-registered condition met).** The DEEP-2026-11-06 bar
+  said to lift when the edge board showed social-count as anything other than Negative with
+  a taker ROI CI no longer entirely below zero. `core/edge_board.py` 2026-11-07 shows
+  `social-count 107 (35) +0.0244 [-0.0022,+0.0510] ... 53 -13% [-66%,+39%] Noise (was Negative)`.
+  Both conditions hold, so the bar is lifted and normal gates apply again (min_edge,
+  outside-view-veto for countable brackets, `postcount-mid` SHADOW). Be honest about it: the
+  point estimate is still adverse (+0.024), and the gap slope is about 0 (-0.08). Nothing here
+  is positive evidence, and both verdicts sat on the CI boundary. **Reinstate the bar
+  automatically, with no deep retro needed, the first time the edge board prints
+  social-count Negative again.** An hourly cycle that sees that line records it in its
+  retro and uses skip reason `category-bar`.
+- **Yes-side say-the-word suspension: KSC ladder replay, kept.** The Cape Canaveral ladder
+  (RETRO-20261107-0215) looked like a vindication of the Yes side, because the
+  own-above-market Yes reads went 6W/2L against the mid. At executable prices it was not.
+  The legs with an edge of at least 0.04 vs the ask were Space Force `45b5edaa6633` at
+  .70, Mars `6f0681a0ead8` at .62, Moon `a8ffa453d5fe` at .57, SpaceX `67ea540bfa29` at .35
+  and AI `98c87e10c87d` at .34. Bought at the ask, they net -0.21 units over 5 stakes. It is
+  also one event with correlated legs. **Insufficient data; the suspension stands.**
+- **The 24h forecast stream repeats the pattern.** Over 31 non-placeholder settled forecasts
+  (since 2026-11-06 04:16Z), the mean is -0.029 vs the recorded mid. Tight books (spread
+  <=0.06, n=15) are **+0.011**, behind the book. Wide books (n=16) are -0.067, which comes
+  from mid-scoring rows like WTI `11e56c2d6e1f` (.01/.95 book) and Silver `87926dc20c00`
+  (.50/.80). Beating the mid on wide books is still not edge (DEEP-2026-11-06 earnings
+  replay). No gate changes.
+- **Watch-item hygiene.** I moved 22 of 28 `schedule.json` watch_items to
+  `strategy/watch-archive.jsonl`. Their events are past, and every id they carry is settled
+  (0 open forecasts), or they name no ids and their date is past. That cuts 38.8KB to about
+  half, which every tick reads. Kept: Tallahassee/FL (`07db025d1b8b` open), Sweden PM
+  (`e746d7e1ba99`), the validated-feed sweep, Parcl Dec31, Serbia (`ce0db5a673e4` open) and
+  Oct Core CPI. **Rule:** a FULL cycle that grades the last open id of a watch item archives
+  it in the same commit.

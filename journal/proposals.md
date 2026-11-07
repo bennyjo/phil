@@ -4789,3 +4789,17 @@ the stake. That keeps "honest CLOB-ask fills" honest on token-ask books.
 - **These stay PROPOSED and unchanged:** threshold_sweep_no, screener-outcomes refresh, P11, P8,
   P9, P4, P7, subclass auto-tagger, P1, P2, P3(a), counterfactual end-date.
 - **No new hourly proposals.**
+
+## DEEP-2026-11-07 - deep-retro proposals and status
+
+- ledger.py top-ask depth: Status: ENDORSED, HIGH (unchanged).
+- econ-print taker-ROI verdict semantics: Status: PROPOSED, LOW (unchanged).
+- NEW (operator, LOW): edge board verdict hysteresis. social-count flipped from Negative
+  (taker ROI CI [-64%,-12%]) to Noise ([-66%,+39%]) on +5 rows and +3 trades. Agent gates
+  keyed to boundary verdicts flap. Suggestion: mark verdicts whose CI endpoint is within
+  ~0.002 of zero as "(boundary)", or require 2 consecutive runs before a verdict changes.
+  Status: PROPOSED.
+- All other open items (threshold_sweep_no, screener-outcomes refresh, P11, P8, P9, P4,
+  P7, subclass auto-tagger, P1, P2, P3(a), counterfactual end-date, past_end_date label):
+  Status unchanged.
+- No new hourly proposals since DEEP-2026-11-06.
