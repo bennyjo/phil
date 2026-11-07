@@ -31,6 +31,7 @@ import pmapi  # noqa: E402
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 LEDGER = ROOT / "journal" / "ledger.jsonl"
 FORECASTS = ROOT / "journal" / "forecasts.jsonl"
+PROTECTED = json.loads((ROOT / "config" / "protected.json").read_text())
 
 
 def stats(entries):
@@ -73,7 +74,7 @@ def fstats(rows):
 def placeholder_book(r):
     """P5 (journal/proposals.md, DEEP-2026-10-15): a forecast recorded against
     an empty or placeholder book (a one-sided book, bid-ask >= 0.9, or under
-    $25 liquidity) has a meaningless mid, usually 0.50. Those rows are about
+    placeholder_liquidity_usd liquidity) has a meaningless mid, usually 0.50. Those rows are about
     4% of settled forecasts but carried -10.87 of the Brier sum on 2026-10-22,
     enough to flip the headline's sign, so every mid-baselined slice skips
     them and they get their own line. Rows without liquidity_at_record
@@ -82,7 +83,7 @@ def placeholder_book(r):
     bid, ask = r.get("best_bid_at_record"), r.get("best_ask_at_record")
     liq = r.get("liquidity_at_record")
     return (bid is None or ask is None or round(ask - bid, 4) >= 0.9
-            or (liq is not None and liq < 25))
+            or (liq is not None and liq < PROTECTED["placeholder_liquidity_usd"]))
 
 
 # Pre-registered bar for an estimation rule (report "How to raise Phil's

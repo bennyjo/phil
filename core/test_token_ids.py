@@ -210,29 +210,29 @@ class ScanMain(unittest.TestCase):
         return [json.loads(line) for line in out.getvalue().splitlines()], err.getvalue()
 
     def test_scan_archives_the_book_fields_it_read(self):
-        recs, _ = self.scan(lambda tokens: [book("9", bids=[{"price": "0.4", "size": "5"}]),
+        recs, _ = self.scan(lambda tokens: [book("9", bids=[{"price": "0.4", "size": "100"}]),
                                             book("8")])
         (path,) = self.books_dir.iterdir()
         (row,) = [json.loads(x) for x in path.read_text().splitlines()]
         self.assertEqual(set(row["books"]), {r["market_id"] for r in recs})
 
     def test_failed_book_archive_leaves_the_scan_output_alone(self):
-        good, _ = self.scan(lambda tokens: [book("9", bids=[{"price": "0.4", "size": "5"}]),
+        good, _ = self.scan(lambda tokens: [book("9", bids=[{"price": "0.4", "size": "100"}]),
                                             book("8")])
         self.setUp()
         self.books_dir = self.books_dir / "blocked"
         self.books_dir.write_text("")
-        got, err = self.scan(lambda tokens: [book("9", bids=[{"price": "0.4", "size": "5"}]),
+        got, err = self.scan(lambda tokens: [book("9", bids=[{"price": "0.4", "size": "100"}]),
                                              book("8")])
         self.assertEqual(got, good)
         self.assertIn("archive: books not saved", err)
 
     def test_v2_market_with_orders_flows_through_tagged(self):
-        recs, err = self.scan(lambda tokens: [book("9", bids=[{"price": "0.4", "size": "5"}]),
+        recs, err = self.scan(lambda tokens: [book("9", bids=[{"price": "0.4", "size": "100"}]),
                                               book("8")])
         self.assertEqual({r["market_id"]: r["version"] for r in recs},
                          {"10": "v1", "20": "v2"})
-        self.assertIn("v2 markets with orders: 1", err)
+        self.assertIn("v2 markets kept: 1,", err)
 
     def test_empty_v2_book_is_dropped_and_counted(self):
         # Empty V2 books carry placeholder 0.5/0.5 prices, which pass keep()
@@ -240,6 +240,32 @@ class ScanMain(unittest.TestCase):
         recs, err = self.scan(lambda tokens: [book(t) for t in tokens])
         self.assertEqual([r["market_id"] for r in recs], ["10"])
         self.assertIn("dropped for an empty book: 1", err)
+
+    def thin_books(self, yes_bids, no_bids):
+        return lambda tokens: [
+            book("9", bids=[{"price": p, "size": s} for p, s in yes_bids]),
+            book("8", bids=[{"price": p, "size": s} for p, s in no_bids])]
+
+    def test_placeholder_book_with_orders_is_dropped_as_thin(self):
+        # Spurs vs. Suns, live on 2026-11-07: orders on both sides, 0.5/0.5 prices,
+        # and $0.48 of bids against Gamma's liquidityNum 0.4788.
+        recs, err = self.scan(self.thin_books([("0.12", "1.26")], [("0.12", "2.73")]))
+        self.assertEqual([r["market_id"] for r in recs], ["10"])
+        self.assertIn("v2 markets kept: 0, dropped for a thin book (under $25): 1", err)
+        self.assertIn("dropped for an empty book: 0", err)
+
+    def test_depth_sums_the_bids_of_every_token_against_the_placeholder_line(self):
+        # Each side alone is under $25. Heat vs. Kings held 12.16 + 11.76 = $23.92.
+        heat = self.thin_books([("0.76", "16")], [("0.21", "56")])
+        self.assertEqual([r["market_id"] for r in self.scan(heat)[0]], ["10"])
+        self.setUp()
+        at_line = self.thin_books([("0.5", "25")], [("0.25", "50")])
+        self.assertEqual([r["market_id"] for r in self.scan(at_line)[0]], ["10", "20"])
+
+    def test_malformed_book_drops_v2_and_leaves_v1_alone(self):
+        recs, err = self.scan(lambda tokens: [book("9", bids=[{"price": "0.4"}]), book("8")])
+        self.assertEqual([r["market_id"] for r in recs], ["10"])
+        self.assertIn("v2 books unreadable", err)
 
     def test_unreadable_books_drop_v2_and_leave_v1_alone(self):
         def down(_tokens):

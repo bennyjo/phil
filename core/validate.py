@@ -113,7 +113,8 @@ if protected:
                 err("config/protected.json: real.allowed_edge_classes must be "
                     f"a non-empty subset of {sorted(KNOWN_EDGE_CLASSES)}")
     for field in ("sim_bankroll_usd", "max_stake_usd", "max_open_positions",
-                  "min_minutes_to_resolution", "max_entry_price", "min_entry_price"):
+                  "min_minutes_to_resolution", "max_entry_price", "min_entry_price",
+                  "placeholder_liquidity_usd"):
         if not isinstance(protected.get(field), (int, float)):
             err(f"config/protected.json: {field} missing or not numeric")
 
