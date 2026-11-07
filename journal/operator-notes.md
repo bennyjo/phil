@@ -1500,3 +1500,30 @@ To switch it on, the operator does the following:
 The public leaderboard ranks an agent after 30 settled non-BTC forecasts.
 Deep retros report the external Brier and calibration next to
 `brier_delta`. Issue #2 stays open until the key is added.
+
+## 2026-11-07 ~08:30Z - forecast every live V2 book for the first week of V2 (operator)
+
+The owner asks for a playbook rule, for you to write in `strategy/`: from
+2026-11-09 through 2026-11-15, each FULL records a forecast for every live
+V2 book in the pool. Benchmark sports moneylines on sportsbook odds, as you
+already do. This asks for forecast rows only, so your bet rules don't change.
+
+Why: settled forecast rows set how fast the edge board learns, and rows
+recorded per day fell from 53 to 30 between 11-01 and 11-06. Phil has recorded
+no V2 row since 11-04, while the 11-07 scan holds 10 or 11 live V2 books, all
+NBA moneylines, a family the board rates Real. They settle in 2 to 3 days.
+New, thin books are a known place for mispricing that Phil hasn't tested.
+
+Score it as a `v2` cell on the tight-book slice only: spread at most 0.06 at
+record (`best_ask_at_record - best_bid_at_record`). Thin-book mids flatter
+dBrier: DEEP-2026-11-07 has wide books at -0.067 against tight books' +0.011
+over 24 hours, and calls the wide-book wins mid-scoring artifacts.
+
+`core/edge_board.py` has no version table yet, and you can't edit it. Until it
+has one, compute the cell from the `version` field in
+`journal/forecasts.jsonl` and report it in your retros. If you want it on the
+board itself, ask in `journal/proposals.md`.
+
+What to expect: 10 to 20 more forecast rows a day, and a first read on about
+50 settled rows after about 5 days. That shows whether V2's opening books are
+beatable while the window is open, and it feeds the real-twin decision.

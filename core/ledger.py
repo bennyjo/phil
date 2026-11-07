@@ -5,11 +5,13 @@ PROTECTED CORE — the trading agent must not edit files under core/.
 The agent CALLS this to bet; it cannot bypass the caps in config/protected.json
 because this is the only writer of journal/ledger.jsonl.
 
-Fills are honest: a paper BUY fills at the live CLOB best ask for the chosen
-outcome token (crossing the spread, like a real taker order) and pays the
-market's taker fee out of the stake, so the stake buys fewer shares. If the
-book is empty, the order is below the book's min_order_size (the CLOB would
-reject it), or the fill violates protected caps, the bet is rejected.
+Fills are honest: a paper BUY walks the live CLOB asks for the chosen outcome
+token, cheapest first (crossing the spread, like a real taker order), and pays
+each level's taker fee out of the stake, so the stake buys fewer shares. If the
+book is empty, the asks within the protected price bounds cannot fill the whole
+stake (there are no partial fills), the order is below the book's min_order_size
+(the CLOB would reject it), or the fill violates protected caps, the bet is
+rejected.
 
 Usage:
   place:  python3 core/ledger.py place --market-id 123 --outcome Yes \
@@ -67,6 +69,22 @@ def skip_v2_bet(args, m):
     sys.exit(f"REJECTED: {reason}; logged to {V2_BET_SKIPS.name}")
 
 
+def walk_asks(market, asks, stake):
+    """Spend stake on ask levels (price, size), in order, each at its own price
+    and taker fee. Returns (shares, fee_usd, unfilled_usd)."""
+    shares = fee_usd = 0.0
+    for price, size in asks:
+        fee_per_share = pmapi.taker_fee_per_share(market, price)
+        cost_per_share = price + fee_per_share
+        wanted = stake / cost_per_share
+        if wanted <= size:
+            return shares + wanted, fee_usd + wanted * fee_per_share, 0.0
+        shares += size
+        fee_usd += size * fee_per_share
+        stake -= size * cost_per_share
+    return shares, fee_usd, stake
+
+
 def cmd_status(entries):
     open_pos = [e for e in entries if e["status"] == "open"]
     settled = [e for e in entries if e["status"] in ("won", "lost")]
@@ -117,16 +135,23 @@ def cmd_place(args, entries):
         sys.exit("REJECTED: no asks in the book (cannot fill)")
     if not PROTECTED["min_entry_price"] <= ask <= PROTECTED["max_entry_price"]:
         sys.exit(f"REJECTED: fill price {ask} outside protected bounds")
+    fillable = [lvl for lvl in q["asks"] if lvl[0] <= PROTECTED["max_entry_price"]]
     try:
-        fee_per_share = pmapi.taker_fee_per_share(m, ask)
+        shares, fee_usd, unfilled = walk_asks(m, fillable, args.stake)
     except ValueError as err:
         sys.exit(f"REJECTED: cannot price the taker fee ({err})")
-    shares = args.stake / (ask + fee_per_share)
+    if round(unfilled, 6) > 0:
+        sys.exit(f"REJECTED: asks within the protected bounds fill only "
+                 f"${args.stake - unfilled:.2f} of the ${args.stake:g} stake; "
+                 f"partial fills are not booked (lower the stake or skip)")
     # docs.polymarket.com/market-data/market-details: "Orders smaller than the
     # minimum order size are rejected." The book's min_order_size is in shares.
     if q["min_order_size"] and shares < q["min_order_size"]:
         sys.exit(f"REJECTED: {shares:.2f} shares is below the book's min_order_size "
                  f"{q['min_order_size']:g} (raise the stake or skip)")
+    # What the shares cost per share before fees. market_prob_at_entry stays the
+    # top ask, so the gap between them shows the walk's slippage.
+    entry_price = round((args.stake - fee_usd) / shares, 6)
 
     entry = {
         "id": uuid.uuid4().hex[:12],
@@ -137,14 +162,14 @@ def cmd_place(args, entries):
         "end_date": m.get("endDate"),
         "outcome": args.outcome,
         "token_id": tokens[args.outcome],
-        "entry_price": ask,
+        "entry_price": entry_price,
         "best_bid_at_entry": bid,
         "market_prob_at_entry": ask,
         "est_prob": args.est_prob,
-        "edge": round(args.est_prob - ask, 4),
+        "edge": round(args.est_prob - entry_price, 4),
         "stake_usd": args.stake,
         "shares": round(shares, 4),
-        "fee_usd": round(shares * fee_per_share, 5),
+        "fee_usd": round(fee_usd, 5),
         "category": args.category,
         "edge_class": args.edge_class,
         "rationale": args.rationale,
@@ -153,7 +178,7 @@ def cmd_place(args, entries):
     }
     with LEDGER.open("a") as f:
         f.write(json.dumps(entry) + "\n")
-    print(json.dumps({"placed": entry["id"], "filled_at": ask, "edge": entry["edge"],
+    print(json.dumps({"placed": entry["id"], "filled_at": entry_price, "edge": entry["edge"],
                       "shares": entry["shares"], "fee_usd": entry["fee_usd"],
                       "question": entry["question"]}, indent=2))
 

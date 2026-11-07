@@ -12,7 +12,8 @@ Split of responsibilities (changed 2026-08-03):
     resolution, entry-price bounds and the output contract are enforced after
     discovery, on every candidate, and cannot be bypassed by a query.
 
-V2 markets with orders flow out tagged with their version like V1 ones.
+V2 markets with at least the placeholder line of book depth flow out tagged
+with their version like V1 ones.
 core/ledger.py bets the binary ones and refuses the rest (pmapi.tradable).
 
 If `strategy/discovery.py` is missing, raises, or returns nothing usable, this
@@ -40,7 +41,7 @@ PROTECTED = json.loads((ROOT / "config" / "protected.json").read_text())
 UNSUPPORTED = collections.Counter()
 # Gamma version -> distinct markets the listings returned, before any filter.
 LISTED = collections.Counter()
-# V2 markets by whether their books hold any order ("orders" or "empty").
+# V2 markets by book depth: "kept", "thin" (under the placeholder line), or "empty".
 V2_BOOKS = collections.Counter()
 # Market id -> book fields of every non-banned market read, for core/archive.py.
 BOOKS = {}
@@ -95,26 +96,37 @@ def v2_sweep(args, min_end, horizon):
             "end_date_min": iso(min_end), "end_date_max": iso(horizon)}
 
 
-def drop_empty_v2(recs):
-    """Drop V2 records whose books hold no order, and count them. Most V2 books
-    are empty, with placeholder 0.5/0.5 prices that pass keep() and would spend
-    the screener slots V1 markets get. Unreadable books count as empty, so an
-    outage costs V2 this scan and never touches V1."""
+def drop_thin_v2(recs):
+    """Drop V2 records whose books are empty or under placeholder_liquidity_usd
+    of depth, and count them. Most V2 books are empty, with placeholder 0.5/0.5
+    prices that pass keep() and would spend the screener slots V1 markets get.
+    Unreadable books count as empty, so an outage costs V2 this scan and never
+    touches V1.
+
+    Depth is the bid dollars of all the market's tokens. A Yes ask at p is the
+    No bid at 1-p, so this counts each resting order once. Gamma's liquidityNum,
+    the figure score.placeholder_book judges, is this same number once it catches
+    up: all 11 live V2 markets matched to the cent on 2026-11-07. The live book
+    has neither that field's lag nor its nulls (see v2_sweep)."""
     tokens = [t for r in recs if r["version"] == "v2" for t in r["clob_token_ids"]]
     if not tokens:
         return recs
     try:
         books = pmapi.clob_books(tokens)
-    except RuntimeError as e:
+        depth = {b.get("asset_id"): pmapi.bid_depth_usd(b) for b in books}
+    except (RuntimeError, KeyError, TypeError, ValueError) as e:
         print(f"scan: v2 books unreadable: {e}", file=sys.stderr)
-        books = []
+        books, depth = [], {}
     live = {b.get("asset_id") for b in books if b.get("bids") or b.get("asks")}
     kept = []
     for r in recs:
         if r["version"] == "v2":
-            has_orders = live.intersection(r["clob_token_ids"])
-            V2_BOOKS["orders" if has_orders else "empty"] += 1
-            if not has_orders:
+            state = "empty"
+            if live.intersection(r["clob_token_ids"]):
+                usd = sum(depth.get(t, 0.0) for t in r["clob_token_ids"])
+                state = "kept" if usd >= PROTECTED["placeholder_liquidity_usd"] else "thin"
+            V2_BOOKS[state] += 1
+            if state != "kept":
                 continue
         kept.append(r)
     return kept
@@ -199,7 +211,7 @@ def main():
                 break
             offset += len(batch)
             recs = [keep(m, seen, banned, args) for m in batch]
-            for rec in drop_empty_v2([r for r in recs if r]):
+            for rec in drop_thin_v2([r for r in recs if r]):
                 got += 1
                 kept += 1
                 # The query that first found it: screen.py counts the
@@ -211,7 +223,9 @@ def main():
         print(f"scan: skipped {sum(UNSUPPORTED.values())} markets with no usable "
               f"token ids, by Gamma version: {dict(UNSUPPORTED)}", file=sys.stderr)
     print(f"scan: Gamma listed by version: {dict(sorted(LISTED.items(), key=str))}; "
-          f"v2 markets with orders: {V2_BOOKS['orders']}, "
+          f"v2 markets kept: {V2_BOOKS['kept']}, "
+          f"dropped for a thin book (under ${PROTECTED['placeholder_liquidity_usd']:g}): "
+          f"{V2_BOOKS['thin']}, "
           f"dropped for an empty book: {V2_BOOKS['empty']}", file=sys.stderr)
     print(f"scan: {kept} candidates total within {args.hours}h", file=sys.stderr)
     archive.append_books(BOOKS, int(now.timestamp()))

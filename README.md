@@ -76,7 +76,8 @@ Pearl at [pearl.you/connect](https://www.pearl.you/connect).
 
 ## Honest-simulation rules
 
-- Paper fills cross the live CLOB spread (buy at best ask), like a real taker.
+- Paper fills walk the live CLOB asks, cheapest first, like a real taker. A book
+  that cannot fill the whole stake refuses the bet.
 - Entry prices are recorded at bet time; resolutions are Polymarket's own.
 - The agent cannot edit the engine (`core/`, `config/protected.json`).
   `loop.sh` reverts any attempt, and CI independently fails any agent

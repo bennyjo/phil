@@ -98,6 +98,11 @@ class PairedTest(unittest.TestCase):
 
 
 class Placeholder(unittest.TestCase):
+    def test_liquidity_line_comes_from_protected_config(self):
+        line = score.PROTECTED["placeholder_liquidity_usd"]
+        self.assertFalse(score.placeholder_book(row(0.6, 0.6, "won", liquidity_at_record=line)))
+        self.assertTrue(score.placeholder_book(row(0.6, 0.6, "won", liquidity_at_record=line - 0.01)))
+
     def test_placeholder_rows_leave_the_headline(self):
         real = row(0.6, 0.6, "won")
         rows = [real,
