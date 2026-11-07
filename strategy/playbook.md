@@ -8502,3 +8502,46 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   (`e746d7e1ba99`), the validated-feed sweep, Parcl Dec31, Serbia (`ce0db5a673e4` open) and
   Oct Core CPI. **Rule:** a FULL cycle that grades the last open id of a watch item archives
   it in the same commit.
+
+## V2 first-week forecast sweep (operator note 2026-11-07 ~08:30Z; integrated 2026-11-07 12:1xZ FULL, cloud)
+
+**Rule (forecast rows only; bet rules unchanged).** From **2026-11-09 through
+2026-11-15** (UTC dates of the FULL tick), every FULL cycle records a step-5b forecast
+for **every live V2 book** the scan kept, whether or not the screener sampled it into
+the pool. "Live V2 book" = a scan record with `version: "v2"` (scan stderr: `v2
+markets kept: N`; the thin/empty-book drops are core's call, not mine). Re-quote each
+with `strategy/tools/quote.py` before recording, as for any row.
+- NBA (and any other sport) moneylines: benchmark on sportsbook odds via `python3
+  core/odds.py odds basketball_nba` -> `strategy/tools/devig.py`. One call covers
+  every game on the slate, so the sweep costs ~1-3 credits a cycle, inside the
+  10-12/day budget. Form the estimate from the devigged book, then compare.
+- Skip reason: `bet` only if the normal gates pass (min_edge vs the live ask, V2
+  binary only; neg-risk/combinatorial V2 is refused by ledger.py anyway); otherwise
+  `no-edge` / `market-agrees` as usual. Category: the existing family slug
+  (`nba-moneyline`).
+- A market already forecast this window and not materially moved (no new
+  injury/lineup news, book within 0.03 of the last record) is not re-recorded:
+  one row per market per day at most, superseding the earlier row when re-recorded,
+  so the cell counts events, not repeats.
+- If odds.py reports the key missing or the budget exhausted, record no row for
+  that game (never invent an estimate) and log it in the cycle line.
+
+**Scoring.** The cell is `v2` on the TIGHT slice only (spread at record
+`best_ask_at_record - best_bid_at_record <= 0.06`); wide books flatter dBrier
+(DEEP-2026-11-07: wide -0.067 vs tight +0.011 over 24h). Until `core/edge_board.py`
+grows a version table, compute it with `python3 strategy/tools/v2cell.py --since
+2026-11-09` and quote its `v2 TIGHT` line in every retro that settles a V2 row,
+next to the `v1 TIGHT` baseline it prints.
+
+**Baseline at integration (2026-11-07 12:1xZ, `v2cell.py --since 2026-11-01`):**
+`v2 TIGHT n=2 events=2 brier_delta=-0.0558`, `v2 wide n=2 +0.0081`, `v1 TIGHT n=69
++0.0116`. n=2 is nothing; the first read is due at ~50 settled rows (~11-14).
+
+**Why (evidence).** Forecast rows/day fell 53 (11-01) -> 30 (11-06), and Phil recorded
+4 V2 rows on 11-04 and none since (`journal/forecasts.jsonl` version counts), while the
+11-07 12:13Z scan kept 7 live V2 books, all NBA moneylines (`v2 markets kept: 7`), in
+a family the edge board rates Real (allocation `prefer family=sports-moneyline`).
+They settle in 2-3 days, so the sweep is the fastest feedback channel available.
+**Early start:** this cycle (11-07) already forecasts the live V2 books as the first
+instance; that is inside the note's intent (rows only) and tests the procedure before
+the window opens.
