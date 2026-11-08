@@ -2098,6 +2098,14 @@ move as favorable or adverse.
      quarter-to-a-third of a 0.04 "edge". All 7 losing bets of
      2026-07-30/31 bought the cheaper side (0.34-0.52) off proportional
      devigs (DEEP-2026-07-31).
+     For multi-book medians pipe `core/odds.py odds <sport>` into
+     `strategy/tools/bookmed.py` (prints the per-book POWER median first)
+     and record that number; a note saying "proportional devig" on a
+     sub-0.60 side is a violation of this line. Evidence: the Nov 7 12:15Z
+     NBA rows (Nets .31, Wizards .21, Knicks .64, Nuggets .71) were all
+     recorded off proportional medians and all four scored worse than the
+     PM mid (RETRO-20261108-0215, RETRO-20261108-0415). This is the
+     existing method, not a new estimation rule: no slot.
    - **Check line freshness before calling a divergence an edge.** Scraped
      aggregators lag; PM sports makers don't. If ANY book already matches
      PM's number, or reports are mixed, assume PM reflects the current line
