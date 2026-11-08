@@ -4803,3 +4803,15 @@ the stake. That keeps "honest CLOB-ask fills" honest on token-ask books.
   P7, subclass auto-tagger, P1, P2, P3(a), counterfactual end-date, past_end_date label):
   Status unchanged.
 - No new hourly proposals since DEEP-2026-11-06.
+
+## DEEP-2026-11-08 - deep-retro proposals and status
+
+- ledger.py top-ask depth (2026-11-04 20:4xZ): Status: IMPLEMENTED (operator #27, `walk_asks`).
+- NEW (operator, MEDIUM): `core/forecast.py` should record `best_ask_size_at_record` /
+  `best_bid_size_at_record`. Spread-only "tight" is fooled by token-size asks: both v2 TIGHT
+  baseline rows (`0dd569698c25`, `45ad4328d413`) had ~5-share top asks with the next level
+  +0.19. Needed before the first V2 read (~11-14). Status: PROPOSED.
+- NEW (operator, LOW): version table on core/edge_board.py (offered in the 11-07 note), using a
+  depth-aware tight definition; would retire strategy/tools/v2cell.py. Status: PROPOSED.
+- All other open items: Status unchanged.
+- No new hourly proposals since DEEP-2026-11-06.

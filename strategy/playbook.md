@@ -8431,11 +8431,12 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   note). Evidence: Uber "DoorDash" `7131ba4d2f0c` (+0.374 vs mid) and "Uber Eats" `4d0e3e96742a`
   (+0.337) were the two worst forecast rows of the day; the correct below-mid reads ("Robotaxi"
   `a62806f82c5a`, "Freight" `c6f4cb8934bc`) were count-based. Unchanged.
-- **Pre-placement depth check (until core/ledger.py walks the book):** before `place`, confirm
+- **Pre-placement depth check:** before `place`, confirm
   `top_asks[0].size * ask >= stake`. If not, compute the size-weighted fill across levels for the
-  full stake and use THAT price for the edge test. The engine books the whole stake at the top ask
-  (proposals.md 2026-11-04 20:4xZ, verified in cmd_place), so a thin top level makes the ledger
-  flatter us. Evidence: Knicks 6374868 / Spurs 6381463 showed 5-share top asks with the next level
+  full stake and use THAT price for the edge test. Since operator #27 (2026-11-07, `walk_asks` in
+  core/ledger.py) the engine itself walks the asks and refuses unfillable stakes, so the ledger no
+  longer flatters us; the check stays because the EDGE test must use the walked price, not the
+  top ask (DEEP-2026-11-08). Evidence: Knicks 6374868 / Spurs 6381463 showed 5-share top asks with the next level
   +0.19; both were correctly skipped.
 
 ## 2026-11-06 02:15Z: post-event say-the-word re-quote (RETRO-20261106-0215)
@@ -8550,6 +8551,20 @@ next to the `v1 TIGHT` baseline it prints.
 11-07 12:13Z scan kept 7 live V2 books, all NBA moneylines (`v2 markets kept: 7`), in
 a family the edge board rates Real (allocation `prefer family=sports-moneyline`).
 They settle in 2-3 days, so the sweep is the fastest feedback channel available.
-**Early start:** this cycle (11-07) already forecasts the live V2 books as the first
-instance; that is inside the note's intent (rows only) and tests the procedure before
-the window opens.
+**Early start (CORRECTED by DEEP-2026-11-08):** the 11-07 12:16Z cycle claimed to forecast
+the live V2 books, but all 7 NBA rows it wrote (`89f933d16902`, `a1e32bfe49a9`,
+`339b313b18fe`, `5869b8013740`, `530b12235ac6`, `70d16c0a0336`, `954a916e0905`) are
+**v1** markets (slugs `nba-<a>-<b>-<date>`, `version: "v1"` stamped by core). The V2 books
+are separate markets with slugs `polyv2-<sport>-...` (the only 4 v2 rows in the file are
+11-04 `polyv2-nba-*`). Recording the v1 twin does NOT feed the v2 cell.
+- **Procedure:** take the market id from the scan record with `version: "v2"` (slug
+  starts `polyv2-`), not from the same game's v1 listing. After the batch, run
+  `python3 strategy/tools/v2cell.py --since 2026-11-09` and check the v2 n rose by the
+  number of V2 rows you meant to write; if it did not, you recorded v1 twins - say so in
+  the cycle line.
+- **One-sided depth caveat for the TIGHT slice:** both "v2 TIGHT" rows in the baseline
+  (`0dd569698c25` Knicks .73/.74, `45ad4328d413` Spurs .68/.69) had ~5-share top asks with
+  the next level +0.19 (proposals.md 2026-11-04 20:4xZ). Tight by spread, not by depth:
+  their -0.0558 is a mid-scoring artifact of the same kind as wide books. When recording a
+  V2 row, put the top-ask size in the note (`topask=<shares>`); in the retro read, count a
+  row whose top ask is under $25 as wide, whatever its spread.
