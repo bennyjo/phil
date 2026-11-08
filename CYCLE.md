@@ -43,7 +43,8 @@ Every invocation runs as one of three ticks:
 
 - **FULL**: the whole procedure below.
 - **LIGHT**: step 1 and the open-position monitor only, then log, commit, stop.
-  Entered from the collision guard (step 0) or from pacing (step 0b).
+  Entered from the collision guard (step 0) or from pacing (step 0b). A
+  LIGHT tick that changed nothing logs and commits nothing (step 7).
 - **TRIGGERED**: invoked by the watch routine when `core/watch.py check`
   reported `trigger: true` this session. Skip step 0b's pacing and step 4's
   broad scan: the candidate set is the verdict's `context` array (plus at most
@@ -76,21 +77,22 @@ Every invocation runs as one of three ticks:
    before firing), with one exception: if that commit is a
    `cycle(triggered):` commit less than 45 minutes old naming the same
    trigger key, demote to LIGHT.
-   Then the **runner lease** (operator, 2026-09-06; moved onto `main`
-   2026-10-08): the tip guard cannot see a cycle that is still in flight on
-   the other runner, so a lease file on origin's `main`
-   (`journal/lease.json`, see `core/lease.py`) says who is mid-cycle. A
+   Then the **runner lease** (operator, 2026-09-06; moved to its own
+   `lease` branch 2026-11-08): the tip guard cannot see a cycle that is
+   still in flight on the other runner, so a lease file on origin
+   (`journal/lease.json` on the `lease` branch, or on `main` while origin
+   has no `lease` branch; see `core/lease.py`) says who is mid-cycle. A
    TRIGGERED invocation neither takes nor honours the lease: skip the rest
    of this paragraph. If the environment variable `PHIL_LEASE` is set,
    loop.sh already took the lease for this invocation: proceed, and never
    run the lease commands yourself. Otherwise run `python3 core/lease.py acquire`.
    `"acquired": true` means proceed, and release the lease in step 9 after
-   your push. `"acquired": false` means **stop this invocation now**: no
-   settle, no log line, no commit, no push; end with the JSON's `reason` as
-   your final message. That covers both refusals: another run holds a
-   fresh lease (exit 3), or the lease could not be written (exit 4: origin
-   unreachable, the push refused, or local `main` behind or diverged from
-   `origin/main`). Stopping instead of running LIGHT is deliberate: a LIGHT
+   your push, or in step 7 when a LIGHT tick ends with nothing to commit.
+   `"acquired": false` means **stop this invocation now**: no settle, no
+   log line, no commit, no push; end with the JSON's `reason` as your final
+   message. That covers both refusals: another run holds a fresh lease
+   (exit 3), or the lease could not be written (exit 4: origin unreachable,
+   the push refused, or local `main` behind or diverged from `origin/main`). Stopping instead of running LIGHT is deliberate: a LIGHT
    tick still commits settled ledger and forecast rows next to the holder's
    cycle, which forks `main`, and the holder's own cycle settles and
    monitors. A lease expires on its own after 50 minutes, so a run that died
@@ -99,8 +101,8 @@ Every invocation runs as one of three ticks:
 0b. **Pace**: read `strategy/schedule.json`. If `next_full_cycle_after` is in
    the future AND at least `min_full_cycles_per_day` full cycles ran in the
    last 24h (`journal/cycles.log`), run a LIGHT tick: steps 1 and the
-   open-position monitor only, log one line, commit, stop. Otherwise run the
-   full procedure. Update the file (with a reason) whenever the coming hours
+   open-position monitor only, then log and commit as step 7 says, stop.
+   Otherwise run the full procedure. Update the file (with a reason) whenever the coming hours
    look genuinely empty — and clear it when they don't.
 
 0c. **CI health** (full cycles only): `python3 core/ci.py` reports the CI
@@ -421,7 +423,14 @@ Every invocation runs as one of three ticks:
    exits 0 even on failure, and a later run retries. Whatever it prints,
    including a failure or a timeout, go on to step 7; never retry it, debug it,
    or work around it this cycle. Step 8's `git add -A` commits its files.
-7. **Log**: append one line to `journal/cycles.log`:
+7. **Log**: a LIGHT tick that changed nothing ends here, with no log line,
+   commit or push, when all of these hold: step 1 settled 0,
+   `git status --porcelain` prints nothing, and there is nothing for the
+   operator to see (a failed fetch, a diverged `main`, or an open position
+   that needs attention still gets its line). Release the lease as step 9's
+   last paragraph says, if you hold it, and stop. Pacing counts only FULL
+   lines, so the skipped line changes no decision. Otherwise append one
+   line to `journal/cycles.log`:
    `<UTC ISO> cycle done: settled N, placed M, cash $X` (from ledger status).
    On a TRIGGERED cycle the detail that follows opens with
    `(TRIGGERED cycle: <key>` before anything else, so the tick type stays
@@ -458,4 +467,5 @@ Every invocation runs as one of three ticks:
    set), release it: `python3 core/lease.py release`. Release after the push,
    never before, so the other runner's next tip check sees your commit, and
    release even when the push failed: your tick is over, and release commits
-   onto `origin/main` itself.
+   onto origin's lease branch (or `origin/main` while there is none), not
+   onto your local `main`.

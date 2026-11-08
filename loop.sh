@@ -224,7 +224,8 @@ PY
   fi
 
   # Release the runner lease after the push, even a failed one: the tick is
-  # over either way, and release commits onto origin/main, not onto HEAD.
+  # over either way, and release commits onto origin's lease branch (or
+  # origin/main while there is none), not onto HEAD.
   PHIL_PUSH_BY_LOOP=1 python3 core/lease.py release >/dev/null \
     || echo "WARNING: could not release the runner lease - it expires on its own" >&2
 

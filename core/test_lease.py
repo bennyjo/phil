@@ -5,7 +5,9 @@ PROTECTED CORE - the trading agent must not edit files under core/.
 
 Each test seeds a bare "origin" with core/lease.py and what it imports, then
 clones it twice: "cloud" and "operator", the two runners that share
-origin/main. Offline and self-contained; CI runs it on every push.
+origin/main. The shared cases run twice: with origin's `lease` branch (where
+the lease lives) and without it (the lease stays on main). Offline and
+self-contained; CI runs it on every push.
 
 Usage: python3 core/test_lease.py
 """
@@ -27,6 +29,10 @@ from unittest import mock
 REPO = pathlib.Path(__file__).resolve().parent.parent
 SEED = ("core/lease.py", "core/screen.py", "core/funnel.py", "config/protected.json")
 LEASE_FILE = "journal/lease.json"
+# The command core/lease.py's docstring gives for moving the lease to its
+# branch; setUp runs it as written, so the documented command stays tested.
+CREATE_BRANCH = ("git push origin \"$(git commit-tree \"$(git mktree </dev/null)\" "
+                 "-m 'lease: branch created')\":refs/heads/lease")
 
 
 def git(cwd, *args, check=True):
@@ -34,7 +40,10 @@ def git(cwd, *args, check=True):
                           check=check).stdout.strip()
 
 
-class TwoRunners(unittest.TestCase):
+class Shared:
+    """Cases that hold wherever the lease lives; mixed into the two classes below."""
+    on_branch = None
+
     def setUp(self):
         self.tmp = pathlib.Path(tempfile.mkdtemp(prefix="phil-lease-"))
         self.addCleanup(shutil.rmtree, self.tmp, ignore_errors=True)
@@ -56,9 +65,21 @@ class TwoRunners(unittest.TestCase):
             shutil.copy(REPO / rel, seed / rel)
         git(seed, "add", "-A")
         git(seed, "commit", "--quiet", "-m", "seed")
-        git(seed, "push", "--quiet", str(self.origin), "main")
+        git(seed, "remote", "add", "origin", str(self.origin))
+        git(seed, "push", "--quiet", "origin", "main")
+        self.seed = seed
+        if self.on_branch:
+            self.create_lease_branch()
         self.cloud = self.clone("cloud")
         self.operator = self.clone("operator")
+
+    def create_lease_branch(self):
+        subprocess.run(["sh", "-c", CREATE_BRANCH], cwd=self.seed, check=True,
+                       capture_output=True)
+
+    @property
+    def lease_branch(self):
+        return "lease" if git(self.origin, "branch", "--list", "lease") else "main"
 
     def clone(self, name):
         path = self.tmp / name
@@ -74,13 +95,27 @@ class TwoRunners(unittest.TestCase):
         except json.JSONDecodeError:
             self.fail(f"lease.py {' '.join(args)} printed no JSON: {proc.stderr}")
 
-    def origin_lease(self):
-        shown = subprocess.run(["git", "show", f"main:{LEASE_FILE}"], cwd=self.origin,
-                               capture_output=True, text=True)
+    def origin_lease(self, branch=None):
+        shown = subprocess.run(["git", "show", f"{branch or self.lease_branch}:{LEASE_FILE}"],
+                               cwd=self.origin, capture_output=True, text=True)
         return json.loads(shown.stdout) if shown.returncode == 0 else None
 
     def origin_main(self):
         return git(self.origin, "rev-parse", "main")
+
+    def subjects(self, branch):
+        return git(self.origin, "log", "--format=%s", branch).splitlines()
+
+    def plant_lease(self, payload):
+        """Commit `payload` as the lease, as an old core/lease.py would have."""
+        branch = self.lease_branch
+        path = self.tmp / "planter"
+        git(self.tmp, "clone", "--quiet", "-b", branch, str(self.origin), str(path))
+        (path / LEASE_FILE).parent.mkdir(exist_ok=True)
+        (path / LEASE_FILE).write_text(json.dumps(payload) + "\n")
+        git(path, "add", "-A")
+        git(path, "commit", "--quiet", "-m", "lease: cloud acquired")
+        git(path, "push", "--quiet", "origin", f"HEAD:{branch}")
 
     def sync(self, runner):
         git(runner, "fetch", "--quiet", "origin")
@@ -100,8 +135,6 @@ class TwoRunners(unittest.TestCase):
         rc, got = self.lease(self.cloud, "acquire")
         self.assertEqual((rc, got["acquired"], got["written"]), (0, True, True))
         self.assertEqual(self.origin_lease()["runner"], "cloud")
-        self.assertEqual(git(self.cloud, "rev-parse", "HEAD"), self.origin_main(),
-                         "the cycle must start from the commit that took the lease")
 
         self.sync(self.operator)
         before = self.origin_main()
@@ -123,15 +156,17 @@ class TwoRunners(unittest.TestCase):
         rc, got = self.lease(self.operator, "acquire")
         self.assertEqual((rc, got["acquired"]), (0, True))
         self.assertEqual(self.origin_lease()["runner"], "operator")
-        subjects = git(self.origin, "log", "--format=%s", "main").splitlines()
-        self.assertEqual(subjects[:4], ["lease: operator acquired", "lease: cloud released",
-                                        "cycle: 20261008-2100", "lease: cloud acquired"])
+        self.assertEqual(self.subjects(self.lease_branch)[:3],
+                         ["lease: operator acquired", "lease: cloud released",
+                          "lease: cloud acquired"] if self.on_branch else
+                         ["lease: operator acquired", "lease: cloud released",
+                          "cycle: 20261008-2100"])
 
     def test_lease_commits_change_only_the_lease_file(self):
-        # The CI boundary guard holds every non-operator commit to this.
+        # The CI boundary guard holds every non-operator commit on main to this.
         self.lease(self.cloud, "acquire")
         self.lease(self.cloud, "release")
-        for sha in git(self.origin, "rev-list", "main", "-2").split():
+        for sha in git(self.origin, "rev-list", self.lease_branch, "-2").split():
             files = git(self.origin, "diff-tree", "--no-commit-id", "--name-only", "-r", sha)
             self.assertEqual(files, LEASE_FILE)
 
@@ -159,9 +194,9 @@ class TwoRunners(unittest.TestCase):
         mod = self.operator_module()
         real_push, cloud_result = mod.push, {}
 
-        def push_after_the_cloud(commit):
+        def push_after_the_cloud(commit, ref):
             cloud_result["rc"], cloud_result["out"] = self.lease(self.cloud, "acquire")
-            return real_push(commit)
+            return real_push(commit, ref)
 
         before = git(self.operator, "rev-parse", "HEAD")
         with mock.patch.object(mod, "push", push_after_the_cloud):
@@ -178,8 +213,8 @@ class TwoRunners(unittest.TestCase):
         mod = self.operator_module()
         real_push = mod.push
 
-        def landed_but_no_answer(commit):
-            real_push(commit)
+        def landed_but_no_answer(commit, ref):
+            real_push(commit, ref)
             return False, "connection lost"
 
         with mock.patch.object(mod, "push", landed_but_no_answer):
@@ -221,9 +256,7 @@ class TwoRunners(unittest.TestCase):
     def test_a_refused_write_fails_closed(self):
         # The cloud credential's HTTP 403 on refs/phil/lease, as a remote
         # that refuses every push. The old lease proceeded "unprotected".
-        hook = self.origin / "hooks" / "pre-receive"
-        hook.write_text("#!/bin/sh\necho 'HTTP 403' >&2\nexit 1\n")
-        hook.chmod(0o755)
+        write_hook(self.origin, "echo 'HTTP 403' >&2\nexit 1\n")
         before = git(self.cloud, "rev-parse", "HEAD")
         rc, got = self.lease(self.cloud, "acquire")
         self.assertEqual((rc, got["acquired"], got["written"]), (4, False, False))
@@ -331,12 +364,9 @@ class TwoRunners(unittest.TestCase):
     def test_a_lease_without_a_holder_is_nobodys_until_it_expires(self):
         # A lease written before holder ids existed: no run can prove it is
         # theirs, so it stays until its ttl runs out.
-        (self.cloud / "journal").mkdir()
-        (self.cloud / LEASE_FILE).write_text(json.dumps(
-            {"runner": "cloud", "started": "2999-01-01T00:00:00Z", "ttl_s": 10 ** 12}) + "\n")
-        git(self.cloud, "add", "-A")
-        git(self.cloud, "commit", "--quiet", "-m", "lease: cloud acquired")
-        git(self.cloud, "push", "--quiet", "origin", "HEAD:main")
+        self.plant_lease({"runner": "cloud", "started": "2999-01-01T00:00:00Z",
+                          "ttl_s": 10 ** 12})
+        self.sync(self.cloud)
         rc, got = self.lease(self.cloud, "release")
         self.assertEqual((rc, got["released"]), (0, False))
         rc, got = self.lease(self.cloud, "acquire")
@@ -351,7 +381,7 @@ class TwoRunners(unittest.TestCase):
         rc, got = self.lease(self.cloud, "release")
         self.assertEqual((rc, got["released"]), (0, True))
         self.assertIsNone(self.origin_lease()["runner"])
-        self.assertIn("cycle: triggered", git(self.origin, "log", "--format=%s", "main"))
+        self.assertIn("cycle: triggered", self.subjects("main"))
 
     def test_unreachable_origin_fails_closed(self):
         git(self.cloud, "remote", "set-url", "origin", str(self.tmp / "missing.git"))
@@ -363,6 +393,79 @@ class TwoRunners(unittest.TestCase):
         git(self.cloud, "remote", "remove", "origin")
         rc, got = self.lease(self.cloud, "acquire")
         self.assertEqual((rc, got["acquired"], got["written"]), (0, True, False))
+
+
+def write_hook(origin, body):
+    hook = origin / "hooks" / "pre-receive"
+    hook.write_text("#!/bin/sh\n" + body)
+    hook.chmod(0o755)
+
+
+class OnTheLeaseBranch(Shared, unittest.TestCase):
+    on_branch = True
+
+    def test_the_lease_never_adds_a_commit_to_main(self):
+        main, head = self.origin_main(), git(self.cloud, "rev-parse", "HEAD")
+        rc, got = self.lease(self.cloud, "acquire")
+        self.assertEqual((rc, got["acquired"], got["ref"]), (0, True, "lease"))
+        self.assertEqual((self.origin_main(), git(self.cloud, "rev-parse", "HEAD")),
+                         (main, head), "acquire must leave main and HEAD alone")
+        self.cycle(self.cloud, "20261108-2213")
+        rc, got = self.lease(self.cloud, "release")
+        self.assertEqual((rc, got["released"], got["ref"]), (0, True, "lease"))
+        self.assertEqual(self.subjects("main"), ["cycle: 20261108-2213", "seed"])
+        self.assertEqual(self.subjects("lease"), ["lease: cloud released",
+                                                  "lease: cloud acquired",
+                                                  "lease: branch created"])
+        self.assertEqual(git(self.origin, "ls-tree", "-r", "--name-only", "lease"), LEASE_FILE,
+                         "the lease branch holds the lease file and nothing else")
+
+    def test_a_refused_branch_push_fails_closed(self):
+        # A credential that may push main but not the lease branch.
+        write_hook(self.origin, 'while read old new ref; do\n'
+                   '  [ "$ref" = refs/heads/lease ] && echo "HTTP 403" >&2 && exit 1\n'
+                   'done\nexit 0\n')
+        main = self.origin_main()
+        rc, got = self.lease(self.cloud, "acquire")
+        self.assertEqual((rc, got["acquired"], got["written"]), (4, False, False))
+        self.assertIn("push refused", got["reason"])
+        self.assertEqual(self.origin_main(), main)
+
+    def test_deleting_the_branch_moves_the_lease_back_to_main(self):
+        self.lease(self.cloud, "acquire")
+        self.lease(self.cloud, "release")
+        git(self.origin, "branch", "-D", "lease")
+        # The cloud still has a tracking ref for the deleted branch.
+        rc, got = self.lease(self.cloud, "acquire")
+        self.assertEqual((rc, got["acquired"], got["ref"]), (0, True, "main"))
+        self.assertEqual(self.origin_lease("main")["runner"], "cloud")
+
+
+class OnMainUntilTheBranchExists(Shared, unittest.TestCase):
+    on_branch = False
+
+    def test_acquire_starts_the_cycle_from_the_lease_commit(self):
+        rc, got = self.lease(self.cloud, "acquire")
+        self.assertEqual((rc, got["acquired"], got["ref"]), (0, True, "main"))
+        self.assertEqual(git(self.cloud, "rev-parse", "HEAD"), self.origin_main(),
+                         "the cycle must start from the commit that took the lease")
+
+    def test_a_lease_taken_on_main_holds_once_the_branch_appears(self):
+        # The branch is created while a cycle that took its lease on main is
+        # in flight: the other runner must still wait, and the holder's
+        # release must still clear its lease.
+        self.lease(self.cloud, "acquire")
+        self.create_lease_branch()
+        self.sync(self.operator)
+        rc, got = self.lease(self.operator, "acquire")
+        self.assertEqual((rc, got["acquired"], got["ref"]), (3, False, "main"))
+        self.assertIn("held on main", got["reason"])
+        rc, got = self.lease(self.cloud, "release")
+        self.assertEqual((rc, got["released"], got["ref"]), (0, True, "main"))
+        self.assertIsNone(self.origin_lease("main")["runner"])
+        self.sync(self.operator)
+        rc, got = self.lease(self.operator, "acquire")
+        self.assertEqual((rc, got["acquired"], got["ref"]), (0, True, "lease"))
 
 
 if __name__ == "__main__":

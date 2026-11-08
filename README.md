@@ -137,7 +137,8 @@ Before you run `loop.sh`, know what it does:
   allowlist that includes web search and web fetch.
 - Each cycle commits, and `loop.sh` pushes to `main` on your `origin`
   remote. Before each cycle it takes the runner lease (`core/lease.py`),
-  which is also a push to `origin`. On a clone that can't push to `origin`,
+  which is also a push to `origin`: to its `lease` branch, or to `main` if
+  `origin` has no `lease` branch. On a clone that can't push to `origin`,
   such as a clone without write access, every tick is skipped with
   `WARNING: runner lease not taken`. To run your own Phil, fork the
   repository and clone your fork. To run locally without pushing anywhere,
