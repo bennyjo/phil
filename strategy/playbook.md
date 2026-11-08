@@ -6848,6 +6848,15 @@ read. The 90-day legs stay forecast-only (`unvalidated-method`).
   same event. `0f8f5b9bfebc` ('<=6' at count 6, 0.31 vs mid 0.275)
   shaded up for the Banda Aceh `mb` downgrade and won (-0.050). Keep
   applying the weight to forecasts in both directions.
+- **RETRO-20261108-2215: reviewed `mww` moved 0.1 too (n=1, procedure
+  only, no probability rule).** Nov 7 daily max: M5.9 mww reviewed at
+  00:17Z (`48a1fd71395a` 5.9-6.0 Yes .95, lost) read M5.8 mww by 16:2xZ
+  (`2a6b9fe14aa0` 5.7-5.8 .97, won). **Procedure: when a daily-max ladder
+  or count hinges on an event within 0.1 of a bucket edge, the last FULL
+  before resolution re-pulls that event from USGS (event detail, note the
+  `updated` time) and supersedes the row if the magnitude moved.** A second
+  `mww` revision across an edge would justify a shadow-slugged floor; until
+  then the mww exemption above stands for estimates.
 
 ## RETRO-20261007-0410 ruling: riding-level aggregator vs the book
 
