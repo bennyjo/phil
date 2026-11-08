@@ -8392,6 +8392,8 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
 - Procedure (selection, not an estimation rule): when a draw (or any "No"-default) leg sits far from its
   base rate, quote the no-result clause and check the governing body's schedule news before modelling the
   match. Grade it when these four settle (by Nov 10).
+- Status (RETRO-20261108-0815): 1 of 4 settled, 540a22361a66 won; the MW13 family's 9 settled rows
+  scored own Brier .0017 vs mkt .0049 (one correlated event). Bet 55c509720c48 won +$0.36. Three open.
 
 ## 2026-11-03 18:15Z: JOLTS Sep bet lost, AAA Nov 3 missed low (RETRO-20261103-1815)
 
