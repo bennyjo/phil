@@ -7432,6 +7432,11 @@ would also have tripped max_spread). Earnings OVV subclass stays as is.
   19cf14c87979 (Aug) both leaned on the TE calendar figure against the
   book, and both were wrong. Treat TE as one input averaged with the
   seasonal-MoM base. It never justifies a claimed edge on its own.
+  RETRO-20261109-0415 addendum: the same holds for a self-built sd
+  around an unsourced centre. Oct-26 rows 4cc5863f9eb8/9c4567540b43
+  (<=0.6, own .32/.20 vs book .23/.11) and d6161362b48e (0.7-0.8, own
+  .33 vs last .68) all lost to the book; outcome 0.7-0.8. With no
+  sourced consensus, China CPI brackets stay forecast-only.
 
 ## DEEP-2026-10-14 rulings
 
