@@ -24,7 +24,7 @@ stores YOUR raw estimate as est_prob and that raw value is what a bet is sized o
 `core/score.py` promotes (PASS, >=20 events, 99.5% paired CI below zero) or retires (FAIL) a
 rule. Quote score.py's rule line when judging one. **No hand tallies for these rules in this
 file any more** — the "re-grade at n=X", "tally n=Y" clauses attached to them below are void.
-Budget 6 (all 6 slots used since RETRO-20261031-0415). Since #14 merged (2026-10-22 ~23:48Z) the 00:12/02:12/04:12Z FULLs recorded 35
+Budget 6 (all 6 slots used since RETRO-20261031-0415; RETRO-20261109-2215 retired the never-tagged `views-decay-mid` and gave its slot to `ai-release-mid`). Since #14 merged (2026-10-22 ~23:48Z) the 00:12/02:12/04:12Z FULLs recorded 35
 forecast rows and tagged 0 (score.py `rules: {}`): no rule had a slug. Now five do.
 
 | slug | applies to | raw | rule value | source |
@@ -32,7 +32,7 @@ forecast rows and tagged 0 (score.py `rules: {}`): no rule had a slug. Now five 
 | `postcount-mid` | social-media-postcount brackets not already decided by the live count | your bootstrap/pace read | CLOB mid | RETRO-20261016-0815 |
 | `knife-edge-mid` | any self-computed distribution whose centre is within 1.5 sd of the bracket/threshold edge (merges the 0.40-0.60 knife-edge cap, RETRO-20261012-1400, and the straddle rule; the cap is retired) | your computed P | CLOB mid | MrBeast straddle instances; GTA `63c1fb8c4d1e` (cap 0.60 vs book 0.88, lost) |
 | `earnings-mid` | earnings-beat rows with no issuer primary-source datapoint dated after the line was set | your estimate | clipped to mid +/-0.05 | RETRO-20261022-1430 |
-| `views-decay-mid` | multi-day view/count projections with fewer than 2 measured day-over-day decay ratios | your projection | clipped to mid +/-0.05 | RETRO-20261022-1620 |
+| `ai-release-mid` | AI-model / product release-date rungs ("released by/on <date>") where the raw est_prob is off the ladder mid WITHOUT a POSITIVE primary-source finding (launch live, or an official date). Negative checks ("not on the news page yet") do not count. | your raw read | CLOB mid | RETRO-20261109-2215: Fable 5.2+ settled Yes Nov 9; four later-than-market rows all lost: `59f1933102a7` .35/.555 (+0.224), `b0877b5340db` .65/.725 (+0.047), `8388516aeff8` .17/.273 (+0.160), `5c1c1d3f700b` .20/.807 (+0.603). Previously written as an untagged "ladder mid" clause (ai-release-anchor) that rows only noted as `rule view`, so score.py never graded it. Replaces `views-decay-mid` (retired unused: 0 tagged rows since RETRO-20261022-1620) |
 | `rally-below-mid` | Trump/Vance rally say-the-word reads (market-series, judgment) that sit BELOW the CLOB mid; not speaker-only transcript counts | your raw read | CLOB mid | NC-revert pre-registration (+0.20 threshold): SC+IA+FL below-mid raw n=20, +0.750 vs mid, RETRO-20261023-2215 (FL was a partial rally; the completed FL legs moved the other way, RETRO-20261024-0015 - untagged, the GA tagged rows are the first scored evidence). DEEP-2026-10-24 recount: the 8 completed-FL below-mid rows (AI, Drill, SI, Fish, Space, Jacksonville, Filibuster, Hell 15+; RETRO-20261024-0015) sum -0.567, so the whole pre-registration pool is about +0.18, UNDER its own +0.20 threshold, and one Fish row (0.50/0.91 book, -0.337) carries much of the swing. Kept in shadow because shadow costs nothing (raw sizes bets); score.py decides |
 | `series-recent6` | Trump/Vance rally market-series rows where the last-6 Laplace differs from the full-series Laplace by >=0.10 (coined/trending phrases decaying or surging inside the window) | full-series Laplace | last-6 Laplace | RETRO-20261031-0415: SI\|Super Intelligence full-series sat above the mid on a 5th straight No (`9c41a232a4f9` 0.40 vs book 0.24/0.29, recent6 view 0.25); AI `f66172016523` 0.235 vs recent6 0.125, No. Counter-instance: Data Center `afafed90f2f7` recent6 2/6 sat at/above full-series and also went No - hence shadow, not a hand verdict |
 
@@ -1642,6 +1642,7 @@ reads are now 12/12 against me.
 Mid-anchored control rows (RETRO-20261015-0625): Fable 5.2+ Oct 14
 `a301f1e0348d` 0.265/0.26 settled No, dBrier +0.003 -- flat, as the rule predicts.
 Fable 5.2+ Oct 24 (RETRO-20261025-0615): anchored `efd09c5220e7`/`1cd2488efaaa` flat; `84ad37e66d6f` (10-14, 0.85 vs mid 0.91, no primary-source URL) violated the Pre-record check and happened to win (dBrier -0.106) -- first later-than-market read to go my way; one event, rule unchanged, counts toward the n=8 shade-view re-grade.
+Fable 5.2+ Nov 9 (RETRO-20261109-2215): released Nov 9 (both by-Nov19 and on-Nov9 rungs Yes). All four below-mid rows lost (sum dBrier about +1.03); the .20-vs-.807 row recorded a NEGATIVE primary-source check as if it were evidence, against the clause above. The anchor is now the slugged shadow rule `ai-release-mid` (table at top): tag every such row so score.py grades it.
 
 **Treasury touch drift rule (RETRO-20260928-2215).** For a Treasury
 par-yield touch rung ("hit X% in <month>") with 5 or fewer prints left,
@@ -6380,6 +6381,11 @@ RETRO-20260929-2342. Stays a tracked observation, not a playbook rule —
 n=2 is far below the ~15-settlement floor CYCLE.md sets for acting on a
 read, and the two cases are in different categories (ai-model-release vs
 news). Re-visit if a third instance settles either way.
+**Third instance (RETRO-20261109-2215): market right, now 2-for-3 for the
+market.** Fable 5.2 on-Nov9 book jumped to .60/.80 with no source I could
+find at 18:3xZ (news page, models page, docs, release notes); the model
+shipped later that day. Still n=3, still not a hand rule; for release-date
+rungs the slugged `ai-release-mid` shadow rule now carries the question.
 
 ## 2026-09-30 15:45Z update: Core PCE Aug, Parcl Sep30 SET, AAA gas $4.50 settled (RETRO-20260930-1545)
 
