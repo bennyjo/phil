@@ -11,15 +11,42 @@ operator asked for from journal/forecasts.jsonl:
 Also prints the wide slice and the V1 tight baseline over the same dates, for
 context only. Read-only; report the TIGHT line in retros.
 
+DEEP-2026-11-09: depth-aware TIGHT. A row is TIGHT only if spread <= 0.06 AND
+its top ask holds >= $25 (first `topask=<shares>` in the note x best_ask).
+Rows with a sub-$25 top ask are demoted to wide (Knicks 0dd569698c25 / Spurs
+45ad4328d413 were ~5-share asks: tight by spread, not by depth). V2 rows with
+no topask note are counted and reported, not silently trusted. The TIGHT line
+is also split by benchmark: `spread-derived` in the note (ML inferred from a
+point spread, an unvalidated conversion) vs sportsbook-odds rows.
+
 usage: python3 strategy/tools/v2cell.py [--since 2026-11-09] [--until 2026-11-15]
+       (default --since is the sweep start, 2026-11-09)
 """
 import argparse
 import json
 import math
+import re
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 TIGHT = 0.06
+MIN_TOP_USD = 25.0
+DEPTH_DEMOTE = {"0dd569698c25", "45ad4328d413"}  # pre-topask rows, ~5-share asks
+TOPASK = re.compile(r"topask=(\d+(?:\.\d+)?)")
+
+
+def depth_ok(r):
+    """True/False on a $25 top-ask test; None when the note carries no topask."""
+    if r["id"] in DEPTH_DEMOTE:
+        return False
+    m = TOPASK.search(r.get("note") or "")
+    if not m:
+        return None
+    return float(m.group(1)) * float(r["best_ask_at_record"]) >= MIN_TOP_USD
+
+
+def spread_derived(r):
+    return "spread-derived" in (r.get("note") or "").lower()
 
 
 def load():
@@ -47,7 +74,7 @@ def cell(rows):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--since", default="2026-11-01")
+    ap.add_argument("--since", default="2026-11-09")
     ap.add_argument("--until", default="2099-12-31")
     a = ap.parse_args()
     rows, superseded = load()
@@ -65,13 +92,23 @@ def main():
             bid, ask = r.get("best_bid_at_record"), r.get("best_ask_at_record")
             if bid is None or ask is None or r.get("market_prob_at_record") is None:
                 continue
-            if (ask - bid <= TIGHT + 1e-9) != tight:
+            is_tight = ask - bid <= TIGHT + 1e-9
+            if is_tight and version == "v2" and depth_ok(r) is False:
+                is_tight = False
+            if is_tight != tight:
                 continue
             out.append(r)
         return out
 
     print(f"window {a.since}..{a.until}; tight = spread <= {TIGHT}")
-    print(f"v2 TIGHT  {cell(pick('v2', True))}  (open: {len(pick('v2', True, False)) - len(pick('v2', True))})")
+    t = pick('v2', True)
+    print(f"v2 TIGHT  {cell(t)}  (open: {len(pick('v2', True, False)) - len(t)})")
+    print(f"  odds-bench      {cell([r for r in t if not spread_derived(r)])}")
+    print(f"  spread-derived  {cell([r for r in t if spread_derived(r)])}")
+    nodepth = [r for r in pick('v2', True, False) if depth_ok(r) is None]
+    if nodepth:
+        print(f"  WARNING: {len(nodepth)} v2 TIGHT row(s) lack topask= in the note: "
+              + " ".join(r['id'] for r in nodepth))
     print(f"v2 wide   {cell(pick('v2', False))}  (context only; mid-scoring artifact risk)")
     print(f"v1 TIGHT  {cell(pick('v1', True))}  (baseline, same window)")
 

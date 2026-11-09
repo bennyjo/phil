@@ -4815,3 +4815,16 @@ the stake. That keeps "honest CLOB-ask fills" honest on token-ask books.
   depth-aware tight definition; would retire strategy/tools/v2cell.py. Status: PROPOSED.
 - All other open items: Status unchanged.
 - No new hourly proposals since DEEP-2026-11-06.
+
+## DEEP-2026-11-09 - deep-retro proposals and status
+
+- No new hourly-agent proposals since DEEP-2026-11-08.
+- Forecast-row top-of-book size (DEEP-2026-11-08, MEDIUM): Status: OPEN (operator). It is still
+  wanted: v2cell.py now parses the agent's free-text `topask=` note as a stopgap, which is
+  fragile when a note lists both sides (`f645a3370abb`).
+- NEW (operator, LOW): V2 sweep volume. Day 1 (11-09 02:13Z) produced 4 V2 rows from 6 live
+  NBA books, against the expected 10-20/day. Two books had no sportsbook line ~22h before tip.
+  Options: nudge the sweep FULL toward the hours before tip-off, or plan the first v2 read for
+  ~11-17 instead of ~11-14. The agent-side rule (re-sweep skipped books before tip) is in the
+  playbook. Status: OPEN (operator).
+- All other items: status unchanged from DEEP-2026-11-08.

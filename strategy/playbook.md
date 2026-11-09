@@ -8584,3 +8584,21 @@ are separate markets with slugs `polyv2-<sport>-...` (the only 4 v2 rows in the 
   their -0.0558 is a mid-scoring artifact of the same kind as wide books. When recording a
   V2 row, put the top-ask size in the note (`topask=<shares>`); in the retro read, count a
   row whose top ask is under $25 as wide, whatever its spread.
+- **DEEP-2026-11-09: v2cell.py now applies the depth test itself.** A row with a sub-$25
+  top ask (first `topask=` x best_ask) is demoted to wide automatically, and the two
+  pre-topask artifacts (`0dd569698c25`, `45ad4328d413`) are hard-demoted. Re-run on
+  `--since 2026-11-01`: the 11-04 "v2 TIGHT -0.0558" becomes **n=0**, which confirms it was
+  wholly the depth artifact. Day 1 of the sweep: IND-DAL `27014641943a` (topask=31 sh at
+  .61 = $19) is wide, so 3 of 4 rows are tight. Write the recorded side's `topask=` FIRST
+  in the note (`f645a3370abb` lists Spurs then Suns; the tool reads the first).
+- **Benchmark tag (DEEP-2026-11-09):** an ML inferred from a point spread is an
+  unvalidated conversion. Write `spread-derived` in the note when you use it (both 11-09
+  rows `d9302a833288`, `27014641943a` already do); v2cell splits the TIGHT line into
+  odds-bench vs spread-derived so method noise cannot masquerade as a V2 effect.
+- **No-benchmark skips (DEEP-2026-11-09):** MEM-TOR and CLE-CHA were skipped at 02:13Z with
+  no line. That is allowed once, but the operator asked for EVERY live V2 book: a skipped
+  book must be re-swept on the next FULL before its tip (lines post on game day), and a
+  game that reaches tip with no row is named in the cycle line. Volume check: the operator
+  expected 10-20 rows/day and ~50 settled by ~11-14; day 1 gave 4 (3 tight). If fewer than
+  25 v2 TIGHT rows have settled by the 11-14 deep retro, the first read is **insufficient
+  data**, not a verdict.
