@@ -8414,6 +8414,9 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
   match. Grade it when these four settle (by Nov 10).
 - Status (RETRO-20261108-0815): 1 of 4 settled, 540a22361a66 won; the MW13 family's 9 settled rows
   scored own Brier .0017 vs mkt .0049 (one correlated event). Bet 55c509720c48 won +$0.36. Three open.
+- Status (RETRO-20261110-0815): graded, 4 of 4 won (`540a22361a66` Nov 8, `5aa5605dd37c` Nov 9,
+  `d038c0ae119a` and `9cb5e6c64b4f` Nov 10; status `won` in journal/forecasts.jsonl). One correlated event
+  (the MW13 postponement), so this confirms the procedure once, not a rate. Keep it as written.
 
 ## 2026-11-03 18:15Z: JOLTS Sep bet lost, AAA Nov 3 missed low (RETRO-20261103-1815)
 
