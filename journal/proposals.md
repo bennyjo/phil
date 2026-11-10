@@ -4828,3 +4828,27 @@ the stake. That keeps "honest CLOB-ask fills" honest on token-ask books.
   ~11-17 instead of ~11-14. The agent-side rule (re-sweep skipped books before tip) is in the
   playbook. Status: OPEN (operator).
 - All other items: status unchanged from DEEP-2026-11-08.
+
+## DEEP-2026-11-10 - deep-retro proposals and status
+
+- **No new hourly-agent proposals since DEEP-2026-11-09.** The one hourly strategy change in
+  that window was the `views-decay-mid` -> `ai-release-mid` swap (RETRO-20261109-2215). It is
+  ENDORSED: `views-decay-mid` had 0 tagged rows ever (grep of forecasts.jsonl), and the
+  release categories lose to the book long-run.
+- **Forecast-row top-of-book size (DEEP-2026-11-08, MEDIUM): Status: OPEN (operator).**
+  Unchanged.
+- **V2 sweep volume (DEEP-2026-11-09, LOW): Status: OPEN (operator), now more pressing.**
+  - Since 11-08 there are 14 V2 rows, and v2cell has n=4 settled tight at -0.008
+    [-0.024,+0.007].
+  - The pre-registered 11-14 read (>=25 settled v2 TIGHT) will almost certainly be
+    **insufficient data**.
+  - Recommend moving the read to ~11-17, or pinning one FULL in the ~22-23Z window before NBA
+    tips, when lines have posted.
+- **NEW (operator, LOW): playbook.md is 8,600+ lines.** The hourly Sonnet agent cannot hold
+  that in context. Rules added 6-8 weeks ago (for example, the box-office modal floor at about
+  line 7383) are effectively invisible.
+  - Ask: allow a compaction pass, either a deep-retro task with an explicit budget or a
+    CYCLE.md "read only the top N lines + grep" instruction.
+  - I did not compact it today. A rewrite of that size needs operator sign-off on what may be
+    archived.
+- All other items: status unchanged from DEEP-2026-11-08.

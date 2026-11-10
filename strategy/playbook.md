@@ -8608,3 +8608,30 @@ are separate markets with slugs `polyv2-<sport>-...` (the only 4 v2 rows in the 
   expected 10-20 rows/day and ~50 settled by ~11-14; day 1 gave 4 (3 tight). If fewer than
   25 v2 TIGHT rows have settled by the 11-14 deep retro, the first read is **insufficient
   data**, not a verdict.
+- **DEEP-2026-11-10: `ai-release-mid` kept, and its scope is pinned to one category label.** The
+  long-run record backs the hourly swap (RETRO-20261109-2215). score.py has release-date rows
+  behind the book in both labels they were filed under: `ai-model-release` n=52 at +0.056 and
+  `product-release` n=13 at +0.046. The Fable 5.2 family was split across both labels
+  (`59f1933102a7`/`b0877b5340db` ai-model-release, `8388516aeff8`/`5c1c1d3f700b`
+  product-release), which halves every per-category read. From now on, file AI-model
+  release-date rungs as `ai-model-release` and tag them `ai-release-mid`. Use
+  `product-release` only for non-AI products.
+- **Box-office family openers (DEEP-2026-11-10, procedure only, no probability rule).**
+  - Evidence: Cat in the Hat 20M+ `ada749212e1c` (own .10 vs mid .611, Yes, +0.659) and the
+    Drummer Boy 9M+ under-read `281c94228034` (.62 vs .85 on a tight book, Yes, +0.122) both
+    came from Friday-only arithmetic.
+  - On every family/animated opener, write the Fri->weekend multiplier you used in the
+    rationale, taken from at least 2 named comps. A bare Friday x constant is not enough.
+  - The category record is drifting the wrong way: score.py box-office is n=60 at +0.027,
+    against n=42 at +0.005 when the modal floor was frozen. By my row-level bootstrap
+    (correlated rows, so optimistic), wide books are n=26 at +0.094 [+0.027,+0.170] and tight
+    books are n=53 at -0.018 [-0.054,+0.015].
+  - So on WIDE box-office books the mid has been right against our deviations, the opposite
+    of the whole-stream wide-book pattern. The category stays no-bet. Revisit at the
+    DEEP-2026-11-17 retro.
+- **Large deviations against TIGHT books still lose (DEEP-2026-11-10, whole forecast stream,
+  my row-level bootstrap, not score.py).** This is supporting evidence for the existing >0.10
+  claimed-edge veto. No change.
+  - Tight books with |est-mid|>=0.10: n=368 at +0.026 [+0.005,+0.050]. The November rows are
+    n=23 at +0.075. October was n=145 at -0.017, so the effect is not uniform.
+  - Tight books with |est-mid|<0.10: n=1988 at +0.0002 (at the book).
