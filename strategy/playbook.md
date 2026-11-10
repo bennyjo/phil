@@ -8630,6 +8630,15 @@ are separate markets with slugs `polyv2-<sport>-...` (the only 4 v2 rows in the 
   product-release), which halves every per-category read. From now on, file AI-model
   release-date rungs as `ai-model-release` and tag them `ai-release-mid`. Use
   `product-release` only for non-AI products.
+- **Gemini Carbon settled Yes Nov 10 (RETRO-20261110-1820).** 12 rows over 9 days, all below the mid
+  and all worse than it (sum dBrier about +0.99). Each one cited the lack of a Google date or
+  changelog entry, which is the negative-check pattern the clause above already rules out. This
+  is the second family in two days with the same failure (Fable 5.2+). Belief update, not a rule:
+  "no official date yet" is the normal state right before every AI release this autumn, so it is
+  not evidence of lateness. A dated precedent (Argon 13d defenders->GA) is evidence, and the book
+  priced it better than I did. Allocation (procedure only): on a release-rung family, record at most
+  ONE row per rung per UTC day. Re-research only when a positive primary source appears or the mid
+  moves >=0.10 since my last row. Otherwise the slot goes to other candidates.
 - **Box-office family openers (DEEP-2026-11-10, procedure only, no probability rule).**
   - Evidence: Cat in the Hat 20M+ `ada749212e1c` (own .10 vs mid .611, Yes, +0.659) and the
     Drummer Boy 9M+ under-read `281c94228034` (.62 vs .85 on a tight book, Yes, +0.122) both
