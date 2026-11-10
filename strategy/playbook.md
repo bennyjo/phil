@@ -3843,6 +3843,17 @@ DOWNSIDE tail the market had already priced thin; the market's up-skew
 +0.03 shade under-weighted it. Gate 2 stands; on a skewed UK/US CPI ladder,
 move the mean toward the skew rather than shading by a token amount.
 
+**Gate-2 seventh line, US Oct-2026 CPI (RETRO-20261110-1615):** two
+forecast-only headline-MoM bracket rows (`80efebb3b0a4` <=0.1 .09 vs mid .06,
+`c22d77021806` 0.2 .32 vs mid .27) used a nowcast-ish mean 0.27 (Cleveland
+0.24, TD 0.30) with an unsourced sd 0.09. FRED CPIAUCSL Sep 336.298 -> Oct
+337.476 = +0.35%, so both legs settled No; own dBrier vs mid +0.0045 and
++0.0295. Same shape as lines 1-6: the unsourced sd put more mass in the
+losing low brackets than the market did, and the print came in ABOVE the
+Cleveland nowcast (Aug: 0.4 vs nowcast 0.36; Oct: ~0.35 vs 0.24). Gate 2
+stands; on US headline-MoM ladders, take the market's implied sd and do not
+place the mean below the market ladder's centre on a nowcast alone.
+
 **2026-08-21 update (18:11Z settlement): the Aug14-21 Musk weekly set's
 two >0.10-disagreement legs both settled, both LOST.** 240-259
 (cd3af116ed2a, No side, bid 0.252 vs est 0.16) lost to the actual count
