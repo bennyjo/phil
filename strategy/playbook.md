@@ -8658,3 +8658,15 @@ are separate markets with slugs `polyv2-<sport>-...` (the only 4 v2 rows in the 
   - Tight books with |est-mid|>=0.10: n=368 at +0.026 [+0.005,+0.050]. The November rows are
     n=23 at +0.075. October was n=145 at -0.017, so the effect is not uniform.
   - Tight books with |est-mid|<0.10: n=1988 at +0.0002 (at the book).
+
+## 2026-11-11 02:15Z: say-the-word name mentions (RETRO-20261111-0215)
+
+- **For name mentions, the speakers' habit is the base rate; a press-release mention is weak
+  evidence (research checklist, not an estimation rule).** CoreWeave "OpenAI" `d7424a97a127`
+  (.55) and `6e093808fefd` (.72, revised up because the Q3 PR listed OpenAI among its highlights)
+  both resolved No (+0.109 / +0.288 vs mid). The Q2'26 call named no customers, and early
+  call quotes had no OpenAI. Process: before revising a customer/partner/person mention up
+  on a PR or filing, count that entity in the last 1-2 call transcripts. Note in the
+  forecast row whether recent calls name customers at all. Weigh in-progress call quotes
+  that lack the word, and the listeners' last trade, as evidence pointing down. n=1 event:
+  no shading rule (the 6-rule budget is full).
