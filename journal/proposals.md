@@ -4852,3 +4852,29 @@ the stake. That keeps "honest CLOB-ask fills" honest on token-ask books.
   - I did not compact it today. A rewrite of that size needs operator sign-off on what may be
     archived.
 - All other items: status unchanged from DEEP-2026-11-08.
+
+## DEEP-2026-11-11 - deep-retro proposals and status
+
+- **No new hourly-agent proposals since DEEP-2026-11-10.** The three hourly playbook edits in
+  that window are all KEPT (DEEP-2026-11-11 (b)):
+  - the Gate-2 seventh line;
+  - the Gemini cap of 1 row per rung per day;
+  - the CoreWeave name-mention checklist.
+- **Forecast-row top-of-book size (DEEP-2026-11-08, MEDIUM): Status: OPEN (operator).**
+  Unchanged.
+- **V2 sweep volume (DEEP-2026-11-09, LOW): Status: OPEN (operator).**
+  - v2 TIGHT settled is now n=15 at -0.0055. That is +11 since 11-10.
+  - The 11-14 read (>=25) is borderline rather than hopeless. Keep the pre-registered rule:
+    below 25 means insufficient data.
+- **Playbook compaction (DEEP-2026-11-10, LOW): Status: OPEN (operator).** The playbook is
+  8,690 lines.
+- **NEW (operator, LOW): a freshness filter in `core/screen.py collect`.**
+  - 35 of 150 escalated slots over 10 collects (11-10 06:20Z to 11-11 04:15Z) were markets
+    that already had a forecast row <48h old.
+  - Ask: an optional `--skip-recent-hours 48 --min-mid-move 0.05` flag (or a config key). It
+    would drop such markets from `ranked` before `[:top_n]`, so `escalated` counts only fresh
+    markets.
+  - Until then, the playbook "DEEP-2026-11-11 rulings" has the agent backfill by hand from
+    ranks 16-30 of the same collect.
+  - Status: PROPOSED.
+- All other items: status unchanged from DEEP-2026-11-08.

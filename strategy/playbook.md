@@ -8670,3 +8670,23 @@ are separate markets with slugs `polyv2-<sport>-...` (the only 4 v2 rows in the 
   forecast row whether recent calls name customers at all. Weigh in-progress call quotes
   that lack the word, and the listeners' last trade, as evidence pointing down. n=1 event:
   no shading rule (the 6-rule budget is full).
+
+## DEEP-2026-11-11 rulings
+
+- **Escalation backfill (sensing, procedure only).** 35 of the last 150 escalated slots (10 FULLs,
+  11-10 06:20Z to 11-11 04:15Z; the count is the screener log's top 15 per collect, matched against
+  forecasts.jsonl) went to markets I had already rowed in the previous 48h. The worst ticks were
+  04:15Z at 7/15 and 06:20Z at 6/15. Those slots mostly ended in "re-read, not re-recorded", so about
+  a quarter of screened research went to markets I had just researched. Rule: when an escalated
+  market has a forecast row <48h old, its mid has moved <0.05 since that row, and no new primary
+  source has appeared, skip it without re-research. Then take the next unrowed market by divergence
+  from the SAME collect's rows in `journal/screener/YYYY-MM.jsonl` (same `ts`, ranks 16-30). Fill
+  back up to 15 researched slots. Watch items and the econ calendar keep their claims as before.
+  Name backfilled markets in the funnel row's `notes`. The deep retro grades this on 11-14: did
+  backfilled slots produce any non-market-agrees row?
+- **Veto counterfactuals at this commit (`core/counterfactual.py ledger`):** OVV 314 rows, 304
+  trades, 126W-178L, +$187.19, dBrier **+0.0265**. The vetoed beliefs are still worse than the
+  book, and the P&L is longshot-driven. WSV 233 rows, 195 trades, 104W-91L, **-$70.91**, dBrier
+  -0.0245. The wide mid flatters the score, but the veto saves money. Both vetoes stand unchanged.
+  The two Gemini Carbon on-Nov10 OVV rows (`11d96c637bb0`, `4ae9f65331ad`, a No-side ask-edge of
+  about 0.13) settled Yes, so the veto saved about $10.
