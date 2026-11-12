@@ -4878,3 +4878,24 @@ the stake. That keeps "honest CLOB-ask fills" honest on token-ask books.
     ranks 16-30 of the same collect.
   - Status: PROPOSED.
 - All other items: status unchanged from DEEP-2026-11-08.
+
+## DEEP-2026-11-12 - deep-retro proposals and status
+
+- **No new hourly-agent proposals.** There were no hourly strategy edits in the window, apart from
+  pacing (DEEP-2026-11-12 (b)).
+- **Status unchanged:**
+  - Forecast-row top-of-book size (DEEP-2026-11-08, MEDIUM): Status: OPEN (operator).
+  - V2 sweep volume (DEEP-2026-11-09, LOW): Status: OPEN (operator).
+    - Depth-verified v2 TIGHT settled is n=16 at -0.0023.
+    - The 11-14 read needs >=25.
+  - Playbook compaction (DEEP-2026-11-10, LOW): Status: OPEN (operator). The playbook is about
+    8,700 lines.
+  - collect freshness flag (DEEP-2026-11-11, LOW): Status: PROPOSED.
+- **NEW (operator, LOW): add odds coverage to `core/odds.py` for ATP tennis and international
+  friendlies.**
+  - Two liquid books were skipped as benchmark-unreachable in 24h: ATP Stockholm Fritz/Rune and
+    Tirante/Shevchenko (liquidity ~$4.5k) at 00:24Z, and NZ-India at 02:20Z. The odds API key
+    list the cycle saw has only `tennis_wta_finals`.
+  - Ask: map the ATP tour keys (and soccer friendlies, if the provider has them) so these
+    categories stop being structurally invisible.
+  - Status: PROPOSED.

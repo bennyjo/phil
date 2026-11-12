@@ -41,6 +41,11 @@ def depth_ok(r):
         return False
     m = TOPASK.search(r.get("note") or "")
     if not m:
+        # DEEP-2026-11-12: a book whose total liquidity is under the top-ask bar
+        # cannot hold a $25 top ask (e3f3fde4eb2a Heat-Jazz: liquidity $23.72).
+        liq = r.get("liquidity_at_record")
+        if liq is not None and float(liq) < MIN_TOP_USD:
+            return False
         return None
     return float(m.group(1)) * float(r["best_ask_at_record"]) >= MIN_TOP_USD
 
@@ -105,6 +110,8 @@ def main():
     print(f"v2 TIGHT  {cell(t)}  (open: {len(pick('v2', True, False)) - len(t)})")
     print(f"  odds-bench      {cell([r for r in t if not spread_derived(r)])}")
     print(f"  spread-derived  {cell([r for r in t if spread_derived(r)])}")
+    # DEEP-2026-11-12: the pre-registered 11-14 read counts depth-VERIFIED rows only.
+    print(f"  depth-verified  {cell([r for r in t if depth_ok(r) is True])}  (the read basis)")
     nodepth = [r for r in pick('v2', True, False) if depth_ok(r) is None]
     if nodepth:
         print(f"  WARNING: {len(nodepth)} v2 TIGHT row(s) lack topask= in the note: "

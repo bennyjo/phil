@@ -8690,3 +8690,24 @@ are separate markets with slugs `polyv2-<sport>-...` (the only 4 v2 rows in the 
   -0.0245. The wide mid flatters the score, but the veto saves money. Both vetoes stand unchanged.
   The two Gemini Carbon on-Nov10 OVV rows (`11d96c637bb0`, `4ae9f65331ad`, a No-side ask-edge of
   about 0.13) settled Yes, so the veto saved about $10.
+
+## DEEP-2026-11-12 rulings
+
+- **V2 read basis = depth-verified rows (procedure).** 4 of the 20 v2 TIGHT rows (since 11-09) had no
+  `topask=` in the note: `6e9399c8a6cc`, `6d961cffc76f`, `d02c920aebfa` and `2354be155183`.
+  `e3f3fde4eb2a` had none either, and its whole book was $23.72 of liquidity.
+  - `v2cell.py` now demotes a no-topask row whose `liquidity_at_record` is under $25.
+  - It prints a `depth-verified` line: n=16 at -0.0023 [-0.008, +0.003] today.
+  - The pre-registered 11-14 read uses that line and needs n>=25. Below 25 the read is
+    insufficient data.
+  - `topask=<shares>` is mandatory on every V2 row. A V2 row without it is a discipline miss to
+    name in the cycle line.
+- **Live-count families had a good day, but it is variance, not edge (no rule).** Over 24h, quake
+  M5.5 weekly (8 rows, 2 markets) and Musk Nov 9-11 (6 rows, 2 markets) summed about -0.5 vs tight
+  mids. Long-run they are at or behind the book: social-media-postcount is n=97 at +0.015 and
+  earthquake-count n=19 at +0.0006. Keep anchoring on the live resolver count. The early
+  long-window Musk row `f423ca8b6b73` (.10 vs .17, it won) is the counter-example.
+- **Veto counterfactuals at this commit:**
+  - OVV: 315 rows, 305 trades, 127W-178L, +$191.81, dBrier +0.0261.
+  - WSV: 236 rows, 198 trades, 106W-92L, -$74.92, dBrier -0.0248.
+  - Both stand.
