@@ -79,6 +79,16 @@ cycles.log lines quoted reconcile. Merge one object per candidate:
 (see the 2026-10-26T12:30:04Z row). A reconcile line that says FAIL is fixed in
 the same cycle, not just pasted.
 
+**V2 sweep rows: `topask=<shares>` is the FIRST token of the note (DEEP-2026-11-13; binding through
+the 11-15 end of the sweep).** The rule is at the V2 section near the end of this file, and it is
+being missed. After yesterday's tooling fix, 4 more V2 tight rows were recorded without it:
+`3e60e809f73d` and `128451f378f3` (11-12 18:18Z), and `6553b48585e0` and `a3fa12080c0d` (11-13 00:18Z).
+That makes 8 in total. Depth-verified v2 TIGHT is stuck at n=16, and the 11-14 read needs 25. A row
+without topask cannot enter the read basis, so it is wasted research. Before you record, read the
+size at the best ask from `quote.py`/the book, then write `topask=<shares> ...`. After you record,
+run `python3 strategy/tools/v2cell.py --since 2026-11-09 | grep WARNING`, and if this cycle's ids
+are listed, say so in the cycles.log line.
+
 If the first does not show this cycle's ts, write the funnel line NOW
 (the pool/screened/escalated numbers you were about to put in cycles.log
 prose belong in `strategy/funnel.jsonl`, not in the log). Record: 41b031e,

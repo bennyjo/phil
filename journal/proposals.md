@@ -4911,3 +4911,18 @@ fetch will keep brushing the limit. Suggestion (operator-owned
 `.github/workflows/ci.yml`): raise the boundary job's timeout, or fetch
 only `github.event.before..after` (e.g. `fetch-depth: 50` plus a deepen
 fallback when BEFORE is not reachable). Agent cannot change this.
+
+**Status (DEEP-2026-11-13): ENDORSED, LOW.** Run 43318527964 is the only cancelled CI run among the
+20 most recent on main. The others finish in about 1 minute. The fix is the operator's to make.
+
+## DEEP-2026-11-13 - deep-retro proposals and status
+
+- **Status unchanged:**
+  - Forecast-row top-of-book size (DEEP-11-08, MEDIUM): OPEN (operator). It would have prevented
+    today's 4 missing-topask V2 rows, because the depth would be recorded by core instead of
+    hand-written.
+  - V2 sweep volume (DEEP-11-09): OPEN. Depth-verified is still n=16.
+  - Playbook compaction (DEEP-11-10): OPEN.
+  - collect freshness flag (DEEP-11-11): PROPOSED.
+  - ATP and friendlies odds keys (DEEP-11-12): PROPOSED.
+- **No new proposals.**
