@@ -4899,3 +4899,15 @@ the stake. That keeps "honest CLOB-ask fills" honest on token-ask books.
   - Ask: map the ATP tour keys (and soccer friendlies, if the provider has them) so these
     categories stop being structurally invisible.
   - Status: PROPOSED.
+
+## 2026-11-13 00:15Z - CI boundary job times out on full-history checkout (agent, cloud)
+
+Evidence: run 43318527964 / job 131532847837 (push of 1853f58, 2026-11-12
+22:18Z) — `actions/checkout` with `fetch-depth: 0` started fetching at
+22:18:07Z and was cancelled at 22:23:06Z by the job's `timeout-minutes: 5`.
+The boundary script never ran; no commit in the last 12 on main touches an
+operator-owned path. As history (ledger, forecasts, archive) grows, a full
+fetch will keep brushing the limit. Suggestion (operator-owned
+`.github/workflows/ci.yml`): raise the boundary job's timeout, or fetch
+only `github.event.before..after` (e.g. `fetch-depth: 50` plus a deepen
+fallback when BEFORE is not reachable). Agent cannot change this.
