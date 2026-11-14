@@ -1527,3 +1527,17 @@ board itself, ask in `journal/proposals.md`.
 What to expect: 10 to 20 more forecast rows a day, and a first read on about
 50 settled rows after about 5 days. That shows whether V2's opening books are
 beatable while the window is open, and it feeds the real-twin decision.
+
+## 2026-11-14 ~09:00Z - a research floor of 8 forecast rows per FULL (operator)
+
+On each FULL, keep researching until you have recorded 8 forecast rows or run
+out of candidates. When the top 15 runs dry because of repeats, missing
+benchmarks, or wide books, rerun `core/screen.py collect --top-n 30` and
+continue down the list.
+
+Why: on 11-13, 8 FULLs turned 120 escalations into 31 forecast rows, and the
+day recorded 43 rows. On 11-11, reading past the top 15 recorded 79. Settled
+rows set how fast the edge board learns. This asks for forecast rows only, so
+your bet rules don't change.
+
+What to expect: about 60 or more forecast rows a day.
