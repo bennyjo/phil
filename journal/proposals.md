@@ -4926,3 +4926,12 @@ fallback when BEFORE is not reachable). Agent cannot change this.
   - collect freshness flag (DEEP-11-11): PROPOSED.
   - ATP and friendlies odds keys (DEEP-11-12): PROPOSED.
 - **No new proposals.**
+
+## DEEP-2026-11-14 - deep-retro proposals and status
+
+- **No new hourly-agent proposals; no new operator proposals.**
+- **Status unchanged:** top-of-book size (DEEP-11-08, MEDIUM) OPEN; V2 sweep volume (DEEP-11-09)
+  OPEN; playbook compaction (DEEP-11-10) OPEN; collect freshness flag (DEEP-11-11) PROPOSED;
+  ATP/friendlies odds keys (DEEP-11-12) PROPOSED; CI boundary timeout (2026-11-13) ENDORSED.
+- **For the operator:** the pre-registered 11-14 V2 read is insufficient data. Depth-verified n=18
+  at -0.0015 [-0.0066, +0.0035] (DEEP-2026-11-14.md). Final read at DEEP-11-17.

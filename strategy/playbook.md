@@ -8721,3 +8721,20 @@ are separate markets with slugs `polyv2-<sport>-...` (the only 4 v2 rows in the 
   - OVV: 315 rows, 305 trades, 127W-178L, +$191.81, dBrier +0.0261.
   - WSV: 236 rows, 198 trades, 106W-92L, -$74.92, dBrier -0.0248.
   - Both stand.
+
+## DEEP-2026-11-14 rulings
+
+- **V2 pre-registered 11-14 read: INSUFFICIENT DATA (as pre-registered; no verdict).**
+  `v2cell.py --since 2026-11-09` at 05:4xZ: depth-verified (read basis) n=18 at -0.0015
+  [-0.0066, +0.0035]; all v2 TIGHT n=25 at -0.0003 [-0.0043, +0.0036]; v1 TIGHT same window n=81
+  at -0.0038. Below the n>=25 bar, so no verdict. What the data does say: V2 opening books, where
+  they are tight and deep, are priced to within a fraction of a cent per row of where a devigged
+  sportsbook puts them. Nothing supports the thin-book-mispricing hypothesis. The sweep still
+  runs through 11-15 per the operator note; the final read is at DEEP-2026-11-17 on everything
+  settled by then. No new missing-topask rows since DEEP-11-13 (WARNING list still the same 8 ids),
+  so the binding rule at the top is working; it expires with the sweep.
+- **Pacing (procedure, existing rules enforced).** The 11-14 04:13Z FULL set next_full 12:00Z, 7.8h
+  out, citing V2 lines not yet posted. That breaches the 3h cap in schedule.json notes, and the
+  DEEP-2026-10-05 budget-aware rule (day 30/150 batches, so spare FULLs existed in the gap). V2
+  waiting is a reason to schedule the NBA sweep for the US morning, not to skip screening the rest of
+  the pool. I moved next_full to 07:45Z. A V2 sweep wait never justifies a deferral past 3h.
