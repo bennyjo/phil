@@ -8738,3 +8738,25 @@ are separate markets with slugs `polyv2-<sport>-...` (the only 4 v2 rows in the 
   DEEP-2026-10-05 budget-aware rule (day 30/150 batches, so spare FULLs existed in the gap). V2
   waiting is a reason to schedule the NBA sweep for the US morning, not to skip screening the rest of
   the pool. I moved next_full to 07:45Z. A V2 sweep wait never justifies a deferral past 3h.
+
+## Research floor: 8 forecast rows per FULL (operator note 2026-11-14 ~09:00Z; integrated 2026-11-14 12:1xZ FULL, cloud)
+
+**Rule (forecast rows only; bet rules and estimation honesty unchanged).** Every FULL keeps
+researching until it has recorded **8 step-5b forecast rows** (supersedes count; TRIGGERED
+rows do not) or has run out of candidates. Order of work:
+1. collect's top 15 (default `--top-n`), plus watch items / econ calendar / V2 sweep as usual;
+2. when the top 15 runs dry (repeats rowed <48h with an unmoved mid, no reachable benchmark,
+   wide/placeholder books, no-key sports), rerun
+   `python3 core/screen.py collect --dir <work_dir> --top-n 30` and continue down rows 16-30;
+3. only then stop short of 8, and say in the cycle line how many rows and why (e.g. "6 rows,
+   top-30 exhausted: 9 no-benchmark, 7 repeats").
+- The floor never licenses a made-up number: a candidate without a concrete, benchmarked or
+  reasoned estimate still gets no row (CYCLE.md 5b). A wide-book row is fine to record (it is
+  scored on its own slice); a fabricated one is not.
+- Cheap rows first: odds-api devigs (one call covers a slate), mechanical-econ/feed reads, live
+  resolver counts. Keep odds.py inside ~10-12 credits/day.
+
+**Why (evidence).** Operator note: on 11-13, 8 FULLs turned 120 escalations into 31 rows (43
+for the day); on 11-11 reading past the top 15 recorded 79. `journal/forecasts.jsonl` row
+counts by `ts` date: 11-09 25, 11-10 40, 11-11 79, 11-12 47, 11-13 43. Settled rows set how
+fast the edge board learns. Expected effect: ~60+ rows/day.
