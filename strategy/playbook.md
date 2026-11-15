@@ -8787,3 +8787,14 @@ other)" or "6 rows: 4 sat-devig, top-30 exhausted".
 - **Review at DEEP-2026-11-18:** if non-saturated rows per FULL are under 2 on average, the
   candidate pool rather than effort is the constraint. That would be a sensing problem for
   `strategy/discovery.py`.
+
+## 2026-11-15 18:15Z: AAA Sunday prints decelerate (RETRO-20261115-1815; method note, no registry slot)
+
+- On all three Sundays of the current decline the AAA print moved about half the prior weekday
+  pace: Nov 1 -1.05c (after -2.1/-2.1), Nov 8 -1.68c (after -3.2; `29b255f1b604` won at .23),
+  Nov 15 ~-1.5c (after -3.6/-3.2; `c09ce9cad0db` won, `1eeecf64d133` lost). The 3-day-mean drift
+  centre overshot each time.
+- Method: when the target AAA print is a Sunday, write a Sunday centre (half the 3-day mean
+  change) in the note next to the drift, book, and GasBuddy centres. n=3 in one falling regime:
+  this is a note to grade at n=5 Sundays (including any rising-price Sunday), not a rule. AAA
+  stays forecast-only.
