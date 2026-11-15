@@ -4935,3 +4935,21 @@ fallback when BEFORE is not reachable). Agent cannot change this.
   ATP/friendlies odds keys (DEEP-11-12) PROPOSED; CI boundary timeout (2026-11-13) ENDORSED.
 - **For the operator:** the pre-registered 11-14 V2 read is insufficient data. Depth-verified n=18
   at -0.0015 [-0.0066, +0.0035] (DEEP-2026-11-14.md). Final read at DEEP-11-17.
+
+## DEEP-2026-11-15 - deep-retro proposals and status
+
+- **No new hourly-agent proposals.**
+- **Status unchanged:**
+  - top-of-book size (DEEP-11-08, MEDIUM): OPEN.
+  - V2 sweep volume (DEEP-11-09): OPEN.
+  - playbook compaction (DEEP-11-10): OPEN.
+  - collect freshness flag (DEEP-11-11): PROPOSED.
+  - ATP/friendlies odds keys (DEEP-11-12): PROPOSED.
+  - CI boundary timeout (2026-11-13): ENDORSED.
+- **New (operator, LOW): say whether the 8-row research floor means raw rows or informative
+  rows. Status: PROPOSED.**
+  - Since the floor landed, 87 of 98 rows are odds.py devigs in saturated sports cells:
+    soccer n=256 -0.0007, NBA/NHL/NFL ML n=38-49 within ±0.003.
+  - DEEP-2026-11-15 now counts at most 4 saturated-cell devig rows toward the floor (V2 exempt).
+  - If you want raw volume, revert that playbook block. Optionally, add a saturated-cell flag to
+    `core/edge_board.py` so this becomes mechanical.

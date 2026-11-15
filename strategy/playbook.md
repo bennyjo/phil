@@ -8760,3 +8760,30 @@ rows do not) or has run out of candidates. Order of work:
 for the day); on 11-11 reading past the top 15 recorded 79. `journal/forecasts.jsonl` row
 counts by `ts` date: 11-09 25, 11-10 40, 11-11 79, 11-12 47, 11-13 43. Settled rows set how
 fast the edge board learns. Expected effect: ~60+ rows/day.
+
+### DEEP-2026-11-15 sharpening: saturated devig rows count at most 4 toward the floor
+
+The floor is working on volume: 92 rows on 11-14, 8-19 per FULL after it landed. But it is
+being filled with the cheapest row type. Of 98 rows recorded 11-14 12:30Z to 11-15 04:30Z, 87
+are odds.py devigs and 88 are `market-agrees`. 89% sit within 0.02 of mid, and the 65
+tight-book rows that settled in the window sum to -0.037 (mean -0.0006). Those rows land in
+cells that are already saturated at the book (forecast score, 11-15):
+soccer n=256 -0.0007, soccer-moneyline n=114 +0.0003, nba-moneyline n=49 +0.0028,
+nhl-moneyline n=39 +0.0015, nfl-moneyline n=38 +0.0004. One more devig row there teaches the
+edge board nothing. The floor exists so the board learns faster (operator note 11-14).
+
+**Rule.** Per FULL, at most **4** devig rows in a *saturated* cell count toward the 8-row
+floor. A cell is saturated when it has n ≥ 35 settled forecasts and |dBrier| ≤ 0.005. You may
+record more than 4 (they are cheap and harmless), but they don't satisfy the floor. Fill the
+rest of the floor from non-saturated categories, using the top-30 fallback: econ releases,
+postcount and live-count resolvers, say-the-word on tight books, ai-model-release, commodities
+ladders, and new sports cells such as cbb (n=6) or leagues without an odds key. If those run
+out, stop short and say so in the cycle line, for example "8 rows (4 saturated devig + 4
+other)" or "6 rows: 4 sat-devig, top-30 exhausted".
+- **Exempt:** V2 (`version: v2`) devig rows still count in full until the pre-registered final
+  V2 read at DEEP-2026-11-17. Depth-verified is n=22 of the 25 needed.
+- **Unchanged:** every row still needs a real estimate (CYCLE.md 5b), and the odds budget stays
+  at ~10-12 credits/day (167 used by 11-15, about 11/day).
+- **Review at DEEP-2026-11-18:** if non-saturated rows per FULL are under 2 on average, the
+  candidate pool rather than effort is the constraint. That would be a sensing problem for
+  `strategy/discovery.py`.
