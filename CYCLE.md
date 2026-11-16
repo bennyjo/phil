@@ -45,6 +45,8 @@ Every invocation runs as one of three ticks:
 - **LIGHT**: step 1 and the open-position monitor only, then log, commit, stop.
   Entered from the collision guard (step 0) or from pacing (step 0b). A
   LIGHT tick that changed nothing logs and commits nothing (step 7).
+  If `git diff --stat` shows forecast or ledger rows changed by resolve, write
+  the retro now; a LIGHT tick never defers grading.
 - **TRIGGERED**: invoked by the watch routine when `core/watch.py check`
   reported `trigger: true` this session. Skip step 0b's pacing and step 4's
   broad scan: the candidate set is the verdict's `context` array (plus at most
@@ -69,12 +71,14 @@ Every invocation runs as one of three ticks:
    diverged, never reset over local commits: the runner lease below refuses
    a diverged `main` and ends the invocation. Then the **collision guard**:
    if the newest commit on `origin/main` that is not a `lease:` commit (the
-   runner lease's own, below) is a `cycle:` or `cycle(triggered):` commit
-   committed less than 20 minutes ago, another runner just cycled - run this
-   invocation as a LIGHT tick (step 1 and the open-position monitor only),
-   regardless of pacing state. A TRIGGERED invocation is exempt and proceeds
-   through the guard (`core/watch.py` already applied its own suppression
-   before firing), with one exception: if that commit is a
+   runner lease's own, below) is a `cycle:` commit committed less than 20
+   minutes ago, another runner just cycled - run this invocation as a LIGHT
+   tick (step 1 and the open-position monitor only), regardless of pacing
+   state. A finished `cycle(triggered):` commit does not trigger the guard
+   (operator, 2026-11-16): it covers one market, not a duplicate FULL, and the
+   runner lease covers any run still in flight. A TRIGGERED invocation is
+   exempt and proceeds through the guard (`core/watch.py` already applied its
+   own suppression before firing), with one exception: if that commit is a
    `cycle(triggered):` commit less than 45 minutes old naming the same
    trigger key, demote to LIGHT.
    Then the **runner lease** (operator, 2026-09-06; moved to its own
