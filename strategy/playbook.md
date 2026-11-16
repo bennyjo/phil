@@ -8798,3 +8798,19 @@ other)" or "6 rows: 4 sat-devig, top-30 exhausted".
   change) in the note next to the drift, book, and GasBuddy centres. n=3 in one falling regime:
   this is a note to grade at n=5 Sundays (including any rising-price Sunday), not a rule. AAA
   stays forecast-only.
+
+## DEEP-2026-11-16: saturated-devig cap KEPT; its 11-18 sensing review closed early
+
+- The DEEP-11-15 cap (at most 4 saturated-cell devig rows count toward the 8-row floor) did what it
+  was meant to. Of 95 forecast rows recorded since 11-15 04Z, only about 28 sit in the saturated
+  sports cells (nba/nhl ML 15, soccer + soccer-ML 13). Before the cap it was 87 of 98. The new
+  cells include earthquake-count 12, awards 6, box-office 3 and AAA/commodities 4.
+- Every FULL that reported its split had 5 or more non-saturated rows (9, all, all, 5+3, 10+0,
+  13 incl. 5 V2, 5+3). The review trigger in the block above was "under 2". So the candidate pool
+  is not the constraint, and the DEEP-11-18 sensing review is closed. `strategy/discovery.py`
+  stays unchanged.
+- The cap stays until the operator answers the raw-versus-informative proposal (DEEP-11-15).
+- The AAA Sunday-centre note (RETRO-20261115-1815) is KEPT as a note. Supporting evidence:
+  `c09ce9cad0db` (est .35 vs mid .82, spread .12, won) is the one tight-ish gas row this window,
+  and it cost +0.39 dBrier. The other gas rows sit on .5-.93 spreads and are mid-scoring
+  artifacts. Grade it at n=5 Sundays as written.

@@ -4953,3 +4953,25 @@ fallback when BEFORE is not reachable). Agent cannot change this.
   - DEEP-2026-11-15 now counts at most 4 saturated-cell devig rows toward the floor (V2 exempt).
   - If you want raw volume, revert that playbook block. Optionally, add a saturated-cell flag to
     `core/edge_board.py` so this becomes mechanical.
+
+## DEEP-2026-11-16 - deep-retro proposals and status
+
+- **No new hourly-agent proposals.**
+- **Status unchanged:**
+  - top-of-book size (DEEP-11-08): OPEN.
+  - V2 sweep volume (DEEP-11-09): OPEN.
+  - playbook compaction (DEEP-11-10): OPEN.
+  - collect freshness flag (DEEP-11-11): PROPOSED.
+  - ATP/friendlies odds keys (DEEP-11-12): PROPOSED.
+  - CI boundary timeout (11-13): ENDORSED.
+- **research-floor intent (DEEP-11-15): PROPOSED, with new evidence.**
+  - With the 4-row cap on saturated devig rows, only about 28 of 95 rows since 11-15 04Z were
+    saturated sports devigs. Before the cap it was 87 of 98.
+  - Every reporting FULL still recorded at least 8 rows.
+- **New (operator, LOW): LIGHT-tick settlement grading belongs in CYCLE.md. Status: PROPOSED.**
+  - The 04:16Z 11-16 LIGHT tick deferred grading of 3 settled forecasts. That is the 4th dated
+    instance, after 08-05, 09-01 and 10-23.
+  - The rule lives only in a comment in `strategy/schedule.json` that is over 3KB long.
+  - Suggested fix: one line in CYCLE.md's LIGHT branch: "if `git diff --stat
+    journal/ledger.jsonl journal/forecasts.jsonl` is non-empty after resolve, write the retro this
+    tick."
