@@ -8814,3 +8814,18 @@ other)" or "6 rows: 4 sat-devig, top-30 exhausted".
   `c09ce9cad0db` (est .35 vs mid .82, spread .12, won) is the one tight-ish gas row this window,
   and it cost +0.39 dBrier. The other gas rows sit on .5-.93 spreads and are mid-scoring
   artifacts. Grade it at n=5 Sundays as written.
+
+## 2026-11-16 18:15Z: AAA tight-book tally 4/4 (RETRO-20261116-1815; method note, no registry slot)
+
+- Nov 16 AAA printed in 3.81x, where the tight book (.82/.85) sat. My 3-day drift centre (-2.8c)
+  put .30 on 3.80x and pulled 3.81x to .62 (`1a1acac886de` +0.126, `94e3630a03b7` +0.082). The
+  GasBuddy (-1.4c) and slow-day (~-1.3c) centres were both inside the winning bin.
+- The DEEP-11-02 tight-book tally is now **4/4** (Oct 23, Oct 30, Nov 1, Nov 16). Its condition
+  (4 or more of 5) is met. It cannot ship as an estimation rule while the registry is full (6/6).
+- Method until a slot frees: on a tight AAA book (spread <=.10), stop using the 3-day drift
+  centre as an input. Write the GasBuddy state and slow-day centres in the note, and expect my
+  honest estimate to land near the tight mid unless they both disagree with it. AAA stays
+  forecast-only. Revisit when a registry slot frees: candidate rule slug `aaa-tight-mid`.
+- Grammy AOTY noms (same retro): the book beat the final-week predictor lists on 4 of 5 rows.
+  RAYE (`5882a5ad4671`, .55 vs .74, Yes, +0.135) was the big miss. The >0.10 outside-view veto
+  blocked the No bet. Public predictor lists are no information race. Awards stays no-bet.
