@@ -15,7 +15,11 @@ report them on their own. The rules section grades each estimation rule with
 a paired raw-versus-rule test (see paired_rule_test); its verdict is what
 core/forecast.py reads to decide whether a rule binds.
 
-Usage: python3 core/score.py [--json] [--skip-mtm]
+--since limits every settled-row slice to rows settled since a cutoff, so a
+deep retro can read the same report over several windows (since the last
+DEEP retro, 7 days, 30 days). Open rows are unaffected.
+
+Usage: python3 core/score.py [--json] [--skip-mtm] [--since 7d|36h|DATE|TS]
 """
 import argparse
 import datetime as dt
@@ -384,26 +388,62 @@ def mark_to_market(open_entries):
     return rows
 
 
+def since_cutoff(value, now=None):
+    """'7d', '36h', '2026-11-16' or '2026-11-16T05:40:00Z' -> the UTC cutoff
+    as a journal-format timestamp string."""
+    now = now or dt.datetime.now(dt.timezone.utc)
+    text = value.strip()
+    if text[-1:] in ("d", "h") and text[:-1].replace(".", "", 1).isdigit():
+        unit = "days" if text[-1] == "d" else "hours"
+        cut = now - dt.timedelta(**{unit: float(text[:-1])})
+    else:
+        try:
+            cut = dt.datetime.fromisoformat(text.replace("Z", "+00:00"))
+        except ValueError:
+            raise SystemExit(f"--since expects 7d, 36h, a date or a UTC "
+                             f"timestamp, got {value!r}")
+        if cut.tzinfo is None:
+            cut = cut.replace(tzinfo=dt.timezone.utc)
+    return cut.astimezone(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def settled_since(rows, cutoff):
+    """Drop settled rows that settled before the cutoff; keep open rows."""
+    return [r for r in rows if r["status"] == "open"
+            or (r.get("settled_ts") or r.get("end_date") or "") >= cutoff]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--skip-mtm", action="store_true",
                     help="skip live mark-to-market of open positions (offline)")
+    ap.add_argument("--since", metavar="WHEN",
+                    help="only rows settled since WHEN: 7d, 36h, a date or a "
+                         "UTC timestamp (open rows are unaffected)")
     args = ap.parse_args()
 
     entries = [json.loads(line) for line in LEDGER.read_text().splitlines() if line.strip()] \
         if LEDGER.exists() else []
     frows = [json.loads(line) for line in FORECASTS.read_text().splitlines() if line.strip()] \
         if FORECASTS.exists() else []
+    since = since_cutoff(args.since) if args.since else None
+    if since:
+        entries, frows = settled_since(entries, since), settled_since(frows, since)
     settled = [e for e in entries if e["status"] in ("won", "lost")]
     if not settled:
-        print(json.dumps({"settled": 0, "open": sum(1 for e in entries if e["status"] == "open"),
-                          "forecasts": forecast_report(frows)}))
+        out = {"settled": 0, "open": sum(1 for e in entries if e["status"] == "open"),
+               "forecasts": forecast_report(frows)}
+        if since:
+            out["since"] = since
+        print(json.dumps(out))
         return
 
     report = {"overall": stats(settled), "luck_adjusted": luck_adjusted(settled),
               "by_edge_class": {}, "by_category": {}, "by_strategy_rev": {},
               "calibration": [], "forecasts": forecast_report(frows)}
+    if since:
+        report["since"] = since
     by_class = defaultdict(list)
     by_cat = defaultdict(list)
     by_rev = defaultdict(list)
@@ -436,6 +476,8 @@ def main():
         print(json.dumps(report, indent=2))
         return
     o = report["overall"]
+    if since:
+        print(f"window: rows settled since {since}")
     print(f"settled={o['n']} win_rate={o['win_rate']} pnl=${o['pnl_usd']} roi={o['roi']}")
     print(f"brier: agent={o['brier_agent']} market={o['brier_market']} "
           f"delta={o['brier_delta']} ({'BEATING market' if o['brier_delta'] < 0 else 'behind market'})")

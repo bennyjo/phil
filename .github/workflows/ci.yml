@@ -15,6 +15,10 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # core/validate.py checks every experiment commit in
+          # strategy/experiments.jsonl is an ancestor of HEAD.
+          fetch-depth: 0
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.12"
@@ -42,6 +46,10 @@ jobs:
         run: python3 core/test_fills.py -v
       - name: Score report parses the real ledger (offline)
         run: python3 core/score.py --json --skip-mtm > /dev/null
+      - name: Experiment grader - propose, grade verdicts, windows, ledger checks (offline)
+        run: python3 core/test_experiments.py -v
+      - name: Experiment grader grades the real ledger (offline)
+        run: python3 core/experiments.py grade --json > /dev/null
       - name: Edge board stays offline and keeps the reserved fold out of its map (offline)
         run: python3 core/test_edge_board.py -v
       - name: Edge board parses the real journal (offline)

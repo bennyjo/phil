@@ -16,6 +16,11 @@ Checks that an unattended cycle cannot have left the repo broken or unsafe:
     journal/screener-quota/*.json and the screener logs
     (journal/screener/*.jsonl, plus the pre-rotation journal/screener.jsonl)
     are well-formed
+  - strategy/experiments.jsonl (core/experiments.py check_ledger) parses,
+    holds at most 3 open experiments, and every experiment's commit resolves,
+    is an ancestor of HEAD, touches at most 2 files and only under strategy/,
+    names no protected lever, does not loosen strategy/risk.json, and its
+    baseline is what core/experiments.py propose computes
   - no file under journal/ is over 80 MB: GitHub refuses any push holding a
     file over 100 MB, which would stop every runner's push
   - every Python file under core/ and strategy/ still compiles
@@ -276,6 +281,15 @@ if real_ledger_path.exists() and protected and isinstance(protected.get("real"),
                 isinstance(row.get("usd"), (int, float)) and row["usd"] > real_cap:
             err(f"real-ledger.jsonl:{lineno}: real stake {row['usd']} exceeds "
                 f"real.max_stake_usd {real_cap}")
+
+sys.path.insert(0, str(ROOT / "core"))
+try:
+    import experiments  # noqa: E402
+except Exception as e:  # noqa: BLE001 - a broken grader is an integrity error
+    err(f"core/experiments.py: does not import - {e}")
+else:
+    for e in experiments.check_ledger(ROOT):
+        err(e)
 
 # GitHub rejects a push holding any file over 100 MB, for every runner at once.
 # Fail well before that so an append-only journal gets rotated in time.
