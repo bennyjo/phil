@@ -142,6 +142,14 @@ Every invocation runs as one of three ticks:
      overreact to fewer than ~15 settlements in a category).
    - Concrete lessons → then ACTUALLY EDIT `strategy/playbook.md`,
      `strategy/risk.json`, or `strategy/tools/` to encode them.
+   - **Respect open experiments** (operator, 2026-11-17). Before you edit
+     `strategy/`, read `python3 core/experiments.py status`. Do not edit a
+     file or playbook section that an open experiment names as its lever:
+     write what you would change in the retro, and the deep retro takes it
+     up.
+   - **Never revert an experiment commit** (`experiment: <id> ...`). Rolling
+     one back is the deep retro's job, after `core/experiments.py grade`
+     prints ROLL BACK. If one looks harmful now, say so in the retro.
    - **Estimation rules ship in shadow; only the scorer promotes them**
      (operator, 2026-10-23). An estimation rule is any playbook rule that
      moves a probability you record (half-gap, shrink toward the mid, a
