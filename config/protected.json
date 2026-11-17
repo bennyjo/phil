@@ -17,7 +17,7 @@
     "_comment": "Tunables for the screening tier (core/screen.py). Screening judgment comes from Haiku subagents the cycle agent fans out with its Task tool, so the day's cost is counted in batches, not dollars - there is no API path and no model field. The max_batches_per_day and max_pool_after_strata hard ceilings live in core/validate.py and core/screen.py; raising either is a protected-core edit by design.",
     "batch_size": 20,
     "top_n": 15,
-    "max_batches_per_day": 150,
+    "max_batches_per_day": 180,
     "max_pool_after_strata": 400
   },
   "real_trading_enabled": true,

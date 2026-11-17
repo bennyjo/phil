@@ -168,7 +168,7 @@ FILTER_DEFAULTS = {"exclude_mids_exactly_half": True, "min_outcomes": 2,
                    "max_outcomes": 2}
 HALF_EPS = 1e-9
 
-SCREENER_DEFAULTS = {"batch_size": 20, "top_n": 15, "max_batches_per_day": 150,
+SCREENER_DEFAULTS = {"batch_size": 20, "top_n": 15, "max_batches_per_day": 180,
                      "max_pool_after_strata": 400}
 
 # Hard ceilings on the config tunables. Raising either is a protected-core
