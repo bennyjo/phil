@@ -4975,3 +4975,23 @@ fallback when BEFORE is not reachable). Agent cannot change this.
   - Suggested fix: one line in CYCLE.md's LIGHT branch: "if `git diff --stat
     journal/ledger.jsonl journal/forecasts.jsonl` is non-empty after resolve, write the retro this
     tick."
+
+## DEEP-2026-11-17 - deep-retro proposals and status
+
+- **No new hourly-agent proposals.**
+- **LIGHT-tick settlement grading (DEEP-11-16): RESOLVED by operator.** Commit `f488a05` (#31,
+  "grade on LIGHT ticks") put the rule in CYCLE.md. No LIGHT ticks have run since then (all
+  FULL/TRIGGERED), so the change is untested in practice. Closed.
+- **V2 sweep volume (DEEP-11-09): CLOSED, moot.** The sweep ended 11-15. The final read is depth-verified
+  n=25 at +0.0000 [-0.0042, +0.0043], so there is no evidence that V2 opening books can be beaten
+  (DEEP-2026-11-17.md).
+- **Forecast-row top-of-book size (DEEP-11-08): OPEN, priority lowered MEDIUM -> LOW.** The V2 read
+  no longer depends on it. It is still useful for any future depth-conditioned read.
+- **Status unchanged:** playbook compaction (DEEP-11-10) OPEN (~8,830 lines); collect freshness
+  flag (DEEP-11-11) PROPOSED; ATP/friendlies odds keys (DEEP-11-12) PROPOSED; CI boundary timeout
+  (11-13) ENDORSED; research-floor intent (DEEP-11-15) PROPOSED.
+- **New (operator, LOW): the triggered-cycle cycles.log line prints `cash cash": 944.86`, and in
+  one case `cash n/a`.** See 11-16 14:55Z, 11-17 00:39Z and 03:41Z. The triggered branch appears to
+  paste a raw JSON fragment instead of the formatted cash value. It is cosmetic, but anything that
+  parses cycles.log will choke on it. If the template is in CYCLE.md's triggered branch, an
+  operator fix is needed.

@@ -33,8 +33,11 @@ forecast rows and tagged 0 (score.py `rules: {}`): no rule had a slug. Now five 
 | `knife-edge-mid` | any self-computed distribution whose centre is within 1.5 sd of the bracket/threshold edge (merges the 0.40-0.60 knife-edge cap, RETRO-20261012-1400, and the straddle rule; the cap is retired) | your computed P | CLOB mid | MrBeast straddle instances; GTA `63c1fb8c4d1e` (cap 0.60 vs book 0.88, lost) |
 | `earnings-mid` | earnings-beat rows with no issuer primary-source datapoint dated after the line was set | your estimate | clipped to mid +/-0.05 | RETRO-20261022-1430 |
 | `ai-release-mid` | AI-model / product release-date rungs ("released by/on <date>") where the raw est_prob is off the ladder mid WITHOUT a POSITIVE primary-source finding (launch live, or an official date). Negative checks ("not on the news page yet") do not count. | your raw read | CLOB mid | RETRO-20261109-2215: Fable 5.2+ settled Yes Nov 9; four later-than-market rows all lost: `59f1933102a7` .35/.555 (+0.224), `b0877b5340db` .65/.725 (+0.047), `8388516aeff8` .17/.273 (+0.160), `5c1c1d3f700b` .20/.807 (+0.603). Previously written as an untagged "ladder mid" clause (ai-release-anchor) that rows only noted as `rule view`, so score.py never graded it. Replaces `views-decay-mid` (retired unused: 0 tagged rows since RETRO-20261022-1620) |
-| `rally-below-mid` | Trump/Vance rally say-the-word reads (market-series, judgment) that sit BELOW the CLOB mid; not speaker-only transcript counts | your raw read | CLOB mid | NC-revert pre-registration (+0.20 threshold): SC+IA+FL below-mid raw n=20, +0.750 vs mid, RETRO-20261023-2215 (FL was a partial rally; the completed FL legs moved the other way, RETRO-20261024-0015 - untagged, the GA tagged rows are the first scored evidence). DEEP-2026-10-24 recount: the 8 completed-FL below-mid rows (AI, Drill, SI, Fish, Space, Jacksonville, Filibuster, Hell 15+; RETRO-20261024-0015) sum -0.567, so the whole pre-registration pool is about +0.18, UNDER its own +0.20 threshold, and one Fish row (0.50/0.91 book, -0.337) carries much of the swing. Kept in shadow because shadow costs nothing (raw sizes bets); score.py decides |
-| `series-recent6` | Trump/Vance rally market-series rows where the last-6 Laplace differs from the full-series Laplace by >=0.10 (coined/trending phrases decaying or surging inside the window) | full-series Laplace | last-6 Laplace | RETRO-20261031-0415: SI\|Super Intelligence full-series sat above the mid on a 5th straight No (`9c41a232a4f9` 0.40 vs book 0.24/0.29, recent6 view 0.25); AI `f66172016523` 0.235 vs recent6 0.125, No. Counter-instance: Data Center `afafed90f2f7` recent6 2/6 sat at/above full-series and also went No - hence shadow, not a hand verdict |
+| `rally-below-mid` (IDLE since 11-01; slot freed by core, DEEP-2026-11-17) | Trump/Vance rally say-the-word reads (market-series, judgment) that sit BELOW the CLOB mid; not speaker-only transcript counts | your raw read | CLOB mid | NC-revert pre-registration (+0.20 threshold): SC+IA+FL below-mid raw n=20, +0.750 vs mid, RETRO-20261023-2215 (FL was a partial rally; the completed FL legs moved the other way, RETRO-20261024-0015 - untagged, the GA tagged rows are the first scored evidence). DEEP-2026-10-24 recount: the 8 completed-FL below-mid rows (AI, Drill, SI, Fish, Space, Jacksonville, Filibuster, Hell 15+; RETRO-20261024-0015) sum -0.567, so the whole pre-registration pool is about +0.18, UNDER its own +0.20 threshold, and one Fish row (0.50/0.91 book, -0.337) carries much of the swing. Kept in shadow because shadow costs nothing (raw sizes bets); score.py decides |
+| `series-recent6` (IDLE since 11-02; slot freed by core, DEEP-2026-11-17) | Trump/Vance rally market-series rows where the last-6 Laplace differs from the full-series Laplace by >=0.10 (coined/trending phrases decaying or surging inside the window) | full-series Laplace | last-6 Laplace | RETRO-20261031-0415: SI\|Super Intelligence full-series sat above the mid on a 5th straight No (`9c41a232a4f9` 0.40 vs book 0.24/0.29, recent6 view 0.25); AI `f66172016523` 0.235 vs recent6 0.125, No. Counter-instance: Data Center `afafed90f2f7` recent6 2/6 sat at/above full-series and also went No - hence shadow, not a hand verdict |
+| `aaa-tight-mid` | AAA US national-average gas price bracket/threshold rows where the book spread at record is <=0.10 | your drift / GasBuddy / slow-day read | CLOB mid | DEEP-2026-11-17: tight AAA tally 4/4 (Oct 23, Oct 30, Nov 1, Nov 16); non-superseded tight (<=.10) gas rows n=30 at +0.0027/row vs mid, the big misses all under a tight mid (`99a8392865e1` .65/.955 +0.120, `c7f964d848cd` .62/.947 +0.142, `1a1acac886de` .62/.865 +0.126) |
+
+**Slot accounting (DEEP-2026-11-17).** core/forecast.py counts a rule as in play only if it was tagged in the last 14 days (RULE_IDLE_DAYS). `rally-below-mid` (last 11-01) and `series-recent6` (last 11-02) are idle because rally season ended with the midterms. So core has 4 rules in play (ai-release, earnings, knife-edge, postcount) and 2 free slots. `aaa-tight-mid` takes one of them. The '6/6 full' lines further down are stale. Idle rules' rows are still graded. A rally rule comes back only if a slot is free when it is next tagged.
 
 Consequences, stated once:
 - When raw equals the rule value (e.g. you already sat at the mid), record WITHOUT `--rule`
@@ -78,16 +81,6 @@ cycles.log lines quoted reconcile. Merge one object per candidate:
 `{"market_id": "...", "category": "...", "skip_reason": "...", "forecast_id": "...", "note": "..."}`
 (see the 2026-10-26T12:30:04Z row). A reconcile line that says FAIL is fixed in
 the same cycle, not just pasted.
-
-**V2 sweep rows: `topask=<shares>` is the FIRST token of the note (DEEP-2026-11-13; binding through
-the 11-15 end of the sweep).** The rule is at the V2 section near the end of this file, and it is
-being missed. After yesterday's tooling fix, 4 more V2 tight rows were recorded without it:
-`3e60e809f73d` and `128451f378f3` (11-12 18:18Z), and `6553b48585e0` and `a3fa12080c0d` (11-13 00:18Z).
-That makes 8 in total. Depth-verified v2 TIGHT is stuck at n=16, and the 11-14 read needs 25. A row
-without topask cannot enter the read basis, so it is wasted research. Before you record, read the
-size at the best ask from `quote.py`/the book, then write `topask=<shares> ...`. After you record,
-run `python3 strategy/tools/v2cell.py --since 2026-11-09 | grep WARNING`, and if this cycle's ids
-are listed, say so in the cycles.log line.
 
 If the first does not show this cycle's ts, write the funnel line NOW
 (the pool/screened/escalated numbers you were about to put in cycles.log
@@ -8343,7 +8336,7 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
 - **Commodities 7d dBrier -2.04 (n=26) is not an edge.** `6172f26a0840` (placeholder book, -0.978)
   and WTI>102 Oct 29 (-0.622, unfillable) make almost all of it, and the rest sits at the book. Do
   not cite it to open commodities bets.
-- **Rule registry is full (6/6).** A seventh rule needs score.py to retire one (FAIL) or promote
+- **Rule registry is full (6/6)** [stale since DEEP-2026-11-17: 2 idle slots freed, see the registry]. A seventh rule needs score.py to retire one (FAIL) or promote
   one (PASS) first, or a deep retro has to free a slot with evidence.
 
 ## DEEP-2026-11-01 rulings
@@ -8821,7 +8814,7 @@ other)" or "6 rows: 4 sat-devig, top-30 exhausted".
   put .30 on 3.80x and pulled 3.81x to .62 (`1a1acac886de` +0.126, `94e3630a03b7` +0.082). The
   GasBuddy (-1.4c) and slow-day (~-1.3c) centres were both inside the winning bin.
 - The DEEP-11-02 tight-book tally is now **4/4** (Oct 23, Oct 30, Nov 1, Nov 16). Its condition
-  (4 or more of 5) is met. It cannot ship as an estimation rule while the registry is full (6/6).
+  (4 or more of 5) is met. It cannot ship as an estimation rule while the registry is full (6/6) [DEEP-2026-11-17: shipped in shadow as `aaa-tight-mid`].
 - Method until a slot frees: on a tight AAA book (spread <=.10), stop using the 3-day drift
   centre as an input. Write the GasBuddy state and slow-day centres in the note, and expect my
   honest estimate to land near the tight mid unless they both disagree with it. AAA stays
@@ -8829,3 +8822,23 @@ other)" or "6 rows: 4 sat-devig, top-30 exhausted".
 - Grammy AOTY noms (same retro): the book beat the final-week predictor lists on 4 of 5 rows.
   RAYE (`5882a5ad4671`, .55 vs .74, Yes, +0.135) was the big miss. The >0.10 outside-view veto
   blocked the No bet. Public predictor lists are no information race. Awards stays no-bet.
+
+## DEEP-2026-11-17 rulings
+
+- **V2 final read (pre-registered): NO EVIDENCE that V2 opening books can be beaten. The sweep is closed.**
+  - `v2cell.py --since 2026-11-09`: depth-verified (read basis) n=25 at +0.0000 [-0.0042, +0.0043].
+    All v2 TIGHT rows: n=33 at +0.0008 [-0.0025, +0.0042]. v1 TIGHT baseline in the same window: n=254 at -0.0008.
+  - Tight, deep V2 books are priced at the devigged sportsbook. The thin-book mispricing
+    hypothesis is not supported, so V2 earns no edge class and no real twin.
+  - Record V2 books like any other candidate, under the saturated-devig cap. The `topask=` rule
+    expired with the sweep and has been removed from the top of this file.
+- **`aaa-tight-mid` ships in SHADOW (registry slot freed by core idling).** On a tight AAA book
+  (spread <=.10), form your drift/GasBuddy/slow-day read as usual and record it as
+  `--raw-prob <read> --rule aaa-tight-mid --est-prob <mid>`. This replaces the 11-16
+  "method until a slot frees" paragraph. AAA stays forecast-only, and score.py grades the rule.
+  This is shadow, so the recorded est_prob stays your raw read. Nothing moves until a PASS.
+- **Box-office wide-book revisit (DEEP-11-10 asked for it here): stays no-bet. Closed.**
+  - All-time tight box-office rows: n=50 at -0.0006, which is at the book.
+  - Wide rows: n=13 at +0.141. None have been recorded since 11-10.
+  - Since 11-10 there are n=3 tight rows at +0.055, driven by Ghost Soldier `62b5cd069168`
+    (.60 vs .84, won, +0.134). That is insufficient data.
