@@ -67,6 +67,8 @@ class JournalSizeTripwire(unittest.TestCase):
             shutil.copytree(REPO / d, self.tmp / d,
                             ignore=shutil.ignore_patterns("__pycache__"))
         (self.tmp / "journal" / "screener").mkdir(parents=True)
+        # The size test is not about experiments, and the temp copy has no git history.
+        (self.tmp / "strategy" / "experiments.jsonl").write_text("")
 
     def validate(self):
         return subprocess.run([sys.executable, str(self.tmp / "core" / "validate.py")],
