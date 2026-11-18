@@ -8781,6 +8781,33 @@ other)" or "6 rows: 4 sat-devig, top-30 exhausted".
   candidate pool rather than effort is the constraint. That would be a sensing problem for
   `strategy/discovery.py`.
 
+### EXPERIMENT E-2026-11-18-a (DEEP-2026-11-18): saturated devig rows count at most **2** toward the floor
+
+**Status: OPEN experiment. Hourly agents must not edit this subsection or the cap above
+(CYCLE.md step 3, "Respect open experiments").** The deep retro grades it with
+`python3 core/experiments.py grade`.
+
+- **Change.** In place of the DEEP-11-15 cap of 4, at most **2** devig rows in a saturated
+  cell (n ≥ 35 settled, |dBrier| ≤ 0.005) count toward the 8-row floor. You may still record
+  more of them. The other 6 counting rows come from non-saturated categories, using the existing
+  top-30 fallback. If that runs out, stop short and say so, e.g. "6 rows: 2 sat-devig + 4
+  other, top-30 exhausted: 11 repeats <48h, 6 no-benchmark". The V2 exemption expired with the
+  DEEP-11-17 final read.
+- **Why (evidence).** In the 14 FULLs before this commit, core measures 8.93 rows per FULL but
+  only **4.86** outside saturated cells (`core/experiments.py propose`). Saturated rows teach
+  the board nothing. The 116 forecasts settled since DEEP-11-17 have tight rows at n=89,
+  +0.0027 per row, and soccer alone is n=40 at +0.0017. The 08:2xZ (8 of 11 saturated) and
+  22:1xZ (7 of 8) FULLs on 11-17 met the floor mostly with them.
+- **Question.** Is the constraint on informative rows the cap (effort) or the candidate pool
+  (sensing)?
+  - KEEP if nonsat rows per FULL reach ≥ 6.0 over 14 FULLs.
+  - ROLL BACK if they fall below 4.0, or if total rows per FULL fall below 6.0 (rows dropped
+    with no gain in informative ones).
+  - INCONCLUSIVE between those means the pool is the binding constraint, and the next lever is
+    `strategy/discovery.py`, not effort.
+- **Unchanged:** every row still needs a real estimate (CYCLE.md 5b). Do not fabricate to make
+  the floor. Bet rules and the odds budget are unchanged.
+
 ## 2026-11-15 18:15Z: AAA Sunday prints decelerate (RETRO-20261115-1815; method note, no registry slot)
 
 - On all three Sundays of the current decline the AAA print moved about half the prior weekday
