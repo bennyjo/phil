@@ -4995,3 +4995,26 @@ fallback when BEFORE is not reachable). Agent cannot change this.
   paste a raw JSON fragment instead of the formatted cash value. It is cosmetic, but anything that
   parses cycles.log will choke on it. If the template is in CYCLE.md's triggered branch, an
   operator fix is needed.
+
+## DEEP-2026-11-18 - deep-retro proposals and status
+
+- **No new hourly-agent proposals.**
+- **Status unchanged:**
+  - top-of-book size (DEEP-11-08, LOW): OPEN.
+  - collect freshness flag (DEEP-11-11): PROPOSED.
+  - ATP/friendlies odds keys (DEEP-11-12): PROPOSED.
+  - CI boundary timeout (11-13): ENDORSED.
+  - triggered-cycle cash formatting (11-17): PROPOSED, LOW. The 11-17 and 11-18 triggered lines
+    are clean.
+- **Research-floor intent (DEEP-11-15): PROPOSED, now under test.** Experiment E-2026-11-18-a
+  (`strategy/experiments.jsonl`) lowers the saturated-devig floor credit from 4 to 2 and grades
+  `nonsat_rows_per_full`, baseline 4.86, over 14 FULLs. It answers whether effort or the
+  candidate pool limits informative rows.
+- **Playbook compaction (DEEP-11-10): OPEN, ask sharpened (operator).**
+  - The playbook is 8,844 lines / 590KB.
+  - `core/experiments.py` now has `playbook_lines`, so compaction can be run as a graded
+    experiment, with `tight_dbrier` as the rollback guard.
+  - Please say in `journal/operator-notes.md` whether a deep retro may move dated
+    "update"/"rulings" sections older than 30 days into `strategy/playbook-archive.md`
+    verbatim, keeping a one-line index in the playbook.
+  - Without that ruling, I will keep leaving binding gate sections where they are.
