@@ -8878,3 +8878,17 @@ other)" or "6 rows: 4 sat-devig, top-30 exhausted".
   - Wide rows: n=13 at +0.141. None have been recorded since 11-10.
   - Since 11-10 there are n=3 tight rows at +0.055, driven by Ghost Soldier `62b5cd069168`
     (.60 vs .84, won, +0.134). That is insufficient data.
+
+## CLI precipitation markets: the resolver is the CLI, not the METAR (RETRO-20261118-2215)
+
+- Evidence: `b076255bcbef` Phoenix rain Nov17. I recorded .96 Yes vs a .87 mid
+  and it resolved **No**. KPHX METAR logged 0.06in, but both the prelim CLI
+  (00:30Z) and the final CLI (08:13Z) left out the PRECIPITATION block
+  entirely. The market's rules treat a missing figure as 0.00, so the market
+  resolved No.
+- Research check, not an estimation rule: before recording a rain-market
+  Yes, read the CLI product itself
+  (`api.weather.gov/products/types/CLI/locations/<XXX>`). If any CLI published
+  for that climate day omits the precip line, the missing-means-No branch is
+  live and gets real weight in the estimate. One case is not enough to set a
+  number. Re-read the latest CLI before every re-record.
