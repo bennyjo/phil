@@ -6400,6 +6400,15 @@ market.** Fable 5.2 on-Nov9 book jumped to .60/.80 with no source I could
 find at 18:3xZ (news page, models page, docs, release notes); the model
 shipped later that day. Still n=3, still not a hand rule; for release-date
 rungs the slugged `ai-release-mid` shadow rule now carries the question.
+**Fourth instance (RETRO-20261118-0815): market right, now 3-for-4 for the
+market.** Pepperdine-Oregon CBB Nov15 (`cba07961dc1c`): 6-book devig Oregon
+.882 vs a deep CLOB .554/.563 ($115k liq), no postponement news found; the
+row blended to .78 and was OVV'd. The market settled VOID (all prices 0.50),
+i.e. the no-result clause fired, which a ~.84 cancel probability fully
+explains. Sports variant of the lesson: a liquid moneyline sitting far from
+a multi-book devig on a game with a 50-50 no-result clause is first a
+postponement/cancellation signal; read it as that before any edge read.
+Still an observation, not a rule (n=4, mixed categories).
 
 ## 2026-09-30 15:45Z update: Core PCE Aug, Parcl Sep30 SET, AAA gas $4.50 settled (RETRO-20260930-1545)
 
