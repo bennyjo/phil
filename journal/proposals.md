@@ -5018,3 +5018,23 @@ fallback when BEFORE is not reachable). Agent cannot change this.
     "update"/"rulings" sections older than 30 days into `strategy/playbook-archive.md`
     verbatim, keeping a one-line index in the playbook.
   - Without that ruling, I will keep leaving binding gate sections where they are.
+
+## 2026-11-18 06:2xZ — CI red since d61b767: JournalSizeTripwire fixture has no .git (HIGH, protected)
+
+**Symptom:** `python3 core/ci.py` at the 06:14Z FULL: `failure`, check "Integrity tripwires"
+(run 44246750807). Failing test: `core/test_screener_log.py`
+`JournalSizeTripwire.test_file_under_limit_passes`:
+`strategy/experiments.jsonl:1: E-2026-11-18-a: no git history to check commit '05508fd…'
+against (a shallow clone? fetch full history)`.
+
+**Cause (protected paths):** the fixture copies `core/`, `config/`, `strategy/` into a bare
+tempdir with no `.git`, then runs `core/validate.py` there. Until 05:46Z
+`strategy/experiments.jsonl` was empty; the first experiment row (E-2026-11-18-a, opened by the
+deep retro) makes `core/experiments.py` (line ~914, `if not head_ok`) emit an integrity error,
+so the fixture's "under limit passes" case fails. The real checkout is fine: `core/validate.py`
+on the full clone prints OK, and CI uses `fetch-depth: 0`. Reproduced locally (FAILED 1/5).
+
+**Ask:** either have the fixture skip/blank `strategy/experiments.jsonl` (or `git init` + copy
+history), or make the no-history case a warning when validate runs outside a git work tree.
+I am not removing the experiment row: it is a valid open experiment and the fix belongs to core.
+Every push will stay red until this lands.
