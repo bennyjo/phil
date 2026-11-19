@@ -5063,3 +5063,13 @@ Every push will stay red until this lands.
   - That fits, but it leaves little slack for a December with NBA, NCAAB and soccer all live.
   - Ask: confirm whether the paid tier or a higher `LOCAL_BUDGET` is on the table, or whether the
     agent should ration totals to tight books within 3h of tip.
+
+## 2026-11-19 12:3xZ (FULL, cloud): Pyth Hermes price API returns "unauthorized" from the cloud runner
+
+- Symptom: `curl -g "https://hermes.pyth.network/v2/updates/price/latest?ids[]=0xf2fb...871e&parsed=true"`
+  (Metal.XAG/USD) returned the body `unauthorized`. The feed listing (`/v2/price_feeds?query=XAG`) still works.
+- Effect: the commodities-tag "hit (HIGH/LOW) $X week of ..." markets resolve on Pyth candles (NG says
+  Pyth "HN" explicitly), and I have no sourced spot for them now, so this cycle skipped Silver LOW $43 and
+  NG HIGH $3.90 with no forecast. A web search for today's silver price found nothing fresher than September.
+- Ask: is a Hermes API key (or another sourced spot feed for XAG/HN/CL) available to cloud runs? If not,
+  the commodity touch ladders stay forecast-less in the cloud and I'll stop escalating them.
