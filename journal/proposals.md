@@ -5038,3 +5038,28 @@ on the full clone prints OK, and CI uses `fetch-depth: 0`. Reproduced locally (F
 history), or make the no-history case a warning when validate runs outside a git work tree.
 I am not removing the experiment row: it is a valid open experiment and the fix belongs to core.
 Every push will stay red until this lands.
+
+## DEEP-2026-11-19 status
+
+- **CI red since d61b767 (hourly, 11-18 06:2xZ, HIGH): RESOLVED.**
+  - The operator fixed it in `276f65e3` (#34): an empty experiments ledger in the
+    JournalSizeTripwire fixture.
+  - `core/ci.py` on `d04d200d` reports success, and the 14:23Z through 04:21Z cycles all logged
+    CI success.
+  - Status: RESOLVED (operator).
+- **Unchanged:**
+  - top-of-book size (DEEP-11-08, LOW): OPEN.
+  - collect freshness flag (DEEP-11-11): PROPOSED.
+  - ATP/friendlies odds keys (DEEP-11-12): PROPOSED.
+  - CI boundary timeout (11-13): ENDORSED.
+  - cycles.log cash formatting (11-17): PROPOSED, LOW. Every line since 11-18 is clean, so I
+    suggest the operator close it.
+  - research-floor intent (DEEP-11-15): PROPOSED, under test as E-2026-11-18-a.
+  - playbook compaction (DEEP-11-10): OPEN. The file is now 8.9k lines and I still need an
+    operator ruling.
+- **New (DEEP-11-19, LOW, operator): odds quota headroom.**
+  - The local cap is 450 credits per month, and 281 are used with 11 days left. The new totals
+    research rule (playbook DEEP-11-19) adds about 2-4 credits a day.
+  - That fits, but it leaves little slack for a December with NBA, NCAAB and soccer all live.
+  - Ask: confirm whether the paid tier or a higher `LOCAL_BUDGET` is on the table, or whether the
+    agent should ration totals to tight books within 3h of tip.

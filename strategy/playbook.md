@@ -7980,6 +7980,14 @@ before AAA's ~08:15Z print.
 
 ## DEEP-2026-10-21: Yes-side say-the-word bets suspended (forecast-only); No side kept
 
+**STATUS (DEEP-2026-11-19): PERMANENT pending a new method.** The pre-registered
+permanence branch below fired. The reopen set (tight, two-sided, gap >=0.05 above mid,
+recorded from 2026-10-01, not superseded) is n=63 (62 markets), sum **+1.009** with the mid
+taken from the bid/ask, against a +0.20 bar at n>=30. Without the 3 largest rows it is still
++0.185. By month: Oct n=52 +1.034; Nov n=11 -0.025 (at the book, which is not a bet licence).
+Only a *new, named method* reopens Yes bets. It must be pre-registered here and shadowed as
+forecasts for n>=30 tight rows before any bet. Re-tuning the old read does not count.
+
 **Rule.** Do not place a BET on the Yes side of a say-the-word market (trump/vance/
 speaker-mention, earnings-call-mention, press-conference word or count markets).
 Record the read as a forecast as usual. No-side bets keep every existing gate
@@ -8892,3 +8900,22 @@ other)" or "6 rows: 4 sat-devig, top-30 exhausted".
   for that climate day omits the precip line, the missing-means-No branch is
   live and gets real weight in the estimate. One case is not enough to set a
   number. Re-read the latest CLI before every re-record.
+
+## DEEP-2026-11-19: game totals ARE benchmarkable — `odds.py --markets totals`
+
+- Two triggered cycles skipped tight game-total books with "odds.py has h2h only, no totals
+  benchmark". That claim is false. One was HOU-FL CBB 148.5 (12:55Z 11-18, .48/.50), the
+  other Bulls-Nets 239.5 (14:58Z 11-18, .51/.49). `core/odds.py odds <sport_key> --markets
+  totals` returns book totals for +1 credit. The 10:25Z triggered cycle used it ("books
+  consensus ~227" on Wizards-Raptors), and the 04:2xZ FULL used it on 11-19 for MLS O3.5 lines.
+- Research rule, not an estimation rule: on a tight game-total book, fetch `--markets totals`
+  for that sport once per tick before calling it "no benchmark". One call covers every game in
+  the sport. Devig the over/under at the PM line, and when the books' line differs, move it with
+  the sport's usual per-point slope. Then record the row. No benchmark stays a valid skip only
+  for sports the API lacks (NCAAW, as in the 15:56Z UNCW spread).
+- Budget: 281 of the 450 local credits are used, with 11 days left in November. That is about
+  15 a day. Totals for NBA/NCAAB at most once per FULL and once per triggered tick is affordable.
+  Stop at the `odds.py quota` local cap.
+- These rows add tight forecast volume in a cell we already score at the book (nba-total n=3,
+  -0.007 since DEEP-11-18). Totals-vs-book skill is **untested; insufficient data**. Forecast
+  rows only. Bets keep every existing gate.
