@@ -2740,6 +2740,7 @@ resolved 123-125): the 08Z re-record put the centre 0.33 sd above the 123 edge (
 0.6M) yet sat 0.16 off both mids (+0.16 dBrier, both lost). The 00Z rows on a 0.14-spread book
 beat the mid (-0.31), so this event is mixed (net -0.0235 over 6). The rule stands: straddle
 means |centre - edge| < 1.5 sd, and then own p is the mid, whatever the shade-up note says.
+Sixth settled instance (RETRO-20261119-2215, q6fgVVmdpgY day5 82-83/83-84, resolved 83-84): centre 82.65M sd 0.3 from a 10Z TROUGH pace (0.16-0.2M/h) = 1.17 sd under the 83 edge, a straddle, yet I sat .10/.24 off the mids (.72 vs .62, .22 vs .46) and both lost (+0.45 dBrier on 2 rows). Two rules broken at once: trough pace projected into the US-day window, and the straddle mid rule. Checklist before recording a view-count rung: (1) is the pace window diurnal-matched? (2) is the centre within 1.5 sd of an edge? If (2), est = mid, full stop.
 WSV tool totals 10-22 20:15Z (rows `4b2b6b7b3641` `6c084bd69e66` `38a4845cfd8e` `3a303ade7e6a`): 114 rows, 53W/45L, CF -55.58, dBrier -0.0190.
 
 **Touch-family gate CLOSED (DEEP-2026-09-01; pre-registered 2026-08-28
