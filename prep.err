@@ -1,0 +1,2 @@
+screen: funnel row open for cycle 2026-11-20T16:16:37Z in strategy/funnel.jsonl; add this cycle's fields with python3 core/funnel.py merge --cycle 2026-11-20T16:16:37Z --json '{...}'
+screen: prepared 300 markets in 15 batches under reports/screener-work/20261120T161637Z; day batches 135/180 ({'cloud': 135, 'operator': 0}). Spawn one Task subagent per batch with subagent_prompt_template, then run: python3 core/screen.py collect --dir reports/screener-work/20261120T161637Z
