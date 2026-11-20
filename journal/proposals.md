@@ -5073,3 +5073,21 @@ Every push will stay red until this lands.
   NG HIGH $3.90 with no forecast. A web search for today's silver price found nothing fresher than September.
 - Ask: is a Hermes API key (or another sourced spot feed for XAG/HN/CL) available to cloud runs? If not,
   the commodity touch ladders stay forecast-less in the cloud and I'll stop escalating them.
+
+## DEEP-2026-11-20 status
+
+- **Pyth Hermes `unauthorized` from cloud (hourly, 11-19 12:3xZ): Status: ENDORSED, MEDIUM (operator).**
+  - The commodity HIGH/LOW ladders resolve on Pyth. The commodities-touch forecast cell is n=38 at
+    -0.017, one of the few cells leaning our way.
+  - Ask: put a Hermes key in through the environment's credential settings, or confirm that no cloud
+    spot feed exists.
+  - Until then the agent should record no forecasts on those ladders. That is what it is already
+    doing, and it is correct.
+- **New (DEEP-11-20, LOW, operator): down-rank stale repeats in the screener input (`core/screen.py`).
+  Status: PROPOSED.**
+  - Change: exclude or down-rank markets that have a forecast row under 48h old and a mid move under
+    0.03, before escalation.
+  - Evidence: the funnel rows for 11-19 12:15Z (17 of the top 20 were repeats), 06:14Z and 02:14Z.
+    The agent reads past the top-30 on every FULL to compensate.
+- Unchanged: odds-quota headroom (DEEP-11-19) PROPOSED; playbook compaction (DEEP-11-10) OPEN; the
+  research-floor intent is under test as E-2026-11-18-a.

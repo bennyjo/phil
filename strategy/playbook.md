@@ -2315,6 +2315,10 @@ would be sign-corrupted, the same failure family as the stale hand-carried
 No-side subtotals (2026-08-18/19). When writing any retro number named
 `brier_delta`, copy it from score.py output, don't recompute with your own
 sign; if quoting "how much I beat the mid by", call it something else.
+DEEP-2026-11-20: the bare word "dBrier" falls under the same rule. RETRO-20261119-2215 used
+own−mid (+0.587 = worse). Ten hours later RETRO-20261120-0415 used mid−own (+0.090 = better),
+and its commit headline says "+0.09 dBrier". Read side by side, those two are sign-corrupted.
+From now on, every retro table header reads "dBrier (own−mid, + = worse)".
 
 First scored window (2026-08-09/10): 54 forecasts recorded, 18 settled,
 brier_delta +0.001 (z -0.15) — estimates that agree with the market settle
