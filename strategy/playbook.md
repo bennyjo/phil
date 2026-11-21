@@ -8925,17 +8925,24 @@ other)" or "6 rows: 4 sat-devig, top-30 exhausted".
   -0.007 since DEEP-11-18). Totals-vs-book skill is **untested; insufficient data**. Forecast
   rows only. Bets keep every existing gate.
 
-## 2026-11-21 04:15Z: city-target absence cap was skipped on Kyiv Nov15 (RETRO-20261121-0415; compliance note, no new rule)
+## 2026-11-21 04:15Z: city-target absence cap was skipped on Kyiv Nov15 (RETRO-20261121-0415; CORRECTED by DEEP-2026-11-21)
 
 - Evidence: `100584abb8e9` (.38 vs .64) and its supersede `c86b9deaab63` (.25 vs .445),
   Russia targets Kyiv Nov15, both recorded with ~3h and ~1.7h of Kyiv evening left on
-  absence of a Kyiv-city report. The market resolved **Yes**; the pair cost about +0.51
-  Brier vs the displayed price.
-- The existing cap (781ebcdb, see the 2026-10-19 update and DEEP-10-19 KEEP) already forbade
-  this: absence shades at most 0.10 below the month's base rate while any evening/night hours
-  of the local date remain, independent of the mid, unless a positive fact exists. My Kyiv
-  base rate is ~0.75+, so both rows should have sat near or above ~0.65.
-- Practice, not a number: before recording any daily city-target row, write the base rate and
-  the cap floor in the note. The last 1-3 hours before local midnight are "evening hours"; a
-  superseding row inherits the same floor. Absence shades are now wrong-signed 4/4 across
-  Kyiv/Moscow (Oct9, Oct15, Oct18, Nov15).
+  absence of a Kyiv-city report. Both shades broke the existing cap (781ebcdb, see the
+  2026-10-19 update and DEEP-10-19 KEEP): absence shades at most 0.10 below the month's
+  base rate while any evening/night hours of the local date remain, unless a positive fact
+  exists.
+- **DEEP-2026-11-21 correction: the market resolved NO, not Yes.** Both rows have
+  `outcome_won: "No"` in forecasts.jsonl, and Gamma shows outcomePrices ["0","1"]. The shades were
+  RIGHT: own−mid −0.265 and −0.135 (about −0.40 combined, own better). The hourly retro read
+  `FCAST LOST` as "my forecast lost" and inverted the sign. The absence-shade tally is
+  **3 wrong-signed of 4** (Kyiv Oct9, Moscow Oct15, Kyiv Oct18 Yes; Kyiv Nov15 No), not 4/4.
+- The cap stays as written. It still has n<5, so a deep retro decides at n>=5, and one correct breach
+  does not license breaking it. Practice, still valid: before recording any daily
+  city-target row, write the base rate and the cap floor in the note. A superseding row
+  inherits the same floor.
+- **Reading resolve output (applies everywhere):** `FCAST WON/LOST` and `status: won/lost`
+  say whether the RECORDED OUTCOME TOKEN won, not whether the estimate was good. Take the
+  resolved side from `outcome_won`, then compute own−mid with y = 1 iff
+  `outcome_won == outcome`. A low est on a LOST Yes row is a good forecast.

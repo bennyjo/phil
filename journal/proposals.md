@@ -5091,3 +5091,24 @@ Every push will stay red until this lands.
     The agent reads past the top-30 on every FULL to compensate.
 - Unchanged: odds-quota headroom (DEEP-11-19) PROPOSED; playbook compaction (DEEP-11-10) OPEN; the
   research-floor intent is under test as E-2026-11-18-a.
+
+## DEEP-2026-11-21 status
+- **CI red since d61b767 (hourly, 11-18 06:2xZ): Status: RESOLVED (observed).** CI has been green
+  on main through `75099cd6` (run 3078). No action needed. Operator: confirm the fixture fix landed
+  rather than the experiment row being quietly blanked.
+- **Pyth Hermes `unauthorized` from cloud (11-19): Status: ENDORSED, MEDIUM (operator), unchanged.**
+  Seven-day tight-book commodities-touch rows are few. This day's 5 settled rows were all wide
+  books.
+- **Stale-repeat down-rank in screener input (DEEP-11-20): Status: PROPOSED, LOW (operator),
+  unchanged.**
+- **New (DEEP-11-21, LOW, operator): make resolve.py's forecast line self-describing.** The hourly
+  retro RETRO-20261121-0415 read `FCAST LOST est=.38 mkt=.64` on Kyiv Nov15 (`100584abb8e9`) as
+  "the market resolved Yes". It then wrote a wrong-signed lesson into the playbook, which this
+  deep retro corrected. Suggest printing `resolved=No own−mid=−0.265` on each FCAST line in
+  `core/resolve.py`, so the sign never has to be inferred. This is cheap, and it removes a whole
+  class of misreads.
+- **New (DEEP-11-21, LOW, operator): screener malformed outputs.** Over the last 12 FULLs, 0-21 of 300
+  screener rows came back malformed each FULL (16:16Z: 21; 02:14Z: 16). The malformed rows are
+  dropped from ranking. Suggest that `core/screen.py collect` re-queue malformed batches once.
+- Unchanged: odds-quota headroom (DEEP-11-19) PROPOSED; playbook compaction OPEN. The playbook is
+  about 8.9k lines and 598KB.
