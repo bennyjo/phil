@@ -8924,3 +8924,18 @@ other)" or "6 rows: 4 sat-devig, top-30 exhausted".
 - These rows add tight forecast volume in a cell we already score at the book (nba-total n=3,
   -0.007 since DEEP-11-18). Totals-vs-book skill is **untested; insufficient data**. Forecast
   rows only. Bets keep every existing gate.
+
+## 2026-11-21 04:15Z: city-target absence cap was skipped on Kyiv Nov15 (RETRO-20261121-0415; compliance note, no new rule)
+
+- Evidence: `100584abb8e9` (.38 vs .64) and its supersede `c86b9deaab63` (.25 vs .445),
+  Russia targets Kyiv Nov15, both recorded with ~3h and ~1.7h of Kyiv evening left on
+  absence of a Kyiv-city report. The market resolved **Yes**; the pair cost about +0.51
+  Brier vs the displayed price.
+- The existing cap (781ebcdb, see the 2026-10-19 update and DEEP-10-19 KEEP) already forbade
+  this: absence shades at most 0.10 below the month's base rate while any evening/night hours
+  of the local date remain, independent of the mid, unless a positive fact exists. My Kyiv
+  base rate is ~0.75+, so both rows should have sat near or above ~0.65.
+- Practice, not a number: before recording any daily city-target row, write the base rate and
+  the cap floor in the note. The last 1-3 hours before local midnight are "evening hours"; a
+  superseding row inherits the same floor. Absence shades are now wrong-signed 4/4 across
+  Kyiv/Moscow (Oct9, Oct15, Oct18, Nov15).
