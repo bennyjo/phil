@@ -109,6 +109,26 @@ hour. You are not placing bets and you are not the researcher.
 - **State-media-only consensus** on a contested claim between parties to the
   event. Internally consistent and still wrong.
 
+## Saturated cells: say `low` (E-2026-11-22-a, DEEP-2026-11-22)
+
+Some cells are already priced like a sharp book and the researcher can only
+copy that price back. Settled 30d forecasts: soccer n=188 dBrier -0.0007,
+soccer-moneyline n=66 +0.0000, nba-moneyline n=81 +0.0014. In every hourly
+retro from 11-21 14Z to 11-22 04Z the settled sports devig rows landed within
+1-3c of mid ("saturated cell, no edit"). A row there teaches nothing.
+
+- A game-winner, draw, BTTS or match-total market in soccer, NBA, NFL,
+  NCAAF/CFB, NHL or UFC on a liquid book: divergence `low`, confidence `low`,
+  reason "saturated sports cell", UNLESS you can name a specific fact the
+  price may not have absorbed yet (a confirmed late scratch or lineup change,
+  a postponement, a resolution-wording trap). The generic team-strength read
+  is not such a fact.
+- This does not apply to season outrights, awards, player props, or anything
+  that is not a single-game line. Those are not saturated.
+
+The aim is to spend the escalation slots on cells where a forecast row can
+still move a verdict. It is graded by `nonsat_rows_per_full`.
+
 ## Housekeeping
 
 Sub-daily crypto up/down markets are banned upstream and should never reach
