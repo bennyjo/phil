@@ -8830,6 +8830,8 @@ other)" or "6 rows: 4 sat-devig, top-30 exhausted".
 - **Unchanged:** every row still needs a real estimate (CYCLE.md 5b). Do not fabricate to make
   the floor. Bet rules and the odds budget are unchanged.
 
+- **CLOSED INCONCLUSIVE (DEEP-2026-11-22):** nonsat_rows_per_full 4.86 -> 5.93 over 14 FULLs, bar 6.0. The floor credit of 2 stays; the lever is free. The pool-side follow-up is E-2026-11-22-a (`strategy/screener-prompt.md`, saturated cells).
+
 ## 2026-11-15 18:15Z: AAA Sunday prints decelerate (RETRO-20261115-1815; method note, no registry slot)
 
 - On all three Sundays of the current decline the AAA print moved about half the prior weekday

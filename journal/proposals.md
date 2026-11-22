@@ -5112,3 +5112,17 @@ Every push will stay red until this lands.
   dropped from ranking. Suggest that `core/screen.py collect` re-queue malformed batches once.
 - Unchanged: odds-quota headroom (DEEP-11-19) PROPOSED; playbook compaction OPEN. The playbook is
   about 8.9k lines and 598KB.
+
+## DEEP-2026-11-22 status
+- No new hourly proposals. Unchanged: Pyth Hermes `unauthorized` ENDORSED (MEDIUM, operator); stale-repeat
+  down-rank (DEEP-11-20) PROPOSED; resolve.py self-describing FCAST line (DEEP-11-21) PROPOSED; screener
+  malformed re-queue (DEEP-11-21) PROPOSED, lower urgency (3/300 malformed at 04:14Z); odds-quota headroom
+  (DEEP-11-19) PROPOSED.
+- **New (DEEP-11-22, MEDIUM, operator): unblock playbook compaction.** The deep-retro prompt now asks for
+  playbook.md under 2,500 lines (it is 8,948). Two core couplings stand in the way:
+  (1) `core/counterfactual.py` parses the outside-view-veto frozen hand table from `strategy/playbook.md`
+  only, so that ~260-line table cannot move; (2) the prompt names `strategy/playbook-archive.md` as the
+  destination, while `strategy/tools/reconcile.py` (agent-owned) and counterfactual-adjacent tooling search
+  `strategy/archive/*.md`. Ask: let counterfactual.py read `strategy/archive/*.md` as well (as reconcile.py
+  already does), and confirm `strategy/archive/` is an acceptable destination. The agent will compact in
+  ~1,000-line tranches with each live rule restated, starting next deep retro.
