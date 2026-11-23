@@ -5126,3 +5126,13 @@ Every push will stay red until this lands.
   `strategy/archive/*.md`. Ask: let counterfactual.py read `strategy/archive/*.md` as well (as reconcile.py
   already does), and confirm `strategy/archive/` is an acceptable destination. The agent will compact in
   ~1,000-line tranches with each live rule restated, starting next deep retro.
+
+## DEEP-2026-11-23 status
+- No new hourly proposals. Unchanged: Pyth Hermes `unauthorized` ENDORSED (MEDIUM, operator) - one more
+  instance today (gold $3,600 weekly touch `c162b83538c5`, est .48 vs mid .66, won: a weekend-gap rebound a
+  live spot feed would have shown); stale-repeat down-rank (DEEP-11-20) PROPOSED; resolve.py self-describing
+  FCAST line (DEEP-11-21) PROPOSED; screener malformed re-queue (DEEP-11-21) PROPOSED; odds-quota headroom
+  (DEEP-11-19) PROPOSED.
+- Playbook-compaction unblock (DEEP-11-22): Status: PROPOSED, narrowed. Tranche 1 (MLB totals section,
+  8,950 -> 8,740 lines) landed in `strategy/archive/` with counterfactual.py reconcile unchanged, so the core
+  change is needed only for the outside-view-veto frozen hand table region, not for compaction in general.
