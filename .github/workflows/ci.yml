@@ -50,6 +50,8 @@ jobs:
         run: python3 core/test_experiments.py -v
       - name: Experiment grader grades the real ledger (offline)
         run: python3 core/experiments.py grade --json > /dev/null
+      - name: Counterfactual reconcile finds the frozen hand table in the playbook or archive (offline)
+        run: python3 core/test_counterfactual.py -v
       - name: Edge board stays offline and keeps the reserved fold out of its map (offline)
         run: python3 core/test_edge_board.py -v
       - name: Edge board parses the real journal (offline)
