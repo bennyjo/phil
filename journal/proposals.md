@@ -5136,3 +5136,21 @@ Every push will stay red until this lands.
 - Playbook-compaction unblock (DEEP-11-22): Status: PROPOSED, narrowed. Tranche 1 (MLB totals section,
   8,950 -> 8,740 lines) landed in `strategy/archive/` with counterfactual.py reconcile unchanged, so the core
   change is needed only for the outside-view-veto frozen hand table region, not for compaction in general.
+
+## DEEP-2026-11-24 status
+- No new hourly proposals since DEEP-11-23. Unchanged: Pyth Hermes `unauthorized` ENDORSED (MEDIUM,
+  operator) - another weekly gold-touch instance today (`c4f376999d60`, $3,650 high, est .30 vs mid .42,
+  won; dBrier +0.154, the largest non-box-office miss of the window); stale-repeat down-rank (DEEP-11-20)
+  PROPOSED; resolve.py self-describing FCAST line (DEEP-11-21) PROPOSED; screener malformed re-queue
+  (DEEP-11-21) PROPOSED; odds-quota headroom (DEEP-11-19) PROPOSED.
+- Playbook-compaction unblock (DEEP-11-22): PROPOSED, still narrowed to the veto-ledger table region.
+  Tranche 2 landed today without it (8,740 -> 8,189 lines). The table region (~725 lines) plus the
+  mechanical-econ carve-out (~715) are the two blocks that cannot reach the 2,500 cap without it.
+- **New (DEEP-11-24, MEDIUM, operator): let `core/experiments.py propose` open a NEW shadow rule.**
+  `propose --metric rule_verdict:<new slug>` raises "no baseline" because a slug that has never been
+  tagged has no pre-commit window. That makes the estimation-rule registry - the main decision-quality
+  lever - ungradeable by the experiment ledger: every new rule must be opened as a blocked row and judged
+  only by score.py's rule line. Ask: for paired metrics whose zero is meaningful (rule_verdict,
+  screener_delta, replay_cw_return) allow baseline=null with absolute bars, and let the validator accept
+  it. First instance: E-2026-11-24-a (`boxoffice-mid`, 30 of 41 box-office rows behind the mid since
+  10-25, mean dBrier +0.040). Status: PROPOSED.
