@@ -55,9 +55,12 @@ declined rows: a gate skipping rows whose beliefs BEAT the market
 (negative) is a different problem from one skipping rows whose beliefs
 lose to it (positive), and the pnl column alone cannot tell them apart.
 
-`reconcile` diffs that mechanical ledger against the hand-kept table under
-"Outside-view veto: settled counterfactual ledger" in strategy/playbook.md
-(markdown rows plus the batches written up in prose only). Rows are matched
+`reconcile` diffs that mechanical ledger against the frozen hand-kept table
+of the "Outside-view veto: settled counterfactual ledger" (markdown rows plus
+any batches written up in prose only). The table runs from its "Frozen hand
+table" heading to the next heading, and that heading must appear in exactly
+one of strategy/playbook.md and strategy/archive/*.md, so playbook
+compaction can move the table to the archive. Rows are matched
 by forecast id where the playbook names one, else by question text and
 date. It prints hand rows with no ledger row, settled outside-view-veto
 ledger rows the hand table never entered, matched rows whose side, edge,
@@ -85,6 +88,7 @@ import screen_replay  # noqa: E402  (protected sibling: fill model, caps, parsin
 
 ROOT = replay.ROOT
 PLAYBOOK = ROOT / "strategy" / "playbook.md"
+ARCHIVE_DIR = ROOT / "strategy" / "archive"
 RETRO_DIR = ROOT / "journal" / "retros"
 STAKE_USD = 5.0
 # market -> gamma event, from the cache core/screen_replay.py events fills.
@@ -388,7 +392,7 @@ def print_ledger(rep, folds, show_rows):
 
 # ------------------------------------------------------------- reconcile
 
-SECTION = "## Outside-view veto: settled counterfactual ledger"
+FROZEN_RE = re.compile(r"^#{2,6} Frozen hand table\b")
 STATED_RE = re.compile(
     r"Totals now (\d+) realizable trades,\s*(\d+)W/(\d+)L, net ([-+−–][\d.]+)u")
 # A prose batch names the id, then its side, edge, result and bolded P&L.
@@ -408,15 +412,25 @@ def _num(s):
         return None
 
 
+def strategy_docs():
+    """The playbook, then the archive files compaction moves its text to."""
+    return [PLAYBOOK] + sorted(ARCHIVE_DIR.glob("*.md"))
+
+
 def parse_playbook():
-    """The hand-kept table: markdown rows plus the prose-only batches."""
-    lines = PLAYBOOK.read_text().splitlines()
-    try:
-        start = next(i for i, ln in enumerate(lines) if ln.startswith(SECTION))
-    except StopIteration:
-        sys.exit(f"{PLAYBOOK} has no section {SECTION!r}")
+    """The frozen hand-kept table: markdown rows plus the prose-only batches."""
+    hits = []
+    for path in strategy_docs():
+        lines = path.read_text().splitlines()
+        hits += [(path, lines, i) for i, ln in enumerate(lines) if FROZEN_RE.match(ln)]
+    where = [f"{p.relative_to(ROOT)}:{i + 1}" for p, _, i in hits]
+    if len(hits) != 1:
+        sys.exit(f"expected one 'Frozen hand table' heading in {PLAYBOOK.relative_to(ROOT)} "
+                 f"or {ARCHIVE_DIR.relative_to(ROOT)}/*.md, found {len(hits)}: "
+                 f"{', '.join(where) or 'none'}")
+    path, lines, start = hits[0]
     end = next((i for i, ln in enumerate(lines[start + 1:], start + 1)
-                if ln.startswith("## ")), len(lines))
+                if ln.startswith("#")), len(lines))
     section, entries, prose, batch = lines[start:end], [], [], None
     for off, ln in enumerate(section):
         if ln.startswith("|") and ln.count("|") >= 6:
@@ -465,7 +479,8 @@ def parse_playbook():
     for m in STATED_RE.finditer(re.sub(r"\s+", " ", "\n".join(section))):
         stated = {"trades": int(m.group(1)), "wins": int(m.group(2)),
                   "losses": int(m.group(3)), "pnl": _num(m.group(4))}
-    return entries, stated, {"section_lines": len(section), "ids_seen": len(seen)}
+    return entries, stated, {"source": str(path.relative_to(ROOT)),
+                             "section_lines": len(section), "ids_seen": len(seen)}
 
 
 def _tokens(label):
@@ -505,11 +520,11 @@ def reconcile_report(rows, folds):
         else:
             matched.append((e, row))
     entered = {r["id"] for _, r in matched}
-    section = PLAYBOOK.read_text()
+    named = "".join(p.read_text() for p in strategy_docs())
     never = [{"id": r["id"], "ts": r["ts"], "edge": r["edge"],
               "pnl": None if r["pnl"] is None else round(r["pnl"] / STAKE_USD, 2),
               "side": r["market_side"], "refused": r["refused"], "outcome": r["market_outcome"],
-              "named_in_playbook": r["id"] in section,
+              "named_in_playbook": r["id"] in named,
               "question": r["question"]}
              for r in rows
              if r["skip_reason"] == "outside-view-veto" and r["id"] not in entered]
@@ -553,8 +568,9 @@ def reconcile_report(rows, folds):
 def print_reconcile(rep):
     h, ledg, d, st = rep["hand"], rep["ledger_veto"], rep["difference"], rep["hand_stated"]
     print("reconcile: hand-kept playbook table vs mechanical counterfactual ledger")
+    src = rep["meta"]["source"]
     print(f"  parsed {h['rows']} hand rows ({h['trades']} graded trades) from "
-          f"{PLAYBOOK.relative_to(ROOT)}; matched {rep['matched']} to ledger rows "
+          f"{src}; matched {rep['matched']} to ledger rows "
           f"({rep['matched_by_text']} by question text + date)")
     if st:
         ok = (st["trades"], st["wins"], st["losses"], st["pnl"]) == (
@@ -565,22 +581,22 @@ def print_reconcile(rep):
     print()
     print(f"A. hand rows with no ledger row ({len(rep['missing_from_ledger'])})")
     for e in rep["missing_from_ledger"]:
-        print(f"   playbook:{e['line']} {e['id'] or '(no id)'} {e['label'][:60]}")
+        print(f"   {src}:{e['line']} {e['id'] or '(no id)'} {e['label'][:60]}")
     print()
     print(f"B. settled outside-view-veto ledger rows the hand table never entered "
           f"({len(rep['never_entered'])})")
     for r in rep["never_entered"]:
         edge = "     -" if r["edge"] is None else f"{r['edge']:>+6.3f}"
         pnl = "      -" if r["pnl"] is None else f"{r['pnl']:>+7.2f}u"
-        why = r["refused"] or ("named elsewhere in the section"
-                               if r["named_in_playbook"] else "not named in the section")
+        why = r["refused"] or ("named in playbook or archive"
+                               if r["named_in_playbook"] else "not named in playbook or archive")
         print(f"   {r['id']} {r['ts'][:10]} {(r['side'] or '-'):>3} edge {edge} "
               f"pnl {pnl}  {why[:34]:<34} {r['question'][:36]}")
     print()
     print(f"C. rows in both that differ ({len(rep['field_diffs'])})")
     for x in rep["field_diffs"]:
         fields = "  ".join(f"{k}: hand {v[0]} -> ledger {v[1]}" for k, v in x["fields"].items())
-        print(f"   {x['id']} playbook:{x['line']} {x['label'][:34]:<34} {fields}")
+        print(f"   {x['id']} {src}:{x['line']} {x['label'][:34]:<34} {fields}")
         if x["refused"]:
             print(f"      ledger refusal: {x['refused']}")
     print()
