@@ -41,6 +41,14 @@ Rate and snapshot metrics take days only. The baseline is the same window
 immediately before the commit, computed with only the data known at
 baseline_asof, so it is reproducible and the validator re-checks it.
 
+A paired metric whose zero means "no effect" (rule_verdict, screener_delta,
+replay_cw_return) can have no data before the commit: a new rule slug, a
+new prompt_rev or a new policy. For those `propose` prints "baseline": null
+instead of refusing, the bars are absolute (keep_if "< -0.01" on
+rule_verdict means the rule beats raw by 0.01), and the validator accepts
+the null only while the window before the commit is still empty. Every
+other metric needs a numeric baseline.
+
 Conditions (keep_if, rollback_if): clauses "<op> <number>" on the
 experiment's metric or "<metric> <op> <number>" on another catalog metric
 over the same span, ops >= <= > <, joined with "and" (binds tighter) and
@@ -51,8 +59,8 @@ Verdicts (grade):
   ROLL BACK     rollback_if holds after at least half the window, or at its end
   KEEP          keep_if holds at window end
   DOUBLE DOWN   KEEP with the effect at least twice the bar (value - baseline
-                against threshold - baseline), or the interval entirely past
-                the threshold
+                against threshold - baseline; a null baseline counts as 0),
+                or the interval entirely past the threshold
   INCONCLUSIVE  window over, neither bar reached
   BLOCKED       a blocked_by_core row; waits on an operator PR
 
@@ -95,6 +103,9 @@ SATURATED_MAX_ABS_DBRIER = 0.005
 # A tight book, as the deep retros slice it: spread at most 6 cents.
 TIGHT_SPREAD = 0.06
 BASELINE_TOLERANCE = 1e-4
+# Paired metrics whose zero means "no effect": the only ones that may open
+# with "baseline": null when the window before the commit has no data.
+NULL_BASELINE_METRICS = ("rule_verdict", "screener_delta", "replay_cw_return")
 
 VERDICTS = ("COLLECTING", "KEEP", "ROLL BACK", "DOUBLE DOWN", "INCONCLUSIVE",
             "BLOCKED")
@@ -642,6 +653,8 @@ def _double_down(groups, value, baseline, ci):
         return False
     _, op, threshold = bars[0]
     up = op in (">=", ">")
+    if baseline is None:
+        baseline = 0.0  # a null baseline: the metric's zero is "no effect"
     bar = threshold - baseline
     if bar != 0 and (bar > 0) == up:
         effect = value - baseline
@@ -691,8 +704,9 @@ def grade_one(root, row, asof):
         else:
             verdict = "COLLECTING"
     shown = "n/a" if value is None else f"{value:.4f}"
+    base = "null" if row["baseline"] is None else row["baseline"]
     line = (f"{row['id']} {verdict} {progress} {row['metric']}={shown} "
-            f"baseline={row['baseline']} keep_if '{row['keep_if']}' "
+            f"baseline={base} keep_if '{row['keep_if']}' "
             f"rollback_if '{row['rollback_if']}'"
             + (f" ({m['detail']})" if m["detail"] else ""))
     return {"id": row["id"], "verdict": verdict,
@@ -711,12 +725,19 @@ def propose(root, metric_name, window, commit, asof):
     parse_window(window, metric)
     anchor = commit_time(root, sha)
     m = measure(root, metric_name, window, anchor, asof, False, commit=sha)
-    if m["value"] is None:
+    if m["value"] is None and not _null_baseline_ok(metric_name):
         raise ValueError(f"no baseline: {metric_name} has no data in the "
-                         f"window before {iso(anchor)}")
+                         f"window before {iso(anchor)} (only "
+                         f"{', '.join(NULL_BASELINE_METRICS)} may open with "
+                         f"a null baseline)")
     return {"commit": sha, "metric": metric_name, "window": window,
-            "baseline": round(m["value"], 4), "baseline_asof": iso(asof),
-            "baseline_n": m["n"], "unit": metric.unit}
+            "baseline": None if m["value"] is None else round(m["value"], 4),
+            "baseline_asof": iso(asof), "baseline_n": m["n"],
+            "unit": metric.unit}
+
+
+def _null_baseline_ok(metric_name):
+    return str(metric_name).partition(":")[0] in NULL_BASELINE_METRICS
 
 
 # ---------------------------------------------------------------- ledger
@@ -903,7 +924,13 @@ def _check_experiment_open(root, r, rid, levers, ts, head_ok, recompute, err,
         err(f"{rid}: {e}")
         return False
     baseline = r.get("baseline")
-    if isinstance(baseline, bool) or not isinstance(baseline, (int, float)):
+    if baseline is None and "baseline" in r:
+        if not _null_baseline_ok(r["metric"]):
+            err(f"{rid}: baseline null is allowed only for "
+                f"{', '.join(NULL_BASELINE_METRICS)}; {r['metric']} needs the "
+                f"number propose prints")
+            ok = False
+    elif isinstance(baseline, bool) or not isinstance(baseline, (int, float)):
         err(f"{rid}: baseline missing or not a number")
         ok = False
     try:
@@ -941,7 +968,12 @@ def _check_experiment_open(root, r, rid, levers, ts, head_ok, recompute, err,
         except Exception as e:  # noqa: BLE001 - report, never crash validate
             err(f"{rid}: baseline could not be recomputed: {e}")
             return False
-        if m["value"] is None or \
+        if baseline is None:
+            if m["value"] is not None:
+                err(f"{rid}: baseline null, but propose computes "
+                    f"{round(m['value'], 4)} for the window before the commit; "
+                    f"copy it from core/experiments.py propose")
+        elif m["value"] is None or \
                 abs(m["value"] - baseline) > BASELINE_TOLERANCE * max(1.0, abs(baseline)):
             err(f"{rid}: baseline {baseline} is not what propose computes "
                 f"({None if m['value'] is None else round(m['value'], 4)}); "
@@ -1002,9 +1034,12 @@ def main(argv=None):
         except ValueError as e:
             sys.exit(f"propose: {e}")
         print(json.dumps(out))
-        print(f"# baseline over {out['baseline_n']} x {out['unit']} before the "
-              f"commit; copy commit, metric, window, baseline and baseline_asof "
-              f"into the open row as printed", file=sys.stderr)
+        what = ("no data before the commit: baseline null, so keep_if and "
+                "rollback_if are absolute" if out["baseline"] is None else
+                f"baseline over {out['baseline_n']} x {out['unit']} before the "
+                f"commit")
+        print(f"# {what}; copy commit, metric, window, baseline and "
+              f"baseline_asof into the open row as printed", file=sys.stderr)
         return 0
 
     errors = check_ledger(ROOT, recompute=False)
