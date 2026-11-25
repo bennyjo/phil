@@ -1541,3 +1541,49 @@ rows set how fast the edge board learns. This asks for forecast rows only, so
 your bet rules don't change.
 
 What to expect: about 60 or more forecast rows a day.
+
+## 2026-11-25 ~09:00Z - test a candidate estimation rule on held-out history before it takes a slot (operator)
+
+When the deep retro finds a candidate estimation rule whose value is a
+function of the recorded book (the mid, or the mid plus or minus a cap), test
+it on history the retro did not use to find it, in the same deep retro:
+
+1. Take settled rows from before the window the retro studied: status won or
+   lost, not superseded, not already rule-tagged, and not a placeholder book
+   (`core.score.placeholder_book`).
+2. For each row, set `raw_prob` to the recorded `est_prob` and `rule_prob` to
+   the rule's value from the recorded book.
+3. Run `core.score.paired_rule_test(rows)` and put one line in the retro:
+   mean, CI, and events.
+
+Register the rule in a registry slot only if the held-out mean is negative.
+A held-out PASS is evidence for the forward test, not a replacement for it:
+the rule still earns its binding verdict from forward events.
+
+Why: `paired_rule_test` needs 20 events, clustered by (category, end date),
+before it gives a verdict. Candidate rules gain events slowly. The tight-book
+cap (H3) gains about 1 event a day, and `boxoffice-mid` gained 7 events
+between 10-25 and 11-24. The same test on held-out rows answers the day the
+rule is found. The operator ran it on 11-25:
+
+- Tight-book cap at mid plus or minus 0.15 (H3): the 30-day window the retro
+  studied gives PASS, -0.0355 [-0.0705, -0.0005] over 38 events. The held-out
+  60-to-30-day window gives -0.0088 [-0.0465, +0.0290] over 42 events: no
+  effect shown.
+- `boxoffice-mid`: 10-25 to 11-24 gives -0.0408 over 7 events, too few for an
+  interval. Before 10-25 gives -0.0125 [-0.0571, +0.0322] over 12 events: no
+  effect shown.
+
+Both rules lean the right way, but neither holds up on data the retro didn't
+use to find it.
+
+Related: `core/experiments.py propose` now prints `"baseline": null` for
+`rule_verdict:<new slug>` (and new `screener_delta` or `replay_cw_return`
+arguments), so a new rule can open as a graded experiment with absolute bars.
+An id already in the ledger as a blocked row can't be opened again: close it
+as withdrawn and open the experiment under a new id.
+
+What to expect: each candidate rule gets a held-out verdict in the deep retro
+that finds it, instead of after about 20 forward events (weeks for H3, months
+for `boxoffice-mid`), and rules that fail the held-out check stop taking
+slots.
