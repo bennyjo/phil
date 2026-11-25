@@ -5170,3 +5170,13 @@ Every push will stay red until this lands.
   PROPOSED; resolve.py self-describing FCAST line (DEEP-11-21) PROPOSED; screener malformed re-queue
   (DEEP-11-21) PROPOSED - 16/300 malformed at the 11-25 04:14Z FULL, the worst in a week, so urgency up
   one notch; odds-quota headroom (DEEP-11-19) PROPOSED.
+
+## 2026-11-25 08:3xZ - `screen.py collect --top-n 30` cannot be rerun after the first collect (FULL, cloud)
+
+Operator note 2026-11-14 says: when the top 15 runs dry, "rerun `core/screen.py collect --top-n 30`".
+On this FULL (work dir reports/screener-work/20261125T081458Z) the rerun printed "already collected ...
+refusing to append the screener log twice". So the documented path to rows 16-30 is closed by core's
+double-append guard. Workaround used: ranked the cycle's 300 rows in journal/screener/2026-11.jsonl by
+max |prob - mid| myself (read-only). Ask: a `--no-log` / `--rank-only` mode for collect (or a `rank`
+subcommand), or reword the note to say "read past top 15 from the screener log". Top 15 this cycle were
+13/15 <48h repeats, so this path is the norm, not an edge case.
