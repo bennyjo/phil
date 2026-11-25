@@ -172,6 +172,19 @@ class ProposeTest(Base):
         with self.assertRaisesRegex(ValueError, "no baseline"):
             E.propose(self.r.root, "tight_dbrier", {"days": 1}, self.sha, COMMIT_AT)
 
+    def test_null_baseline_for_a_new_paired_metric(self):
+        # A rule slug never tagged before the commit: no data, baseline null.
+        out = E.propose(self.r.root, "rule_verdict:new-rule", {"n": 20},
+                        self.sha, COMMIT_AT + 5 * H)
+        self.assertIsNone(out["baseline"])
+        self.assertEqual(out["baseline_n"], 0)
+        # A slug with rows before the commit still gets its number.
+        self.r.forecast("old", COMMIT_AT - 3 * H, COMMIT_AT - 2 * H, won=True,
+                        rule="old-rule")
+        out = E.propose(self.r.root, "rule_verdict:old-rule", {"n": 20},
+                        self.sha, COMMIT_AT + 5 * H)
+        self.assertAlmostEqual(out["baseline"], -0.09)
+
 
 class GradeTest(Base):
     def test_collecting_before_the_window_fills(self):
@@ -287,6 +300,21 @@ class GradeTest(Base):
         self.assertEqual((g["verdict"], g["n"]), ("KEEP", 3))
         self.assertGreater(g["value"], 0)
 
+    def test_null_baseline_grades_against_zero(self):
+        row = open_row("E-1", self.sha, None, metric="rule_verdict:knife",
+                       window={"n": 3}, keep_if="< -0.01", rollback_if="> 0")
+        g = self.grade(row)
+        self.assertEqual(g["verdict"], "COLLECTING")
+        self.assertIn("COLLECTING n=0/3", g["line"])
+        self.assertIn("baseline=null", g["line"])
+        for i in range(3):
+            self.r.forecast(f"r{i}", COMMIT_AT + H, COMMIT_AT + (2 + i) * H,
+                            won=True, rule="knife")
+        # -0.09 against a bar of -0.01 from zero: past twice the bar.
+        self.assertEqual(self.grade(row)["verdict"], "DOUBLE DOWN")
+        row["keep_if"] = "< -0.05"  # -0.09 is short of twice -0.05
+        self.assertEqual(self.grade(row)["verdict"], "KEEP")
+
 
 class StatusTest(Base):
     def test_fold_and_lever_filter(self):
@@ -345,6 +373,22 @@ class CheckLedgerTest(Base):
         closed = {"event": "close", "id": "E-1", "ts": iso(COMMIT_AT + 9 * H),
                   "outcome": "withdrawn", "lesson": "wrong baseline"}
         self.assertEqual(self.errors([open_row("E-1", self.sha, 6.0), closed]), [])
+
+    def test_null_baseline(self):
+        rule = dict(metric="rule_verdict:knife", window={"n": 20},
+                    keep_if="< -0.01", rollback_if="> 0")
+        self.assertEqual(self.errors([open_row("E-1", self.sha, None, **rule)]),
+                         [])
+        self.assertError([open_row("E-1", self.sha, None)],
+                         "baseline null is allowed only for")
+        row = open_row("E-1", self.sha, 5.0)
+        del row["baseline"]
+        self.assertError([row], "baseline missing or not a number")
+        # Null is refused once the window before the commit has data.
+        self.r.forecast("old", COMMIT_AT - 3 * H, COMMIT_AT - 2 * H, won=True,
+                        rule="knife")
+        self.assertError([open_row("E-1", self.sha, None, **rule)],
+                         "baseline null, but propose computes -0.09")
 
     def test_commit_rules(self):
         self.assertError([open_row("E-1", "0" * 40, 5.0)], "does not resolve")
