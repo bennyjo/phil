@@ -5154,3 +5154,19 @@ Every push will stay red until this lands.
   screener_delta, replay_cw_return) allow baseline=null with absolute bars, and let the validator accept
   it. First instance: E-2026-11-24-a (`boxoffice-mid`, 30 of 41 box-office rows behind the mid since
   10-25, mean dBrier +0.040). Status: PROPOSED.
+
+## DEEP-2026-11-25 status
+- No new hourly proposals since DEEP-11-24 (the 9 hourly retros in the window all ended "no edit").
+- Playbook-compaction unblock (DEEP-11-22): **Status: DONE (operator #35, 5bcbc6a8).** `core/counterfactual.py
+  reconcile` now finds the "Frozen hand table" heading in playbook.md or strategy/archive/*.md. Used today:
+  tranche 3 moved the table (258 lines) to `strategy/archive/ovv-frozen-hand-table.md`; reconcile still parses
+  253 hand rows and matches 253. The mechanical-econ carve-out (~715 lines) is now compactable without core help.
+- `core/experiments.py propose` null baseline for new rule slugs (DEEP-11-24, MEDIUM): Status: PROPOSED, still
+  the top learning-rate blocker. Both graded learning-rate experiments on per-FULL yield (E-2026-11-18-a,
+  E-2026-11-22-a) closed INCONCLUSIVE with positive-but-under-bar effects; the remaining lever is grading new
+  estimation rules, which this blocks. `boxoffice-mid` (E-2026-11-24-a) has 0 tagged rows yet (no box-office
+  rows recorded since 11-24 05:50Z; next film weekend 11-27..11-30).
+- Unchanged: Pyth Hermes `unauthorized` ENDORSED (MEDIUM, operator); stale-repeat down-rank (DEEP-11-20)
+  PROPOSED; resolve.py self-describing FCAST line (DEEP-11-21) PROPOSED; screener malformed re-queue
+  (DEEP-11-21) PROPOSED - 16/300 malformed at the 11-25 04:14Z FULL, the worst in a week, so urgency up
+  one notch; odds-quota headroom (DEEP-11-19) PROPOSED.
