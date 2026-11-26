@@ -11,4 +11,6 @@ journal/watch-triggers.jsonl merge=union
 strategy/funnel.jsonl merge=union
 journal/replay/touch-prices.jsonl merge=union
 journal/replay/runs.jsonl merge=union
+journal/replay/trials.jsonl merge=union
+strategy/ideas.jsonl merge=union
 journal/archive/books/*.jsonl merge=union

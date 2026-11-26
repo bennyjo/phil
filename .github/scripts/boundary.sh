@@ -11,10 +11,10 @@ BEFORE="${1:?usage: boundary.sh <before-sha> <after-sha>}"
 AFTER="${2:?usage: boundary.sh <before-sha> <after-sha>}"
 
 PROTECTED='^(core/|config/|\.github/|\.claude/|CYCLE\.md|REAL\.md|loop\.sh|CLAUDE\.md|LICENSE|README\.md|\.gitignore)'
-# Written by core/touch_replay.py and core/scan.py, and the agent's experiment
-# ledger (graded by core/experiments.py); an agent commit may only append to
-# them.
-APPEND_ONLY='^(journal/(replay/(touch-prices|runs)|archive/books/[0-9-]+)|strategy/experiments)\.jsonl$'
+# Written by core/touch_replay.py, core/edge_board.py and core/scan.py, and the
+# agent's experiment ledger (graded by core/experiments.py) and idea log; an
+# agent commit may only append to them.
+APPEND_ONLY='^(journal/(replay/(touch-prices|runs|trials)|archive/books/[0-9-]+)|strategy/(experiments|ideas))\.jsonl$'
 # Written once by core/archive.py; an agent commit may only add them.
 WRITE_ONCE='^journal/archive/prices/'
 

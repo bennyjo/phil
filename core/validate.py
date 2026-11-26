@@ -21,6 +21,9 @@ Checks that an unattended cycle cannot have left the repo broken or unsafe:
     is an ancestor of HEAD, touches at most 2 files and only under strategy/,
     names no protected lever, does not loosen strategy/risk.json, and its
     baseline is what core/experiments.py propose computes
+  - strategy/ideas.jsonl (the agent's idea log) and
+    journal/replay/trials.jsonl (core/edge_board.py's trial log) parse, and
+    each row carries its required fields
   - no file under journal/ is over 80 MB: GitHub refuses any push holding a
     file over 100 MB, which would stop every runner's push
   - every Python file under core/ and strategy/ still compiles
@@ -281,6 +284,28 @@ if real_ledger_path.exists() and protected and isinstance(protected.get("real"),
                 isinstance(row.get("usd"), (int, float)) and row["usd"] > real_cap:
             err(f"real-ledger.jsonl:{lineno}: real stake {row['usd']} exceeds "
                 f"real.max_stake_usd {real_cap}")
+
+# The agent's idea log and core/edge_board.py's trial log: append-only JSONL
+# that the deep retro and the edge board's reserved budget read back.
+for rel, required in (("strategy/ideas.jsonl", {"event", "id", "ts"}),
+                      ("journal/replay/trials.jsonl", {"ts", "variant", "code", "reserved"})):
+    path = ROOT / rel
+    if not path.exists():
+        continue
+    for lineno, line in enumerate(path.read_text().splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError as e:
+            err(f"{rel}:{lineno}: invalid JSON - {e}")
+            continue
+        if not isinstance(row, dict):
+            err(f"{rel}:{lineno}: not a JSON object")
+            continue
+        missing = required - row.keys()
+        if missing:
+            err(f"{rel}:{lineno}: missing fields {sorted(missing)}")
 
 sys.path.insert(0, str(ROOT / "core"))
 try:

@@ -25,17 +25,43 @@ Variants. raw, shrink and stack are built in. The agent may add its own in
 strategy/variants.py, which is optional:
 
   VARIANTS = {"my-slug": (fit, predict)}
+  RESERVED = ["my-slug"]     optional: the variants that ask for a reserved
+                             verdict; the rest replay on development rows only
   fit(history) -> state      history = earlier settled rows, with `won`.
   predict(row, state) -> p   row = the forecast as recorded, outcome fields
                              stripped (core/replay.py's contract). None means
                              no opinion and keeps the raw estimate.
+  Keep a variant's parameters in this file: a variant that reads another file
+  at run time is a new version only when its outputs on the probe rows change.
 
-Two guards keep the replay honest:
+Three guards keep the replay honest:
 
-  Rule budget     Tagged rules in play plus agent variants share
-                  forecast.RULE_BUDGET slots. Variants past it are not replayed.
-                  The built-ins take no slot: they never touch a recorded row,
-                  and using one means tagging a rule, which takes a slot.
+  Trial log       Every agent variant is replayed on the development rows, up
+                  to MAX_AGENT_VARIANTS a run, and takes no rule-budget slot:
+                  forecast.RULE_BUDGET limits tagged rules, which can bind. A
+                  variant version is what it does and the code it lives in: its
+                  outputs on fixed probe rows (probe_sets), and the text of
+                  every Python file under strategy/ and of any other in-repo
+                  module the variants file references. Any edit to that code
+                  makes every variant a new version, and so does a change in
+                  the outputs; a variant whose
+                  outputs differ between two probe runs is not replayed. Each
+                  version gets one row in TRIALS_REL the first time the board
+                  replays it, and another when it first sees its reserved
+                  verdict or that verdict changes, so the log counts every
+                  version tried, failures included.
+  Reserved budget Only a variant named in RESERVED asks for a reserved
+                  verdict, and at most RESERVED_CHECKS_PER_WEEK new versions see
+                  one in any trailing 7 days, in the order VARIANTS lists them;
+                  the rest print HELD until the budget frees. A version keeps its
+                  verdict once it has had it, so compare candidates on the
+                  development columns first, ask only for the best, and take a
+                  name out of RESERVED once its verdict is logged: after any
+                  edit to a Python file under strategy/, a name still listed
+                  spends another check.
+                  Reading the reserved rows once per idea, not once per tweak,
+                  is what keeps them a test (reusing a holdout for adaptively
+                  chosen variants overfits it).
   Reserved rows   Rows recorded in the last RESERVED_DAYS are reserved. They
                   reach the printed board only as a variant's verdict word: the
                   edge map, the allocation and every other number leave them out,
@@ -48,8 +74,8 @@ Two guards keep the replay honest:
                   This guards against tuning by accident, not on purpose:
                   core/score.py still reports over every row, and an agent variant
                   is code that can read the journal or be swapped each cycle.
-                  Variants run in this process with a timeout, and its git history
-                  is the record of what was tried.
+                  Variants run in this process with a timeout; the trial log and
+                  the file's git history are the record of what was tried.
 
 Intervals are 95% ratio-estimator intervals clustered by event, the method of
 score.paired_rule_test. They replace a bootstrap so a verdict never flips on a
@@ -64,13 +90,15 @@ Usage: python3 core/edge_board.py [--json]
 import argparse
 import contextlib
 import datetime as dt
-import importlib.util
+import hashlib
 import json
 import math
 import pathlib
+import random
 import re
 import signal
 import sys
+import types
 from collections import defaultdict
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
@@ -85,8 +113,17 @@ VARIANTS_FILE = ROOT / "strategy" / "variants.py"
 # line without a tracked file that two runners would conflict on.
 ALLOCATION_FILE = screen.EDGE_BOARD_ALLOCATION
 
+# Every agent variant version the board replays, and each reserved verdict it
+# shows, one row each (append-only, written only here).
+TRIALS_REL = "journal/replay/trials.jsonl"
+TRIALS_FILE = ROOT / TRIALS_REL
+
 FOLDS = 5             # older than RESERVED_DAYS; fold 0 only trains
 RESERVED_DAYS = 14
+# New agent variant versions that may see their reserved verdict in any
+# trailing 7 days. A version keeps its verdict once it has had it.
+RESERVED_CHECKS_PER_WEEK = 5
+MAX_AGENT_VARIANTS = 20  # replayed per run, in strategy/variants.py order
 MIN_ROWS = FOLDS * 10
 VARIANT_TIMEOUT_S = 30
 MIN_CI_EVENTS = score.RULE_MIN_CI_EVENTS
@@ -389,15 +426,21 @@ def contained():
 
 
 def load_agent_variants(path=None):
-    """(variants, notes). A broken file costs its variants, never the board."""
+    """(variants, notes, requested, basis). requested: the names the file's
+    optional RESERVED list asks a reserved verdict for; basis: module_basis of
+    the file. A broken file costs its variants, never the board."""
     path = pathlib.Path(path or VARIANTS_FILE)
     if not path.exists():
-        return {}, []
+        return {}, [], [], ""
     try:
-        spec = importlib.util.spec_from_file_location("edge_board_variants", path)
-        mod = importlib.util.module_from_spec(spec)
+        # Compiled from the source every run, never from a cached .pyc: an
+        # edit of the same size in the same second would otherwise replay the
+        # old code under the old version id.
+        mod = types.ModuleType("edge_board_variants")
+        mod.__file__ = str(path)
+        code = compile(path.read_text(), str(path), "exec")
         with contained():
-            spec.loader.exec_module(mod)
+            exec(code, mod.__dict__)  # noqa: S102 - the agent's own variants file
         declared = mod.VARIANTS
         variants, notes = {}, []
         for name, pair in declared.items():
@@ -406,10 +449,18 @@ def load_agent_variants(path=None):
                 continue
             fit, predict = pair
             variants[name] = (fit, predict)
+        asked = getattr(mod, "RESERVED", [])
+        basis = module_basis(mod, path)
     except (Exception, SystemExit) as e:  # noqa: BLE001 - the agent owns this file
         return {}, [f"{path.name} unusable, no agent variants this run: "
-                    f"{type(e).__name__}: {e}"]
-    return variants, notes
+                    f"{type(e).__name__}: {e}"], [], ""
+    if not isinstance(asked, (list, tuple)) or not all(isinstance(n, str) for n in asked):
+        notes.append("RESERVED is not a list of variant names: no reserved check asked")
+        asked = []
+    unknown = [n for n in asked if n not in variants]
+    if unknown:
+        notes.append(f"RESERVED names no such variant: {', '.join(unknown)}")
+    return variants, notes, [n for n in asked if n in variants], basis
 
 
 def rules_in_play(frows, now):
@@ -419,18 +470,169 @@ def rules_in_play(frows, now):
                   if v["verdict"] != "fail" and v["last_ts"] >= cutoff)
 
 
-def apply_budget(variants, in_play):
-    """(variants inside the budget, names refused, slots used). A variant named
-    after a tagged rule shares that rule's slot."""
-    slots = set(in_play)
-    kept, refused = {}, []
-    for name, pair in variants.items():
-        if name in slots or len(slots) < forecast.RULE_BUDGET:
-            slots.add(name)
-            kept[name] = pair
-        else:
-            refused.append(name)
-    return kept, refused, sorted(slots)
+# A variant's version is what it does and the code it lives in, never a
+# reading of how it is written: its outputs on fixed probe rows, and the text
+# of every in-repo module the variants file references. Any change to either
+# is a new version; a false new version only costs a fresh trial.
+PROBE_SEED = 20261126
+PROBE_HISTORY = 300   # settled rows fit() sees
+PROBE_RANDOM = 265    # rows predict() sees beyond the grid below
+PROBE_GRID = [(est, mid, spread) for est in (0.02, 0.1, 0.25, 0.4, 0.5, 0.6, 0.75, 0.9, 0.98)
+              for mid in (0.03, 0.2, 0.5, 0.8, 0.97) for spread in (0.01, 0.04, 0.12)]
+PROBE_CATEGORIES = ("soccer", "social-media-postcount", "say-the-word", "nba-moneyline",
+                    "crypto-touch", "politics-general", "commodities", "box-office",
+                    "econ-print", "weather")
+
+
+def _probe_row(i, u, est=None, mid=None, spread=None):
+    """One forecast row as a variant sees it, every field drawn from u()."""
+    est = round(0.01 + 0.98 * u(), 4) if est is None else est
+    mid = round(0.02 + 0.96 * u(), 4) if mid is None else mid
+    spread = (0.01, 0.02, 0.04, 0.08, 0.15)[int(u() * 5)] if spread is None else spread
+    ts = dt.datetime(2026, 1, 1, tzinfo=dt.timezone.utc) + dt.timedelta(hours=i)
+    end = ts + dt.timedelta(hours=(2, 12, 30, 80, 200, 700)[int(u() * 6)])
+    return {"id": f"probe{i}", "ts": _stamp(ts), "market_id": str(900000 + i),
+            "question": f"Probe question {i}?", "slug": f"probe-{i}", "end_date": _stamp(end),
+            "outcome": ("Yes", "No")[int(u() * 2)], "token_id": str(i), "version": "v1",
+            "est_prob": est, "best_bid_at_record": round(max(0.001, mid - spread / 2), 4),
+            "best_ask_at_record": round(min(0.999, mid + spread / 2), 4),
+            "price_source_at_record": "mid", "market_prob_at_record": mid,
+            "liquidity_at_record": round(100 * 10 ** (3 * u()), 2),
+            "volume_24h_at_record": round(50 * 10 ** (3 * u()), 2),
+            "category": PROBE_CATEGORIES[int(u() * len(PROBE_CATEGORIES))],
+            "skip_reason": ("market-agrees", "no-edge", "wide-spread")[int(u() * 3)],
+            "fit_score": None, "note": "probe", "strategy_rev": "probe"}
+
+
+def probe_sets():
+    """(history, rows): the fixed rows every variant version is fingerprinted
+    on. Drawn from random.Random(PROBE_SEED).random only, whose sequence Python
+    keeps across versions, so the set is the same on every runner."""
+    u = random.Random(PROBE_SEED).random
+    history = []
+    for i in range(PROBE_HISTORY):
+        r = _probe_row(i, u)
+        r["won"] = u() < (r["est_prob"] + r["market_prob_at_record"]) / 2
+        history.append(r)
+    start = PROBE_HISTORY
+    rows = [_probe_row(start + i, u, *cell) for i, cell in enumerate(PROBE_GRID)]
+    rows += [_probe_row(start + len(PROBE_GRID) + i, u) for i in range(PROBE_RANDOM)]
+    return history, rows
+
+
+def behavior(variant):
+    """The variant's outputs on the probe rows, after fitting on the probe
+    history, as one string. Errors are part of the behavior; a timeout is not,
+    and propagates, so a stuck variant costs one timeout."""
+    fit, predict = variant
+    history, rows = probe_sets()
+    with contained():
+        try:
+            state = fit([dict(h) for h in history]) if fit else None
+        except TimeoutError:
+            raise
+        except (Exception, SystemExit) as e:  # noqa: BLE001 - the agent owns its variants
+            return f"fit-error:{type(e).__name__}"
+        out = []
+        for r in rows:
+            try:
+                p = predict(dict(r), state)
+                out.append("None" if p is None else format(float(p), ".9g"))
+            except TimeoutError:
+                raise
+            except (Exception, SystemExit) as e:  # noqa: BLE001
+                out.append(f"error:{type(e).__name__}")
+    return "|".join(out)
+
+
+def module_basis(mod, path):
+    """A hash of the text of the variants file, every Python file under
+    strategy/, and every other in-repo module the variants file references,
+    directly or through those modules. An edit to any of them makes every
+    variant in the file a new version."""
+    files, stack = {pathlib.Path(path).resolve()}, [vars(mod)]
+    while stack:
+        for value in list(stack.pop().values()):
+            try:
+                owner = value if isinstance(value, types.ModuleType) else \
+                    sys.modules.get(getattr(value, "__module__", None) or "")
+                name = getattr(owner, "__file__", None)
+            except Exception:  # noqa: BLE001 - an odd object adds nothing
+                continue
+            if not name:
+                continue
+            file = pathlib.Path(name).resolve()
+            if ROOT.resolve() in file.parents and file not in files and file.suffix == ".py":
+                files.add(file)
+                stack.append(vars(owner))
+    # Code reached only at call time (an import inside a function, a module
+    # in the strategy.tools namespace package, importlib) is invisible to the
+    # walk above, so every agent-owned Python file counts too.
+    files.update(f.resolve() for f in (ROOT / "strategy").rglob("*.py")
+                 if "__pycache__" not in f.parts)
+    h = hashlib.sha256()
+    for file in sorted(files):
+        label = file.relative_to(ROOT.resolve()) if ROOT.resolve() in file.parents else file.name
+        h.update(f"{label}\0{file.read_text()}\0".encode())
+    return h.hexdigest()
+
+
+def variant_code(variant, basis=""):
+    """A variant version's id: a hash of the module basis (module_basis) and of
+    its behavior on the probe rows, run twice. Raises ValueError when the two
+    runs differ: a variant that does not repeat itself cannot be versioned,
+    so it is not replayed."""
+    first = behavior(variant)
+    if behavior(variant) != first:
+        raise ValueError("its outputs on the fixed probe rows differ between two runs; "
+                         "a variant must be deterministic")
+    return hashlib.sha256(f"{basis}\0{first}".encode()).hexdigest()[:12]
+
+
+def read_trials(path=None):
+    path = pathlib.Path(path or TRIALS_FILE)
+    if not path.exists():
+        return []
+    out = []
+    for line in path.read_text().splitlines():
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(row, dict):
+            out.append(row)
+    return out
+
+
+def _stamp(t):
+    return t.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def reserved_checks_used(trials, now):
+    """Variant versions whose first reserved verdict fell in the 7 days to now."""
+    first = {}
+    for t in trials:
+        if t.get("reserved") == "checked" and isinstance(t.get("ts"), str):
+            key = (t.get("variant"), t.get("code"))
+            first[key] = min(first.get(key, t["ts"]), t["ts"])
+    lo, hi = _stamp(now - dt.timedelta(days=7)), _stamp(now)
+    return sum(1 for ts in first.values() if lo < ts <= hi)
+
+
+def _round(v):
+    return None if v is None else round(v, 4)
+
+
+def trial_row(now, name, code, v, granted):
+    def stat(s):
+        return {k: _round(s.get(k)) for k in ("est", "lo", "hi")}
+    res = v["reserved"]
+    return {"ts": _stamp(now), "tool": "edge_board", "variant": name, "code": code,
+            "rows": v["rows"], "vs_raw": stat(v["vs_raw"]), "vs_market": stat(v["vs_market"]),
+            "h1": _round(v["h1"]), "h2": _round(v["h2"]),
+            "reserved": "checked" if granted else res["verdict"],
+            "verdict": res["verdict"] if granted else None,
+            "events": res["events"] if granted else None}
 
 
 def reserved_from(now):
@@ -595,12 +797,22 @@ def flag_changes(cells_by_table, rows, moves, now):
                 c["was"] = was
 
 
-def build(rows, frows, moves, agent_variants, notes, now, revised=()):
+def build(rows, frows, moves, agent_variants, notes, now, revised=(), trials=(), requested=(),
+          basis=""):
+    """The board. trials: the trial log so far; the rows this run adds come
+    back in report["trial_rows"] for main to append. requested: the agent
+    variants that ask for a reserved verdict (strategy/variants.py RESERVED);
+    the rest replay on the development rows only. basis: the variants file's
+    module_basis, part of every version id."""
     in_play = rules_in_play(frows, now)
-    kept, refused, slots = apply_budget(agent_variants, in_play)
-    report = {"rows": len(rows), "notes": list(notes), "budget": {
-        "limit": forecast.RULE_BUDGET, "rules_in_play": in_play,
-        "agent_variants": sorted(kept), "refused": refused, "used": len(slots)}}
+    names = list(agent_variants)
+    replayed = {name: agent_variants[name] for name in names[:MAX_AGENT_VARIANTS]}
+    report = {"rows": len(rows), "notes": list(notes), "trial_rows": [], "budget": {
+        "limit": forecast.RULE_BUDGET, "rules_in_play": in_play, "used": len(in_play),
+        "agent_variants": list(replayed), "refused": names[MAX_AGENT_VARIANTS:]},
+        "reserved_checks": {"limit": RESERVED_CHECKS_PER_WEEK,
+                            "used": reserved_checks_used(trials, now), "held": [],
+                            "dev_only": []}}
     fold0, dev, reserved = split_folds(rows, now)
     if len(fold0) + len(dev) < MIN_ROWS:
         report["notes"].append(f"only {len(fold0) + len(dev)} settled rows before the reserved "
@@ -610,11 +822,48 @@ def build(rows, frows, moves, agent_variants, notes, now, revised=()):
     report["folds"] = {"train_only": len(fold0), "development": len(dev), "reserved": len(reserved),
                        "reserved_from": reserved_from(now)}
     report["variants"] = []
-    for name, variant in {**BUILTINS, **kept}.items():
+    for name, variant in BUILTINS.items():
         try:
             report["variants"].append(variant_row(name, variant, rows, now, revised))
+        except Exception as e:  # noqa: BLE001 - one variant never stops the board
+            report["notes"].append(f"variant {name} failed: {type(e).__name__}: {e}")
+    last, checked = {}, set()
+    for t in trials:
+        key = (t.get("variant"), t.get("code"))
+        last[key] = t
+        if t.get("reserved") == "checked":
+            checked.add(key)
+    checks = report["reserved_checks"]
+    for name, variant in replayed.items():
+        try:
+            code = variant_code(variant, basis)
+        except (Exception, SystemExit) as e:  # noqa: BLE001 - it costs itself only
+            report["notes"].append(f"variant {name} not replayed: cannot version it: "
+                                   f"{type(e).__name__}: {e}")
+            continue
+        key = (name, code)
+        new_check = (key not in checked and name in requested
+                     and checks["used"] < RESERVED_CHECKS_PER_WEEK)
+        try:
+            v = variant_row(name, variant, rows, now, revised)
         except (Exception, SystemExit) as e:  # noqa: BLE001 - the agent owns its variants
             report["notes"].append(f"variant {name} failed: {type(e).__name__}: {e}")
+            if key not in last:
+                report["trial_rows"].append({
+                    "ts": _stamp(now), "tool": "edge_board", "variant": name, "code": code,
+                    "reserved": "failed", "error": f"{type(e).__name__}: {e}"[:200]})
+            continue
+        granted = key in checked or new_check
+        if new_check:
+            checks["used"] += 1
+        if not granted:
+            word = "held" if name in requested else "dev"
+            v["reserved"] = {"rows": None, "n": None, "events": None, "verdict": word}
+            checks["held" if word == "held" else "dev_only"].append(name)
+        report["variants"].append(v)
+        prev = last.get(key)
+        if prev is None or new_check or (granted and prev.get("verdict") != v["reserved"]["verdict"]):
+            report["trial_rows"].append(trial_row(now, name, code, v, granted))
     cells = edge_map(rows, moves, now)
     flag_changes(cells, rows, moves, now)
     report["edge_map"] = cells
@@ -654,9 +903,13 @@ def render(report):
     print(f"edge board: {report['rows']} settled rows"
           + (" ({train_only} train-only, {development} development, {reserved} reserved "
              "from {reserved_from})".format(**report["folds"]) if "folds" in report else ""))
-    print(f"rule budget: {b['used']}/{b['limit']} in play ({len(b['rules_in_play'])} tagged, "
-          f"{len(b['agent_variants'])} agent variants)"
-          + (f"; NOT replayed, over budget: {', '.join(b['refused'])}" if b["refused"] else ""))
+    print(f"rule budget: {b['used']}/{b['limit']} tagged rules in play; "
+          f"{len(b['agent_variants'])} agent variants replayed"
+          + (f"; NOT replayed, over the {MAX_AGENT_VARIANTS}-variant cap: {', '.join(b['refused'])}"
+             if b["refused"] else ""))
+    rc = report["reserved_checks"]
+    print(f"reserved checks: {rc['used']}/{rc['limit']} new variant versions in 7 days"
+          + (f"; verdict held, budget spent: {', '.join(rc['held'])}" if rc["held"] else ""))
     for note in report["notes"]:
         print(f"note: {note}")
     if not report["variants"] and not report["edge_map"]:
@@ -666,6 +919,8 @@ def render(report):
     for v in report["variants"]:
         res = v["reserved"]
         verdict = ("baseline" if v["variant"] == "raw" else
+                   "HELD (weekly reserved budget)" if res["verdict"] == "held" else
+                   "dev only (not in RESERVED)" if res["verdict"] == "dev" else
                    f"{res['verdict'].upper()} n={res['n']} events={res['events']}")
         lines.append([v["variant"], v["rows"], _ci(v["vs_market"]),
                       "-" if v["variant"] == "raw" else _ci(v["vs_raw"]),
@@ -698,8 +953,14 @@ def main(argv=None, now=None):
     frows = forecast.read_forecasts()
     rows, revised = settled_rows(frows)
     moves = load_moves(rows)
-    variants, notes = load_agent_variants()
-    report = build(rows, frows, moves, variants, notes, now, revised)
+    variants, notes, requested, basis = load_agent_variants()
+    report = build(rows, frows, moves, variants, notes, now, revised, read_trials(TRIALS_FILE),
+                   requested, basis)
+    new_trials = report.pop("trial_rows")
+    if new_trials:
+        TRIALS_FILE.parent.mkdir(parents=True, exist_ok=True)
+        with TRIALS_FILE.open("a") as fh:
+            fh.writelines(json.dumps(t) + "\n" for t in new_trials)
     ALLOCATION_FILE.parent.mkdir(parents=True, exist_ok=True)
     ALLOCATION_FILE.write_text(allocation_line(report["allocation"]) + "\n")
     if args.json:

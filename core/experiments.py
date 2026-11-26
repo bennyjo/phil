@@ -64,11 +64,33 @@ Verdicts (grade):
   INCONCLUSIVE  window over, neither bar reached
   BLOCKED       a blocked_by_core row; waits on an operator PR
 
+Event floor. The metrics over forecast rows (tight_dbrier, rule_verdict)
+count independent events, keyed (category, end date) as core/score.py
+clusters them, and get no verdict on fewer than EVENT_FLOOR (10): grade
+reads COLLECTING while the window runs and INCONCLUSIVE at its end. Rows of
+one event share one outcome, so a window of 40 box-office rows on 7 film
+weekends holds 7 observations; a KEEP or ROLL BACK on them would record
+noise as a lesson.
+
 Subcommands:
   propose --metric NAME --window SPEC --commit SHA   prints the open row's
-          computed fields (baseline, baseline_asof, window); copy them as-is
+          computed fields (baseline, baseline_asof, window); copy them as-is.
+          It also prints what the window can detect, from the same window
+          before the commit: baseline_events, and mde, the smallest effect a
+          two-sided 5% test finds with 80% power (2.8 standard errors,
+          clustered by event; times sqrt(2) for a numeric baseline, because
+          the forward window is compared with the baseline window). Set the
+          bars at least mde from the baseline (from 0 for a null baseline).
   grade [--json] [--asof TS]                         one line per open row
   status [--lever PATH] [--json]                     the folded ledger
+  scoreboard [--since TS] [--json] [--asof TS]       the primary metric and
+          its target, and the guard metrics a change must not worsen. The
+          primary metric is set by the operator: mean dBrier against the
+          price on tight books (spread <= 0.06, no placeholder books; superseded
+          rows count) over the rows settled in the last PRIMARY_DAYS (30) days,
+          with a 95% interval clustered by event; the target is met when the
+          interval sits below zero. --since adds the same metric since that
+          time (the last deep retro).
 
 check_ledger() is the ledger half of core/validate.py.
 
@@ -106,6 +128,18 @@ BASELINE_TOLERANCE = 1e-4
 # Paired metrics whose zero means "no effect": the only ones that may open
 # with "baseline": null when the window before the commit has no data.
 NULL_BASELINE_METRICS = ("rule_verdict", "screener_delta", "replay_cw_return")
+# A metric over forecast rows (tight_dbrier, rule_verdict) gets no verdict on
+# fewer independent events than this: the count below which core/score.py
+# shows no interval. Rows of one event share one outcome driver, so 40 rows
+# on 7 film weekends are 7 observations, not 40.
+EVENT_FLOOR = score.RULE_MIN_CI_EVENTS
+# propose's smallest detectable effect: a two-sided 5% test with 80% power
+# is 1.96 + 0.84 standard errors from no effect.
+MDE_Z = 2.80
+# The scoreboard's primary metric: forecast skill against the price on tight
+# books, over the rows that settled in the trailing PRIMARY_DAYS. The target
+# is met when the 95% interval sits below zero. Set by the operator.
+PRIMARY_DAYS = 30
 
 VERDICTS = ("COLLECTING", "KEEP", "ROLL BACK", "DOUBLE DOWN", "INCONCLUSIVE",
             "BLOCKED")
@@ -260,10 +294,16 @@ class Journal:
 
 # ---------------------------------------------------------------- metrics
 
-Unit = collections.namedtuple("Unit", "rec at sample")
+Unit = collections.namedtuple("Unit", "rec at sample event", defaults=(None,))
 # rec: when the unit entered the record (a forward window counts units
 # recorded at or after the commit); at: when the unit became known (windows
-# are ordered and cut on it); sample: the per-unit value, if any.
+# are ordered and cut on it); sample: the per-unit value, if any; event: the
+# (category, end date) key core/score.py clusters forecast rows by, for the
+# metrics whose units are forecast rows.
+
+
+def _event(r):
+    return (r["category"], (r.get("end_date") or "")[:10])
 
 
 def _y(r):
@@ -331,13 +371,13 @@ def u_tight_dbrier(j, arg, anchor):
             continue
         if arg and r["category"] != arg:
             continue
-        out.append(Unit(r["_ts"], r["_sts"], _dbrier(r)))
+        out.append(Unit(r["_ts"], r["_sts"], _dbrier(r), _event(r)))
     return out
 
 
 def u_rule(j, arg, anchor):
     # Superseded rows count, as in score.rule_verdicts.
-    return [Unit(r["_ts"], r["_sts"], r) for r in j.forecasts()
+    return [Unit(r["_ts"], r["_sts"], r, _event(r)) for r in j.forecasts()
             if r.get("rule") == arg and r["_settled"]]
 
 
@@ -469,6 +509,9 @@ CATALOG = {
         "snapshot", "day", None, None, False, 1,
         "lines in strategy/playbook.md at the end of the window"),
 }
+# Metrics whose units are forecast rows: they count independent events, and
+# grade gives no verdict on fewer than EVENT_FLOOR of them.
+EVENT_METRICS = (u_tight_dbrier, u_rule)
 
 
 def parse_metric(name):
@@ -625,8 +668,11 @@ def measure(root, metric_name, window, anchor, asof, forward, commit=None,
         complete = bool((k and len(us) >= k) or (cap and asof >= cap))
         half = bool((k and len(us) >= k / 2) or (days and elapsed >= days / 2))
     n = round(span_days, 1) if metric.kind == "rate" else len(us)
+    events = (len({u.event for u in us})
+              if metric.units in EVENT_METRICS else None)
     return {"value": value, "n": n, "ci": ci, "lo": lo, "hi": hi,
-            "complete": complete, "half": half, "detail": detail}
+            "complete": complete, "half": half, "detail": detail,
+            "events": events, "units": us}
 
 
 def _needed(window, metric):
@@ -687,7 +733,11 @@ def grade_one(root, row, asof):
 
     value, needed = m["value"], _needed(row["window"], metric)
     progress = f"n={m['n']}/{needed}"
-    if value is None:
+    events = m.get("events")
+    short = events is not None and events < EVENT_FLOOR
+    if events is not None:
+        progress += f" events={events}" + (f"/{EVENT_FLOOR}" if short else "")
+    if value is None or short:
         verdict = "INCONCLUSIVE" if m["complete"] else "COLLECTING"
     else:
         rollback = _eval(back, value, secondary)
@@ -711,7 +761,7 @@ def grade_one(root, row, asof):
             + (f" ({m['detail']})" if m["detail"] else ""))
     return {"id": row["id"], "verdict": verdict,
             "value": None if value is None else round(value, 4),
-            "n": m["n"], "needed": needed,
+            "n": m["n"], "needed": needed, "events": events,
             "ci": None if not m["ci"] else [round(x, 4) for x in m["ci"]],
             "window_end": iso(m["hi"]) if m["complete"] else None,
             "line": line}
@@ -730,10 +780,73 @@ def propose(root, metric_name, window, commit, asof):
                          f"window before {iso(anchor)} (only "
                          f"{', '.join(NULL_BASELINE_METRICS)} may open with "
                          f"a null baseline)")
+    se = (_standard_error(m.get("units") or [])
+          if metric.kind == "mean" or metric.units is u_rule else None)
+    # A null baseline is judged against zero; a numeric one compares the
+    # forward window with the baseline window, two samples of about one size.
+    mde = None if se is None else MDE_Z * se * (1 if m["value"] is None
+                                                 else math.sqrt(2))
     return {"commit": sha, "metric": metric_name, "window": window,
             "baseline": None if m["value"] is None else round(m["value"], 4),
             "baseline_asof": iso(asof), "baseline_n": m["n"],
+            "baseline_events": m.get("events"),
+            "mde": None if mde is None else round(mde, 4),
             "unit": metric.unit}
+
+
+def power_note(out):
+    """One line on what the proposed window can detect, from the same window
+    before the commit."""
+    parts = []
+    events = out.get("baseline_events")
+    if events is not None and events < EVENT_FLOOR:
+        parts.append(f"the same window before the commit held {events} events, "
+                     f"and grade gives no verdict below {EVENT_FLOOR}: widen it")
+    if out.get("mde") is None:
+        parts.append("no standard error from history for this metric; size the "
+                     "window from the cell's rows (events) on core/edge_board.py")
+    else:
+        zero = out["baseline"] if out["baseline"] is not None else 0
+        parts.append(f"smallest effect this window detects at 80% power: "
+                     f"{out['mde']:g}; set keep_if at least that far from {zero:g}")
+    return "; ".join(parts)
+
+
+def _unit_value(u):
+    """A unit's number for the standard error: its sample, or the paired
+    rule-minus-raw Brier of a rule-tagged row."""
+    s = u.sample
+    if isinstance(s, bool):
+        return None
+    if isinstance(s, (int, float)):
+        return float(s)
+    if isinstance(s, dict) and "rule_prob" in s and "raw_prob" in s:
+        y = _y(s)
+        return (s["rule_prob"] - y) ** 2 - (s["raw_prob"] - y) ** 2
+    return None
+
+
+def _standard_error(units):
+    """Standard error of the mean unit value, clustered by event when the units
+    carry one (core/score.py paired_rule_test's estimator); None when fewer
+    than two units or events."""
+    vals = [(u.event, _unit_value(u)) for u in units]
+    vals = [(e, v) for e, v in vals if v is not None]
+    n = len(vals)
+    if n < 2:
+        return None
+    mean = sum(v for _, v in vals) / n
+    if vals[0][0] is None:
+        return math.sqrt(sum((v - mean) ** 2 for _, v in vals) / (n - 1) / n)
+    clusters = collections.defaultdict(lambda: [0.0, 0])
+    for e, v in vals:
+        clusters[e][0] += v
+        clusters[e][1] += 1
+    g = len(clusters)
+    if g < 2:
+        return None
+    return math.sqrt(g / (g - 1) * sum((s - mean * k) ** 2
+                                       for s, k in clusters.values())) / n
 
 
 def _null_baseline_ok(metric_name):
@@ -981,6 +1094,89 @@ def _check_experiment_open(root, r, rid, levers, ts, head_ok, recompute, err,
     return ok
 
 
+# ---------------------------------------------------------------- scoreboard
+
+def _tight(r):
+    return round(r["best_ask_at_record"] - r["best_bid_at_record"], 4) <= TIGHT_SPREAD
+
+
+def _skill(rows):
+    """Mean dBrier against the price, with a 95% interval clustered by event
+    (core/edge_board.py cluster_ratio; no interval under 10 events)."""
+    import edge_board  # deferred: only the scoreboard needs the board's maths
+    c = edge_board.cluster_ratio([(_event(r), _dbrier(r), 1.0) for r in rows])
+    return {"value": c["est"], "lo": c["lo"], "hi": c["hi"], "n": len(rows),
+            "events": c["events"]}
+
+
+def scoreboard(root, asof, since=None):
+    """The primary metric, its target, and the guard metrics a change must not
+    worsen, as known at asof. since: also the primary over rows settled after
+    that time (the last deep retro)."""
+    import edge_board
+    j = Journal(root, asof)
+    # Superseded rows count, as in core/score.py rule_verdicts: each was the
+    # estimate at its own record price, and dropping it would let a revision
+    # made on later news remove a bad early read from the score.
+    scored = [r for r in j.forecasts() if r["_settled"] and not score.placeholder_book(r)]
+    window = [r for r in scored if r["_sts"] > asof - PRIMARY_DAYS * DAY]
+    primary = _skill([r for r in window if _tight(r)])
+    primary["met"] = primary["hi"] is not None and primary["hi"] < 0
+    out = {"asof": iso(asof), "days": PRIMARY_DAYS, "primary": primary}
+    if since is not None:
+        out["since"] = dict(_skill([r for r in scored if _tight(r)
+                                    and r["_sts"] > since]), start=iso(since))
+    recorded = [r["_ts"] for r in j.forecasts()]
+    # validate and grade report a broken ledger; here it only blanks the count.
+    ledger_ok = not check_ledger(root, recompute=False)
+    folded = fold(root) if ledger_ok else {}
+    trials = edge_board.read_trials(pathlib.Path(root) / edge_board.TRIALS_REL)
+    out["guards"] = {
+        "forecast_rows_per_day": {
+            "last_7d": round(sum(t > asof - 7 * DAY for t in recorded) / 7, 1),
+            "prior_7d": round(sum(asof - 14 * DAY < t <= asof - 7 * DAY
+                                  for t in recorded) / 7, 1)},
+        "all_books": _skill(window),
+        "open_experiments": sum(1 for e in folded.values()
+                                if e["close"] is None and e["open"].get("commit"))
+        if ledger_ok else None,
+        "open_cap": MAX_OPEN,
+        "reserved_checks": {"used": edge_board.reserved_checks_used(trials, asof),
+                            "limit": edge_board.RESERVED_CHECKS_PER_WEEK}}
+    return out
+
+
+def _fmt_skill(s):
+    if s["value"] is None:
+        return f"n/a n={s['n']}"
+    ci = "" if s["lo"] is None else f" [{s['lo']:+.4f}, {s['hi']:+.4f}]"
+    return f"{s['value']:+.4f}{ci} n={s['n']} events={s['events']}"
+
+
+def render_scoreboard(sb):
+    p, g = sb["primary"], sb["guards"]
+    print(f"scoreboard as of {sb['asof']}")
+    print(f"primary: tight-book dBrier against the price (spread <= "
+          f"{TIGHT_SPREAD}, no placeholder books, superseded rows count), rows "
+          f"settled in the last {sb['days']} days; target: the 95% interval below 0")
+    print(f"  {_fmt_skill(p)}  "
+          + ("MET" if p["met"] else
+             "MISSED" + (f" (upper end {p['hi']:+.4f})" if p["hi"] is not None else "")))
+    if "since" in sb:
+        print(f"  since {sb['since']['start']}: {_fmt_skill(sb['since'])}")
+    rows = g["forecast_rows_per_day"]
+    print("guards (a change must not make these worse)")
+    print(f"  forecast rows per day: {rows['last_7d']} in the last 7 days, "
+          f"{rows['prior_7d']} in the 7 days before")
+    print(f"  all-books dBrier, last {sb['days']} days: {_fmt_skill(g['all_books'])}")
+    print(f"  open experiments: {g['open_experiments']} of {g['open_cap']}"
+          if g["open_experiments"] is not None else
+          "  open experiments: ledger errors, run core/experiments.py grade")
+    rc = g["reserved_checks"]
+    print(f"  reserved checks this week: {rc['used']} of {rc['limit']} new variant "
+          f"versions (core/edge_board.py)")
+
+
 # ---------------------------------------------------------------- CLI
 
 def status(root, lever=None):
@@ -1024,6 +1220,12 @@ def main(argv=None):
     s = sub.add_parser("status", help="the folded ledger")
     s.add_argument("--lever", help="only rows naming this lever path")
     s.add_argument("--json", action="store_true")
+    b = sub.add_parser("scoreboard",
+                       help="the primary metric, its target, and the guard metrics")
+    b.add_argument("--since", help="also the primary since this time: an ISO "
+                                   "timestamp, a date, or 7d / 36h")
+    b.add_argument("--json", action="store_true")
+    b.add_argument("--asof", help="as of this UTC time (default: now)")
     a = ap.parse_args(argv)
     asof = parse_ts(a.asof) if getattr(a, "asof", None) else now_utc()
 
@@ -1040,6 +1242,16 @@ def main(argv=None):
                 f"commit")
         print(f"# {what}; copy commit, metric, window, baseline and "
               f"baseline_asof into the open row as printed", file=sys.stderr)
+        print(f"# {power_note(out)}", file=sys.stderr)
+        return 0
+
+    if a.cmd == "scoreboard":
+        since = parse_ts(score.since_cutoff(a.since, asof)) if a.since else None
+        sb = scoreboard(ROOT, asof, since)
+        if a.json:
+            print(json.dumps(sb, indent=1))
+        else:
+            render_scoreboard(sb)
         return 0
 
     errors = check_ledger(ROOT, recompute=False)

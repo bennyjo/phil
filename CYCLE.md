@@ -142,6 +142,19 @@ Every invocation runs as one of three ticks:
      overreact to fewer than ~15 settlements in a category).
    - Concrete lessons → then ACTUALLY EDIT `strategy/playbook.md`,
      `strategy/risk.json`, or `strategy/tools/` to encode them.
+   - **Log the idea even when you edit nothing** (operator, 2026-11-26).
+     When a settled row shows a mechanism (a repeatable reason the estimate
+     missed, or a source that would have caught it), append one line to
+     `strategy/ideas.jsonl`, the idea log the deep retro tests ideas from.
+     It is append-only: never edit or delete a line. An idea row is
+     `{"event": "idea", "id": "I-<YYYYMMDD-HHMM>-<n>", "ts": "<UTC>",
+     "kind": "<kind>", "origin": "failure-log", "source": "<forecast or
+     ledger ids>", "mechanism": "<one sentence>", "expected": "<the metric it
+     moves, and by about how much>", "test": "replay" | "shadow" |
+     "proposal"}`. Kinds: `info-source`, `estimation`, `selection`,
+     `timing`, `bet-policy`, `coverage`, `plumbing`, `simplification`. Later
+     rows on the same id (`trial`, `reserved`, `shadow`, `ask`, `decision`,
+     `close`) are the deep retro's.
    - **Respect open experiments** (operator, 2026-11-17). Before you edit
      `strategy/`, read `python3 core/experiments.py status`. Do not edit a
      file or playbook section that an open experiment names as its lever:
@@ -168,10 +181,21 @@ Every invocation runs as one of three ticks:
      reconcile `journal/forecasts.jsonl` coverage against funnel researched
      entries, and grade skip reasons against settled forecast outcomes).
    - **Variants are mine to add** in `strategy/variants.py` (optional;
-     contract in `core/edge_board.py`). Each takes a slot in the 6-rule
-     budget. The board keeps the last 14 days of rows out of everything it
-     prints except the variant's verdict word, so judge a variant by that word
-     and quote its line.
+     contract in `core/edge_board.py`). They take no slot in the 6-rule
+     budget: the board replays up to 20 of them on the development rows
+     every run (operator, 2026-11-26). It keeps the last 14 days of rows out
+     of everything it prints except a variant's verdict word. A variant gets
+     that word only when its name is in the file's `RESERVED` list, and only
+     5 new variant versions in any 7 days get it; the rest print HELD until
+     the budget frees. So compare versions on the development columns (vs
+     raw, H1, H2) first, and name only the best in `RESERVED`. A version is
+     the variant's outputs on fixed probe rows plus the code it can reach, so
+     any edit to a Python file under `strategy/` (`strategy/variants.py`
+     included) makes every variant a new version: take a name out of
+     `RESERVED` once its verdict is logged, or the next edit spends another
+     check on it. Judge a variant by its verdict word
+     and quote its line. Every version the board replays, and each verdict it
+     shows, lands once in `journal/replay/trials.jsonl`.
    - **Touch-family edits need a passing replay** (operator, 2026-10-23):
      change `strategy/tools/touch.py` or its shading rule
      `strategy/tools/touch_rule.py` (what `touch.py --mid` prints as
