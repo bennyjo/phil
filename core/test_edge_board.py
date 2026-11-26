@@ -15,6 +15,7 @@ import contextlib
 import datetime as dt
 import io
 import json
+import math
 import pathlib
 import sys
 import tempfile
@@ -582,11 +583,57 @@ class Board(unittest.TestCase):
                              [("half-gap", "checked"), ("raw-too", "dev")])
             run()
             self.assertEqual(len(edge_board.read_trials(trials)), 2)
-            variants.write_text(variants.read_text().replace("0.5) / 2", "0.4) / 2"))
+            variants.write_text(variants.read_text().replace("0.5) / 2", "0.45) / 2"))
             run()
             codes = [t["code"] for t in edge_board.read_trials(trials)
                      if t["variant"] == "half-gap"]
             self.assertEqual(len(set(codes)), 2)  # an edited variant is a new trial
+
+    def test_editing_a_constant_or_helper_is_a_new_version(self):
+        # A version keeps its reserved verdict at no cost, so an edit to what
+        # predict uses must re-version it, or the reserved rows could be read
+        # once per tweak without spending the budget or leaving a trial row.
+        with tempfile.TemporaryDirectory() as d:
+            root = pathlib.Path(d)
+            forecasts = root / "forecasts.jsonl"
+            forecasts.write_text("\n".join(json.dumps(r) for r in sample()) + "\n")
+            variants = root / "variants.py"
+            trials = root / "trials.jsonl"
+            base = ("ALPHA = 0.3\n\n\n"
+                    "def helper(p):\n    return ALPHA * p + (1 - ALPHA) * 0.5\n\n\n"
+                    "def predict(r, s):\n    return helper(r['est_prob'])\n\n\n"
+                    "def other(r, s):\n    return None\n\n\n"
+                    "VARIANTS = {'tuned': (None, predict), 'other': (None, other)}\n"
+                    "RESERVED = ['tuned']\n")
+
+            def run(source):
+                variants.write_text(source)
+                out = io.StringIO()
+                with mock.patch.object(edge_board.forecast, "FORECASTS", forecasts), \
+                        mock.patch.object(edge_board, "ALLOCATION_FILE", root / "line.txt"), \
+                        mock.patch.object(edge_board, "VARIANTS_FILE", variants), \
+                        mock.patch.object(edge_board, "TRIALS_FILE", trials), \
+                        mock.patch.object(screen, "log_rows", lambda: iter(())), \
+                        contextlib.redirect_stdout(out):
+                    edge_board.main([], NOW)
+                return out.getvalue()
+            run(base)
+            run(base.replace("ALPHA = 0.3", "ALPHA = 0.6"))
+            text = run(base.replace("return ALPHA * p + (1 - ALPHA) * 0.5", "return 0.5"))
+            rows = edge_board.read_trials(trials)
+            tuned = [t for t in rows if t["variant"] == "tuned"]
+            self.assertEqual([t["reserved"] for t in tuned], ["checked"] * 3)
+            self.assertEqual(len({t["code"] for t in tuned}), 3)
+            self.assertIn("reserved checks: 3/5", text)
+            # The variant that uses neither stays one version.
+            self.assertEqual(len([t for t in rows if t["variant"] == "other"]), 1)
+
+    def test_variant_code_skips_modules_and_builtins(self):
+        def uses_math(r, s):
+            return math.exp(0) * min(r["est_prob"], 1.0)
+        self.assertEqual(edge_board.variant_code((None, uses_math)),
+                         edge_board.variant_code((None, uses_math)))
+        self.assertNotIn("math=", edge_board._globals_used(uses_math, 0))
 
     def test_a_failed_run_leaves_no_allocation_line(self):
         with tempfile.TemporaryDirectory() as d:

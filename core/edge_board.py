@@ -37,8 +37,9 @@ Three guards keep the replay honest:
   Trial log       Every agent variant is replayed on the development rows, up
                   to MAX_AGENT_VARIANTS a run, and takes no rule-budget slot:
                   forecast.RULE_BUDGET limits tagged rules, which can bind. Each
-                  variant version (a hash of its fit and predict source and the
-                  values they close over) gets one row in TRIALS_REL the first
+                  variant version (a hash of its fit and predict source, the
+                  values they close over, and the module constants and helpers
+                  they use) gets one row in TRIALS_REL the first
                   time the board replays it, and another when it first sees its
                   reserved verdict or that verdict changes, so the log counts
                   every version tried, failures included.
@@ -80,7 +81,6 @@ import argparse
 import contextlib
 import datetime as dt
 import hashlib
-import importlib.util
 import inspect
 import json
 import math
@@ -88,6 +88,7 @@ import pathlib
 import re
 import signal
 import sys
+import types
 from collections import defaultdict
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
@@ -422,10 +423,14 @@ def load_agent_variants(path=None):
     if not path.exists():
         return {}, [], []
     try:
-        spec = importlib.util.spec_from_file_location("edge_board_variants", path)
-        mod = importlib.util.module_from_spec(spec)
+        # Compiled from the source every run, never from a cached .pyc: an
+        # edit of the same size in the same second would otherwise replay the
+        # old code under the old version id.
+        mod = types.ModuleType("edge_board_variants")
+        mod.__file__ = str(path)
+        code = compile(path.read_text(), str(path), "exec")
         with contained():
-            spec.loader.exec_module(mod)
+            exec(code, mod.__dict__)  # noqa: S102 - the agent's own variants file
         declared = mod.VARIANTS
         variants, notes = {}, []
         for name, pair in declared.items():
@@ -484,12 +489,30 @@ def _source(fn, depth=0):
             bound.append(_stable(cell.cell_contents, depth))
         except ValueError:  # an empty cell
             bound.append("<empty>")
-    return text + _stable(getattr(fn, "__defaults__", None), depth) + "".join(bound)
+    return (text + _stable(getattr(fn, "__defaults__", None), depth) + "".join(bound)
+            + _globals_used(fn, depth))
+
+
+def _globals_used(fn, depth):
+    """The module-level values and helpers a function's code names, nested
+    functions and comprehensions included; imported modules are skipped."""
+    code, names = getattr(fn, "__code__", None), getattr(fn, "__globals__", None)
+    if code is None or not isinstance(names, dict):
+        return ""
+    used, stack = set(), [code]
+    while stack:
+        c = stack.pop()
+        used.update(c.co_names)
+        stack.extend(k for k in c.co_consts if isinstance(k, types.CodeType))
+    return "".join(f"|{name}={_stable(names[name], depth)}" for name in sorted(used)
+                   if name in names and not isinstance(names[name], types.ModuleType))
 
 
 def variant_code(variant):
-    """A variant version's id: a hash of its fit and predict source and of the
-    values they close over, so a changed variant is a new trial."""
+    """A variant version's id: a hash of its fit and predict source, the values
+    they close over, and the module constants and helpers they use (to four
+    levels of helpers), so a changed variant is a new trial and an edit to
+    another variant is not."""
     fit, predict = variant
     return hashlib.sha256((_source(fit) + "\0" + _source(predict)).encode()).hexdigest()[:12]
 
