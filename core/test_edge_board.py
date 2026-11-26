@@ -4,10 +4,10 @@
 PROTECTED CORE - the trading agent must not edit files under core/.
 
 core/edge_board.py replays settled forecasts every cycle. These tests pin its
-maths on hand-computed examples and prove its two guards: the reserved rows
-reach nothing but a variant's verdict, and agent variants stay inside the rule
-budget. Nothing touches the network or the real journal. CI runs it on every
-push.
+maths on hand-computed examples and prove its guards: the reserved rows reach
+nothing but a variant's verdict, new variant versions see that verdict only
+within the weekly budget, and every version tried lands once in the trial log.
+Nothing touches the network or the real journal. CI runs it on every push.
 
 Usage: python3 core/test_edge_board.py
 """
@@ -289,20 +289,127 @@ class Budget(unittest.TestCase):
                                             ts=stamp(idle))]
         self.assertEqual(edge_board.rules_in_play(frows, NOW), ["fresh"])
 
-    def test_variants_past_the_budget_are_refused(self):
-        frows = self.tagged("r-a", "r-b", "r-c", "r-d", "r-e")
+    def test_variants_take_no_rule_slot(self):
+        frows = self.tagged("r-a", "r-b", "r-c", "r-d", "r-e", "r-f")
         variants = {"new-one": (None, lambda r, s: None), "new-two": (None, lambda r, s: None)}
         report = edge_board.build(sample(), frows, {}, variants, [], NOW)
-        self.assertEqual(report["budget"]["agent_variants"], ["new-one"])
-        self.assertEqual(report["budget"]["refused"], ["new-two"])
-        self.assertEqual(report["budget"]["used"], 6)
+        self.assertEqual(report["budget"]["agent_variants"], ["new-one", "new-two"])
+        self.assertEqual((report["budget"]["refused"], report["budget"]["used"]), ([], 6))
         names = [v["variant"] for v in report["variants"]]
-        self.assertEqual(names, ["raw", "shrink", "stack", "new-one"])
+        self.assertEqual(names, ["raw", "shrink", "stack", "new-one", "new-two"])
 
-    def test_a_variant_named_after_a_tagged_rule_shares_its_slot(self):
-        kept, refused, slots = edge_board.apply_budget(
-            {"r-a": (None, None)}, ["r-a", "r-b", "r-c", "r-d", "r-e", "r-f"])
-        self.assertEqual((list(kept), refused, len(slots)), (["r-a"], [], 6))
+    def test_variants_past_the_cap_are_not_replayed(self):
+        variants = {"new-one": (None, lambda r, s: None), "new-two": (None, lambda r, s: None)}
+        with mock.patch.object(edge_board, "MAX_AGENT_VARIANTS", 1):
+            report = edge_board.build(sample(), [], {}, variants, [], NOW)
+        self.assertEqual(report["budget"]["refused"], ["new-two"])
+        self.assertEqual([v["variant"] for v in report["variants"]][-1], "new-one")
+
+
+def half(r, _s):
+    return (r["est_prob"] + 0.5) / 2
+
+
+def third(r, _s):
+    return (r["est_prob"] + 1.0) / 3
+
+
+class ReservedBudget(unittest.TestCase):
+    def build(self, variants, trials, now=NOW, limit=1, requested=None):
+        asked = list(variants) if requested is None else requested
+        with mock.patch.object(edge_board, "RESERVED_CHECKS_PER_WEEK", limit):
+            return edge_board.build(sample(), [], {}, variants, [], now, trials=trials,
+                                    requested=asked)
+
+    def test_a_variant_not_in_reserved_stays_on_development_rows(self):
+        report = self.build({"half": (None, half), "third": (None, third)}, [],
+                            requested=["third"])
+        self.assertEqual(self.verdicts(report)["half"], "dev")
+        self.assertNotIn(self.verdicts(report)["third"], ("dev", "held"))
+        self.assertEqual(report["reserved_checks"]["dev_only"], ["half"])
+        self.assertEqual([(t["variant"], t["reserved"]) for t in report["trial_rows"]],
+                         [("half", "dev"), ("third", "checked")])
+        # Asking later spends a check then, and logs it.
+        later = self.build({"half": (None, half)}, report["trial_rows"],
+                           NOW + dt.timedelta(days=8))
+        self.assertEqual([(t["variant"], t["reserved"]) for t in later["trial_rows"]],
+                         [("half", "checked")])
+
+    def verdicts(self, report):
+        return {v["variant"]: v["reserved"]["verdict"] for v in report["variants"]}
+
+    def test_new_versions_past_the_weekly_budget_are_held(self):
+        report = self.build({"half": (None, half), "third": (None, third)}, [])
+        self.assertEqual(self.verdicts(report)["third"], "held")
+        self.assertNotEqual(self.verdicts(report)["half"], "held")
+        held = next(v for v in report["variants"] if v["variant"] == "third")
+        self.assertEqual(held["reserved"], {"rows": None, "n": None, "events": None,
+                                            "verdict": "held"})
+        self.assertIsNotNone(held["vs_raw"]["est"])  # development rows still replayed
+        self.assertEqual(report["reserved_checks"], {"limit": 1, "used": 1, "held": ["third"],
+                                                     "dev_only": []})
+        rows = report["trial_rows"]
+        self.assertEqual([(t["variant"], t["reserved"]) for t in rows],
+                         [("half", "checked"), ("third", "held")])
+        self.assertEqual(rows[0]["code"], edge_board.variant_code((None, half)))
+
+        # A day later: half keeps its verdict and adds no row; third waits.
+        later = self.build({"half": (None, half), "third": (None, third)}, rows,
+                           NOW + dt.timedelta(days=1))
+        self.assertEqual(self.verdicts(later)["third"], "held")
+        self.assertEqual(later["trial_rows"], [])
+        # Eight days later the budget is free again and third gets its check.
+        week = self.build({"half": (None, half), "third": (None, third)}, rows,
+                          NOW + dt.timedelta(days=8))
+        self.assertEqual([(t["variant"], t["reserved"]) for t in week["trial_rows"]],
+                         [("third", "checked")])
+        self.assertEqual(week["reserved_checks"]["used"], 1)
+
+    def test_a_changed_verdict_adds_a_row(self):
+        first = self.build({"half": (None, half)}, [])["trial_rows"]
+        stale = [dict(first[0], verdict="fail")]
+        rows = self.build({"half": (None, half)}, stale)["trial_rows"]
+        self.assertEqual([(t["reserved"], t["verdict"]) for t in rows],
+                         [("checked", first[0]["verdict"])])
+
+    def test_a_failed_variant_is_logged_once(self):
+        bad = {"bad-prob": (None, lambda r, s: 7.0)}
+        rows = self.build(bad, [])["trial_rows"]
+        self.assertEqual([t["reserved"] for t in rows], ["failed"])
+        self.assertIn("ValueError", rows[0]["error"])
+        report = self.build(bad, rows)
+        self.assertEqual(report["trial_rows"], [])
+        self.assertEqual(report["reserved_checks"]["used"], 0)  # a failure spends nothing
+
+    def test_variant_code_follows_source_and_bound_values(self):
+        def make(k):
+            return lambda r, s: k * r["est_prob"]
+        code = edge_board.variant_code
+        self.assertEqual(code((None, half)), code((None, half)))
+        self.assertNotEqual(code((None, half)), code((None, third)))
+        self.assertNotEqual(code((None, make(0.5))), code((None, make(0.6))))
+        self.assertEqual(code((None, make(0.5))), code((None, make(0.5))))
+        loop = []
+        loop.append(loop)  # a self-containing value still hashes
+        self.assertTrue(code((None, make(loop))))
+
+    def test_weekly_count_uses_each_version_s_first_check(self):
+        trials = [{"ts": stamp(NOW - dt.timedelta(days=9)), "variant": "a", "code": "1",
+                   "reserved": "checked"},
+                  {"ts": stamp(NOW - dt.timedelta(days=1)), "variant": "a", "code": "1",
+                   "reserved": "checked"},
+                  {"ts": stamp(NOW - dt.timedelta(days=2)), "variant": "b", "code": "2",
+                   "reserved": "checked"},
+                  {"ts": stamp(NOW - dt.timedelta(days=2)), "variant": "c", "code": "3",
+                   "reserved": "held"}]
+        self.assertEqual(edge_board.reserved_checks_used(trials, NOW), 1)
+
+    def test_read_trials_skips_broken_lines(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = pathlib.Path(d) / "trials.jsonl"
+            self.assertEqual(edge_board.read_trials(path), [])
+            path.write_text('{"variant": "a"}\nnot json\n[1]\n\n')
+            self.assertEqual(edge_board.read_trials(path), [{"variant": "a"}])
 
 
 class AgentFile(unittest.TestCase):
@@ -310,10 +417,23 @@ class AgentFile(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             path = pathlib.Path(d) / "variants.py"
             path.write_text(source)
-            return edge_board.load_agent_variants(path)
+            variants, notes, self.requested = edge_board.load_agent_variants(path)
+            return variants, notes
 
     def test_missing_file_is_no_variants(self):
-        self.assertEqual(edge_board.load_agent_variants("/nonexistent/variants.py"), ({}, []))
+        self.assertEqual(edge_board.load_agent_variants("/nonexistent/variants.py"),
+                         ({}, [], []))
+
+    def test_reserved_names_the_variants_that_ask_for_a_verdict(self):
+        variants, notes = self.load("VARIANTS = {'a-b': (None, None), 'c-d': (None, None)}\n"
+                                    "RESERVED = ['c-d', 'zz']\n")
+        self.assertEqual((list(variants), self.requested), (["a-b", "c-d"], ["c-d"]))
+        self.assertIn("no such variant: zz", notes[0])
+        variants, notes = self.load("VARIANTS = {'a-b': (None, None)}\nRESERVED = 'a-b'\n")
+        self.assertEqual(self.requested, [])
+        self.assertIn("not a list", notes[0])
+        self.load("VARIANTS = {'a-b': (None, None)}\n")
+        self.assertEqual(self.requested, [])
 
     def test_loads_a_variant_and_skips_a_builtin_name(self):
         variants, notes = self.load(
@@ -414,10 +534,12 @@ class Board(unittest.TestCase):
             forecasts = root / "forecasts.jsonl"
             forecasts.write_text("\n".join(json.dumps(r) for r in sample()) + "\n")
             allocation = root / "reports" / "line.txt"
+            trials = root / "replay" / "trials.jsonl"
             out = io.StringIO()
             with mock.patch.object(edge_board.forecast, "FORECASTS", forecasts), \
                     mock.patch.object(edge_board, "ALLOCATION_FILE", allocation), \
                     mock.patch.object(edge_board, "VARIANTS_FILE", root / "absent.py"), \
+                    mock.patch.object(edge_board, "TRIALS_FILE", trials), \
                     mock.patch.object(screen, "log_rows", lambda: iter(())), \
                     mock.patch.object(pmapi.urllib.request, "urlopen",
                                       side_effect=AssertionError("network")), \
@@ -426,7 +548,45 @@ class Board(unittest.TestCase):
             text = out.getvalue()
             self.assertIn("edge board: 120 settled rows", text)
             self.assertIn("reserved verdict", text)
+            self.assertIn("reserved checks: 0/5 new variant versions in 7 days", text)
             self.assertTrue(allocation.read_text().startswith("allocation: prefer "))
+            self.assertFalse(trials.exists())  # no agent variant, no trial row
+
+    def test_main_appends_each_variant_version_once(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = pathlib.Path(d)
+            forecasts = root / "forecasts.jsonl"
+            forecasts.write_text("\n".join(json.dumps(r) for r in sample()) + "\n")
+            variants = root / "variants.py"
+            variants.write_text("def half(r, s):\n    return (r['est_prob'] + 0.5) / 2\n\n"
+                                "VARIANTS = {'half-gap': (None, half), 'raw-too': (None, lambda r, s: None)}\n"
+                                "RESERVED = ['half-gap']\n")
+            trials = root / "replay" / "trials.jsonl"
+
+            def run():
+                out = io.StringIO()
+                with mock.patch.object(edge_board.forecast, "FORECASTS", forecasts), \
+                        mock.patch.object(edge_board, "ALLOCATION_FILE", root / "line.txt"), \
+                        mock.patch.object(edge_board, "VARIANTS_FILE", variants), \
+                        mock.patch.object(edge_board, "TRIALS_FILE", trials), \
+                        mock.patch.object(screen, "log_rows", lambda: iter(())), \
+                        contextlib.redirect_stdout(out):
+                    edge_board.main([], NOW)
+                return out.getvalue()
+            text = run()
+            self.assertIn("2 agent variants replayed", text)
+            self.assertIn("reserved checks: 1/5", text)
+            self.assertIn("dev only (not in RESERVED)", text)
+            rows = edge_board.read_trials(trials)
+            self.assertEqual([(t["variant"], t["reserved"]) for t in rows],
+                             [("half-gap", "checked"), ("raw-too", "dev")])
+            run()
+            self.assertEqual(len(edge_board.read_trials(trials)), 2)
+            variants.write_text(variants.read_text().replace("0.5) / 2", "0.4) / 2"))
+            run()
+            codes = [t["code"] for t in edge_board.read_trials(trials)
+                     if t["variant"] == "half-gap"]
+            self.assertEqual(len(set(codes)), 2)  # an edited variant is a new trial
 
     def test_a_failed_run_leaves_no_allocation_line(self):
         with tempfile.TemporaryDirectory() as d:
