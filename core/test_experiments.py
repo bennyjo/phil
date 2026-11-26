@@ -10,7 +10,9 @@ enforces, and core/score.py --since.
 
 Usage: python3 core/test_experiments.py [-v]
 """
+import contextlib
 import datetime as dt
+import io
 import json
 import os
 import pathlib
@@ -26,6 +28,7 @@ import score  # noqa: E402
 T0 = dt.datetime(2026, 11, 1, tzinfo=dt.timezone.utc)
 COMMIT_AT = T0 + dt.timedelta(days=1)          # 2026-11-02T00:00:00Z
 H = dt.timedelta(hours=1)
+MIN = dt.timedelta(minutes=1)
 RISK = {"default_stake_usd": 5.0, "min_edge": 0.04, "max_spread": 0.06}
 
 
@@ -185,6 +188,90 @@ class ProposeTest(Base):
                         self.sha, COMMIT_AT + 5 * H)
         self.assertAlmostEqual(out["baseline"], -0.09)
 
+    def test_power_of_a_count_metric(self):
+        # Baseline FULLs 4, 6, 4, 6: sd 1.1547, se 0.5774. A numeric baseline
+        # compares two windows, so the detectable effect is 2.8 * sqrt(2) * se.
+        out = E.propose(self.r.root, "rows_per_full", {"n": 4}, self.sha, COMMIT_AT)
+        self.assertAlmostEqual(out["mde"], 2.8 * 2 ** 0.5 * (4 / 3) ** 0.5 / 2, places=4)
+        self.assertIsNone(out["baseline_events"])
+        self.assertIn("smallest effect this window detects at 80% power: 2.2862; "
+                      "set keep_if at least that far from 5", E.power_note(out))
+
+    def test_power_of_a_rule_counts_events(self):
+        # Four events before the commit: three wins (-0.09) and a loss (+0.11).
+        for i in range(4):
+            self.r.forecast(f"o{i}", COMMIT_AT - (9 - i) * H, COMMIT_AT - (8 - i) * H,
+                            won=i != 0, rule="knife", category=f"c{i}")
+        out = E.propose(self.r.root, "rule_verdict:knife", {"n": 20}, self.sha,
+                        COMMIT_AT)
+        self.assertAlmostEqual(out["baseline"], -0.04)
+        self.assertEqual(out["baseline_events"], 4)
+        # Clustered se: sqrt(4/3 * (0.15^2 + 3 * 0.05^2)) / 4 = 0.05.
+        self.assertAlmostEqual(out["mde"], 2.8 * 2 ** 0.5 * 0.05, places=4)
+        self.assertIn("held 4 events, and grade gives no verdict below 10",
+                      E.power_note(out))
+
+    def test_no_history_no_power(self):
+        out = E.propose(self.r.root, "rule_verdict:new-rule", {"n": 20}, self.sha,
+                        COMMIT_AT)
+        self.assertEqual((out["mde"], out["baseline_events"]), (None, 0))
+        self.assertIn("no standard error from history", E.power_note(out))
+
+
+class ScoreboardTest(Base):
+    ASOF = COMMIT_AT + 5 * E.DAY
+
+    def setUp(self):
+        super().setUp()
+        start = self.ASOF - 3 * E.DAY
+        for i in range(10):  # ten tight events, each -0.09 against the price
+            self.r.forecast(f"p{i}", start + i * H, start + E.DAY + i * H, won=True,
+                            category=f"c{i}")
+        self.r.forecast("wide", start, start + E.DAY, won=False, spread=0.2)
+        # A revised row still counts: a revision on later news must not drop it.
+        self.r.forecast("rev", start, start + E.DAY, won=True, est=0.5, category="cr")
+        self.r.forecasts[-1]["superseded_by"] = "p0"
+        self.r.write("journal/forecasts.jsonl",
+                     "".join(json.dumps(r) + "\n" for r in self.r.forecasts))
+        self.r.forecast("old", self.ASOF - 41 * E.DAY, self.ASOF - 40 * E.DAY,
+                        won=False)
+
+    def test_primary_guards_and_since(self):
+        self.r.write("journal/replay/trials.jsonl", "".join(json.dumps(t) + "\n" for t in [
+            {"ts": iso(self.ASOF - 2 * E.DAY), "variant": "a", "code": "1",
+             "reserved": "checked"},
+            {"ts": iso(self.ASOF - 9 * E.DAY), "variant": "b", "code": "2",
+             "reserved": "checked"},
+            {"ts": iso(self.ASOF - E.DAY), "variant": "c", "code": "3",
+             "reserved": "held"}]))
+        sb = E.scoreboard(self.r.root, self.ASOF,
+                          since=self.ASOF - 2 * E.DAY + 5 * H + MIN)
+        p = sb["primary"]
+        self.assertEqual((p["n"], p["events"], p["met"]), (11, 11, True))
+        self.assertAlmostEqual(p["value"], -0.9 / 11)
+        self.assertEqual((sb["since"]["n"], sb["since"]["lo"]), (4, None))
+        g = sb["guards"]
+        self.assertEqual(g["all_books"]["n"], 12)  # the wide row, not the old one
+        self.assertEqual(g["forecast_rows_per_day"], {"last_7d": 1.7, "prior_7d": 0.0})
+        self.assertEqual((g["open_experiments"], g["open_cap"]), (0, E.MAX_OPEN))
+        self.assertEqual(g["reserved_checks"]["used"], 1)
+
+    def test_missed_without_an_interval_and_rendered(self):
+        self.r.forecasts = self.r.forecasts[:5]  # five events: no interval yet
+        self.r.write("journal/forecasts.jsonl",
+                     "".join(json.dumps(r) + "\n" for r in self.r.forecasts))
+        self.r.ledger_rows([open_row("E-1", self.sha, 5.0)])
+        sb = E.scoreboard(self.r.root, self.ASOF)
+        self.assertFalse(sb["primary"]["met"])
+        self.assertEqual(sb["guards"]["open_experiments"], 1)
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            E.render_scoreboard(sb)
+        text = out.getvalue()
+        self.assertIn("-0.0900 n=5 events=5  MISSED", text)
+        self.assertIn("open experiments: 1 of 3", text)
+        self.assertIn("reserved checks this week: 0 of 5", text)
+
 
 class GradeTest(Base):
     def test_collecting_before_the_window_fills(self):
@@ -284,15 +371,21 @@ class GradeTest(Base):
         self.assertAlmostEqual(g["value"], 0.01)
         self.assertEqual(g["verdict"], "INCONCLUSIVE")
 
-    def test_rule_verdict_and_replay(self):
-        for i in range(3):
+    def rule_rows(self, n=10, lost=(7, 8, 9)):
+        """n rule-tagged rows, one event each, recorded after the commit."""
+        for i in range(n):
             self.r.forecast(f"r{i}", COMMIT_AT + H, COMMIT_AT + (2 + i) * H,
-                            won=True, rule="knife")
+                            won=i not in lost, rule="knife", category=f"c{i}")
+
+    def test_rule_verdict_and_replay(self):
+        # Rule 0.6 against raw 0.5: -0.09 on each win, +0.11 on each loss.
+        self.rule_rows()
         rule = open_row("E-1", self.sha, 0.0, metric="rule_verdict:knife",
-                        window={"n": 3}, keep_if="< 0", rollback_if="> 0")
+                        window={"n": 10}, keep_if="< 0", rollback_if="> 0")
         g = self.grade(rule)
-        self.assertEqual(g["verdict"], "KEEP")  # rule 0.6 beats raw 0.5 on wins
-        self.assertAlmostEqual(g["value"], -0.09)
+        self.assertEqual(g["verdict"], "KEEP")
+        self.assertAlmostEqual(g["value"], -0.03)
+        self.assertEqual(g["events"], 10)
         pol = open_row("E-2", self.sha, 0.0,
                        metric="replay_cw_return:strategy/policy.py",
                        window={"n": 3}, keep_if="> 0", rollback_if="< -0.5")
@@ -302,18 +395,47 @@ class GradeTest(Base):
 
     def test_null_baseline_grades_against_zero(self):
         row = open_row("E-1", self.sha, None, metric="rule_verdict:knife",
-                       window={"n": 3}, keep_if="< -0.01", rollback_if="> 0")
+                       window={"n": 10}, keep_if="< -0.01", rollback_if="> 0")
         g = self.grade(row)
         self.assertEqual(g["verdict"], "COLLECTING")
-        self.assertIn("COLLECTING n=0/3", g["line"])
+        self.assertIn("COLLECTING n=0/10", g["line"])
         self.assertIn("baseline=null", g["line"])
-        for i in range(3):
-            self.r.forecast(f"r{i}", COMMIT_AT + H, COMMIT_AT + (2 + i) * H,
-                            won=True, rule="knife")
-        # -0.09 against a bar of -0.01 from zero: past twice the bar.
+        self.rule_rows()
+        # -0.03 against a bar of -0.01 from zero: past twice the bar.
         self.assertEqual(self.grade(row)["verdict"], "DOUBLE DOWN")
-        row["keep_if"] = "< -0.05"  # -0.09 is short of twice -0.05
+        row["keep_if"] = "< -0.02"  # -0.03 is short of twice -0.02
         self.assertEqual(self.grade(row)["verdict"], "KEEP")
+
+    def test_event_floor_holds_back_a_verdict(self):
+        # Twelve rows of one event (one category, one end date) are one
+        # observation: no KEEP at the window's end, no early ROLL BACK.
+        for i in range(12):
+            self.r.forecast(f"r{i}", COMMIT_AT + H, COMMIT_AT + 2 * H + i * MIN,
+                            won=True, rule="knife")
+        row = open_row("E-1", self.sha, None, metric="rule_verdict:knife",
+                       window={"n": 12}, keep_if="< -0.01", rollback_if="< 0")
+        g = self.grade(row)
+        self.assertEqual((g["verdict"], g["events"]), ("INCONCLUSIVE", 1))
+        self.assertIn("events=1/10", g["line"])
+        self.assertAlmostEqual(g["value"], -0.09)  # still shown, never acted on
+        g = self.grade(row, asof=COMMIT_AT + 2 * H + 7 * MIN)
+        self.assertEqual(g["verdict"], "COLLECTING")  # past half, rollback_if holds
+
+    def test_event_floor_counts_tight_dbrier_events(self):
+        for i in range(10):
+            self.r.forecast(f"t{i}", COMMIT_AT + H, COMMIT_AT + (2 + i) * H,
+                            won=True, category="one" if i < 9 else "two")
+        row = open_row("E-1", self.sha, 0.0, metric="tight_dbrier",
+                       window={"n": 10}, keep_if="< 0", rollback_if="> 0.05")
+        g = self.grade(row)
+        self.assertEqual((g["verdict"], g["events"]), ("INCONCLUSIVE", 2))
+        self.assertIn("n=10/10 events=2/10", g["line"])
+
+    def test_count_metrics_have_no_event_floor(self):
+        self.forward([6, 8, 6, 8])
+        g = self.grade(open_row("E-1", self.sha, 5.0))
+        self.assertEqual((g["verdict"], g["events"]), ("KEEP", None))
+        self.assertNotIn("events=", g["line"])
 
 
 class StatusTest(Base):
