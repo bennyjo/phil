@@ -391,8 +391,16 @@ class ReservedBudget(unittest.TestCase):
         self.assertNotEqual(code((None, make(0.5))), code((None, make(0.6))))
         self.assertEqual(code((None, make(0.5))), code((None, make(0.5))))
         loop = []
-        loop.append(loop)  # a self-containing value still hashes
-        self.assertTrue(code((None, make(loop))))
+        loop.append(loop)  # self-containing: opaque, so it needs a file to hash
+        with mock.patch.object(edge_board, "VARIANTS_FILE", pathlib.Path("/nonexistent/v.py")):
+            with self.assertRaisesRegex(ValueError, "cannot describe"):
+                code((None, make(loop)))
+        with tempfile.TemporaryDirectory() as d:
+            path = pathlib.Path(d) / "variants.py"
+            path.write_text("# one\n")
+            first = code((None, make(loop)), path)
+            path.write_text("# two\n")
+            self.assertNotEqual(first, code((None, make(loop)), path))
 
     def test_weekly_count_uses_each_version_s_first_check(self):
         trials = [{"ts": stamp(NOW - dt.timedelta(days=9)), "variant": "a", "code": "1",
@@ -627,6 +635,99 @@ class Board(unittest.TestCase):
             self.assertIn("reserved checks: 3/5", text)
             # The variant that uses neither stays one version.
             self.assertEqual(len([t for t in rows if t["variant"] == "other"]), 1)
+
+    def versions(self, sources, name="tuned"):
+        """Run main once per variants.py text; the trial rows for `name`."""
+        with tempfile.TemporaryDirectory() as d:
+            root = pathlib.Path(d)
+            forecasts = root / "forecasts.jsonl"
+            forecasts.write_text("\n".join(json.dumps(r) for r in sample()) + "\n")
+            variants = root / "variants.py"
+            trials = root / "trials.jsonl"
+            for source in sources:
+                variants.write_text(source)
+                with mock.patch.object(edge_board.forecast, "FORECASTS", forecasts), \
+                        mock.patch.object(edge_board, "ALLOCATION_FILE", root / "line.txt"), \
+                        mock.patch.object(edge_board, "VARIANTS_FILE", variants), \
+                        mock.patch.object(edge_board, "TRIALS_FILE", trials), \
+                        mock.patch.object(screen, "log_rows", lambda: iter(())), \
+                        contextlib.redirect_stdout(io.StringIO()):
+                    edge_board.main([], NOW)
+            return [t for t in edge_board.read_trials(trials) if t["variant"] == name]
+
+    def assertEachEditIsAVersion(self, base, *edits):
+        sources = [base] + [base.replace(a, b) for a, b in edits]
+        for source in sources[1:]:
+            self.assertNotEqual(source, base)
+        rows = self.versions(sources)
+        self.assertEqual([t["reserved"] for t in rows], ["checked"] * len(sources))
+        self.assertEqual(len({t["code"] for t in rows}), len(sources))
+
+    def test_a_partial_re_versions_on_each_edit(self):
+        self.assertEachEditIsAVersion(
+            "import functools\n\n\ndef shrink(r, s, k):\n"
+            "    return k * r['est_prob'] + (1 - k) * 0.5\n\n\n"
+            "VARIANTS = {'tuned': (None, functools.partial(shrink, k=0.3))}\n"
+            "RESERVED = ['tuned']\n",
+            ("k=0.3)", "k=0.6)"),
+            ("return k * r['est_prob'] + (1 - k) * 0.5", "return 0.5"))
+
+    def test_a_callable_instance_re_versions_on_each_edit(self):
+        self.assertEachEditIsAVersion(
+            "class Shrink:\n    def __init__(self, k):\n        self.k = k\n\n"
+            "    def __call__(self, r, s):\n"
+            "        return self.k * r['est_prob'] + (1 - self.k) * 0.5\n\n\n"
+            "VARIANTS = {'tuned': (None, Shrink(0.3))}\nRESERVED = ['tuned']\n",
+            ("Shrink(0.3)", "Shrink(0.6)"),
+            ("return self.k * r['est_prob'] + (1 - self.k) * 0.5", "return 0.5"))
+
+    def test_a_class_constant_re_versions(self):
+        self.assertEachEditIsAVersion(
+            "class P:\n    ALPHA = 0.3\n\n\ndef predict(r, s):\n"
+            "    return P.ALPHA * r['est_prob'] + (1 - P.ALPHA) * 0.5\n\n\n"
+            "VARIANTS = {'tuned': (None, predict)}\nRESERVED = ['tuned']\n",
+            ("ALPHA = 0.3", "ALPHA = 0.6"))
+
+    def test_a_set_constant_re_versions(self):
+        self.assertEachEditIsAVersion(
+            "CATS = {'nba'}\n\n\ndef predict(r, s):\n"
+            "    return 0.5 if r['category'] in CATS else r['est_prob']\n\n\n"
+            "VARIANTS = {'tuned': (None, predict)}\nRESERVED = ['tuned']\n",
+            ("{'nba'}", "{'nba', 'nfl', 'nhl', 'mlb', 'soccer', 'tennis', 'golf', 'f1'}"))
+
+    def test_a_nested_table_two_helpers_down_re_versions(self):
+        self.assertEachEditIsAVersion(
+            "W = {'a': {'b': [0.3]}}\n\n\ndef inner(p):\n"
+            "    return W['a']['b'][0] * p + (1 - W['a']['b'][0]) * 0.5\n\n\n"
+            "def outer(p):\n    return inner(p)\n\n\n"
+            "def predict(r, s):\n    return outer(r['est_prob'])\n\n\n"
+            "VARIANTS = {'tuned': (None, predict)}\nRESERVED = ['tuned']\n",
+            ("[0.3]", "[0.6]"))
+
+    def test_an_opaque_variant_leaves_plain_ones_exact(self):
+        base = ("import functools\nfrom math import log\n\n\n"
+                "def shrink(r, s, k):\n    return k * r['est_prob'] + (1 - k) * 0.5\n\n\n"
+                "def plain(r, s):\n    return (r['est_prob'] + 0.5) / 2\n\n\n"
+                "def logged(r, s):\n    return min(0.99, max(0.01, 0.5 + log(1.0) + r['est_prob'] / 2))\n\n\n"
+                "VARIANTS = {'tuned': (None, functools.partial(shrink, k=0.3)),\n"
+                "            'plain': (None, plain), 'logged': (None, logged)}\n"
+                "RESERVED = ['tuned']\n")
+        sources = [base, base.replace("k=0.3)", "k=0.6)")]
+        # An edit to the opaque variant re-versions only it: the plain variant
+        # and the one using a C builtin (described by name) stay one version.
+        self.assertEqual(len({t["code"] for t in self.versions(sources, "plain")}), 1)
+        self.assertEqual(len({t["code"] for t in self.versions(sources, "logged")}), 1)
+        self.assertEqual(len({t["code"] for t in self.versions(sources)}), 2)
+
+    def test_an_unversionable_variant_is_not_replayed(self):
+        import functools
+        partial = functools.partial(lambda r, s, k: k, k=0.4)
+        with mock.patch.object(edge_board, "VARIANTS_FILE", pathlib.Path("/nonexistent/v.py")):
+            report = edge_board.build(sample(), [], {}, {"tuned": (None, partial)}, [], NOW,
+                                      requested=["tuned"])
+        self.assertNotIn("tuned", [v["variant"] for v in report["variants"]])
+        self.assertEqual(report["trial_rows"], [])
+        self.assertTrue(any("cannot version" in n for n in report["notes"]))
 
     def test_variant_code_skips_modules_and_builtins(self):
         def uses_math(r, s):

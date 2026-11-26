@@ -31,6 +31,8 @@ strategy/variants.py, which is optional:
   predict(row, state) -> p   row = the forecast as recorded, outcome fields
                              stripped (core/replay.py's contract). None means
                              no opinion and keeps the raw estimate.
+  Keep a variant's parameters in this file: a variant that reads another file
+  at run time can change what it does without becoming a new version.
 
 Three guards keep the replay honest:
 
@@ -459,12 +461,18 @@ def rules_in_play(frows, now):
                   if v["verdict"] != "fail" and v["last_ts"] >= cutoff)
 
 
+# Marks a part of a variant the hash cannot describe exactly. A version that
+# carries it also hashes the whole variants file, so no edit keeps its id.
+OPAQUE = "<opaque>"
+
+
 def _stable(value, depth=0):
-    """A run-independent text for what a variant closes over (no addresses)."""
+    """A run-independent text for what a variant closes over (no addresses).
+    What it cannot describe exactly comes back marked OPAQUE."""
     if isinstance(value, (bool, int, float, str, type(None))):
         return repr(value)
     if depth >= 4:
-        return type(value).__name__
+        return OPAQUE + type(value).__name__
     if isinstance(value, (list, tuple)):
         return "[" + ",".join(_stable(v, depth + 1) for v in value) + "]"
     if isinstance(value, dict):
@@ -472,16 +480,23 @@ def _stable(value, depth=0):
                                      for k, v in value.items())) + "}"
     if callable(value):
         return _source(value, depth + 1)
-    return type(value).__name__
+    return OPAQUE + type(value).__name__
 
 
 def _source(fn, depth=0):
     if fn is None:
         return "None"
+    if isinstance(fn, types.BuiltinFunctionType):
+        # C code has no source: its module and name describe it exactly, plus
+        # the object a method is bound to.
+        owner = getattr(fn, "__self__", None)
+        bound_to = "" if owner is None or isinstance(owner, types.ModuleType) \
+            else _stable(owner, depth)
+        return f"<builtin {getattr(fn, '__module__', None)}.{fn.__qualname__}>{bound_to}"
     try:
         text = inspect.getsource(fn)
     except (OSError, TypeError):
-        text = getattr(fn, "__qualname__", type(fn).__name__)
+        text = OPAQUE + getattr(fn, "__qualname__", type(fn).__name__)
     cells = getattr(fn, "__closure__", None) or ()
     bound = []
     for cell in cells:
@@ -508,13 +523,27 @@ def _globals_used(fn, depth):
                    if name in names and not isinstance(names[name], types.ModuleType))
 
 
-def variant_code(variant):
+def variant_code(variant, path=None):
     """A variant version's id: a hash of its fit and predict source, the values
-    they close over, and the module constants and helpers they use (to four
-    levels of helpers), so a changed variant is a new trial and an edit to
-    another variant is not."""
+    they close over, and the module constants and helpers they use, so a
+    changed variant is a new trial and an edit to another plain variant is not.
+
+    Anything the hash cannot describe exactly (a functools.partial, a callable
+    instance, a class, a set, a value nested more than four levels down) makes
+    the version opaque, and an opaque version also hashes the whole variants
+    file: any edit to the file re-versions it, which over-counts, the safe
+    direction. Raises ValueError for an opaque variant with no file to hash,
+    so it is never replayed under a fixed id."""
     fit, predict = variant
-    return hashlib.sha256((_source(fit) + "\0" + _source(predict)).encode()).hexdigest()[:12]
+    text = _source(fit) + "\0" + _source(predict)
+    if OPAQUE in text:
+        file = pathlib.Path(path or VARIANTS_FILE)
+        if not file.exists():
+            raise ValueError("it uses a value the board cannot describe (a partial, a "
+                             "callable instance, a class, a set, or deep nesting) and "
+                             f"there is no {file.name} to hash")
+        text += "\0" + file.read_text()
+    return hashlib.sha256(text.encode()).hexdigest()[:12]
 
 
 def read_trials(path=None):
@@ -763,8 +792,10 @@ def build(rows, frows, moves, agent_variants, notes, now, revised=(), trials=(),
     for name, variant in replayed.items():
         try:
             code = variant_code(variant)
-        except Exception:  # noqa: BLE001 - an odd closure costs its id, never the board
-            code = "unhashable"
+        except Exception as e:  # noqa: BLE001 - an unversionable variant costs itself only
+            report["notes"].append(f"variant {name} not replayed: cannot version it: "
+                                   f"{type(e).__name__}: {e}")
+            continue
         key = (name, code)
         new_check = (key not in checked and name in requested
                      and checks["used"] < RESERVED_CHECKS_PER_WEEK)
