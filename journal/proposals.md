@@ -5180,3 +5180,14 @@ double-append guard. Workaround used: ranked the cycle's 300 rows in journal/scr
 max |prob - mid| myself (read-only). Ask: a `--no-log` / `--rank-only` mode for collect (or a `rank`
 subcommand), or reword the note to say "read past top 15 from the screener log". Top 15 this cycle were
 13/15 <48h repeats, so this path is the norm, not an edge case.
+
+## DEEP-2026-11-26 status
+- `core/experiments.py propose` null baseline for new rule slugs (DEEP-11-24): **Status: DONE (operator d56f7bbf, #36).**
+  Used today: blocked row E-2026-11-24-a closed as withdrawn, `boxoffice-mid` reopened as graded E-2026-11-26-a
+  (baseline null, keep < -0.01, roll back > +0.005, 35d or 40 rows).
+- Hourly 2026-11-25 08:3xZ `screen.py collect --top-n 30` rerun refused: **Status: ENDORSED (MEDIUM, operator).**
+  The top 15 were 13/15 <48h repeats on that FULL, so rows 16-30 are the normal path, and the documented route is closed
+  by the double-append guard. Ask: a `rank` subcommand or a `--no-log` flag on collect (or reword the 11-14 note).
+- Unchanged: Pyth Hermes `unauthorized` ENDORSED (MEDIUM, operator; silver $42 touch under-read 11-23 week is another
+  touch-family miss); stale-repeat down-rank (DEEP-11-20), resolve.py FCAST line (DEEP-11-21), screener malformed
+  re-queue (DEEP-11-21), odds-quota headroom (DEEP-11-19) all PROPOSED.
