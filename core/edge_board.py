@@ -41,9 +41,10 @@ Three guards keep the replay honest:
                   forecast.RULE_BUDGET limits tagged rules, which can bind. A
                   variant version is what it does and the code it lives in: its
                   outputs on fixed probe rows (probe_sets), and the text of
-                  strategy/variants.py and every in-repo module it references.
-                  Any edit to that code makes every variant in the file a new
-                  version, and so does a change in the outputs; a variant whose
+                  every Python file under strategy/ and of any other in-repo
+                  module the variants file references. Any edit to that code
+                  makes every variant a new version, and so does a change in
+                  the outputs; a variant whose
                   outputs differ between two probe runs is not replayed. Each
                   version gets one row in TRIALS_REL the first time the board
                   replays it, and another when it first sees its reserved
@@ -56,7 +57,8 @@ Three guards keep the replay honest:
                   verdict once it has had it, so compare candidates on the
                   development columns first, ask only for the best, and take a
                   name out of RESERVED once its verdict is logged: after any
-                  edit to the file, a name still listed spends another check.
+                  edit to a Python file under strategy/, a name still listed
+                  spends another check.
                   Reading the reserved rows once per idea, not once per tweak,
                   is what keeps them a test (reusing a holdout for adaptively
                   chosen variants overfits it).
@@ -544,9 +546,10 @@ def behavior(variant):
 
 
 def module_basis(mod, path):
-    """A hash of the text of the variants file and of every in-repo module it
-    references, directly or through those modules. An edit to any of them
-    makes every variant in the file a new version."""
+    """A hash of the text of the variants file, every Python file under
+    strategy/, and every other in-repo module the variants file references,
+    directly or through those modules. An edit to any of them makes every
+    variant in the file a new version."""
     files, stack = {pathlib.Path(path).resolve()}, [vars(mod)]
     while stack:
         for value in list(stack.pop().values()):
@@ -562,6 +565,11 @@ def module_basis(mod, path):
             if ROOT.resolve() in file.parents and file not in files and file.suffix == ".py":
                 files.add(file)
                 stack.append(vars(owner))
+    # Code reached only at call time (an import inside a function, a module
+    # in the strategy.tools namespace package, importlib) is invisible to the
+    # walk above, so every agent-owned Python file counts too.
+    files.update(f.resolve() for f in (ROOT / "strategy").rglob("*.py")
+                 if "__pycache__" not in f.parts)
     h = hashlib.sha256()
     for file in sorted(files):
         label = file.relative_to(ROOT.resolve()) if ROOT.resolve() in file.parents else file.name

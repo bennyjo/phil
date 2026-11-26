@@ -779,6 +779,59 @@ class Board(unittest.TestCase):
             "VARIANTS = {'tuned': (None, predict)}\nRESERVED = ['tuned']\n",
             ("min(0.99, max(0.01,", "min(0.95, max(0.05,"))
 
+    def helper_versions(self, variants_src, *edits):
+        """Run main once per text of strategy/tools/zz_helper.py, under a
+        temporary ROOT. The helper changes only a category the probe rows never
+        use, so only the code basis can see an edit; the trial rows for tuned."""
+        base = ("K = 0.3\n\n\ndef adjust(r):\n    if r['category'] == 'countable-metric':\n"
+                "        return K * r['est_prob'] + (1 - K) * 0.5\n    return r['est_prob']\n")
+        self.assertNotIn("countable-metric", edge_board.PROBE_CATEGORIES)
+        before = set(sys.modules)
+        with tempfile.TemporaryDirectory() as d:
+            root = pathlib.Path(d)
+            tools = root / "strategy" / "tools"
+            tools.mkdir(parents=True)
+            variants = root / "strategy" / "variants.py"
+            variants.write_text(variants_src)
+            forecasts = root / "forecasts.jsonl"
+            forecasts.write_text("\n".join(json.dumps(r) for r in sample()) + "\n")
+            trials = root / "trials.jsonl"
+            sys.path[:0] = [str(root), str(tools)]
+            try:
+                for text in [base] + [base.replace(a, b) for a, b in edits]:
+                    (tools / "zz_helper.py").write_text(text)
+                    with mock.patch.object(edge_board, "ROOT", root), \
+                            mock.patch.object(edge_board.forecast, "FORECASTS", forecasts), \
+                            mock.patch.object(edge_board, "ALLOCATION_FILE", root / "line.txt"), \
+                            mock.patch.object(edge_board, "VARIANTS_FILE", variants), \
+                            mock.patch.object(edge_board, "TRIALS_FILE", trials), \
+                            mock.patch.object(screen, "log_rows", lambda: iter(())), \
+                            contextlib.redirect_stdout(io.StringIO()):
+                        edge_board.main([], NOW)
+            finally:
+                sys.path.remove(str(root))
+                sys.path.remove(str(tools))
+                for name in set(sys.modules) - before:
+                    if name == "zz_helper" or name.startswith("strategy"):
+                        sys.modules.pop(name)
+            return [t for t in edge_board.read_trials(trials) if t["variant"] == "tuned"]
+
+    def assertEachHelperEditIsAVersion(self, variants_src):
+        rows = self.helper_versions(variants_src, ("K = 0.3", "K = 0.6"), ("K = 0.3", "K = 0.0"))
+        self.assertEqual([t["reserved"] for t in rows], ["checked"] * 3)
+        self.assertEqual(len({t["code"] for t in rows}), 3)
+
+    def test_a_helper_imported_inside_a_function_re_versions(self):
+        self.assertEachHelperEditIsAVersion(
+            "def predict(r, s):\n    import zz_helper\n    return zz_helper.adjust(r)\n\n\n"
+            "VARIANTS = {'tuned': (None, predict)}\nRESERVED = ['tuned']\n")
+
+    def test_a_helper_in_the_strategy_tools_package_re_versions(self):
+        self.assertEachHelperEditIsAVersion(
+            "import strategy.tools.zz_helper\n\n\n"
+            "def predict(r, s):\n    return strategy.tools.zz_helper.adjust(r)\n\n\n"
+            "VARIANTS = {'tuned': (None, predict)}\nRESERVED = ['tuned']\n")
+
     def test_any_edit_to_the_file_re_versions_every_variant(self):
         # Versions follow the code a variant lives in, not a reading of which
         # parts it uses: editing one variant re-versions the others too. A
