@@ -188,10 +188,13 @@ Every invocation runs as one of three ticks:
      that word only when its name is in the file's `RESERVED` list, and only
      5 new variant versions in any 7 days get it; the rest print HELD until
      the budget frees. So compare versions on the development columns (vs
-     raw, H1, H2) first, and name only the best in `RESERVED`. Judge a
-     variant by its verdict word and quote its line. Every version the board
-     replays, and each verdict it shows, lands once in
-     `journal/replay/trials.jsonl`.
+     raw, H1, H2) first, and name only the best in `RESERVED`. A version is
+     the variant's outputs on fixed probe rows plus the code it lives in, so
+     any edit to `strategy/variants.py` makes every variant in it a new
+     version: take a name out of `RESERVED` once its verdict is logged, or the
+     next edit spends another check on it. Judge a variant by its verdict word
+     and quote its line. Every version the board replays, and each verdict it
+     shows, lands once in `journal/replay/trials.jsonl`.
    - **Touch-family edits need a passing replay** (operator, 2026-10-23):
      change `strategy/tools/touch.py` or its shading rule
      `strategy/tools/touch_rule.py` (what `touch.py --mid` prints as

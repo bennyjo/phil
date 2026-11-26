@@ -32,25 +32,31 @@ strategy/variants.py, which is optional:
                              stripped (core/replay.py's contract). None means
                              no opinion and keeps the raw estimate.
   Keep a variant's parameters in this file: a variant that reads another file
-  at run time can change what it does without becoming a new version.
+  at run time is a new version only when its outputs on the probe rows change.
 
 Three guards keep the replay honest:
 
   Trial log       Every agent variant is replayed on the development rows, up
                   to MAX_AGENT_VARIANTS a run, and takes no rule-budget slot:
-                  forecast.RULE_BUDGET limits tagged rules, which can bind. Each
-                  variant version (a hash of its fit and predict source, the
-                  values they close over, and the module constants and helpers
-                  they use) gets one row in TRIALS_REL the first
-                  time the board replays it, and another when it first sees its
-                  reserved verdict or that verdict changes, so the log counts
-                  every version tried, failures included.
+                  forecast.RULE_BUDGET limits tagged rules, which can bind. A
+                  variant version is what it does and the code it lives in: its
+                  outputs on fixed probe rows (probe_sets), and the text of
+                  strategy/variants.py and every in-repo module it references.
+                  Any edit to that code makes every variant in the file a new
+                  version, and so does a change in the outputs; a variant whose
+                  outputs differ between two probe runs is not replayed. Each
+                  version gets one row in TRIALS_REL the first time the board
+                  replays it, and another when it first sees its reserved
+                  verdict or that verdict changes, so the log counts every
+                  version tried, failures included.
   Reserved budget Only a variant named in RESERVED asks for a reserved
                   verdict, and at most RESERVED_CHECKS_PER_WEEK new versions see
                   one in any trailing 7 days, in the order VARIANTS lists them;
                   the rest print HELD until the budget frees. A version keeps its
                   verdict once it has had it, so compare candidates on the
-                  development columns first and ask only for the best.
+                  development columns first, ask only for the best, and take a
+                  name out of RESERVED once its verdict is logged: after any
+                  edit to the file, a name still listed spends another check.
                   Reading the reserved rows once per idea, not once per tweak,
                   is what keeps them a test (reusing a holdout for adaptively
                   chosen variants overfits it).
@@ -83,10 +89,10 @@ import argparse
 import contextlib
 import datetime as dt
 import hashlib
-import inspect
 import json
 import math
 import pathlib
+import random
 import re
 import signal
 import sys
@@ -418,12 +424,12 @@ def contained():
 
 
 def load_agent_variants(path=None):
-    """(variants, notes, requested). requested: the names the file's optional
-    RESERVED list asks a reserved verdict for. A broken file costs its
-    variants, never the board."""
+    """(variants, notes, requested, basis). requested: the names the file's
+    optional RESERVED list asks a reserved verdict for; basis: module_basis of
+    the file. A broken file costs its variants, never the board."""
     path = pathlib.Path(path or VARIANTS_FILE)
     if not path.exists():
-        return {}, [], []
+        return {}, [], [], ""
     try:
         # Compiled from the source every run, never from a cached .pyc: an
         # edit of the same size in the same second would otherwise replay the
@@ -442,16 +448,17 @@ def load_agent_variants(path=None):
             fit, predict = pair
             variants[name] = (fit, predict)
         asked = getattr(mod, "RESERVED", [])
+        basis = module_basis(mod, path)
     except (Exception, SystemExit) as e:  # noqa: BLE001 - the agent owns this file
         return {}, [f"{path.name} unusable, no agent variants this run: "
-                    f"{type(e).__name__}: {e}"], []
+                    f"{type(e).__name__}: {e}"], [], ""
     if not isinstance(asked, (list, tuple)) or not all(isinstance(n, str) for n in asked):
         notes.append("RESERVED is not a list of variant names: no reserved check asked")
         asked = []
     unknown = [n for n in asked if n not in variants]
     if unknown:
         notes.append(f"RESERVED names no such variant: {', '.join(unknown)}")
-    return variants, notes, [n for n in asked if n in variants]
+    return variants, notes, [n for n in asked if n in variants], basis
 
 
 def rules_in_play(frows, now):
@@ -461,89 +468,117 @@ def rules_in_play(frows, now):
                   if v["verdict"] != "fail" and v["last_ts"] >= cutoff)
 
 
-# Marks a part of a variant the hash cannot describe exactly. A version that
-# carries it also hashes the whole variants file, so no edit keeps its id.
-OPAQUE = "<opaque>"
+# A variant's version is what it does and the code it lives in, never a
+# reading of how it is written: its outputs on fixed probe rows, and the text
+# of every in-repo module the variants file references. Any change to either
+# is a new version; a false new version only costs a fresh trial.
+PROBE_SEED = 20261126
+PROBE_HISTORY = 300   # settled rows fit() sees
+PROBE_RANDOM = 265    # rows predict() sees beyond the grid below
+PROBE_GRID = [(est, mid, spread) for est in (0.02, 0.1, 0.25, 0.4, 0.5, 0.6, 0.75, 0.9, 0.98)
+              for mid in (0.03, 0.2, 0.5, 0.8, 0.97) for spread in (0.01, 0.04, 0.12)]
+PROBE_CATEGORIES = ("soccer", "social-media-postcount", "say-the-word", "nba-moneyline",
+                    "crypto-touch", "politics-general", "commodities", "box-office",
+                    "econ-print", "weather")
 
 
-def _stable(value, depth=0):
-    """A run-independent text for what a variant closes over (no addresses).
-    What it cannot describe exactly comes back marked OPAQUE."""
-    if isinstance(value, (bool, int, float, str, type(None))):
-        return repr(value)
-    if depth >= 4:
-        return OPAQUE + type(value).__name__
-    if isinstance(value, (list, tuple)):
-        return "[" + ",".join(_stable(v, depth + 1) for v in value) + "]"
-    if isinstance(value, dict):
-        return "{" + ",".join(sorted(f"{_stable(k, depth + 1)}:{_stable(v, depth + 1)}"
-                                     for k, v in value.items())) + "}"
-    if callable(value):
-        return _source(value, depth + 1)
-    return OPAQUE + type(value).__name__
+def _probe_row(i, u, est=None, mid=None, spread=None):
+    """One forecast row as a variant sees it, every field drawn from u()."""
+    est = round(0.01 + 0.98 * u(), 4) if est is None else est
+    mid = round(0.02 + 0.96 * u(), 4) if mid is None else mid
+    spread = (0.01, 0.02, 0.04, 0.08, 0.15)[int(u() * 5)] if spread is None else spread
+    ts = dt.datetime(2026, 1, 1, tzinfo=dt.timezone.utc) + dt.timedelta(hours=i)
+    end = ts + dt.timedelta(hours=(2, 12, 30, 80, 200, 700)[int(u() * 6)])
+    return {"id": f"probe{i}", "ts": _stamp(ts), "market_id": str(900000 + i),
+            "question": f"Probe question {i}?", "slug": f"probe-{i}", "end_date": _stamp(end),
+            "outcome": ("Yes", "No")[int(u() * 2)], "token_id": str(i), "version": "v1",
+            "est_prob": est, "best_bid_at_record": round(max(0.001, mid - spread / 2), 4),
+            "best_ask_at_record": round(min(0.999, mid + spread / 2), 4),
+            "price_source_at_record": "mid", "market_prob_at_record": mid,
+            "liquidity_at_record": round(100 * 10 ** (3 * u()), 2),
+            "volume_24h_at_record": round(50 * 10 ** (3 * u()), 2),
+            "category": PROBE_CATEGORIES[int(u() * len(PROBE_CATEGORIES))],
+            "skip_reason": ("market-agrees", "no-edge", "wide-spread")[int(u() * 3)],
+            "fit_score": None, "note": "probe", "strategy_rev": "probe"}
 
 
-def _source(fn, depth=0):
-    if fn is None:
-        return "None"
-    if isinstance(fn, types.BuiltinFunctionType):
-        # C code has no source: its module and name describe it exactly, plus
-        # the object a method is bound to.
-        owner = getattr(fn, "__self__", None)
-        bound_to = "" if owner is None or isinstance(owner, types.ModuleType) \
-            else _stable(owner, depth)
-        return f"<builtin {getattr(fn, '__module__', None)}.{fn.__qualname__}>{bound_to}"
-    try:
-        text = inspect.getsource(fn)
-    except (OSError, TypeError):
-        text = OPAQUE + getattr(fn, "__qualname__", type(fn).__name__)
-    cells = getattr(fn, "__closure__", None) or ()
-    bound = []
-    for cell in cells:
-        try:
-            bound.append(_stable(cell.cell_contents, depth))
-        except ValueError:  # an empty cell
-            bound.append("<empty>")
-    return (text + _stable(getattr(fn, "__defaults__", None), depth) + "".join(bound)
-            + _globals_used(fn, depth))
+def probe_sets():
+    """(history, rows): the fixed rows every variant version is fingerprinted
+    on. Drawn from random.Random(PROBE_SEED).random only, whose sequence Python
+    keeps across versions, so the set is the same on every runner."""
+    u = random.Random(PROBE_SEED).random
+    history = []
+    for i in range(PROBE_HISTORY):
+        r = _probe_row(i, u)
+        r["won"] = u() < (r["est_prob"] + r["market_prob_at_record"]) / 2
+        history.append(r)
+    start = PROBE_HISTORY
+    rows = [_probe_row(start + i, u, *cell) for i, cell in enumerate(PROBE_GRID)]
+    rows += [_probe_row(start + len(PROBE_GRID) + i, u) for i in range(PROBE_RANDOM)]
+    return history, rows
 
 
-def _globals_used(fn, depth):
-    """The module-level values and helpers a function's code names, nested
-    functions and comprehensions included; imported modules are skipped."""
-    code, names = getattr(fn, "__code__", None), getattr(fn, "__globals__", None)
-    if code is None or not isinstance(names, dict):
-        return ""
-    used, stack = set(), [code]
-    while stack:
-        c = stack.pop()
-        used.update(c.co_names)
-        stack.extend(k for k in c.co_consts if isinstance(k, types.CodeType))
-    return "".join(f"|{name}={_stable(names[name], depth)}" for name in sorted(used)
-                   if name in names and not isinstance(names[name], types.ModuleType))
-
-
-def variant_code(variant, path=None):
-    """A variant version's id: a hash of its fit and predict source, the values
-    they close over, and the module constants and helpers they use, so a
-    changed variant is a new trial and an edit to another plain variant is not.
-
-    Anything the hash cannot describe exactly (a functools.partial, a callable
-    instance, a class, a set, a value nested more than four levels down) makes
-    the version opaque, and an opaque version also hashes the whole variants
-    file: any edit to the file re-versions it, which over-counts, the safe
-    direction. Raises ValueError for an opaque variant with no file to hash,
-    so it is never replayed under a fixed id."""
+def behavior(variant):
+    """The variant's outputs on the probe rows, after fitting on the probe
+    history, as one string. Errors are part of the behavior; a timeout is not,
+    and propagates, so a stuck variant costs one timeout."""
     fit, predict = variant
-    text = _source(fit) + "\0" + _source(predict)
-    if OPAQUE in text:
-        file = pathlib.Path(path or VARIANTS_FILE)
-        if not file.exists():
-            raise ValueError("it uses a value the board cannot describe (a partial, a "
-                             "callable instance, a class, a set, or deep nesting) and "
-                             f"there is no {file.name} to hash")
-        text += "\0" + file.read_text()
-    return hashlib.sha256(text.encode()).hexdigest()[:12]
+    history, rows = probe_sets()
+    with contained():
+        try:
+            state = fit([dict(h) for h in history]) if fit else None
+        except TimeoutError:
+            raise
+        except (Exception, SystemExit) as e:  # noqa: BLE001 - the agent owns its variants
+            return f"fit-error:{type(e).__name__}"
+        out = []
+        for r in rows:
+            try:
+                p = predict(dict(r), state)
+                out.append("None" if p is None else format(float(p), ".9g"))
+            except TimeoutError:
+                raise
+            except (Exception, SystemExit) as e:  # noqa: BLE001
+                out.append(f"error:{type(e).__name__}")
+    return "|".join(out)
+
+
+def module_basis(mod, path):
+    """A hash of the text of the variants file and of every in-repo module it
+    references, directly or through those modules. An edit to any of them
+    makes every variant in the file a new version."""
+    files, stack = {pathlib.Path(path).resolve()}, [vars(mod)]
+    while stack:
+        for value in list(stack.pop().values()):
+            try:
+                owner = value if isinstance(value, types.ModuleType) else \
+                    sys.modules.get(getattr(value, "__module__", None) or "")
+                name = getattr(owner, "__file__", None)
+            except Exception:  # noqa: BLE001 - an odd object adds nothing
+                continue
+            if not name:
+                continue
+            file = pathlib.Path(name).resolve()
+            if ROOT.resolve() in file.parents and file not in files and file.suffix == ".py":
+                files.add(file)
+                stack.append(vars(owner))
+    h = hashlib.sha256()
+    for file in sorted(files):
+        label = file.relative_to(ROOT.resolve()) if ROOT.resolve() in file.parents else file.name
+        h.update(f"{label}\0{file.read_text()}\0".encode())
+    return h.hexdigest()
+
+
+def variant_code(variant, basis=""):
+    """A variant version's id: a hash of the module basis (module_basis) and of
+    its behavior on the probe rows, run twice. Raises ValueError when the two
+    runs differ: a variant that does not repeat itself cannot be versioned,
+    so it is not replayed."""
+    first = behavior(variant)
+    if behavior(variant) != first:
+        raise ValueError("its outputs on the fixed probe rows differ between two runs; "
+                         "a variant must be deterministic")
+    return hashlib.sha256(f"{basis}\0{first}".encode()).hexdigest()[:12]
 
 
 def read_trials(path=None):
@@ -754,11 +789,13 @@ def flag_changes(cells_by_table, rows, moves, now):
                 c["was"] = was
 
 
-def build(rows, frows, moves, agent_variants, notes, now, revised=(), trials=(), requested=()):
+def build(rows, frows, moves, agent_variants, notes, now, revised=(), trials=(), requested=(),
+          basis=""):
     """The board. trials: the trial log so far; the rows this run adds come
     back in report["trial_rows"] for main to append. requested: the agent
     variants that ask for a reserved verdict (strategy/variants.py RESERVED);
-    the rest replay on the development rows only."""
+    the rest replay on the development rows only. basis: the variants file's
+    module_basis, part of every version id."""
     in_play = rules_in_play(frows, now)
     names = list(agent_variants)
     replayed = {name: agent_variants[name] for name in names[:MAX_AGENT_VARIANTS]}
@@ -791,8 +828,8 @@ def build(rows, frows, moves, agent_variants, notes, now, revised=(), trials=(),
     checks = report["reserved_checks"]
     for name, variant in replayed.items():
         try:
-            code = variant_code(variant)
-        except Exception as e:  # noqa: BLE001 - an unversionable variant costs itself only
+            code = variant_code(variant, basis)
+        except (Exception, SystemExit) as e:  # noqa: BLE001 - it costs itself only
             report["notes"].append(f"variant {name} not replayed: cannot version it: "
                                    f"{type(e).__name__}: {e}")
             continue
@@ -908,9 +945,9 @@ def main(argv=None, now=None):
     frows = forecast.read_forecasts()
     rows, revised = settled_rows(frows)
     moves = load_moves(rows)
-    variants, notes, requested = load_agent_variants()
+    variants, notes, requested, basis = load_agent_variants()
     report = build(rows, frows, moves, variants, notes, now, revised, read_trials(TRIALS_FILE),
-                   requested)
+                   requested, basis)
     new_trials = report.pop("trial_rows")
     if new_trials:
         TRIALS_FILE.parent.mkdir(parents=True, exist_ok=True)

@@ -13,9 +13,10 @@ Usage: python3 core/test_edge_board.py
 """
 import contextlib
 import datetime as dt
+import hashlib
 import io
+import itertools
 import json
-import math
 import pathlib
 import sys
 import tempfile
@@ -30,6 +31,7 @@ import screen  # noqa: E402
 
 START = dt.datetime(2026, 1, 1, tzinfo=dt.timezone.utc)
 NOW = START + dt.timedelta(days=30)  # sample() ends here, 14 of its 30 days reserved
+PROBE_DIGEST = "de7f8a3c5d763387"  # edge_board.probe_sets(), first 16 hex digits
 
 
 def stamp(t):
@@ -382,25 +384,37 @@ class ReservedBudget(unittest.TestCase):
         self.assertEqual(report["trial_rows"], [])
         self.assertEqual(report["reserved_checks"]["used"], 0)  # a failure spends nothing
 
-    def test_variant_code_follows_source_and_bound_values(self):
+    def test_variant_code_follows_behavior_and_basis(self):
         def make(k):
             return lambda r, s: k * r["est_prob"]
+
+        def rate(history):
+            return sum(h["won"] for h in history) / len(history)
         code = edge_board.variant_code
         self.assertEqual(code((None, half)), code((None, half)))
         self.assertNotEqual(code((None, half)), code((None, third)))
         self.assertNotEqual(code((None, make(0.5))), code((None, make(0.6))))
         self.assertEqual(code((None, make(0.5))), code((None, make(0.5))))
-        loop = []
-        loop.append(loop)  # self-containing: opaque, so it needs a file to hash
-        with mock.patch.object(edge_board, "VARIANTS_FILE", pathlib.Path("/nonexistent/v.py")):
-            with self.assertRaisesRegex(ValueError, "cannot describe"):
-                code((None, make(loop)))
-        with tempfile.TemporaryDirectory() as d:
-            path = pathlib.Path(d) / "variants.py"
-            path.write_text("# one\n")
-            first = code((None, make(loop)), path)
-            path.write_text("# two\n")
-            self.assertNotEqual(first, code((None, make(loop)), path))
+        self.assertNotEqual(code((None, half), "basis-a"), code((None, half), "basis-b"))
+        self.assertNotEqual(code((rate, lambda r, s: s)), code((None, lambda r, s: 0.5)))
+
+    def test_a_variant_that_does_not_repeat_itself_cannot_be_versioned(self):
+        counter = itertools.count()
+        with self.assertRaisesRegex(ValueError, "deterministic"):
+            edge_board.variant_code((None, lambda r, s: (next(counter) % 7) / 10))
+
+    def test_the_probe_set_is_fixed_and_spans_the_grid(self):
+        history, rows = edge_board.probe_sets()
+        self.assertEqual((history, rows), edge_board.probe_sets())
+        self.assertEqual((len(history), len(rows)), (300, 400))
+        self.assertTrue(all(isinstance(h["won"], bool) for h in history))
+        self.assertFalse(any(k in r for r in rows for k in ("won", "status", "settled_ts")))
+        self.assertTrue({0.02, 0.98} <= {r["est_prob"] for r in rows})
+        self.assertTrue({0.03, 0.97} <= {r["market_prob_at_record"] for r in rows})
+        # Pinned: a change to the probe set re-versions every variant at once,
+        # so it must be a deliberate edit of this digest too.
+        digest = hashlib.sha256(json.dumps([history, rows], sort_keys=True).encode()).hexdigest()
+        self.assertEqual(digest[:16], PROBE_DIGEST)
 
     def test_weekly_count_uses_each_version_s_first_check(self):
         trials = [{"ts": stamp(NOW - dt.timedelta(days=9)), "variant": "a", "code": "1",
@@ -426,12 +440,33 @@ class AgentFile(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             path = pathlib.Path(d) / "variants.py"
             path.write_text(source)
-            variants, notes, self.requested = edge_board.load_agent_variants(path)
+            variants, notes, self.requested, self.basis = edge_board.load_agent_variants(path)
             return variants, notes
 
     def test_missing_file_is_no_variants(self):
         self.assertEqual(edge_board.load_agent_variants("/nonexistent/variants.py"),
-                         ({}, [], []))
+                         ({}, [], [], ""))
+
+    def test_basis_covers_the_file_and_the_in_repo_modules_it_imports(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = pathlib.Path(d)
+            helper = root / "probehelp_basis.py"
+            helper.write_text("K = 0.3\n")
+            variants = root / "variants.py"
+            variants.write_text("import math\nimport probehelp_basis\nVARIANTS = {}\n")
+            sys.path.insert(0, d)
+            try:
+                with mock.patch.object(edge_board, "ROOT", root):
+                    first = edge_board.load_agent_variants(variants)[3]
+                    self.assertEqual(first, edge_board.load_agent_variants(variants)[3])
+                    helper.write_text("K = 0.6\n")
+                    second = edge_board.load_agent_variants(variants)[3]
+                    self.assertNotEqual(first, second)  # an imported in-repo module
+                    variants.write_text(variants.read_text() + "# note\n")
+                    self.assertNotEqual(second, edge_board.load_agent_variants(variants)[3])
+            finally:
+                sys.path.remove(d)
+                sys.modules.pop("probehelp_basis", None)
 
     def test_reserved_names_the_variants_that_ask_for_a_verdict(self):
         variants, notes = self.load("VARIANTS = {'a-b': (None, None), 'c-d': (None, None)}\n"
@@ -633,8 +668,10 @@ class Board(unittest.TestCase):
             self.assertEqual([t["reserved"] for t in tuned], ["checked"] * 3)
             self.assertEqual(len({t["code"] for t in tuned}), 3)
             self.assertIn("reserved checks: 3/5", text)
-            # The variant that uses neither stays one version.
-            self.assertEqual(len([t for t in rows if t["variant"] == "other"]), 1)
+            # Every edit to the file re-versions the other variant too; it isn't
+            # in RESERVED, so each new version spends no check.
+            other = [t for t in rows if t["variant"] == "other"]
+            self.assertEqual([t["reserved"] for t in other], ["dev"] * 3)
 
     def versions(self, sources, name="tuned"):
         """Run main once per variants.py text; the trial rows for `name`."""
@@ -704,37 +741,63 @@ class Board(unittest.TestCase):
             "VARIANTS = {'tuned': (None, predict)}\nRESERVED = ['tuned']\n",
             ("[0.3]", "[0.6]"))
 
-    def test_an_opaque_variant_leaves_plain_ones_exact(self):
-        base = ("import functools\nfrom math import log\n\n\n"
-                "def shrink(r, s, k):\n    return k * r['est_prob'] + (1 - k) * 0.5\n\n\n"
-                "def plain(r, s):\n    return (r['est_prob'] + 0.5) / 2\n\n\n"
-                "def logged(r, s):\n    return min(0.99, max(0.01, 0.5 + log(1.0) + r['est_prob'] / 2))\n\n\n"
-                "VARIANTS = {'tuned': (None, functools.partial(shrink, k=0.3)),\n"
-                "            'plain': (None, plain), 'logged': (None, logged)}\n"
-                "RESERVED = ['tuned']\n")
-        sources = [base, base.replace("k=0.3)", "k=0.6)")]
-        # An edit to the opaque variant re-versions only it: the plain variant
-        # and the one using a C builtin (described by name) stay one version.
-        self.assertEqual(len({t["code"] for t in self.versions(sources, "plain")}), 1)
-        self.assertEqual(len({t["code"] for t in self.versions(sources, "logged")}), 1)
-        self.assertEqual(len({t["code"] for t in self.versions(sources)}), 2)
+    def test_a_bound_method_re_versions_on_each_edit(self):
+        self.assertEachEditIsAVersion(
+            "class Shrink:\n    def __init__(self, k):\n        self.k = k\n\n"
+            "    def predict(self, r, s):\n"
+            "        return self.k * r['est_prob'] + (1 - self.k) * 0.5\n\n\n"
+            "VARIANTS = {'tuned': (None, Shrink(0.3).predict)}\nRESERVED = ['tuned']\n",
+            ("Shrink(0.3)", "Shrink(0.6)"), ("Shrink(0.3)", "Shrink(0.0)"))
 
-    def test_an_unversionable_variant_is_not_replayed(self):
-        import functools
-        partial = functools.partial(lambda r, s, k: k, k=0.4)
-        with mock.patch.object(edge_board, "VARIANTS_FILE", pathlib.Path("/nonexistent/v.py")):
-            report = edge_board.build(sample(), [], {}, {"tuned": (None, partial)}, [], NOW,
-                                      requested=["tuned"])
+    def test_a_classmethod_re_versions_on_each_edit(self):
+        self.assertEachEditIsAVersion(
+            "class P:\n    K = 0.3\n\n    @classmethod\n    def predict(cls, r, s):\n"
+            "        return cls.K * r['est_prob'] + (1 - cls.K) * 0.5\n\n\n"
+            "VARIANTS = {'tuned': (None, P.predict)}\nRESERVED = ['tuned']\n",
+            ("K = 0.3", "K = 0.6"), ("K = 0.3", "K = 0.0"))
+
+    def test_a_keyword_only_default_re_versions_on_each_edit(self):
+        self.assertEachEditIsAVersion(
+            "def make(k):\n    def predict(r, s, *, k=k):\n"
+            "        return k * r['est_prob'] + (1 - k) * 0.5\n    return predict\n\n\n"
+            "VARIANTS = {'tuned': (None, make(0.3))}\nRESERVED = ['tuned']\n",
+            ("make(0.3)", "make(0.6)"), ("make(0.3)", "make(0.0)"))
+
+    def test_a_cached_helper_re_versions_on_each_edit(self):
+        self.assertEachEditIsAVersion(
+            "import functools\n\nK = 0.3\n\n\n@functools.lru_cache(maxsize=None)\n"
+            "def blend(p):\n    return K * p + (1 - K) * 0.5\n\n\n"
+            "def predict(r, s):\n    return blend(r['est_prob'])\n\n\n"
+            "VARIANTS = {'tuned': (None, predict)}\nRESERVED = ['tuned']\n",
+            ("K = 0.3", "K = 0.6"), ("K = 0.3", "K = 0.0"))
+
+    def test_a_wrapped_function_re_versions_when_the_wrapper_changes(self):
+        self.assertEachEditIsAVersion(
+            "import functools\n\n\ndef clip(fn):\n    @functools.wraps(fn)\n"
+            "    def inner(r, s):\n        return min(0.99, max(0.01, fn(r, s)))\n"
+            "    return inner\n\n\n@clip\ndef predict(r, s):\n    return r['est_prob']\n\n\n"
+            "VARIANTS = {'tuned': (None, predict)}\nRESERVED = ['tuned']\n",
+            ("min(0.99, max(0.01,", "min(0.95, max(0.05,"))
+
+    def test_any_edit_to_the_file_re_versions_every_variant(self):
+        # Versions follow the code a variant lives in, not a reading of which
+        # parts it uses: editing one variant re-versions the others too. A
+        # false new version costs a fresh trial, the safe direction.
+        base = ("def plain(r, s):\n    return (r['est_prob'] + 0.5) / 2\n\n\n"
+                "def other(r, s):\n    return 0.4\n\n\n"
+                "VARIANTS = {'tuned': (None, other), 'plain': (None, plain)}\n")
+        sources = [base, base, base.replace("return 0.4", "return 0.45")]
+        self.assertEqual(len({t["code"] for t in self.versions(sources, "plain")}), 2)
+
+    def test_a_nondeterministic_variant_is_not_replayed(self):
+        counter = itertools.count()
+        report = edge_board.build(sample(), [], {},
+                                  {"tuned": (None, lambda r, s: (next(counter) % 7) / 10)},
+                                  [], NOW, requested=["tuned"])
         self.assertNotIn("tuned", [v["variant"] for v in report["variants"]])
         self.assertEqual(report["trial_rows"], [])
-        self.assertTrue(any("cannot version" in n for n in report["notes"]))
-
-    def test_variant_code_skips_modules_and_builtins(self):
-        def uses_math(r, s):
-            return math.exp(0) * min(r["est_prob"], 1.0)
-        self.assertEqual(edge_board.variant_code((None, uses_math)),
-                         edge_board.variant_code((None, uses_math)))
-        self.assertNotIn("math=", edge_board._globals_used(uses_math, 0))
+        self.assertTrue(any("cannot version" in n and "deterministic" in n
+                            for n in report["notes"]))
 
     def test_a_failed_run_leaves_no_allocation_line(self):
         with tempfile.TemporaryDirectory() as d:
