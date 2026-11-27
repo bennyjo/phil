@@ -1587,3 +1587,54 @@ What to expect: each candidate rule gets a held-out verdict in the deep retro
 that finds it, instead of after about 20 forward events (weeks for H3, months
 for `boxoffice-mid`), and rules that fail the held-out check stop taking
 slots.
+
+## 2026-11-27 ~10:30Z - move the rule slot from `boxoffice-mid` to `tight-cap10`; RULE_BUDGET stays 6 (operator)
+
+This answers the RULE_BUDGET ask in `E-2026-11-27-a`. Do not raise
+`RULE_BUDGET`: it stays 6. Free the slot this way instead, in the next deep
+retro:
+
+1. Close `E-2026-11-26-a` (`boxoffice-mid`) as `withdrawn`, and stop
+   reserving a slot for `boxoffice-mid`. Box office gives about one event
+   per film weekend: the 35 days before the experiment opened held 50
+   box-office rows on 7 events, so its 35-day window can't reach the
+   10-event floor (`EVENT_FLOOR` in `core/experiments.py`), and grade would
+   end it INCONCLUSIVE. The held-out test on 11-25 also showed no effect:
+   -0.0125 [-0.0571, +0.0322] over 12 events.
+2. Close the blocked row `E-2026-11-27-a` as `withdrawn`, and open
+   `tight-cap10` as a graded experiment under a new id in the freed slot,
+   with the same metric (`rule_verdict:tight-cap10`) and window, and the
+   commit that adds the rule to the registry; set the bars as item 3 says.
+   Don't apply the rule to box-office rows or to rows another in-play rule
+   tags. It passed its held-out test, -0.0251 [-0.0525, +0.0024]
+   over 124 events, and it targets the rows with a gap of 0.10 or more,
+   which carry +5.61 of the +5.78 summed tight-book deficit.
+3. Before you open any rule experiment, run `core/experiments.py propose`
+   and read `baseline_events` and `mde`. Don't open an experiment whose
+   window can't reach 10 events. For a slug that was never tagged,
+   `propose` prints `baseline_events: 0` and `mde: null`. Then take the
+   rows the rule would have moved (rule value different from the raw
+   estimate, because `core/forecast.py` refuses the tag on any other row),
+   recorded in the same window before the commit and settled before it,
+   leaving out rows another in-play rule tags. Open the experiment only if
+   those rows cover 10 or more events, keyed (category, end date). On the
+   same rows, compute the paired difference (rule value - y)^2 - (raw - y)^2,
+   where y is 1 if the outcome won and 0 if not, with a standard error
+   clustered by event, as `core/score.py`
+   `paired_rule_test` does. Set `keep_if` and `rollback_if` at least 2.8
+   standard errors from 0, or widen the window until they are. For
+   `tight-cap10`, the 30 days before 11-27 give about 42 to 57 such events
+   and a standard error of about 0.010 to 0.014; for `boxoffice-mid`, 7
+   events.
+
+Why: `RULE_BUDGET` limits how many rules are under test at once, which keeps
+false passes rare (`core/forecast.py`). Withdrawing a test that can't reach a
+verdict frees the slot without loosening that guard. Five slugs are in play
+(`ai-release-mid`, `earnings-mid`, `knife-edge-mid`, `aaa-tight-mid`,
+`postcount-mid`), so `tight-cap10` takes the sixth.
+
+What to expect: rows tagged `tight-cap10` from about 11-28 instead of 12-03
+or later, and a graded verdict on the largest part of the primary metric's
+deficit about 5 days sooner. `strategy/experiments.jsonl` gains close rows
+for `E-2026-11-26-a` and `E-2026-11-27-a` and an open row for `tight-cap10`,
+and `core/experiments.py grade` then counts `tight-cap10` events.
