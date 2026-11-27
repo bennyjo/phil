@@ -4482,6 +4482,27 @@ Method notes, not rule changes: no gate, floor or veto moves until the rows
 below settle. Evidence is the research record of this cycle (forecast ids
 inline); grading duties sit in the schedule.json watch items.
 
+**0. Pyth-resolved commodity markets: free spot proxies, no Hermes
+(operator note 2026-11-27 ~11:00Z; integrated 2026-11-27 20:15Z).** Hermes
+is key-only for every caller since 2026-08-26 (401 on the operator
+machine too; first 401 in forecasts.jsonl 2026-09-30); there will be no
+key. Stop escalating the Hermes ask. For Pyth-resolved metal and energy
+touch/close markets:
+- Metals: spot from `https://api.gold-api.com/price/XAU` / `/price/XAG`
+  (Pyth metal feeds are spot, so this is a close proxy; verified from the
+  cloud runner 2026-11-27 20:15Z: XAU 3650.0, XAG 43.23, `updatedAt`
+  seconds old). Cross-check Yahoo `GC=F` / `SI=F`.
+- Energy: Yahoo `https://query1.finance.yahoo.com/v8/finance/chart/CL=F`
+  or `NG=F` (send a browser User-Agent; reachable 2026-11-27 20:15Z).
+  Pyth resolves on ICE active-month contracts, so NYMEX front month is an
+  approximate stand-in: pass it as `touch.py --spot`, after reading the
+  Active Month clause (item 1).
+- In the forecast `--note`, write the proxy, its timestamp, and
+  "proxy for Pyth feed". Record the row as usual; never skip a ladder for
+  lack of a Pyth read.
+- The source mismatch is one more reason to stay inside the band the
+  playbook already allows; never widen an edge because a proxy exists.
+
 **1. Commodity touch ladders: read the Active Month clause before the
 spot price.** The WTI "hit (HIGH/LOW) $X in September" rules define the
 Active Month as rolling to the next contract at the start of the second
