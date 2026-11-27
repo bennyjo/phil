@@ -149,8 +149,18 @@ def main():
         print(f"{e['status'].upper():5} {e['pnl_usd']:+7.2f}  est={e['est_prob']:.2f} "
               f"mkt={e['entry_price']:.2f}  [{e['category']}] {e['question'][:70]}")
     for r in fsettled:
-        print(f"FCAST {r['status'].upper():5} est={r['est_prob']:.2f} "
-              f"mkt={r['market_prob_at_record']:.2f}  [{r['category']}] {r['question'][:70]}")
+        # Spell out the side and the Brier delta: WON/LOST is about the recorded
+        # outcome token, not about whether the estimate beat the market
+        # (proposals DEEP-11-21: a retro read "FCAST LOST" backwards).
+        if r["status"] == "void":
+            verdict = "void"
+        else:
+            y = 1 if r["status"] == "won" else 0
+            dbrier = (r["est_prob"] - y) ** 2 - (r["market_prob_at_record"] - y) ** 2
+            verdict = (f"resolved={r.get('outcome_won', '?')} dBrier={dbrier:+.3f} "
+                       f"({'own better' if dbrier < 0 else 'market better' if dbrier > 0 else 'tie'})")
+        print(f"FCAST {r['status'].upper():5} {r['outcome']} est={r['est_prob']:.2f} "
+              f"mkt={r['market_prob_at_record']:.2f} {verdict}  [{r['category']}] {r['question'][:70]}")
     print(f"resolve: settled {len(settled)} of {sum(1 for e in entries if e['status'] != 'open') + len(settled)} "
           f"({sum(1 for e in entries if e['status'] == 'open')} still open); "
           f"forecasts settled {len(fsettled)} "
