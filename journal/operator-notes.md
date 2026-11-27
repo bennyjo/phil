@@ -1638,3 +1638,90 @@ or later, and a graded verdict on the largest part of the primary metric's
 deficit about 5 days sooner. `strategy/experiments.jsonl` gains close rows
 for `E-2026-11-26-a` and `E-2026-11-27-a` and an open row for `tight-cap10`,
 and `core/experiments.py grade` then counts `tight-cap10` events.
+
+## 2026-11-27 ~11:00Z - Pyth Hermes is paid-only; use free spot proxies and stop escalating (operator)
+
+This answers the Pyth Hermes `unauthorized` ask (hourly 11-19 12:3xZ,
+ENDORSED MEDIUM since DEEP-11-20). There will be no Hermes key.
+
+Pyth made Hermes key-only for every caller on 2026-08-26 (Hermes docs:
+"Hermes now requires an API Key"). It is not a cloud problem: the operator
+machine gets the same 401 on every price endpoint, BTC included, on
+`hermes.pyth.network`, `pyth.dourolabs.app/hermes`, `hermes-beta` and
+`benchmarks.pyth.network`. Only the feed list (`/v2/price_feeds`) and the
+health checks answer 200, which is why the listing worked and the price
+did not. Phil has never had a working Hermes price read: the first 401 is in
+`journal/forecasts.jsonl` on 2026-09-30, and `journal/cycles.log` records it
+from 10-06 on. Pyth plans that cover metals cost $2,500 a month or more, and
+the on-chain Pyth metal feeds on Base and Arbitrum are months stale.
+
+What to do on Pyth-resolved commodity touch and close markets:
+
+1. Metals: take spot from `https://api.gold-api.com/price/XAU` or
+   `/price/XAG`. Pyth's metal feeds are spot prices, so this is a close
+   proxy. The cloud runner reaches it (the 10-30 FULL used it, forecast row
+   `8661d6342966`). Yahoo `SI=F` / `GC=F` are a cross-check.
+2. Energy: take Yahoo `https://query1.finance.yahoo.com/v8/finance/chart/CL=F`
+   or `NG=F`. Pyth resolves on ICE active-month contracts (CLL, HN), so NYMEX
+   front month is an approximate stand-in; pass it as `--spot` the way
+   `strategy/tools/touch.py` already describes.
+3. In the forecast note, write the proxy, its timestamp, and that it is a
+   proxy for the Pyth feed. Record the forecast row as usual; do not skip
+   the ladder for lack of a Pyth read.
+4. Treat the source mismatch as one more reason to stay inside the band the
+   playbook already allows; do not widen edges because a proxy is available.
+
+Stop escalating this ask. Mark it ANSWERED in the next deep retro.
+
+## 2026-11-27 ~11:00Z - stale-repeat down-rank: the hold has lifted; open it as a blocked experiment (operator)
+
+This answers the stale-repeat ask (DEEP-11-20, repeated at DEEP-11-27):
+down-rank markets with a forecast row under 48h old and a mid move under
+0.03 before escalation in `core/screen.py collect`.
+
+The operator held this on 11-22 so that it would not confound
+`E-2026-11-22-a`, which changed the screener prompt. That experiment closed
+INCONCLUSIVE on 11-25 (7.07 non-saturated rows per FULL against a 7.5 bar).
+The experiments open now, `E-2026-11-26-a` and `E-2026-11-27-a`, and the
+`tight-cap10` experiment that replaces them under the note above, grade
+estimation rules on paired rows, so a ranking change does not confound
+them. The hold is lifted.
+
+Size, from the 24 FULLs between 11-25 08:17Z and 11-27 08:18Z: about 11 of
+the top 15 have some prior forecast row, but only about 3.1 of 15 per FULL
+match the proposed rule (row under 48h old and a move under 0.03 from the
+recorded book midpoint). The other repeats moved 0.03 or more, and some of
+them produce real supersede rows. Expect about 3 freed slots per FULL, not
+13.
+
+What to do, in the next deep retro:
+
+1. Open a graded experiment on `nonsat_rows_per_full` with `commit: null`
+   and `blocked_by_core` naming this change. Use `core/experiments.py
+   propose` for the baseline and bars; the latest graded value is 7.07 over
+   28 FULLs (`E-2026-11-22-a`). A blocked row does not count toward the open
+   cap.
+2. The operator then ships the `core/screen.py` change as an `operator:` PR,
+   and you reopen the experiment as graded with that commit, the same way
+   `E-2026-11-24-a` became `E-2026-11-26-a`.
+
+The planned change, so the experiment row can describe it:
+
+- `collect` keeps the screener log as it is, so screener calibration still
+  sees every row. Only the escalation order changes.
+- A ranked row is `stale_repeat` when the market has a forecast row with
+  `ts` in the 48h before the collect `ts`, and the row's current mid for
+  that outcome is within 0.03 of the recorded book midpoint
+  (`(best_bid_at_record + best_ask_at_record) / 2`, falling back to
+  `market_prob_at_record`).
+- Escalation takes fresh rows first, then stale ones, cut at `top_n`.
+  Stale rows that still make the cut print with their `stale_repeat` field
+  (forecast id and age), and the funnel `screener` field gains
+  `stale_down_ranked: N`.
+- The 48h and 0.03 values live in `strategy/screener-filters.json` with the
+  same degrade-loudly validation as the other pre-filter scalars, so you
+  can tune them without another core change.
+
+Down-ranking puts stale repeats behind the fresh rows without dropping
+them. It does not fix the `collect --top-n 30` double-append refusal
+(ENDORSED 11-25); that stays its own ask.
