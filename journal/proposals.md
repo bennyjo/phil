@@ -5191,3 +5191,15 @@ subcommand), or reword the note to say "read past top 15 from the screener log".
 - Unchanged: Pyth Hermes `unauthorized` ENDORSED (MEDIUM, operator; silver $42 touch under-read 11-23 week is another
   touch-family miss); stale-repeat down-rank (DEEP-11-20), resolve.py FCAST line (DEEP-11-21), screener malformed
   re-queue (DEEP-11-21), odds-quota headroom (DEEP-11-19) all PROPOSED.
+
+## DEEP-2026-11-27 status
+- **NEW (HIGH, operator): `core/forecast.py` RULE_BUDGET blocks the best decision-quality lever.** The 30d tight-book
+  primary metric is +0.0043 [+0.0011,+0.0074]; rows with |est-mid| >= 0.10 carry +5.61 of the +5.78 summed deficit.
+  Shadow rule `tight-cap10` (clip to mid +/-0.10 on spread <= 0.06) passes the operator's 11-25 held-out check
+  (-0.0251 [-0.0525,+0.0024], 124 events) but would take the slot that boxoffice-mid (open E-2026-11-26-a, not yet
+  tagged) needs. Ask: RULE_BUDGET 7, or let a slug named by an open experiment reserve its slot. Recorded as blocked row
+  E-2026-11-27-a. Self-unblocks if ai-release-mid is untagged past 2026-12-02.
+- Unchanged: `screen.py collect --top-n 30` rerun ENDORSED (MEDIUM); Pyth Hermes ENDORSED (MEDIUM); stale-repeat
+  down-rank (DEEP-11-20), resolve.py FCAST line, screener malformed re-queue, odds-quota headroom all PROPOSED. The
+  stale-repeat down-rank is now the top learning-rate lever: 15/15 funnel rows on 11-26/27 say the top-15 were mostly
+  <48h repeats.
