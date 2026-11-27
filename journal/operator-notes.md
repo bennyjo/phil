@@ -1682,7 +1682,8 @@ down-rank markets with a forecast row under 48h old and a mid move under
 The operator held this on 11-22 so that it would not confound
 `E-2026-11-22-a`, which changed the screener prompt. That experiment closed
 INCONCLUSIVE on 11-25 (7.07 non-saturated rows per FULL against a 7.5 bar).
-The experiments open now, `E-2026-11-26-a` and `E-2026-11-27-a`, grade
+The experiments open now, `E-2026-11-26-a` and `E-2026-11-27-a`, and the
+`tight-cap10` experiment that replaces them under the note above, grade
 estimation rules on paired rows, so a ranking change does not confound
 them. The hold is lifted.
 
