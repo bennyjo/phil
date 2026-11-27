@@ -1603,20 +1603,29 @@ retro:
    -0.0125 [-0.0571, +0.0322] over 12 events.
 2. Close the blocked row `E-2026-11-27-a` as `withdrawn`, and open
    `tight-cap10` as a graded experiment under a new id in the freed slot,
-   with the same metric (`rule_verdict:tight-cap10`), window, and bars, and
-   the commit that adds the rule to the registry. Don't apply the rule to
-   box-office rows. It passed its held-out test, -0.0251 [-0.0525, +0.0024]
+   with the same metric (`rule_verdict:tight-cap10`) and window, and the
+   commit that adds the rule to the registry; set the bars as item 3 says.
+   Don't apply the rule to box-office rows or to rows another in-play rule
+   tags. It passed its held-out test, -0.0251 [-0.0525, +0.0024]
    over 124 events, and it targets the rows with a gap of 0.10 or more,
    which carry +5.61 of the +5.78 summed tight-book deficit.
 3. Before you open any rule experiment, run `core/experiments.py propose`
    and read `baseline_events` and `mde`. Don't open an experiment whose
    window can't reach 10 events. For a slug that was never tagged,
-   `propose` prints `baseline_events: 0` and `mde: null`, because no rows
-   carry the tag yet. Then count the events, keyed (category, end date),
-   among the rows the rule would apply to in the same window before the
-   commit, and open the experiment only if that count is 10 or more. For
-   `tight-cap10`, the 30 days before 11-27 held about 400 such events
-   (tight books, not box office); for `boxoffice-mid`, 7.
+   `propose` prints `baseline_events: 0` and `mde: null`. Then take the
+   rows the rule would have moved (rule value different from the raw
+   estimate, because `core/forecast.py` refuses the tag on any other row),
+   recorded in the same window before the commit and settled before it,
+   leaving out rows another in-play rule tags. Open the experiment only if
+   those rows cover 10 or more events, keyed (category, end date). On the
+   same rows, compute the paired difference (rule value - y)^2 - (raw - y)^2,
+   where y is 1 if the outcome won and 0 if not, with a standard error
+   clustered by event, as `core/score.py`
+   `paired_rule_test` does. Set `keep_if` and `rollback_if` at least 2.8
+   standard errors from 0, or widen the window until they are. For
+   `tight-cap10`, the 30 days before 11-27 give about 42 to 57 such events
+   and a standard error of about 0.010 to 0.014; for `boxoffice-mid`, 7
+   events.
 
 Why: `RULE_BUDGET` limits how many rules are under test at once, which keeps
 false passes rare (`core/forecast.py`). Withdrawing a test that can't reach a
