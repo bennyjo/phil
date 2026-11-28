@@ -7159,6 +7159,10 @@ with the one-liner in journal/retros/DEEP-2026-10-21.md.
 - Status (RETRO-20261110-0815): graded, 4 of 4 won (`540a22361a66` Nov 8, `5aa5605dd37c` Nov 9,
   `d038c0ae119a` and `9cb5e6c64b4f` Nov 10; status `won` in journal/forecasts.jsonl). One correlated event
   (the MW13 postponement), so this confirms the procedure once, not a rate. Keep it as written.
+- Status (RETRO-20261128-0015): second event. KNVB cancelled four KKD games for weather on 2026-11-27;
+  bets `215097fa593f` (Utrecht win No @.83) and `e214d767646c` (draw Yes @.88) both won (+$1.62), and
+  forecast-only legs `cc48ff93da74`, `1a0ce70c97f4`, `60053861a96c` won. Two correlated clusters now;
+  still one procedure confirmed twice, not a rate. Keep as written.
 
 ## 2026-11-03 18:15Z: JOLTS Sep bet lost, AAA Nov 3 missed low (RETRO-20261103-1815)
 
