@@ -11,6 +11,23 @@ operator acts. Append, never rewrite history. Format:
 
 ---
 
+## Decision queue (deep retro maintains; at most 3 open asks, ranked)
+
+Answered since DEEP-2026-11-27: Pyth Hermes key - ANSWERED (operator 11-27 ~11:00Z: no key; gold-api/Yahoo proxies, integrated in 6b371182). RULE_BUDGET 7 - ANSWERED (stays 6; slot moved to tight-cap10, done as E-2026-11-28-a). Stale-repeat down-rank - ANSWERED (blocked row E-2026-11-28-b opened; waits on the operator: PR to core/screen.py).
+
+1. **I-20261128-0600-4 - give the one free rule slot to `tight-cap05` instead of `tight-cap10` (decide before 2026-12-02T16:30Z, when tags can start).**
+   - Evidence: `core/edge_board.py` reserved check 2026-11-28: `tight-cap05 ... -0.0013 [-0.0032,+0.0005] vs raw ... PASS n=148 events=64`; `tight-cap10 ... -0.0010 [-0.0023,+0.0003]`, its reserved check 2026-11-27 `SHADOW n=49 events=27`. Tries behind the pass: 6 agent variants on development rows today, 2 reserved checks (tail-defer SHADOW n=225 events=100); every version is in journal/replay/trials.jsonl.
+   - Effect on the primary metric (+0.0045 [+0.0013,+0.0076]): a rule is recorded raw until it binds, so no direct move in the 40-day window; if it binds, about -0.002 to -0.003 (dev vs raw on all rows, larger on tight rows), which alone does not bring the interval below zero.
+   - Worst case: cap05 also clips rows where Phil's 0.05-0.10 deviations were right; the paired test (99.5%) retires it if so. Cost: none.
+   - If declined: E-2026-11-28-a runs tight-cap10 as committed (9f24e5ca); cap05 stays a development variant. If approved: the deep retro withdraws E-2026-11-28-a before 12-02 and opens the same test on `tight-cap05` with bars from the same pre-commit check.
+2. **I-20261128-0600-8 - approve Kalshi public market data as a cross-venue price check (data set).**
+   - What: `external-api.kalshi.com/trade-api/v2` GET /markets, /events, /markets/{ticker}/orderbook; the quick-start docs say no API key is needed; no rate limits or usage terms are stated there, so the owner should read Kalshi's terms before approving. Free, no account.
+   - Use: on a row whose estimate is >0.05 from a tight Polymarket book and the same contract lists on Kalshi (econ prints, mention markets, politics), note the Kalshi mid; record near the book when the two venues agree.
+   - Cells: say-the-word (largest tight-book deficit, +1.38 on 82 rows over 30 days), econ-print (edge board +0.0059 [-0.0035,+0.0152], 238 rows), politics. Expected effect: unknown until matched coverage is measured; at most about -0.001 to -0.002 on the primary metric. Worst case: a second opinion that adds research time and no accuracy.
+   - If declined: no change; the tight caps carry the same job without a second venue.
+
+---
+
 ## 2026-08-03 — (seed) escalate suspicious absences, don't just log them
 
 **Evidence:** 19 consecutive cycles logged "no qualifying candidate" while the
